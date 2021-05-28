@@ -1,0 +1,9 @@
+/bin/
+/build/
+/.settings/
+/.pydevproject
+/Doxyfile.bak
+/DoxygenZetgineLayout.xml
+/.vscode
+/install_manifest.txt
+/release/
