@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-set(ignoreMe "${ZETSCRIPT}")
 cmake_policy(SET CMP0015 NEW) #remove link dir directories
-project(zg_core)
+project(zetgame)
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
@@ -87,10 +86,10 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 		message("-- Memmanager: ON (Warning execution time could be slow)")
 		SET( COMMON_PARAMS " ${COMMON_PARAMS} -D__MEMMANAGER__")
 		include_directories (
-			../../../memmgr
+			../memmgr
 		)
 		
-	   	set(ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../../memmgr/memmgr.c)
+	   	set(ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../memmgr/memmgr.c)
 	   		
 	else()
 		MESSAGE ("-- Memmanager: OFF " )
@@ -101,9 +100,8 @@ endif()
 
   
 include_directories (
-	${PROJECT_SOURCE_DIR}/../ #to keep same include when on installs directory
-	${PROJECT_SOURCE_DIR}/../../3rdparty/include
-	${PROJECT_SOURCE_DIR}/../../3rdparty/include/freetype2
+	${PROJECT_SOURCE_DIR}/3rdparty/include
+	${PROJECT_SOURCE_DIR}/3rdparty/include/freetype2
 	${OPEN_GL_INCLUDE_DIRS}  
 	${GLU_INCLUDE_DIRS}
 )
@@ -122,14 +120,14 @@ if( "${ZETDEV}" STREQUAL "ON" )
  	MESSAGE ("-- ZetDev: ON" )
  	set(TARGET_FLAGS " ${TARGET_FLAGS} -D__ZETDEV__ ")
 	include_directories (
-		${PROJECT_SOURCE_DIR}/../../../zetpacker
-		${PROJECT_SOURCE_DIR}/../../../zetnet
+		${PROJECT_SOURCE_DIR}/../zetpacker
+		${PROJECT_SOURCE_DIR}/../zetnet
 	) 	
 else()
 	MESSAGE ("-- ZetDev: OFF" )
 	include_directories (
-		${PROJECT_SOURCE_DIR}/../../3rdparty/include/zetpacker
-		${PROJECT_SOURCE_DIR}/../../3rdparty/include/zetnet
+		${PROJECT_SOURCE_DIR}/3rdparty/include/zetpacker
+		${PROJECT_SOURCE_DIR}/3rdparty/include/zetnet
 	)
 endif()
 
@@ -141,9 +139,9 @@ SET(CMAKE_C_FLAGS   " ${TARGET_FLAGS} ${COMMON_PARAMS}  " )
 MESSAGE ("Target : " ${TARGET})
 
 #Redefine output dir ...
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/${TARGET})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/${TARGET})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/${TARGET})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${TARGET})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${TARGET})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${TARGET})
 LINK_DIRECTORIES(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -179,10 +177,10 @@ FOREACH(embeddFileName ${embeddFiles})
 ENDFOREACH(embeddFileName)
 
 
-configure_files(${PROJECT_SOURCE_DIR}/test/data/images ${PROJECT_SOURCE_DIR}/../../bin/${TARGET}/data/images)
-configure_files(${PROJECT_SOURCE_DIR}/test/data/fonts ${PROJECT_SOURCE_DIR}/../../bin/${TARGET}/data/fonts)
-configure_files(${PROJECT_SOURCE_DIR}/test/data/musics ${PROJECT_SOURCE_DIR}/../../bin/${TARGET}/data/musics)
-configure_files(${PROJECT_SOURCE_DIR}/test/data/samples ${PROJECT_SOURCE_DIR}/../../bin/${TARGET}/data/samples)
+configure_files(${PROJECT_SOURCE_DIR}/test/data/images ${PROJECT_SOURCE_DIR}/bin/${TARGET}/data/images)
+configure_files(${PROJECT_SOURCE_DIR}/test/data/fonts ${PROJECT_SOURCE_DIR}/bin/${TARGET}/data/fonts)
+configure_files(${PROJECT_SOURCE_DIR}/test/data/musics ${PROJECT_SOURCE_DIR}/bin/${TARGET}/data/musics)
+configure_files(${PROJECT_SOURCE_DIR}/test/data/samples ${PROJECT_SOURCE_DIR}/bin/${TARGET}/data/samples)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -193,7 +191,7 @@ configure_files(${PROJECT_SOURCE_DIR}/test/data/samples ${PROJECT_SOURCE_DIR}/..
 
 
 LINK_DIRECTORIES (
-	${PROJECT_SOURCE_DIR}/../../3rdparty/lib
+	${PROJECT_SOURCE_DIR}/3rdparty/lib
 )
 
 
@@ -215,8 +213,8 @@ endif()
 
 if( "${ZETDEV}" STREQUAL "ON" )
 	set( LIB_DEPS ${LIB_DEPS} 
-		${PROJECT_SOURCE_DIR}/../../../zetpacker/bin/${TARGET}/libzetpacker${POST_NAME}.a 
-		${PROJECT_SOURCE_DIR}/../../../zetnet/bin/${TARGET}/libzetnet${POST_NAME}.a
+		${PROJECT_SOURCE_DIR}/../zetpacker/bin/${TARGET}/libzetpacker${POST_NAME}.a 
+		${PROJECT_SOURCE_DIR}/../zetnet/bin/${TARGET}/libzetnet${POST_NAME}.a
 	)
 	
 else()
@@ -320,13 +318,13 @@ set( ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS}
 
 	
 	#-- Core --
-	ZetgineCore.c		
+	ZetGame.c		
 )
 
-add_library( zg_core${POST_NAME} STATIC ${ZG_CORE_LIB_SRCS} )
+add_library( zetgame${POST_NAME} STATIC ${ZG_CORE_LIB_SRCS} )
 
 
-target_link_libraries(zg_core${POST_NAME}
+target_link_libraries(zetgame${POST_NAME}
 	${LIB_DEPS}
 	${LINK_PARAMS}
 )	
@@ -341,13 +339,13 @@ add_executable(test_mixer${POST_NAME}
 	${PROJECT_SOURCE_DIR}/test/test_mixer.c
 )
 
-target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 	
 add_executable(test_2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_2d.c
 )
 
-target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 
 
@@ -356,36 +354,36 @@ add_executable(test_2d_primitives${POST_NAME}
 	${PROJECT_SOURCE_DIR}/test/test_2d_primitives.c
 )
 
-target_link_libraries(test_2d_primitives${POST_NAME}    ${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d_primitives${POST_NAME}    ${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 
 add_executable(test_2d_textbox${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_2d_textbox.c
 )
 
-target_link_libraries(test_2d_textbox${POST_NAME}    	${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 #add_executable(test_2d_scenegraph${POST_NAME} 
 #	${PROJECT_SOURCE_DIR}/test/test_2d_scenegraph.c
 #)
 
-#target_link_libraries(test_2d_scenegraph${POST_NAME}    	${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+#target_link_libraries(test_2d_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_viewport.c
 )
 
-target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_gui${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_gui.c
 )
 
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_animation${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_animation.c
 )
 
-target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} zg_core${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
