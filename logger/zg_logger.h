@@ -1,4 +1,4 @@
-#include "core/system/zg_system.h"
+#include "system/zg_system.h"
 
 #include "FileWritter.h"
 #include "LoggerVar.h"

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/system/zg_system.h"
-#include "core/mmedia/audio/music/Music.h"
-#include "core/mmedia/audio/Mixer.h"
-#include "core/mmedia/audio/Sample.h"
+#include "system/zg_system.h"
+#include "mmedia/audio/music/Music.h"
+#include "mmedia/audio/Mixer.h"
+#include "mmedia/audio/Sample.h"
 
 
 

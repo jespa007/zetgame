@@ -1,4 +1,4 @@
-#include "core/ecs/zg_ecs.h"
+#include "ecs/zg_ecs.h"
 /*
 typedef struct{
 	Entity *entities; // max entities it'll have this type

@@ -1,5 +1,5 @@
 
-#include "core/assets/font/pf_arma_five.ttf.c"
+#include "assets/font/pf_arma_five.ttf.c"
 
 #define MAX_FONT_NAME 		100
 #define DEFAULT_FONT_FAMILY "pf_arma_five.ttf"

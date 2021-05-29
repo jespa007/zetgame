@@ -1,6 +1,6 @@
 #include "../../assets/image/default.png.c"
 #include "../zg_system.h"
-#include "core/graphics/zg_graphics.h"
+#include "graphics/zg_graphics.h"
 
 /*{
  * signature

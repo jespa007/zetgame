@@ -1,4 +1,4 @@
-#include "core/scene/zg_scene.h"
+#include "scene/zg_scene.h"
 
 
 typedef struct{

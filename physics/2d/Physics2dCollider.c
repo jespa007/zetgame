@@ -1,4 +1,4 @@
-#include "core/physics/zg_physics.h"
+#include "physics/zg_physics.h"
 
 Physics2dCollider * Physics2dCollider_New(void){
 	Physics2dCollider *p2d_collider=NEW(Physics2dCollider);

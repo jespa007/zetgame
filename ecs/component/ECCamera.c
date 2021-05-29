@@ -1,4 +1,4 @@
-#include "core/ecs/zg_ecs.h"
+#include "ecs/zg_ecs.h"
 
 ECCamera * ECCamera_New(void){
 	ECCamera * ec_camera = NEW(ECCamera);

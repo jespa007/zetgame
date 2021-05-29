@@ -1,4 +1,4 @@
-#include "../ZetgineCore.h"
+#include "../ZetGame.h"
 
 
 int main(int argc, char *argv[]){

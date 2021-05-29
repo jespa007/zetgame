@@ -1,5 +1,5 @@
 #include "zg_gui.h"
-#include "core/assets/image/button1.png.c"
+#include "assets/image/button1.png.c"
 
 typedef struct{
 	List *on_click_events;

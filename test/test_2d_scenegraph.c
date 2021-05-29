@@ -1,4 +1,4 @@
-#include "../ZetgineCore.h"
+#include "../ZetGame.h"
 
 void MS_OnDeleteTexture(void *text){
 	Texture_Delete(text);

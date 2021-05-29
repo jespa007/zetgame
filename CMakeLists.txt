@@ -100,6 +100,7 @@ endif()
 
   
 include_directories (
+	${PROJECT_SOURCE_DIR}
 	${PROJECT_SOURCE_DIR}/3rdparty/include
 	${PROJECT_SOURCE_DIR}/3rdparty/include/freetype2
 	${OPEN_GL_INCLUDE_DIRS}  

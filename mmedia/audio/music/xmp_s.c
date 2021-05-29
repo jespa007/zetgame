@@ -1,7 +1,7 @@
 
 #include <xmp.h>
-#include "core/mmedia/audio/music/xmp_s.h"
-#include "core/mmedia/audio/music/xmp_common.h"
+#include "mmedia/audio/music/xmp_s.h"
+#include "mmedia/audio/music/xmp_common.h"
 
 int get_sequence2(struct context_data *ctx, int ord)
 {

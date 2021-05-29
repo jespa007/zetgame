@@ -1,4 +1,4 @@
-#include "../ZetgineCore.h"
+#include "../ZetGame.h"
 
 #define STEP_INC 0.016
 

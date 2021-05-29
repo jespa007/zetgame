@@ -1,8 +1,8 @@
 #ifndef __ZG_ECS_H__
 #define __ZG_ECS_H__
 
-#include "core/graphics/zg_graphics.h"
-#include "core/mmedia/zg_mmedia.h"
+#include "graphics/zg_graphics.h"
+#include "mmedia/zg_mmedia.h"
 
 
 #include "component/ECComponent.h"

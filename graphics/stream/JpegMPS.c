@@ -1,5 +1,5 @@
-#include "core/graphics/zg_graphics.h"
-#include "core/input/zg_input.h"
+#include "graphics/zg_graphics.h"
+#include "input/zg_input.h"
 
 #define PBO_COUNT 2
 #define MASK_PBO_COUNT (PBO_COUNT-1)

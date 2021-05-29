@@ -1,4 +1,4 @@
-#include "core/ecs/zg_ecs.h"
+#include "ecs/zg_ecs.h"
 
 typedef struct{
 	void 		*components[EC_TYPE_COMPONENT_MAX];

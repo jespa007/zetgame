@@ -1,4 +1,4 @@
-#include "ZetgineCore.h"
+#include "ZetGame.h"
 
 static ZetgineCoreSetupParams default_setup={
 		.graphics_api=GRAPHICS_API_GL

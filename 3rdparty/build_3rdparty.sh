@@ -5,7 +5,8 @@ THIRD_PARTY_SOURCES_DIR=$PWD
 THIRD_PARTY_BUILD_DIR=$THIRD_PARTY_DIR"/build"
 THIRD_PARTY_PREFIX=$PWD
 
-
+# update path to bind generated executables in 3rd party bin
+PATH=$PATH:$PWD"/bin"
  
 # The third parties
 YASM_VERSION="yasm-1.3.0"

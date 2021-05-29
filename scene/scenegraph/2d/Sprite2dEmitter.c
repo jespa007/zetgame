@@ -1,4 +1,4 @@
-#include "core/scene/zg_scene.h"
+#include "scene/zg_scene.h"
 
 Sprite2dEmitter * SpriteEmitter2d_New(void){
 	Sprite2dEmitter *sprite_emitter=NEW(Sprite2dEmitter);

@@ -1,4 +1,4 @@
-#include "../ZetgineCore.h"
+#include "../ZetGame.h"
 #include "zg_graphics.h"
 
 //#define TBRT_NEXT_CHAR(text,ch,sizechar) while(text!=NULL && *text!=0 && *text!=ch) text++

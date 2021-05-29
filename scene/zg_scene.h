@@ -1,5 +1,5 @@
-#include "core/graphics/zg_graphics.h"
-#include "core/mmedia/zg_mmedia.h"
+#include "graphics/zg_graphics.h"
+#include "mmedia/zg_mmedia.h"
 
 //#include "scenegraph/SGNode.h"
 //#include "scenegraph/SGCamera.h"

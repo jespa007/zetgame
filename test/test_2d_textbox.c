@@ -1,4 +1,4 @@
-#include "../ZetgineCore.h"
+#include "../ZetGame.h"
 
 #define TEXT_WIDTH_BB
 

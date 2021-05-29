@@ -1,5 +1,5 @@
 
-#include "core/assets/image/silk_icons_preview.png.c"
+#include "assets/image/silk_icons_preview.png.c"
 #include "zg_graphics.h"
 //#include "../res/image/silk_icons_preview.gif.c"
 

@@ -1,4 +1,4 @@
-#include "core/math/zg_math.h"
+#include "math/zg_math.h"
 #include "ease.h"
 #include "ChannelsInfo.h"
 #include "KeyframePoint.h"
