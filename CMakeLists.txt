@@ -287,9 +287,6 @@ set( ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS}
 	#-- System --
 	system/zg_system.c
 	
-	#-- Logger --
-	logger/zg_logger.c
-	
 	#-- Animation --
 	animation/zg_animation.c
 	

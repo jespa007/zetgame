@@ -2,7 +2,6 @@
 #define __ZETGINE_CORE_H__
 
 #include "system/zg_system.h"
-#include "logger/zg_logger.h"
 #include "mmedia/zg_mmedia.h"
 #include "math/zg_math.h"
 #include "physics/zg_physics.h"
@@ -10,13 +9,7 @@
 #include "graphics/zg_graphics.h"
 #include "scene/zg_scene.h"
 #include "gui/zg_gui.h"
-//#include "mmedia/zg_mmedia.h"
-/*
-#include "scene/zg_scene.h"
-#include "ui/zg_ui.h"
-#include "stage/zg_stage.h
 
-"*/
 
 #define ZG_CORE_MAJOR_VERSION	1
 #define ZG_CORE_MINOR_VERSION	0
