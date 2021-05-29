@@ -171,14 +171,14 @@ int main(int argc, char * argv[]){
 
 	//MapString *map_textures = MapString_New();
 	//map_textures->on_delete=MS_OnDeleteTexture;
-	ZetgineCoreSetupParams setup;
+	ZetGameSetupParams setup;
 	memset(&setup,0,sizeof(setup));
 	setup.width=640;
 	setup.height=480;
 	setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
 
 
-	ZetgineCore_Init(&setup);
+	ZetGame_Init(&setup);
 
 	Scene * scene = Scene_New();
 	SGViewer2d *sg_image_background=NULL
@@ -432,7 +432,7 @@ int main(int argc, char * argv[]){
 	MaterialAction_Delete(mat_act_fade_in_out);
 
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

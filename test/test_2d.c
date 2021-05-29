@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
 
-	ZetgineCore_Init(NULL);
+	ZetGame_Init(NULL);
 	TTFont_SetFontResourcePath("data/fonts");
 	Texture_SetTextureResourcePath("data/images");
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
 	Appearance_Delete(appearance);
 
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

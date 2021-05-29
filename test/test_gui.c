@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]){
 
-	ZetgineCore_Init(NULL);
+	ZetGame_Init(NULL);
 
 	GUIWindow * window=GUIWindow_New(10,10,200,100);
 	GUIViewer * texture=GUIViewer_New(10,10,42,42);
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
 	GUIWindow_Delete(window);
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

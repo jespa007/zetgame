@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
 
-	ZetgineCoreSetupParams default_setup={
+	ZetGameSetupParams default_setup={
 			.graphics_api=GRAPHICS_API_GL
 			,.width=ZG_DEFAULT_SCREEN_WIDTH
 			,.height=ZG_DEFAULT_SCREEN_HEIGHT
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	uint_t	 request_forward_seek=0
 			,request_backward_seek=0;
 
-	ZetgineCore_Init(&default_setup);
+	ZetGame_Init(&default_setup);
 
 	SAMPLE 	id_effect = INVALID_SOUND_IDX;
 	MUSIC 	id_wav = INVALID_SOUND_IDX
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]){
 		Input_Update();
 	}while(!K_ESC);
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 
 #if defined(__MEMMANAGER__)

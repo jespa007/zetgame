@@ -38,15 +38,15 @@ const PrintFontInfo print_font_info[]={
 
 int main(int argc, char * argv[]){
 
-	ZetgineCoreSetupParams setup_options;
-	memset(&setup_options,0,sizeof(ZetgineCoreSetupParams));
+	ZetGameSetupParams setup_options;
+	memset(&setup_options,0,sizeof(ZetGameSetupParams));
 
 
 	setup_options.width=WIDTH_RES;
 	setup_options.height=HEIGHT_RES;
 
-	ZetgineCore_Init(&setup_options);
-	ZetgineCore_SetDebugMode(true);
+	ZetGame_Init(&setup_options);
+	ZetGame_SetDebugMode(true);
 
 	//TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",16);
 	Textbox *textbox=Textbox_New();
@@ -85,7 +85,7 @@ int main(int argc, char * argv[]){
 
 	Textbox_Delete(textbox);
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

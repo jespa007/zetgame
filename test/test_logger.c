@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
 
-	ZetgineCore_Init(NULL);
+	ZetGame_Init(NULL);
 
 	Logger *l=Logger_New();
 	PartialLogger *lp1=PartialLogger_New(); // will write every 100ms
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
 
 	Logger_Stop(l);
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

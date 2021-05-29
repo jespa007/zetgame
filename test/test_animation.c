@@ -17,7 +17,7 @@ void normalize_from_relative_pixels(float *v, size_t count){
 
 int main(int argc, char *argv[]){
 
-	ZetgineCore_Init(NULL);
+	ZetGame_Init(NULL);
 	float rotate=0;
 	float scale=1;
 	float x=0.2,y=0.1;
@@ -177,7 +177,7 @@ int main(int argc, char *argv[]){
 	Appearance_Delete(appearance);
 
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

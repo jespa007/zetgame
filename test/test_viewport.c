@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]){
 
-	ZetgineCore_Init(NULL);
+	ZetGame_Init(NULL);
 	ViewPort *v1;
 	Texture_SetTextureResourcePath("data/images");
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 	Texture_Delete(text_png);
 	Textbox_Delete(textbox);
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();

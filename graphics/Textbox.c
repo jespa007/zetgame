@@ -316,7 +316,7 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 		y=start_pos.y+(data->dimensions.y>>1)-text_total_height;
 	}
 
-	if(ZetgineCore_IsDebugMode()){
+	if(ZetGame_IsDebugMode()){
 		Graphics_DrawRectangle(
 				start_pos.x-(data->dimensions.x>>1)
 				,start_pos.y-(data->dimensions.y>>1)

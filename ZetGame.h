@@ -26,9 +26,9 @@
 #define ZG_DEFAULT_SCREEN_HEIGHT	480
 
 
-typedef struct ZetgineCoreSetupParams ZetgineCoreSetupParams;
+typedef struct ZetGameSetupParams ZetGameSetupParams;
 
-struct ZetgineCoreSetupParams{
+struct ZetGameSetupParams{
 
 	GraphicsApi	graphics_api;
 	uint16_t width;
@@ -40,12 +40,12 @@ struct ZetgineCoreSetupParams{
 };
 
 
-void ZetgineCore_Init(ZetgineCoreSetupParams * info);
-void ZetgineCore_SetDebugMode(bool _debug_mode);
-bool ZetgineCore_IsDebugMode(void);
+void ZetGame_Init(ZetGameSetupParams * info);
+void ZetGame_SetDebugMode(bool _debug_mode);
+bool ZetGame_IsDebugMode(void);
 
 
-void ZetgineCore_DeInit(void);
+void ZetGame_DeInit(void);
 
 
 

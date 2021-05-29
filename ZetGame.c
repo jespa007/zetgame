@@ -1,6 +1,6 @@
 #include "ZetGame.h"
 
-static ZetgineCoreSetupParams default_setup={
+static ZetGameSetupParams default_setup={
 		.graphics_api=GRAPHICS_API_GL
 		,.width=ZG_DEFAULT_SCREEN_WIDTH
 		,.height=ZG_DEFAULT_SCREEN_HEIGHT
@@ -13,12 +13,12 @@ static ZetgineCoreSetupParams default_setup={
 static bool debug_mode=false;
 
 
-void SetupInfo_SetupInfo(ZetgineCoreSetupParams *si){
+void SetupInfo_SetupInfo(ZetGameSetupParams *si){
 	si->width=ZG_DEFAULT_SCREEN_WIDTH;
 	si->height=ZG_DEFAULT_SCREEN_HEIGHT;
 }
 
-void ZetgineCore_Init(ZetgineCoreSetupParams * info){
+void ZetGame_Init(ZetGameSetupParams * info){
 
 	if(info == NULL){
 		info=&default_setup;
@@ -54,16 +54,16 @@ void ZetgineCore_Init(ZetgineCoreSetupParams * info){
 	GUI_Init();
 }
 
-void ZetgineCore_SetDebugMode(bool _debug_mode){
+void ZetGame_SetDebugMode(bool _debug_mode){
 	debug_mode=_debug_mode;
 }
 
 
-bool ZetgineCore_IsDebugMode(void){
+bool ZetGame_IsDebugMode(void){
 	return debug_mode;
 }
 
-void ZetgineCore_DeInit(void){
+void ZetGame_DeInit(void){
 
 	GUI_DeInit();
 	//SGRender_DeInit();

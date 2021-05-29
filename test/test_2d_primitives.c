@@ -4,8 +4,6 @@
 #define SHAPER_COLOR		0xff707070
 #define SHAPE_BORDER_COLOR	0xffe0e0e0
 
-
-
 int main(int argc, char *argv[]){
 
 	struct{
@@ -15,10 +13,7 @@ int main(int argc, char *argv[]){
 			,{SHAPE_WIDTH>>1,SHAPER_COLOR,SHAPE_WIDTH*0.1,SHAPE_BORDER_COLOR}
 	};
 
-
-	ZetgineCore_Init(NULL);
-
-
+	ZetGame_Init(NULL);
 
 	List *textures= List_New();
 
@@ -89,7 +84,7 @@ int main(int argc, char *argv[]){
 
 	List_Delete(textures);
 
-	ZetgineCore_DeInit();
+	ZetGame_DeInit();
 
 #ifdef __MEMMANAGER__
 	MEMMGR_print_status();
