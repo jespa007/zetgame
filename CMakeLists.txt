@@ -89,7 +89,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 			../memmgr
 		)
 		
-	   	set(ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../memmgr/memmgr.c)
+	   	set(ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../memmgr/memmgr.c)
 	   		
 	else()
 		MESSAGE ("-- Memmanager: OFF " )
@@ -282,7 +282,7 @@ ENDIF()
 #
 
 
-set( ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS} 
+set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} 
 
 	#-- System --
 	system/zg_system.c
@@ -319,7 +319,7 @@ set( ZG_CORE_LIB_SRCS ${ZG_CORE_LIB_SRCS}
 	ZetGame.c		
 )
 
-add_library( zetgame${POST_NAME} STATIC ${ZG_CORE_LIB_SRCS} )
+add_library( zetgame${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
 
 
 target_link_libraries(zetgame${POST_NAME}
