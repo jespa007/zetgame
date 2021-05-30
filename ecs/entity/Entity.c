@@ -50,7 +50,7 @@ void * Entity_GetComponent(Entity *_this, int idx_component){
 
 void Entity_SetTranslate3f(Entity *_this,float x, float y, float z){
 	EntityData *data=(EntityData *)_this->data;
-	ECTransform *sg_node=data->components[EC_TYPE_COMPONENT_SGNODE];
+	ECTransform *sg_node=data->components[EC_TYPE_COMPONENT_TRANSFORM];
 	if(sg_node != NULL){
 		ECSGNode_SetTranslate3f(sg_node,x,y,z);
 	}

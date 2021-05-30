@@ -235,15 +235,50 @@ void ESSystem_DeleteComponent(ESSystem *_this,int idx_component, uint8_t * compo
 void ESSystem_Update(ESSystem * _this){
 	ESSystemData *data=(ESSystemData *)_this->data;
 
+	//----------------------------------------------------------------------------------
+	// UPDATE TRANSFORM COMPONENT
+	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_TRANSFORM];
+	uint8_t *ptr_data=component_data->ptr_data;
+	for(unsigned i=0; i < component_data->n_active_elements; i++){
+		ECSGNode_Update(((ECTransform *)ptr_data));
+		ptr_data+=component_data->size_data;
+	}
+
+	//----------------------------------------------------------------------------------
+	// UPDATE RENDERABLE COMPONENTS
+	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_RENDERABLE];
+	uint8_t *ptr_data=component_data->ptr_data;
+	for(unsigned i=0; i < component_data->n_active_elements; i++){
+		ECRenderable_Update(((ECRenderable *)ptr_data));
+		ptr_data+=component_data->size_data;
+	}
+
+	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_VIEWER2D];
+	uint8_t *ptr_data=component_data->ptr_data;
+	for(unsigned i=0; i < component_data->n_active_elements; i++){
+		ECViewer2d_Update(((ECViewer2d *)ptr_data));
+		ptr_data+=component_data->size_data;
+	}
+
+	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_TEXT2D];
+	uint8_t *ptr_data=component_data->ptr_data;
+	for(unsigned i=0; i < component_data->n_active_elements; i++){
+		ECText2d_Update(((ECText2d *)ptr_data));
+		ptr_data+=component_data->size_data;
+	}
+	//
+	//----------------------------------------------------------------------------------
+
+
 	// this function batches all components...
-	for(unsigned ec=0; ec < EC_TYPE_COMPONENT_MAX; ec++){
+	/*for(unsigned ec=0; ec < EC_TYPE_COMPONENT_MAX; ec++){
 		ESSystemComponentData *component_data=&data->components[ec];
 		//unsigned it=component_data->n_active_elements;
 		uint8_t *ptr_data=component_data->ptr_data;
 
 		for(unsigned i=0; i < component_data->n_active_elements; i++){
 			switch(ec){
-				case EC_TYPE_COMPONENT_SGNODE: // it should update all root nodes
+				case EC_TYPE_COMPONENT_TRANSFORM: // it should update all root nodes
 					ECSGNode_Update(((ECTransform *)ptr_data));
 					break;
 				default:
@@ -251,7 +286,7 @@ void ESSystem_Update(ESSystem * _this){
 			}
 			ptr_data+=component_data->size_data;
 		}
-	}
+	}*/
 
 
 }

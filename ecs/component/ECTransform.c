@@ -7,25 +7,25 @@ typedef struct{
 	Transform 	transform_default;
 	Transform 	*transform_local;
 	uint16_t	transform_attributes;
-}ECSGNodeData;
+}ECTransformData;
 
-void ECSGNode_SetParent(ECTransform *_this, ECTransform *_parent);
+void ECTransform_SetParent(ECTransform *_this, ECTransform *_parent);
 
-void ECSGNode_ClearChilds(ECTransform * node){
-	ECSGNodeData *data=node->data;
+void ECTransform_ClearChilds(ECTransform * node){
+	ECTransformData *data=node->data;
 	for(unsigned i = 0; i < data->child_nodes->count; i++){
-		ECSGNode_ClearChilds(data->child_nodes->items[i]);
+		ECTransform_ClearChilds(data->child_nodes->items[i]);
 	}
 
-	ECSGNode_SetParent(node,NULL);
+	ECTransform_SetParent(node,NULL);
 	List_Clear(data->child_nodes);
 }
 //------------------------------------------------------------------------------------
 
-ECTransform * ECSGNode_New(void){
+ECTransform * ECTransform_New(void){
 
 	ECTransform * sg_node = NEW(ECTransform);
-	ECSGNodeData *data= NEW(ECSGNodeData);
+	ECTransformData *data= NEW(ECTransformData);
 	sg_node->data=data;
 
 	data->transform_local=&data->transform_default;
@@ -38,34 +38,34 @@ ECTransform * ECSGNode_New(void){
 			| 	TRANSFORM_TRANSLATE
 			|	TRANSFORM_ROTATE;
 
-	//sg_node->sgnode_type=ECSGNodeTypeNode;
+	//sg_node->sgnode_type=ECTransformTypeNode;
 
 	return sg_node;
 }
 
 
-void ECSGNode_ClearNodes(ECTransform *_this){
+void ECTransform_ClearNodes(ECTransform *_this){
 
 	if(_this == NULL) return;
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 
 
 	for(unsigned i=0; i < data->child_nodes->count; i++){
-		ECSGNode_ClearNodes(data->child_nodes->items[i]);
+		ECTransform_ClearNodes(data->child_nodes->items[i]);
 	}
 
 	List_Clear(data->child_nodes);
 }
 
-void ECSGNode_SetTranslate3f(ECTransform *_this,float x, float y, float z){
+void ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z){
 	Transform_SetTranslate3f(&_this->transform,x,y,z);
 }
 
-bool ECSGNode_IsParentNodeRoot(ECTransform *_this){
-	ECSGNodeData *data=_this->data;
+bool ECTransform_IsParentNodeRoot(ECTransform *_this){
+	ECTransformData *data=_this->data;
 	if(data->parent != NULL){
-		ECSGNodeData *parent_data = data->parent->data;
+		ECTransformData *parent_data = data->parent->data;
 
 		return (parent_data->parent==NULL);
 
@@ -75,109 +75,109 @@ bool ECSGNode_IsParentNodeRoot(ECTransform *_this){
 	return false;
 }
 
-void ECSGNode_SetPosition2i(ECTransform *_this,int x, int y){
-	ECSGNodeData *data=_this->data;
+void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
+	ECTransformData *data=_this->data;
 	Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
 	Transform_SetPosition2i(data->transform_local,v.x,v.y);
 }
 
-Vector2i	ECSGNode_GetPosition2i(ECTransform *_this){
+Vector2i	ECTransform_GetPosition2i(ECTransform *_this){
 
 	return Transform_GetPosition2i(&_this->transform);
 }
 
-void ECSGNode_SetRotateZ(ECTransform *_this,float z){
-	ECSGNodeData *data=_this->data;
+void ECTransform_SetRotateZ(ECTransform *_this,float z){
+	ECTransformData *data=_this->data;
 	Transform_SetRotateZ(data->transform_local,z);
 }
 
-void ECSGNode_SetRotate3f(ECTransform *_this,float x, float y, float z){
-	ECSGNodeData *data=_this->data;
+void ECTransform_SetRotate3f(ECTransform *_this,float x, float y, float z){
+	ECTransformData *data=_this->data;
 	Transform_SetRotate3f(data->transform_local,x,y,z);
 }
 
-void ECSGNode_SetScale3f(ECTransform *_this,float x, float y, float z){
-	ECSGNodeData *data=_this->data;
+void ECTransform_SetScale3f(ECTransform *_this,float x, float y, float z){
+	ECTransformData *data=_this->data;
 	Transform_SetScale3f(data->transform_local,x,y,z);
 }
 
-void	ECSGNode_SetParent(ECTransform *_this, ECTransform *parent_node){
-	ECSGNodeData *data = _this->data;
+void	ECTransform_SetParent(ECTransform *_this, ECTransform *parent_node){
+	ECTransformData *data = _this->data;
 	data->parent=parent_node;
 }
 
-ECTransform	*	ECSGNode_GetParent(ECTransform *_this){
-	ECSGNodeData *data = _this->data;
+ECTransform	*	ECTransform_GetParent(ECTransform *_this){
+	ECTransformData *data = _this->data;
 	return data->parent;
 }
 
 
-bool ECSGNode_DetachNode(ECTransform *_this,ECTransform * obj) {
+bool ECTransform_DetachNode(ECTransform *_this,ECTransform * obj) {
 
-	ECSGNodeData *obj_data = obj->data;
+	ECTransformData *obj_data = obj->data;
 
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
-		ECSGNodeData *parent_data = obj_data->parent->data;
+		ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
 			Log_Error("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
 
-	ECSGNode_SetParent(obj,NULL);
+	ECTransform_SetParent(obj,NULL);
 
 	// already deattached
 	return true;
 
 }
 
-bool ECSGNode_AttachNode(ECTransform *_this,ECTransform * obj) {
+bool ECTransform_AttachNode(ECTransform *_this,ECTransform * obj) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	if(obj == NULL){
 		return false;
 	}
 
-	if(!ECSGNode_DetachNode(_this,obj)){
+	if(!ECTransform_DetachNode(_this,obj)){
 		return false;
 	}
 
-	ECSGNode_SetParent(obj,_this);
+	ECTransform_SetParent(obj,_this);
 	List_Add(data->child_nodes,obj);
 
 	return false;
 }
 
-bool ECSGNode_Detach(ECTransform *_this){
+bool ECTransform_Detach(ECTransform *_this){
 
-	ECTransform * parent = ECSGNode_GetParent(_this);
+	ECTransform * parent = ECTransform_GetParent(_this);
 	if(parent != NULL){
-		ECSGNode_DetachNode(parent,_this);
+		ECTransform_DetachNode(parent,_this);
 	}
 
 	return true;
 
 }
 
-void ECSGNode_UpdateChilds(ECTransform *_this) {
+void ECTransform_UpdateChilds(ECTransform *_this) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	ECTransform *o;
 	//-------- UPDATE TRANFORMS OF THEIR CHILDS ----
 	for(unsigned i=0; i < data->child_nodes->count; i++) {
 		o = data->child_nodes->items[i];
-		ECSGNode_Update(o);
+		ECTransform_Update(o);
 	}
 }
 
-void ECSGNode_PostUpdate(ECTransform *_this){
-	ECSGNode_UpdateChilds(_this);
+void ECTransform_PostUpdate(ECTransform *_this){
+	ECTransform_UpdateChilds(_this);
 }
 
 //--------------------------- MAIN UPDATE SCENEGRAPH ----------------------------
-void ECSGNode_UpdateSceneGraph(ECTransform *_this) {
+void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 
 	Quaternion local_quaternion;
 	Transform *transform_world=&_this->transform;
@@ -190,7 +190,7 @@ void ECSGNode_UpdateSceneGraph(ECTransform *_this) {
 	_this->transform.quaternion = transform_world->quaternion = local_quaternion = Quaternion_FromEulerV3f(transform_local->rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
-	if(!ECSGNode_IsParentNodeRoot(_this)) { // Conditioned to transformations of m_scrParent....
+	if(!ECTransform_IsParentNodeRoot(_this)) { // Conditioned to transformations of m_scrParent....
 
 		ECTransform *parent=data->parent;
 		if(parent == NULL){
@@ -198,7 +198,7 @@ void ECSGNode_UpdateSceneGraph(ECTransform *_this) {
 			return;
 		}
 
-		//ECSGNodeData *parent_data = parent->data;
+		//ECTransformData *parent_data = parent->data;
 		Transform *parent_transform_world=&parent->transform;
 
 		// todo: quaternions
@@ -245,21 +245,21 @@ void ECSGNode_UpdateSceneGraph(ECTransform *_this) {
 	}
 }
 
-void ECSGNode_Update(ECTransform *_this) {
+void ECTransform_Update(ECTransform *_this) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	if(data->parent!=NULL){ // it has parent, is not update
 		return;
 	}
 
 
 	// update coord3d  scene graph...
-	ECSGNode_UpdateSceneGraph(_this);
-	ECSGNode_PostUpdate(_this);
+	ECTransform_UpdateSceneGraph(_this);
+	ECTransform_PostUpdate(_this);
 }
 
-Transform *ECSGNode_GetTransform(ECTransform *_this, TransformNodeType sgtransform){
-	ECSGNodeData *data=_this->data;
+Transform *ECTransform_GetTransform(ECTransform *_this, TransformNodeType sgtransform){
+	ECTransformData *data=_this->data;
 	if(sgtransform == TRANSFORM_NODE_TYPE_WORLD){
 		return &_this->transform;
 	}
@@ -269,13 +269,13 @@ Transform *ECSGNode_GetTransform(ECTransform *_this, TransformNodeType sgtransfo
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------v
 
-void 	 ECSGNode_Delete(ECTransform *_this){
+void 	 ECTransform_Delete(ECTransform *_this){
 
 	if(_this==NULL) return;
 
-	ECSGNodeData *_data = _this->data;
+	ECTransformData *_data = _this->data;
 
-	ECSGNode_ClearNodes(_this);
+	ECTransform_ClearNodes(_this);
 	List_Delete(_data->child_nodes);
 
 	FREE(_data);

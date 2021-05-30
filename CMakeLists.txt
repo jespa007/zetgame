@@ -312,7 +312,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	gui/zg_gui.c
 	
 	#-- ECS --
-	#ecs/zg_ecs.c
+	ecs/zg_ecs.c
 
 	
 	#-- Core --
