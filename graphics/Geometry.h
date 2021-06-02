@@ -28,6 +28,8 @@ struct Geometry{
 	uint32_t properties;
 };
 
+Geometry	* 	Geometry_Default(void); // it returns a quad
+
 Geometry	* 	Geometry_New(size_t index_count, uint32_t properties);
 Geometry	* 	Geometry_NewQuad(uint32_t properties);
 
@@ -39,5 +41,7 @@ void 			Geometry_SetMeshNormal(Geometry *geometry,BufferFloat mesh_normal);
 void 			Geometry_Draw(Geometry *geometry);
 
 void			Geometry_Delete(Geometry *geometry);
+
+void			Geometry_DeInit(void);
 
 #endif

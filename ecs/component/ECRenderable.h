@@ -4,7 +4,13 @@
 typedef struct ECRenderable ECRenderable;
 
 struct ECRenderable{
-	void *data;
+	Entity *entity;
+	Geometry *geometry;
+	Appearance *appearance;
 };
+
+ECRenderable *ECRenderable_New(Entity *_entity);
+void ECRenderable_Update(ECRenderable *_this);
+void ECRenderable_Delete(ECRenderable *_this);
 
 #endif

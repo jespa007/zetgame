@@ -17,19 +17,19 @@ typedef struct{
 
 	//ESSystem *es_system;
 	char *name; // name entity type
-	EcTypeComponent msk_ec_types; // it says the components it has this entity
+	ECComponent msk_ec_types; // it says the components it has this entity
 
 	short max_entities; // max entitites of this type (default 1)
 	short active_entities;
 	Entity **entities;
 
-	//uint8_t **ref_component_entity[EC_TYPE_COMPONENT_MAX]; // givent entity n it get the component from system
+	//uint8_t **ref_component_entity[EC_COMPONENT_MAX]; // givent entity n it get the component from system
 }EntityTypeData;
 
 typedef struct{
 	MapString *map_entity_types;
 	List *lst_entity_types;
-	ESSystemComponentData components[EC_TYPE_COMPONENT_MAX];
+	ESSystemComponentData components[EC_COMPONENT_MAX];
 }ESSystemData;
 
 //---------------------------------------------------
@@ -237,49 +237,49 @@ void ESSystem_Update(ESSystem * _this){
 
 	//----------------------------------------------------------------------------------
 	// UPDATE TRANSFORM COMPONENT
-	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_TRANSFORM];
+	ESSystemComponentData *component_data=&data->components[EC_COMPONENT_TRANSFORM];
 	uint8_t *ptr_data=component_data->ptr_data;
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
-		ECSGNode_Update(((ECTransform *)ptr_data));
+		ECTransform_Update(((ECTransform *)ptr_data));
 		ptr_data+=component_data->size_data;
 	}
 
 	//----------------------------------------------------------------------------------
 	// UPDATE RENDERABLE COMPONENTS
-	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_RENDERABLE];
-	uint8_t *ptr_data=component_data->ptr_data;
+	component_data=&data->components[EC_COMPONENT_RENDERABLE];
+	ptr_data=component_data->ptr_data;
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
 		ECRenderable_Update(((ECRenderable *)ptr_data));
 		ptr_data+=component_data->size_data;
 	}
 
-	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_VIEWER2D];
+	/*ESSystemComponentData *component_data=&data->components[EC_COMPONENT_VIEWER2D];
 	uint8_t *ptr_data=component_data->ptr_data;
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
 		ECViewer2d_Update(((ECViewer2d *)ptr_data));
 		ptr_data+=component_data->size_data;
 	}
 
-	ESSystemComponentData *component_data=&data->components[EC_TYPE_COMPONENT_TEXT2D];
+	ESSystemComponentData *component_data=&data->components[EC_COMPONENT_TEXT2D];
 	uint8_t *ptr_data=component_data->ptr_data;
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
 		ECText2d_Update(((ECText2d *)ptr_data));
 		ptr_data+=component_data->size_data;
-	}
+	}*/
 	//
 	//----------------------------------------------------------------------------------
 
 
 	// this function batches all components...
-	/*for(unsigned ec=0; ec < EC_TYPE_COMPONENT_MAX; ec++){
+	/*for(unsigned ec=0; ec < EC_COMPONENT_MAX; ec++){
 		ESSystemComponentData *component_data=&data->components[ec];
 		//unsigned it=component_data->n_active_elements;
 		uint8_t *ptr_data=component_data->ptr_data;
 
 		for(unsigned i=0; i < component_data->n_active_elements; i++){
 			switch(ec){
-				case EC_TYPE_COMPONENT_TRANSFORM: // it should update all root nodes
-					ECSGNode_Update(((ECTransform *)ptr_data));
+				case EC_COMPONENT_TRANSFORM: // it should update all root nodes
+					ECTransform_Update(((ECTransform *)ptr_data));
 					break;
 				default:
 					break;

@@ -2,6 +2,15 @@
 
 #include "Geometry_GL.c"
 
+static Geometry * g_geometry_default=NULL;
+
+Geometry	* Geometry_Default(void){
+	if(g_geometry_default == NULL){
+		g_geometry_default=Geometry_NewQuad(GEOMETRY_TEXTURE);
+	}
+
+	return g_geometry_default;
+}
 
 Geometry	* Geometry_New(size_t n_vertexs,uint32_t properties){
 
@@ -175,3 +184,10 @@ void	Geometry_Delete(Geometry *_this){
 
 }
 
+void			Geometry_DeInit(void){
+	if(g_geometry_default != NULL){
+		Geometry_Delete(g_geometry_default);
+	}
+
+	g_geometry_default=NULL;
+}

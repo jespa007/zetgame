@@ -522,13 +522,13 @@ void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2,  C
 }
 
 void Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance){
-	if(transform)			Transform_Apply(transform);
+	if(transform)	Transform_Apply(transform);
 	if(appearance)  Appearance_Apply(appearance);
 
-	if(geometry) Geometry_Draw(geometry);
+	if(geometry) 	Geometry_Draw(geometry);
 
-	if(appearance) Appearance_Restore(appearance);
-	if(transform) Transform_Restore(transform);
+	if(appearance) 	Appearance_Restore(appearance);
+	if(transform) 	Transform_Restore(transform);
 }
 
 
@@ -565,6 +565,7 @@ void Graphics_DeInit(void) {
 
 	IconManager_DeInit();
 	Texture_DeInit();
+	Geometry_DeInit();
 
 	TTFont_DeInit();
 	ViewPort_DeInit();

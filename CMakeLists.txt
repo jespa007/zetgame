@@ -361,11 +361,11 @@ add_executable(test_2d_textbox${POST_NAME}
 
 target_link_libraries(test_2d_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
-#add_executable(test_2d_scenegraph${POST_NAME} 
-#	${PROJECT_SOURCE_DIR}/test/test_2d_scenegraph.c
-#)
+add_executable(test_2d_scenegraph${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/test/test_2d_scenegraph.c
+)
 
-#target_link_libraries(test_2d_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_viewport.c

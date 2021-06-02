@@ -3,6 +3,7 @@
 
 
 
+#include "Scene.c"
 
 
 //#include "scenegraph/2d/SGTextbox2d.c"

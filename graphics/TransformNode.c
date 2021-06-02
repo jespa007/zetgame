@@ -7,12 +7,12 @@ typedef struct{
 	Transform 	transform_default;
 	Transform 	*transform_local;
 	uint16_t	transform_attributes;
-}ECSGNodeData;
+}ECTransformData;
 
 void SetParent(TransformNode *_this, TransformNode *_parent);
 
 void ClearChilds(TransformNode * node){
-	ECSGNodeData *data=node->data;
+	ECTransformData *data=node->data;
 	for(unsigned i = 0; i < data->child_nodes->count; i++){
 		ClearChilds(data->child_nodes->items[i]);
 	}
@@ -25,7 +25,7 @@ void ClearChilds(TransformNode * node){
 TransformNode * New(void){
 
 	TransformNode * sg_node = NEW(TransformNode);
-	ECSGNodeData *data= NEW(ECSGNodeData);
+	ECTransformData *data= NEW(ECTransformData);
 	sg_node->data=data;
 
 	data->transform_local=&data->transform_default;
@@ -38,7 +38,7 @@ TransformNode * New(void){
 			| 	TRANSFORM_TRANSLATE
 			|	TRANSFORM_ROTATE;
 
-	//sg_node->sgnode_type=ECSGNodeTypeNode;
+	//sg_node->sgnode_type=ECTransformTypeNode;
 
 	return sg_node;
 }
@@ -48,7 +48,7 @@ void ClearNodes(TransformNode *_this){
 
 	if(_this == NULL) return;
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 
 
 	for(unsigned i=0; i < data->child_nodes->count; i++){
@@ -63,9 +63,9 @@ void SetTranslate3f(TransformNode *_this,float x, float y, float z){
 }
 
 bool IsParentNodeRoot(TransformNode *_this){
-	ECSGNodeData *data=_this->data;
+	ECTransformData *data=_this->data;
 	if(data->parent != NULL){
-		ECSGNodeData *parent_data = data->parent->data;
+		ECTransformData *parent_data = data->parent->data;
 
 		return (parent_data->parent==NULL);
 
@@ -76,7 +76,7 @@ bool IsParentNodeRoot(TransformNode *_this){
 }
 
 void SetPosition2i(TransformNode *_this,int x, int y){
-	ECSGNodeData *data=_this->data;
+	ECTransformData *data=_this->data;
 	Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
 	Transform_SetPosition2i(data->transform_local,v.x,v.y);
 }
@@ -87,37 +87,37 @@ Vector2i	GetPosition2i(TransformNode *_this){
 }
 
 void SetRotateZ(TransformNode *_this,float z){
-	ECSGNodeData *data=_this->data;
+	ECTransformData *data=_this->data;
 	Transform_SetRotateZ(data->transform_local,z);
 }
 
 void SetRotate3f(TransformNode *_this,float x, float y, float z){
-	ECSGNodeData *data=_this->data;
+	ECTransformData *data=_this->data;
 	Transform_SetRotate3f(data->transform_local,x,y,z);
 }
 
 void SetScale3f(TransformNode *_this,float x, float y, float z){
-	ECSGNodeData *data=_this->data;
+	ECTransformData *data=_this->data;
 	Transform_SetScale3f(data->transform_local,x,y,z);
 }
 
 void	SetParent(TransformNode *_this, TransformNode *parent_node){
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	data->parent=parent_node;
 }
 
 TransformNode	*	GetParent(TransformNode *_this){
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	return data->parent;
 }
 
 
 bool DetachNode(TransformNode *_this,TransformNode * obj) {
 
-	ECSGNodeData *obj_data = obj->data;
+	ECTransformData *obj_data = obj->data;
 
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
-		ECSGNodeData *parent_data = obj_data->parent->data;
+		ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
 			Log_Error("Cannot add node child because cannot deattach from parent");
 			return false;
@@ -133,7 +133,7 @@ bool DetachNode(TransformNode *_this,TransformNode * obj) {
 
 bool AttachNode(TransformNode *_this,TransformNode * obj) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	if(obj == NULL){
 		return false;
 	}
@@ -161,7 +161,7 @@ bool Detach(TransformNode *_this){
 
 void UpdateChilds(TransformNode *_this) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	TransformNode *o;
 	//-------- UPDATE TRANFORMS OF THEIR CHILDS ----
 	for(unsigned i=0; i < data->child_nodes->count; i++) {
@@ -177,7 +177,7 @@ void PostUpdate(TransformNode *_this){
 //--------------------------- MAIN UPDATE SCENEGRAPH ----------------------------
 void UpdateSceneGraph(TransformNode *_this) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 
 	Quaternion local_quaternion;
 	Transform *transform_world=&_this->transform;
@@ -198,7 +198,7 @@ void UpdateSceneGraph(TransformNode *_this) {
 			return;
 		}
 
-		//ECSGNodeData *parent_data = parent->data;
+		//ECTransformData *parent_data = parent->data;
 		Transform *parent_transform_world=&parent->transform;
 
 		// todo: quaternions
@@ -247,7 +247,7 @@ void UpdateSceneGraph(TransformNode *_this) {
 
 void Update(TransformNode *_this) {
 
-	ECSGNodeData *data = _this->data;
+	ECTransformData *data = _this->data;
 	if(data->parent!=NULL){ // it has parent, is not update
 		return;
 	}
@@ -259,7 +259,7 @@ void Update(TransformNode *_this) {
 }
 
 Transform *GetTransform(TransformNode *_this, TransformNodeType sgtransform){
-	ECSGNodeData *data=_this->data;
+	ECTransformData *data=_this->data;
 	if(sgtransform == TRANSFORM_NODE_TYPE_WORLD){
 		return &_this->transform;
 	}
@@ -273,7 +273,7 @@ void 	 Delete(TransformNode *_this){
 
 	if(_this==NULL) return;
 
-	ECSGNodeData *_data = _this->data;
+	ECTransformData *_data = _this->data;
 
 	ClearNodes(_this);
 	List_Delete(_data->child_nodes);

@@ -12,7 +12,7 @@ typedef struct{
 	List 		* 	animations;
 	List 		* 	movie_players;
 	List 		* 	sprite2d_emitters;
-	SGNode		*	node_root;
+	//SGNode		*	node_root;
 	//SceneState  * 	current_state;
 	//List		*	scene_states;
 	SceneStatus 	scene_status;
@@ -31,7 +31,7 @@ Scene * Scene_New(void){
 	scene->data=data;
 
 
-	scene->sg_render=SGRender_New();
+	//scene->sg_render=SGRender_New();
 	//data->node_root=SGNode_New();
 
 	//SGNode_SetScene(data->node_root,scene);
@@ -178,16 +178,16 @@ void Scene_Update(Scene *_this){
 
 	if(data->scene_status != SCENE_STATUS_RUNNING) return;
 
-	SGRender_Begin(_this->sg_render,NULL);
+	//SGRender_Begin(_this->sg_render,NULL);
 
 	_this->current_time = SDL_GetTicks() - data->start_time;
 
 	for(unsigned i=0; i < data->animations->count;i++){
-		Animation_Update(data->animations->items[i]);
+		Animation_Update(data->animations->items[i],_this->current_time);
 	}
 
 
-	SGNode_Update(data->node_root);
+	//SGNode_Update(data->node_root);
 
 	/*if(data->current_state != NULL){
 		SceneState_Update(data->current_state);
@@ -198,7 +198,7 @@ void Scene_Update(Scene *_this){
 	}
 
 
-	SGRender_End(_this->sg_render);
+	//SGRender_End(_this->sg_render);
 }
 
 

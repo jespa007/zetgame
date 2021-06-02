@@ -6,12 +6,14 @@
 
 
 #include "component/ECComponent.h"
+#include "component/ECTransform.h"
+#include "component/ECRenderable.h"
+
 #include "component/ECTweenTransform.h"
 #include "component/ECCamera.h"
-#include "component/ECTransform.h"
 #include "component/ECViewer2d.h"
 #include "component/ECText2d.h"
-#include "component/ECRenderable.h"
+
 #include "entity/Entity.h"
 //#include "entity/EntityType.h"
 #include "system/ESSystem.h"

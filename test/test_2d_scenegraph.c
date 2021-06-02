@@ -181,7 +181,7 @@ int main(int argc, char * argv[]){
 	ZetGame_Init(&setup);
 
 	Scene * scene = Scene_New();
-	SGViewer2d *sg_image_background=NULL
+	Entity *sg_image_background=NULL
 				,*sg_image_sun=NULL
 				,*sg_image_car_part1=NULL
 				,*sg_image_car_part2=NULL
@@ -224,9 +224,8 @@ int main(int argc, char * argv[]){
 
 	// ground...
 
-	List_Add(sg_viewers2d,sg_image_background=SGViewer2d_New());
-	Scene_AttachNode(scene,sg_image_background->node);
-	TransformNode_SetPosition2i(sg_image_background->node,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	sg_image_background=Scene_NewEntity(scene,"sg_image_background");//SGViewer2d_New());
+	Entity_SetPosition2i(sg_image_background,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
 
 	sg_image_background->node->appearance->texture=text_ground;
 	SGViewer2d_SetDimensions(sg_image_background,Graphics_GetWidth(), Graphics_GetHeight());
@@ -235,22 +234,21 @@ int main(int argc, char * argv[]){
 	// SETUP FAN...
 	for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		SGViewer2d *sg_image_fan_base=NULL;
+		Entity *sg_image_fan_base=NULL;
 		TransformNode *sg_node_base_van=NULL;
 
-		List_Add(sg_viewers2d,sg_image_fan_base=SGViewer2d_New());
-		Scene_AttachNode(scene,sg_image_fan_base->node);
+		sg_image_fan_base=Scene_NewEntity(scene,"sg_image_fan_base");
 
 		// by default it sets default texture... set to no paint
 		//sg_image_fan_base->node->appearance->texture=NULL;
 
-		TransformNode_SetPosition2i(sg_image_fan_base->node,info->x,info->y);
-		SGViewer2d_SetDimensions(sg_image_fan_base,info->w,info->h);
+		Entity_SetPosition2i(sg_image_fan_base,info->x,info->y);
+		Entity_SetDimensions(sg_image_fan_base,info->w,info->h);
 
 		// van base
 		List_Add(sg_nodes,sg_node_base_van=TransformNode_New());
-		TransformNode_SetPosition2i(sg_node_base_van,info->vane_disp.x,info->vane_disp.y);
-		TransformNode_AttachNode(sg_image_fan_base->node,sg_node_base_van);
+		Entity_SetPosition2i(sg_node_base_van,info->vane_disp.x,info->vane_disp.y);
+		Entity_AttachNode(sg_image_fan_base,sg_node_base_van);
 
 		// set animation rotate
 		TransformAnimation_AddTransform(transform_ani_fan,sg_node_base_van->transform);
