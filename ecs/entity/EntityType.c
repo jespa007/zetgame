@@ -37,14 +37,14 @@ typedef struct{
 	short active_entities;
 	ESSystem *es_system;
 	char *name; // name entity type
-	ECComponent msk_ec_types; // it says the components it has this entity
+	EntityComponent msk_ec_types; // it says the components it has this entity
 
-	short *component_entity[EC_COMPONENT_MAX]; // givent entity n it get the component from system
+	short *component_entity[ENTITY_COMPONENT_MAX]; // givent entity n it get the component from system
 
 }EntityTypeData;
 
 
-void  EntityType_New(ESSystem *es_system, EntityTypeId entity_id, const char *name,int max,ECComponent msk_ec_types){
+void  EntityType_New(ESSystem *es_system, EntityTypeId entity_id, const char *name,int max,EntityComponent msk_ec_types){
 	EntityType * entity_type=NEW(EntityType);
 	EntityTypeData *data=NEW(EntityTypeData);
 	entity_type->data=data;

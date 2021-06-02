@@ -22,8 +22,6 @@ void Entity_DeAttachComponent(Entity *_this, int idx_component);
 void * Entity_GetComponent(Entity *_this, int idx_component);
 
 // Helper functions
-void Entity_SetTranslate3f(Entity *_this,float x, float y, float z);
-Vector3f Entity_GetTranslate(Entity *_this,TransformNodeType transform_type);
 
 void Entity_Delete(Entity *_this);
 

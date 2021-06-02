@@ -10,6 +10,7 @@ struct ECRenderable{
 };
 
 ECRenderable *ECRenderable_New(Entity *_entity);
+//void ECRenderable_SetQuadPixels(uint16 width, uint16 height);
 void ECRenderable_Update(ECRenderable *_this);
 void ECRenderable_Delete(ECRenderable *_this);
 
