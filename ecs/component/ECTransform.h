@@ -1,12 +1,12 @@
-#ifndef __EC_TRANSFORM_H__
-#define __EC_TRANSFORM_H__
+#ifndef _EC_TRANSFORM_H__
+#define _EC_TRANSFORM_H__
 
 typedef struct ECTransform 	ECTransform;
 typedef struct Entity		Entity;
 
-#define EC_TRANSFORM_SCALE			0x0001
-#define EC_TRANSFORM_TRANSLATE		0x0002
-#define EC_TRANSFORM_ROTATE			0x0004
+#define ECS_COMPONENT_TRANSFORM_SCALE			0x0001
+#define ECS_COMPONENT_TRANSFORM_TRANSLATE		0x0002
+#define ECS_COMPONENT_TRANSFORM_ROTATE			0x0004
 
 
 struct ECTransform{
@@ -16,8 +16,8 @@ struct ECTransform{
 };
 
 ECTransform *	ECTransform_New(Entity *_entity);
-bool			ECTransform_AttachNode(ECTransform *_this, ECTransform *node);
-bool			ECTransform_DetachNode(ECTransform *_this, ECTransform *node);
+bool			ECTransform_Attach(ECTransform *_this, ECTransform *node);
+bool			ECTransform_Detach(ECTransform *_this, ECTransform *node);
 void 			ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z);
 
 // 2D Stuff

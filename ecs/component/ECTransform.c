@@ -35,9 +35,9 @@ ECTransform * ECTransform_New(Entity *_entity){
 
 	// by default...
 	data->transform_attributes =
-				EC_TRANSFORM_SCALE
-			| 	EC_TRANSFORM_TRANSLATE
-			|	EC_TRANSFORM_ROTATE;
+				ECS_COMPONENT_TRANSFORM_SCALE
+			| 	ECS_COMPONENT_TRANSFORM_TRANSLATE
+			|	ECS_COMPONENT_TRANSFORM_ROTATE;
 
 	//sg_node->sgnode_type=ECTransformTypeNode;
 
@@ -113,7 +113,7 @@ ECTransform	*	ECTransform_GetParent(ECTransform *_this){
 }
 
 
-bool ECTransform_DetachNode(ECTransform *_this,ECTransform * obj) {
+bool ECTransform_Detach(ECTransform *_this,ECTransform * obj) {
 
 	ECTransformData *obj_data = obj->data;
 
@@ -132,14 +132,14 @@ bool ECTransform_DetachNode(ECTransform *_this,ECTransform * obj) {
 
 }
 
-bool ECTransform_AttachNode(ECTransform *_this,ECTransform * obj) {
+bool ECTransform_Attach(ECTransform *_this,ECTransform * obj) {
 
 	ECTransformData *data = _this->data;
 	if(obj == NULL){
 		return false;
 	}
 
-	if(!ECTransform_DetachNode(_this,obj)){
+	if(!ECTransform_Detach(_this,obj)){
 		return false;
 	}
 
@@ -148,17 +148,17 @@ bool ECTransform_AttachNode(ECTransform *_this,ECTransform * obj) {
 
 	return false;
 }
-
+/*
 bool ECTransform_Detach(ECTransform *_this){
 
 	ECTransform * parent = ECTransform_GetParent(_this);
 	if(parent != NULL){
-		ECTransform_DetachNode(parent,_this);
+		ECTransform_Detach(parent,_this);
 	}
 
 	return true;
 
-}
+}*/
 
 void ECTransform_UpdateChilds(ECTransform *_this) {
 
@@ -209,12 +209,12 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 		Vector3f transform_child_from_parent=transform_local->translate;
 
 		// the is propagated ...
-		if(data->transform_attributes & EC_TRANSFORM_SCALE) {
+		if(data->transform_attributes & ECS_COMPONENT_TRANSFORM_SCALE) {
 			// transforms the scale ...
 			transform_world->scale=Vector3f_Mul(transform_world->scale,parent_transform_world->scale);
 		}
 		// Set origin translation ...
-		if(data->transform_attributes & EC_TRANSFORM_TRANSLATE){
+		if(data->transform_attributes & ECS_COMPONENT_TRANSFORM_TRANSLATE){
 			transform_world->translate=parent_transform_world->translate;
 
 			// Scale the translation...
@@ -240,7 +240,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 			transform_absolute->translate.y+=origin.y;
 		}*/
 
-		if((data->transform_attributes & EC_TRANSFORM_ROTATE)){
+		if((data->transform_attributes & ECS_COMPONENT_TRANSFORM_ROTATE)){
 			transform_world->quaternion=local_quaternion;
 		}
 	}

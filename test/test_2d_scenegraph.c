@@ -167,10 +167,17 @@ int main(int argc, char * argv[]){
 		};
 
 
+	EntityComponent entity_components_sprite[]={
+			ENTITY_COMPONENT_SPRITE_RENDERER
+	};
+
+
+
 	//----------------------------------------------------------------------------------------------------
 
 	//MapString *map_textures = MapString_New();
 	//map_textures->on_delete=MS_OnDeleteTexture;
+	size_t entity_components_sprite_len=ARRAY_SIZE(entity_components_sprite);
 	ZetGameSetupParams setup;
 	memset(&setup,0,sizeof(setup));
 	setup.width=640;
@@ -181,16 +188,16 @@ int main(int argc, char * argv[]){
 	ZetGame_Init(&setup);
 
 	Scene * scene = Scene_New();
-	Entity *sg_image_background=NULL
-				,*sg_image_sun=NULL
-				,*sg_image_car_part1=NULL
-				,*sg_image_car_part2=NULL
-				,*sg_image_car_left_wheel=NULL
-				,*sg_image_car_right_wheel=NULL;
-	TransformNode *sg_base_car=NULL;
+	Entity *spr_image_background=NULL
+				,*spr_image_sun=NULL
+				,*spr_image_car_part1=NULL
+				,*spr_image_car_part2=NULL
+				,*spr_image_car_left_wheel=NULL
+				,*spr_image_car_right_wheel=NULL;
+	Entity *spr_base_car=NULL;
 
-	List *sg_viewers2d = List_New(); // list of graph nodes...
-	List *sg_nodes = List_New(); // list of graph nodes...
+	//List *spr_viewers2d = List_New(); // list of graph nodes...
+	//List *spr_s = List_New(); // list of graph nodes...
 
 
 
@@ -222,51 +229,53 @@ int main(int argc, char * argv[]){
 		MapString_SetValue(map_textures,info->name,Texture_Load(info->name));
 	}*/
 
-	// ground...
+	// configure entities...
+	Scene_NewEntityType(scene,"sprite2d",20,entity_components_sprite,entity_components_sprite_len);
 
-	sg_image_background=Scene_NewEntity(scene,"sg_image_background");//SGViewer2d_New());
-	Entity_SetPosition2i(sg_image_background,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	// ground
+	spr_image_background=Scene_NewEntity(scene,"sprite2d");//SGViewer2d_New());
+	EntityTransform_SetPosition2i(spr_image_background,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
 
-	sg_image_background->node->appearance->texture=text_ground;
-	SGViewer2d_SetDimensions(sg_image_background,Graphics_GetWidth(), Graphics_GetHeight());
+	EntitySpriteRenderer_SetTexture(spr_image_background,text_ground);
+	EntitySpriteRenderer_SetDimensions(spr_image_background,Graphics_GetWidth(), Graphics_GetHeight());
 
 	//----------------------------------
 	// SETUP FAN...
 	for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		Entity *sg_image_fan_base=NULL;
-		TransformNode *sg_node_base_van=NULL;
+		Entity *spr_image_fan_base=NULL;
+		Entity *spr__base_van=NULL;
 
-		sg_image_fan_base=Scene_NewEntity(scene,"sg_image_fan_base");
+		spr_image_fan_base=Scene_NewEntity(scene,"spr_image_fan_base");
 
 		// by default it sets default texture... set to no paint
-		//sg_image_fan_base->node->appearance->texture=NULL;
+		//spr_image_fan_base->node->appearance->texture=NULL;
 
-		Entity_SetPosition2i(sg_image_fan_base,info->x,info->y);
-		Entity_SetDimensions(sg_image_fan_base,info->w,info->h);
+		EntityTransform_SetPosition2i(spr_image_fan_base,info->x,info->y);
+		EntitySpriteRenderer_SetDimensions(spr_image_fan_base,info->w,info->h);
 
 		// van base
-		List_Add(sg_nodes,sg_node_base_van=TransformNode_New());
-		Entity_SetPosition2i(sg_node_base_van,info->vane_disp.x,info->vane_disp.y);
-		Entity_AttachNode(sg_image_fan_base,sg_node_base_van);
+		spr__base_van=Scene_NewEntity(scene,"sprite2d");
+		EntityTransform_SetPosition2i(spr__base_van,info->vane_disp.x,info->vane_disp.y);
+		EntityTransform_Attach(spr_image_fan_base,spr__base_van);
 
 		// set animation rotate
-		TransformAnimation_AddTransform(transform_ani_fan,sg_node_base_van->transform);
+		TransformAnimation_AddTransform(transform_ani_fan,spr__base_van->transform);
 
 		// setup vans
 		for(unsigned j=0; j < 3; j++){
-			SGViewer2d *sg_image_van=NULL;
-			List_Add(sg_viewers2d,sg_image_van=SGViewer2d_New());
+			Entity *spr_image_van=Scene_NewEntity(scene,"sprite2d");
 
-			TransformNode_SetPosition2i(sg_image_van->node,info->vane_disp.info_vane[j].x,info->vane_disp.info_vane[j].y);
-			TransformNode_SetRotate3f(sg_image_van->node,0,0,info->vane_disp.info_vane[j].rot);
-			SGViewer2d_SetDimensions(sg_image_van,62,9);
 
-			sg_image_van->node->appearance->texture=text_vane;
+			EntityTransform_SetPosition2i(spr_image_van,info->vane_disp.info_vane[j].x,info->vane_disp.info_vane[j].y);
+			EntityTransform_SetRotate3f(spr_image_van,0,0,info->vane_disp.info_vane[j].rot);
+			EntitySpriteRenderer_SetDimensions(spr_image_van,62,9);
 
-			TransformNode_AttachNode(sg_node_base_van,sg_image_van->node);
+			EntitySpriteRenderer_SetTexture(spr_image_van,text_vane);
+
+			EntityTransform_Attach(spr__base_van,spr_image_van);
 		}
-		//sg_image_background->node->appearance->texture=text_ground;
+		//spr_image_background->node->appearance->texture=text_ground;
 	}
 
 	// setup fan animation...
@@ -285,31 +294,37 @@ int main(int argc, char * argv[]){
 
 	//----
 	// SETUP CAR
-	List_Add(sg_nodes,sg_base_car=TransformNode_New());
-	List_Add(sg_viewers2d,sg_image_car_part1=SGViewer2d_New());
-	List_Add(sg_viewers2d,sg_image_car_part2=SGViewer2d_New());
-	List_Add(sg_viewers2d,sg_image_car_left_wheel=SGViewer2d_New());
-	List_Add(sg_viewers2d,sg_image_car_right_wheel=SGViewer2d_New());
+	spr_base_car=Scene_NewEntity(scene,"sprite2d");
+	spr_image_car_part1=Scene_NewEntity(scene,"sprite2d");
+	spr_image_car_part2=Scene_NewEntity(scene,"sprite2d");
+	spr_image_car_left_wheel=Scene_NewEntity(scene,"sprite2d");
+	spr_image_car_right_wheel=Scene_NewEntity(scene,"sprite2d");
 
-	Scene_AttachNode(scene,sg_base_car);
+	/*List_Add(spr_s,spr_base_car=TransformNode_New());
+	List_Add(spr_viewers2d,spr_image_car_part1=SGViewer2d_New());
+	List_Add(spr_viewers2d,spr_image_car_part2=SGViewer2d_New());
+	List_Add(spr_viewers2d,spr_image_car_left_wheel=SGViewer2d_New());
+	List_Add(spr_viewers2d,spr_image_car_right_wheel=SGViewer2d_New());*/
 
-	TransformNode_AttachNode(sg_base_car,sg_image_car_part1->node);
-	TransformNode_SetPosition2i(sg_image_car_part1->node,car_info.part1.x,car_info.part1.y);
-	SGViewer2d_SetDimensions(sg_image_car_part1,car_info.part1.w,car_info.part1.h);
+	//Scene_AttachNode(scene,spr_base_car);
 
-	TransformNode_AttachNode(sg_base_car,sg_image_car_part2->node);
-	TransformNode_SetPosition2i(sg_image_car_part2->node,car_info.part2.x,car_info.part2.y);
-	SGViewer2d_SetDimensions(sg_image_car_part2,car_info.part2.w,car_info.part2.h);
+	EntityTransform_AttachNode(spr_base_car,spr_image_car_part1);
+	EntityTransform_SetPosition2i(spr_image_car_part1,car_info.part1.x,car_info.part1.y);
+	EntitySpriteRenderer_SetDimensions(spr_image_car_part1,car_info.part1.w,car_info.part1.h);
 
-	TransformNode_AttachNode(sg_base_car,sg_image_car_left_wheel->node);
-	TransformNode_SetPosition2i(sg_image_car_left_wheel->node,car_info.wheel[0].x,car_info.wheel[0].y);
-	SGViewer2d_SetDimensions(sg_image_car_left_wheel,car_info.wheel[0].w,car_info.wheel[0].h);
-	sg_image_car_left_wheel->node->appearance->texture=text_wheel;
+	EntityTransform_AttachNode(spr_base_car,spr_image_car_part2);
+	EntityTransform_SetPosition2i(spr_image_car_part2,car_info.part2.x,car_info.part2.y);
+	EntitySpriteRenderer_SetDimensions(spr_image_car_part2,car_info.part2.w,car_info.part2.h);
 
-	TransformNode_AttachNode(sg_base_car,sg_image_car_right_wheel->node);
-	TransformNode_SetPosition2i(sg_image_car_right_wheel->node,car_info.wheel[1].x,car_info.wheel[1].y);
-	SGViewer2d_SetDimensions(sg_image_car_right_wheel,car_info.wheel[1].w,car_info.wheel[1].h);
-	sg_image_car_right_wheel->node->appearance->texture=text_wheel;
+	EntityTransform_Attach(spr_base_car,spr_image_car_left_wheel);
+	EntityTransform_SetPosition2i(spr_image_car_left_wheel,car_info.wheel[0].x,car_info.wheel[0].y);
+	EntitySpriteRenderer_SetDimensions(spr_image_car_left_wheel,car_info.wheel[0].w,car_info.wheel[0].h);
+	EntitySpriteRenderer_SetTexture(spr_image_car_left_wheel,text_wheel);
+
+	EntityTransform_AttachNode(spr_base_car,spr_image_car_right_wheel);
+	EntityTransform_SetPosition2i(spr_image_car_right_wheel,car_info.wheel[1].x,car_info.wheel[1].y);
+	EntitySpriteRenderer_SetDimensions(spr_image_car_right_wheel,car_info.wheel[1].w,car_info.wheel[1].h);
+	EntitySpriteRenderer_SetTexture(spr_image_car_right_wheel,text_wheel);
 
 	TransformAction_SetKeyFramesTranslate(
 		 transform_act_car_x
@@ -331,20 +346,21 @@ int main(int argc, char * argv[]){
 	TransformAnimation_AddAction(transform_ani_car,transform_act_car_y,true);
 	Scene_AttachAnimation(scene,transform_ani_car->animation);
 
-	TransformAnimation_AddTransform(transform_ani_car,sg_base_car->transform);
+	TransformAnimation_AddTransform(transform_ani_car,spr_base_car->transform);
 
 	//----
 	// SUN
 
-	List_Add(sg_viewers2d,sg_image_sun=SGViewer2d_New());
-	Scene_AttachNode(scene,sg_image_sun->node);
-	TransformNode_SetPosition2i(sg_image_sun->node,Graphics_GetWidth()-200,100);
+	spr_image_sun=Scene_NewEntity(scene,"sprite2d");
+	//Scene_AttachNode(scene,spr_image_sun);
+	EntityTransform_SetPosition2i(spr_image_sun,Graphics_GetWidth()-200,100);
 
-	sg_image_sun->node->appearance->texture=text_sun;
-	SGViewer2d_SetDimensions(sg_image_sun,100,100);
+	EntitySpriteRenderer_SetTexture(spr_image_sun,text_sun);
+	EntitySpriteRenderer_SetDimensions(spr_image_sun,100,100);
 
-	MaterialAnimation_AddMaterial(mat_ani_sun,sg_image_sun->node->appearance->material);
-	sg_image_sun->node->appearance->material->color.a=ALPHA_VALUE_TRANSPARENT;
+	MaterialAnimation_AddMaterial(mat_ani_sun,spr_image_sun->node->appearance->material);
+
+	EntitySpriteRenderer_SetAlpha(spr_image_sun,ALPHA_VALUE_TRANSPARENT);
 
 
 	// ani
@@ -384,7 +400,7 @@ int main(int argc, char * argv[]){
 		}
 
 		Scene_Update(scene);
-		//Graphics_Draw(sg_image_background->node->transform,sg_image_background->node->geometry,sg_image_background->node->appearance);
+		//Graphics_Draw(spr_image_background->node->transform,spr_image_background->node->geometry,spr_image_background->node->appearance);
 
 		if(Input_IsMouseButtonPressed()){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
@@ -407,19 +423,19 @@ int main(int argc, char * argv[]){
 	Texture_Delete(text_vane);
 	Texture_Delete(text_wheel);
 
-	for(unsigned i = 0; i < sg_viewers2d->count; i++){
-		SGViewer2d *sg_viewer2d=sg_viewers2d->items[i];
-		SGViewer2d_Delete(sg_viewer2d);
+	/*for(unsigned i = 0; i < spr_viewers2d->count; i++){
+		SGViewer2d *spr_viewer2d=spr_viewers2d->items[i];
+		SGViewer2d_Delete(spr_viewer2d);
 	}
 
-	List_Delete(sg_viewers2d);
+	List_Delete(spr_viewers2d);*/
 
-	for(unsigned i = 0; i < sg_nodes->count; i++){
-		TransformNode *sg_node=sg_nodes->items[i];
-		TransformNode_Delete(sg_node);
+	/*for(unsigned i = 0; i < spr_s->count; i++){
+		TransformNode *spr_=spr_s->items[i];
+		TransformNode_Delete(spr_);
 	}
 
-	List_Delete(sg_nodes);
+	List_Delete(spr_s);*/
 
 	TransformAnimation_Delete(transform_ani_fan);
 	TransformAction_Delete(transform_act_fan);

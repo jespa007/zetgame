@@ -16,6 +16,7 @@ typedef struct{
 	//SceneState  * 	current_state;
 	//List		*	scene_states;
 	SceneStatus 	scene_status;
+	ESSystem		*es_system;
 
 /*	List * appearances;
 	List * transforms3d;
@@ -30,7 +31,7 @@ Scene * Scene_New(void){
 	SceneData *data=NEW(SceneData);
 	scene->data=data;
 
-
+	data->es_system=ESSystem_New();
 	//scene->sg_render=SGRender_New();
 	//data->node_root=SGNode_New();
 
@@ -114,6 +115,17 @@ void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player){
 
 	List_Add(data->movie_players,movie_player);
 }
+
+void Scene_NewEntityType(Scene *_this, const char *_str_entity_type,size_t max_entities,EntityComponent * entity_components, size_t entity_components_len){
+	SceneData *data=_this->data;
+	ESSystem_NewEntityType(data->es_system,_str_entity_type,max_entities,entity_components,entity_components_len);
+}
+
+Entity * Scene_NewEntity(Scene *_this, const char *_str_entity_type){
+	SceneData *data=_this->data;
+	return ESSystem_NewEntity(data->es_system,_str_entity_type);
+}
+
 
 /*
 void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter){
@@ -204,7 +216,7 @@ void Scene_Update(Scene *_this){
 
 void Scene_Delete(Scene *_this){
 	if(_this == NULL) return;
-	SceneData *_data = _this->data;
+	SceneData *data = _this->data;
 
 	//SGRender_Delete(_this->sg_render);
 	//SGNode_Delete(_data->node_root);
@@ -215,12 +227,13 @@ void Scene_Delete(Scene *_this){
 	}
 
 	List_Delete(_data->scene_states);*/
+	ESSystem_Delete(data->es_system);
 
-	List_Delete(_data->animations);
-	List_Delete(_data->movie_players);
-	List_Delete(_data->sprite2d_emitters);
+	List_Delete(data->animations);
+	List_Delete(data->movie_players);
+	List_Delete(data->sprite2d_emitters);
 
 
-	FREE(_data);
+	FREE(data);
 	FREE(_this);
 }

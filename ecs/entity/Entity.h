@@ -1,5 +1,5 @@
-#ifndef __ENTITY_H__
-#define __ENTITY_H__
+#ifndef __ECS_ENTITY_H__
+#define __ECS_ENTITY_H__
 
 typedef struct Entity Entity;
 

@@ -7,9 +7,9 @@ struct ESSystem{
 	void *data;
 };
 
-ESSystem 	*	ESSystem_New(void);
-void  			ESSystem_NewEntityType(ESSystem *_this, const char *_str_entity_type,size_t max_entities,uint32_t msk_ec_types);
-Entity  	*	ESSystem_NewEntity(ESSystem *_this,const char *_str_entity_type);
+ESSystem 	*		ESSystem_New(void);
+void  				ESSystem_NewEntityType(ESSystem *_this, const char *_str_entity_type,size_t max_entities,EntityComponent * entity_components, size_t entity_components_len);
+Entity  	*		ESSystem_NewEntity(ESSystem *_this,const char *_str_entity_type);
 //uint8_t *ESSystem_NewComponent(ESSystem *_this,int idx_component);
 /*void  			ESSystem_RemoveEntity(ESSystem * _this, Entity entity);
 

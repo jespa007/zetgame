@@ -17,7 +17,7 @@ typedef struct{
 
 	//ESSystem *es_system;
 	char *name; // name entity type
-	EntityComponent msk_ec_types; // it says the components it has this entity
+	bool entity_components[ENTITY_COMPONENT_MAX]; // it says the components it has this entity
 
 	short max_entities; // max entitites of this type (default 1)
 	short active_entities;
@@ -67,28 +67,33 @@ void ESSystem_ExtendComponent(ESSystem *_this,int idx_component, int extend){
 	component_data->n_elements=n_elements;
 }
 
-void  ESSystem_NewEntityType(ESSystem *_this, const char *_str_entity_type,size_t max_entities,uint32_t msk_ec_types){
+void  ESSystem_NewEntityType(ESSystem *_this
+		, const char *_str_entity_type
+		,size_t max_entities
+		,EntityComponent *entity_components
+		, size_t entity_components_len){
 	ESSystemData *data=_this->data;
 	EntityTypeData *entity_type_data=NEW(EntityTypeData);
 
 	//entity_type_data->es_system=_this;
 	entity_type_data->max_entities=max_entities;
 	entity_type_data->active_entities=0;
-	entity_type_data->msk_ec_types=msk_ec_types;
+	//entity_type_data->entity_components=entity_components;
+	//entity_type_data->entity_components_len=entity_components_len;
+
 	entity_type_data->name=malloc(strlen(_str_entity_type)*sizeof(char)+1);
 	memset(entity_type_data->name,0,strlen(_str_entity_type)*sizeof(char)+1);
 	strcpy(entity_type_data->name,_str_entity_type);
 
-	uint32_t msk_ec_it=msk_ec_types;
-	uint32_t component_id=0;
+	//uint32_t msk_ec_it=msk_ec_types;
+	//uint32_t component_id=0;
 	// add components neededs for the type...
-	while(msk_ec_it>>component_id){
-
-		if(msk_ec_it & (msk_ec_it<<component_id)){ // extend component by the number of entities
-			ESSystem_ExtendComponent(_this,component_id,max_entities);
+	for(unsigned i=0; i < entity_components_len;i++){
+		short idx_ec=entity_components[i];
+		if(entity_type_data->entity_components[idx_ec]==false){
+			entity_type_data->entity_components[idx_ec]=true;
+			ESSystem_ExtendComponent(_this,idx_ec,max_entities);
 		}
-
-		component_id++;
 	};
 
 	List_Add(data->lst_entity_types,data);
@@ -113,22 +118,22 @@ Entity  *ESSystem_NewEntity(ESSystem *_this,const char *_str_entity_type){
 
 	Entity *entity=NULL;
 	if(entity_type_data->active_entities<entity_type_data->max_entities){
-		uint32_t msk_ec_it=entity_type_data->msk_ec_types;
-		uint32_t idx_component=0;
+		//uint32_t msk_ec_it=entity_type_data->msk_ec_types;
+		//uint32_t idx_component=0;
 		//uint16_t entity_id=entity_type_data->active_entities++;
 		//Entity entity=entity_type_data->id|entity_id;
 		entity=entity_type_data->entities[entity_type_data->active_entities];
 		Entity_Reset(entity);
 
-		while(msk_ec_it>>idx_component){ // attach all components
-			uint32_t msk_component=(msk_ec_it & (msk_ec_it<<idx_component));
-			if(msk_component){ // attach component to entity
+		for(unsigned idx_component=0; idx_component < ENTITY_COMPONENT_MAX; idx_component++){ //(msk_ec_it>>idx_component){ // attach all components
+			//uint32_t msk_component=(msk_ec_it & (msk_ec_it<<idx_component));
+			if(entity_type_data->entity_components[idx_component]){// msk_component){ // attach component to entity
 
 				uint8_t *ref_component=ESSystem_NewComponent(_this,idx_component); // request free & set default values component
 				//entity_type_data->ref_component_entity[idx_component][entity_id]=ref_component; // attach component to entity
 				Entity_AttachComponent(entity,idx_component,ref_component);
 			}
-			idx_component++;
+			//idx_component++;
 		}
 
 		entity_type_data->active_entities++;
@@ -246,10 +251,10 @@ void ESSystem_Update(ESSystem * _this){
 
 	//----------------------------------------------------------------------------------
 	// UPDATE RENDERABLE COMPONENTS
-	component_data=&data->components[ENTITY_COMPONENT_RENDERABLE];
+	component_data=&data->components[ENTITY_COMPONENT_SPRITE_RENDERER];
 	ptr_data=component_data->ptr_data;
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
-		ECRenderable_Update(((ECRenderable *)ptr_data));
+		ECSpriteRenderer_Update(((ECSpriteRenderer *)ptr_data));
 		ptr_data+=component_data->size_data;
 	}
 
