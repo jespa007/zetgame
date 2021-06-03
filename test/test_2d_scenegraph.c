@@ -171,6 +171,10 @@ int main(int argc, char * argv[]){
 			ENTITY_COMPONENT_SPRITE_RENDERER
 	};
 
+	EntityComponent entity_components_sprite_with_movement[]={
+			ENTITY_COMPONENT_SPRITE_RENDERER
+			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
+	};
 
 
 	//----------------------------------------------------------------------------------------------------
@@ -230,6 +234,7 @@ int main(int argc, char * argv[]){
 	}*/
 
 	// configure entities...
+	Scene_NewEntityType(scene,"nodes",10,NULL,0);
 	Scene_NewEntityType(scene,"sprite2d",20,entity_components_sprite,entity_components_sprite_len);
 
 	// ground
@@ -244,9 +249,9 @@ int main(int argc, char * argv[]){
 	for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
 		Entity *spr_image_fan_base=NULL;
-		Entity *spr__base_van=NULL;
+		Entity *spr_base_van=NULL;
 
-		spr_image_fan_base=Scene_NewEntity(scene,"spr_image_fan_base");
+		spr_image_fan_base=Scene_NewEntity(scene,"nodes");
 
 		// by default it sets default texture... set to no paint
 		//spr_image_fan_base->node->appearance->texture=NULL;
@@ -255,12 +260,12 @@ int main(int argc, char * argv[]){
 		EntitySpriteRenderer_SetDimensions(spr_image_fan_base,info->w,info->h);
 
 		// van base
-		spr__base_van=Scene_NewEntity(scene,"sprite2d");
-		EntityTransform_SetPosition2i(spr__base_van,info->vane_disp.x,info->vane_disp.y);
-		EntityTransform_Attach(spr_image_fan_base,spr__base_van);
+		spr_base_van=Scene_NewEntity(scene,"nodes");
+		EntityTransform_SetPosition2i(spr_base_van,info->vane_disp.x,info->vane_disp.y);
+		EntityTransform_Attach(spr_image_fan_base,spr_base_van);
 
 		// set animation rotate
-		TransformAnimation_AddTransform(transform_ani_fan,spr__base_van->transform);
+		//TransformAnimation_AddTransform(transform_ani_fan,spr_base_van->transform);
 
 		// setup vans
 		for(unsigned j=0; j < 3; j++){
@@ -273,7 +278,7 @@ int main(int argc, char * argv[]){
 
 			EntitySpriteRenderer_SetTexture(spr_image_van,text_vane);
 
-			EntityTransform_Attach(spr__base_van,spr_image_van);
+			EntityTransform_Attach(spr_base_van,spr_image_van);
 		}
 		//spr_image_background->node->appearance->texture=text_ground;
 	}

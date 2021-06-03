@@ -1,12 +1,13 @@
 #include "ecs/zg_ecs.h"
 
 typedef struct{
-	size_t 	size_data;
-	uint8_t *ptr_data;
+	size_t 	size_data; // len data component
+	uint8_t *ptr_data; // ptr data component
 	uint8_t *swap_aux;
 	size_t 	n_elements;
 	size_t 	n_active_elements;
-	void (*ini)(void); // function to setup or init component
+	void   (*Component_Ini)(void *); // function to setup or init component
+	void   (*Component_DeIni)(void *); // function to setup or init component
 
 }ESSystemComponentData;
 
@@ -47,10 +48,39 @@ ESSystem *ESSystem_New(void){
 	data->map_entity_types=MapString_New();
 
 	// initialize all component struct
+	ESSystemComponentData *es_scd=&data->components[ENTITY_COMPONENT_TRANSFORM];
+	es_scd->size_data=sizeof(ECTransform);
+	es_scd->Component_Ini=ECTransform_Ini;
+	es_scd->Component_DeIni=ECTransform_DeIni;
+
+	es_scd=&data->components[ENTITY_COMPONENT_SPRITE_RENDERER];
+	es_scd->size_data=sizeof(ECSpriteRenderer);
+	es_scd->Component_Ini=ECSpriteRenderer_Ini;
+	es_scd->Component_DeIni=ECSpriteRenderer_DeIni;
+
+	es_scd=&data->components[ENTITY_COMPONENT_ANIMATION_TRANSFORM];
+	es_scd->size_data=sizeof(ECAnimationTransform);
+	es_scd->Component_Ini=ECAnimationTransform_Ini;
+	es_scd->Component_DeIni=ECAnimationTransform_DeIni;
+
 
 	system->data=data;
 
 	return system;
+}
+
+void ESSystem_FreeDataComponents(ESSystem *_this,int idx_component){
+	ESSystemData *data=_this->data;
+	ESSystemComponentData *component_data=&data->components[idx_component];
+	if(component_data->ptr_data!=NULL){ // deinit current
+		uint8_t *ptr_data=component_data->ptr_data;
+		for(unsigned i=0; i < component_data->n_active_elements; i++){
+			component_data->Component_DeIni(ptr_data);
+		}
+		free(component_data->ptr_data);
+		component_data->ptr_data=NULL;
+		component_data->n_elements=0;
+	}
 }
 
 void ESSystem_ExtendComponent(ESSystem *_this,int idx_component, int extend){
@@ -59,9 +89,8 @@ void ESSystem_ExtendComponent(ESSystem *_this,int idx_component, int extend){
 
 	int n_elements=component_data->n_elements+extend;
 
-	if(component_data->ptr_data!=NULL){
-		free(component_data->ptr_data);
-	}
+	// free current...
+	ESSystem_FreeDataComponents(_this,idx_component);
 
 	component_data->ptr_data=malloc(component_data->size_data*n_elements);
 	component_data->n_elements=n_elements;

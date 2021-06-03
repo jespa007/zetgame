@@ -8,16 +8,9 @@
 #include "Appearance.c"
 
 #include "Transform.c"
-#include "TransformNode.h"
-
 #include "Material.c"
 
 #include "Shape.c"
-/*#include "Shape2d.c"
-#include "Shape2dChannel.c"
-#include "Shape2dAction.c"
-#include "Shape2dAnimation.c"*/
-
 #include "ViewPort.c"
 #include "Graphics.c"
 

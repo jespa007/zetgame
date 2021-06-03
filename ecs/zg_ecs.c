@@ -1,10 +1,14 @@
 
-#include "entity/Entity.c"
-#include "entity/EntitySpriteRenderer.c"
-
-
 #include "component/ECTransform.c"
 #include "component/ECSpriteRenderer.c"
+
+#include "component/ECAnimationTransform.c"
+
+#include "entity/Entity.c"
+#include "entity/EntitySpriteRenderer.c"
+#include "entity/EntityAnimationTransform.c"
+
+
 
 //#include "component/ECCamera.c"
 //#include "component/ECText2d.c"

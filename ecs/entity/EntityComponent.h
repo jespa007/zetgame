@@ -7,6 +7,7 @@ typedef enum{
 	ENTITY_COMPONENT_CAMERA, 			// entity has camera
 	ENTITY_COMPONENT_VIEWER2D, 			// entity has viewer2d (support texture/video)
 	ENTITY_COMPONENT_TEXT2D, 			// entity dimension + texture + appearance
+	ENTITY_COMPONENT_ANIMATION_TRANSFORM,
 	ENTITY_COMPONENT_MAX
 }EntityComponent;
 

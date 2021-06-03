@@ -1,0 +1,6 @@
+#ifndef __ENTITY_ANIMATION_TRANSFORM_H__
+#define __ENTITY_ANIMATION_TRANSFORM_H__
+
+
+
+#endif

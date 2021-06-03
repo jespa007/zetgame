@@ -8,16 +8,17 @@ typedef struct{
 	uint16_t 			width, height;
 }ECSpriteRendererData;
 
-ECSpriteRenderer *ECSpriteRenderer_New(Entity *_entity){
+void ECSpriteRenderer_Ini(void *_this,Entity *_entity){
+	ECSpriteRenderer *ec_sprite_renderer=_this;
 
-	ECSpriteRenderer * ec_sprite_render = NEW(ECSpriteRenderer);
 	ECSpriteRendererData *data=NEW(ECSpriteRendererData);
-	ec_sprite_render->entity=_entity;
+
 	data->appearance=Appearance_New();
 	data->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE); // Quad by default ?
-	ECSpriteRenderer_SetDimensions(ec_sprite_render,100,100); // default with/height
+	ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 
-	return ec_sprite_render;
+	ec_sprite_renderer->entity=_entity;
+	ec_sprite_renderer->data=data;
 }
 
 void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height){
@@ -74,12 +75,11 @@ void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,Texture *texture){
 	data->appearance->texture=texture;
 }
 
-void ECSpriteRenderer_Delete(ECSpriteRenderer *_this){
-	ECSpriteRendererData * data= _this->data;
+void ECSpriteRenderer_DeIni(void *_this){
+	ECSpriteRendererData * data= ((ECSpriteRenderer *)_this)->data;
 
 	Appearance_Delete(data->appearance);
 	Geometry_Delete(data->geometry);
 
 	free(data);
-	free(_this);
 }

@@ -22,12 +22,12 @@ void ECTransform_ClearChilds(ECTransform * node){
 }
 //------------------------------------------------------------------------------------
 
-ECTransform * ECTransform_New(Entity *_entity){
+void ECTransform_Ini(void *_this, Entity *_entity){
 
-	ECTransform * sg_node = NEW(ECTransform);
-	sg_node->entity=_entity;
+	ECTransform * ec_transform = _this;
+	ec_transform->entity=_entity;
 	ECTransformData *data= NEW(ECTransformData);
-	sg_node->data=data;
+	ec_transform->data=data;
 
 	data->transform_local=&data->transform_default;
 	data->child_nodes=List_New();
@@ -35,13 +35,16 @@ ECTransform * ECTransform_New(Entity *_entity){
 
 	// by default...
 	data->transform_attributes =
-				ECS_COMPONENT_TRANSFORM_SCALE
-			| 	ECS_COMPONENT_TRANSFORM_TRANSLATE
-			|	ECS_COMPONENT_TRANSFORM_ROTATE;
+				EC_TRANSFORM_SCALE
+			| 	EC_TRANSFORM_TRANSLATE
+			|	EC_TRANSFORM_ROTATE;
 
 	//sg_node->sgnode_type=ECTransformTypeNode;
 
-	return sg_node;
+}
+
+void			ECTransform_Ini(ECTransform *_this){
+
 }
 
 
@@ -209,12 +212,12 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 		Vector3f transform_child_from_parent=transform_local->translate;
 
 		// the is propagated ...
-		if(data->transform_attributes & ECS_COMPONENT_TRANSFORM_SCALE) {
+		if(data->transform_attributes & EC_TRANSFORM_SCALE) {
 			// transforms the scale ...
 			transform_world->scale=Vector3f_Mul(transform_world->scale,parent_transform_world->scale);
 		}
 		// Set origin translation ...
-		if(data->transform_attributes & ECS_COMPONENT_TRANSFORM_TRANSLATE){
+		if(data->transform_attributes & EC_TRANSFORM_TRANSLATE){
 			transform_world->translate=parent_transform_world->translate;
 
 			// Scale the translation...
@@ -240,7 +243,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 			transform_absolute->translate.y+=origin.y;
 		}*/
 
-		if((data->transform_attributes & ECS_COMPONENT_TRANSFORM_ROTATE)){
+		if((data->transform_attributes & EC_TRANSFORM_ROTATE)){
 			transform_world->quaternion=local_quaternion;
 		}
 	}
@@ -259,9 +262,9 @@ void ECTransform_Update(ECTransform *_this) {
 	ECTransform_PostUpdate(_this);
 }
 
-Transform *ECTransform_GetTransform(ECTransform *_this, TransformNodeType sgtransform){
+Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_transform_type){
 	ECTransformData *data=_this->data;
-	if(sgtransform == TRANSFORM_NODE_TYPE_WORLD){
+	if(ec_transform_type == EC_TRANSFORM_TYPE_WORLD){
 		return &_this->transform;
 	}
 
@@ -270,15 +273,12 @@ Transform *ECTransform_GetTransform(ECTransform *_this, TransformNodeType sgtran
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------v
 
-void 	 ECTransform_Delete(ECTransform *_this){
+void 	 ECTransform_DeIni(void *_this){
 
-	if(_this==NULL) return;
-
-	ECTransformData *_data = _this->data;
+	ECTransformData *_data = (ECTransform *)_this->data;
 
 	ECTransform_ClearNodes(_this);
 	List_Delete(_data->child_nodes);
 
 	FREE(_data);
-	FREE(_this);
 }
