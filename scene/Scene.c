@@ -121,7 +121,13 @@ void Scene_NewEntityType(Scene *_this, const char *_str_entity_type,size_t max_e
 	ESSystem_NewEntityType(data->es_system,_str_entity_type,max_entities,entity_components,entity_components_len);
 }
 
-Entity * Scene_NewEntity(Scene *_this, const char *_str_entity_type){
+Entity * Scene_NewEntity(Scene *_this, const char *_str_entity_type,EntityComponent * entity_components, size_t entity_components_len){
+	SceneData *data=_this->data;
+
+	return ESSystem_NewEntityFromComponents(data->es_system,entity_components,entity_components_len);
+}
+
+Entity * Scene_NewEntityFromId(Scene *_this, const char *_str_entity_type){
 	SceneData *data=_this->data;
 	return ESSystem_NewEntity(data->es_system,_str_entity_type);
 }

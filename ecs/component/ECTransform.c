@@ -22,10 +22,10 @@ void ECTransform_ClearChilds(ECTransform * node){
 }
 //------------------------------------------------------------------------------------
 
-void ECTransform_Ini(void *_this, Entity *_entity){
+void ECTransform_Setup(void *_this){
 
 	ECTransform * ec_transform = _this;
-	ec_transform->entity=_entity;
+	ec_transform->entity=NULL;
 	ECTransformData *data= NEW(ECTransformData);
 	ec_transform->data=data;
 
@@ -43,8 +43,9 @@ void ECTransform_Ini(void *_this, Entity *_entity){
 
 }
 
-void			ECTransform_Ini(ECTransform *_this){
-
+void			ECTransform_Ini(void *_this, Entity *_entity){
+	ECTransform *ec_transform = _this;
+	ec_transform->entity=_entity;
 }
 
 
@@ -249,17 +250,16 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	}
 }
 
-void ECTransform_Update(ECTransform *_this) {
-
-	ECTransformData *data = _this->data;
+void ECTransform_Update(void *_this) {
+	ECTransform *ec_transform=_this;
+	ECTransformData *data = ec_transform->data;
 	if(data->parent!=NULL){ // it has parent, is not update
 		return;
 	}
 
-
 	// update coord3d  scene graph...
-	ECTransform_UpdateSceneGraph(_this);
-	ECTransform_PostUpdate(_this);
+	ECTransform_UpdateSceneGraph(ec_transform);
+	ECTransform_PostUpdate(ec_transform);
 }
 
 Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_transform_type){
@@ -273,9 +273,9 @@ Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_trans
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------v
 
-void 	 ECTransform_DeIni(void *_this){
+void 	 ECTransform_Destroy(void *_this){
 
-	ECTransformData *_data = (ECTransform *)_this->data;
+	ECTransformData *_data = ((ECTransform *)_this)->data;
 
 	ECTransform_ClearNodes(_this);
 	List_Delete(_data->child_nodes);

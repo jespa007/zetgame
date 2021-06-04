@@ -214,16 +214,14 @@ int main(int argc, char * argv[]){
 	Texture * text_wheel=Texture_LoadFromFile("data/images/wheel.png");
 
 	// setup animations/actions...
-	TransformAnimation *transform_ani_fan=TransformAnimation_New();
+	/*TransformAnimation *transform_ani_fan=TransformAnimation_New();
 	TransformAction 	 *transform_act_fan=TransformAction_New();
 	TransformAnimation *transform_ani_car=TransformAnimation_New();
 	TransformAction 	 *transform_act_car_x=TransformAction_New();
-	TransformAction 	 *transform_act_car_y=TransformAction_New();
+	TransformAction 	 *transform_act_car_y=TransformAction_New();*/
 
 	MaterialAnimation 	 *mat_ani_sun=MaterialAnimation_New();
 	MaterialAction 	  	 *mat_act_fade_in_out=MaterialAction_New();
-
-
 
 
 	//---
@@ -296,14 +294,16 @@ int main(int argc, char * argv[]){
 
 	Scene_AttachAnimation(scene,transform_ani_fan->animation);
 
+	// SETUP ENTITIES WITHOUT PRE CREATION ?
+	spr_base_car=Scene_NewEntity(scene,NULL,0); // --> empty entity without id ? It can be but then it cannot be referenced
 
 	//----
 	// SETUP CAR
-	spr_base_car=Scene_NewEntity(scene,"sprite2d");
-	spr_image_car_part1=Scene_NewEntity(scene,"sprite2d");
-	spr_image_car_part2=Scene_NewEntity(scene,"sprite2d");
-	spr_image_car_left_wheel=Scene_NewEntity(scene,"sprite2d");
-	spr_image_car_right_wheel=Scene_NewEntity(scene,"sprite2d");
+	spr_base_car=Scene_NewEntityFromId(scene,"nodes");
+	spr_image_car_part1=Scene_NewEntityFromId(scene,"sprite2d");
+	spr_image_car_part2=Scene_NewEntityFromId(scene,"sprite2d");
+	spr_image_car_left_wheel=Scene_NewEntityFromId(scene,"sprite2d");
+	spr_image_car_right_wheel=Scene_NewEntityFromId(scene,"sprite2d");
 
 	/*List_Add(spr_s,spr_base_car=TransformNode_New());
 	List_Add(spr_viewers2d,spr_image_car_part1=SGViewer2d_New());

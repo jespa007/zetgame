@@ -8,7 +8,7 @@ typedef struct{
 	uint16_t 			width, height;
 }ECSpriteRendererData;
 
-void ECSpriteRenderer_Ini(void *_this,Entity *_entity){
+void ECSpriteRenderer_Setup(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 
 	ECSpriteRendererData *data=NEW(ECSpriteRendererData);
@@ -17,9 +17,15 @@ void ECSpriteRenderer_Ini(void *_this,Entity *_entity){
 	data->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE); // Quad by default ?
 	ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 
-	ec_sprite_renderer->entity=_entity;
+	ec_sprite_renderer->entity=NULL;
 	ec_sprite_renderer->data=data;
 }
+
+void ECSpriteRenderer_Ini(void *_this,Entity *_entity){
+	ECSpriteRenderer *ec_sprite_renderer=_this;
+	ec_sprite_renderer->entity=_entity;
+}
+
 
 void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height){
 
@@ -58,21 +64,20 @@ void ECSpriteRenderer_SetAlpha(ECSpriteRenderer *_this, float _alpha){
 	data->appearance->material->color.a=_alpha;
 }
 
-void ECSpriteRenderer_Update(ECSpriteRenderer *_this){
-
-	if(_this == NULL) return;
-
-	ECTransform *ec_transform=Entity_GetComponent(_this->entity,ENTITY_COMPONENT_TRANSFORM);
-	ECSpriteRendererData * data= _this->data;
-	Graphics_Draw(&ec_transform->transform,data->geometry,data->appearance);
-}
-
 void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,Texture *texture){
 
 	if(_this == NULL) return;
 
 	ECSpriteRendererData * data= _this->data;
 	data->appearance->texture=texture;
+}
+
+
+void ECSpriteRenderer_Update(void *_this){
+	ECSpriteRenderer *ec_sprite_renderer=_this;
+	ECTransform *ec_transform=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TRANSFORM);
+	ECSpriteRendererData * data= ec_sprite_renderer->data;
+	Graphics_Draw(&ec_transform->transform,data->geometry,data->appearance);
 }
 
 void ECSpriteRenderer_DeIni(void *_this){

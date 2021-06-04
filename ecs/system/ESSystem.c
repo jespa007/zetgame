@@ -6,8 +6,10 @@ typedef struct{
 	uint8_t *swap_aux;
 	size_t 	n_elements;
 	size_t 	n_active_elements;
-	void   (*Component_Ini)(void *); // function to setup or init component
-	void   (*Component_DeIni)(void *); // function to setup or init component
+	void   (*Component_Setup)(void *); // function to Setup component
+	void   (*Component_Ini)(void *, Entity *); // function to Ini component
+	void   (*Component_Update)(void *); // function to update component
+	void   (*Component_Destroy)(void *); // function to destroy
 
 }ESSystemComponentData;
 
@@ -50,18 +52,24 @@ ESSystem *ESSystem_New(void){
 	// initialize all component struct
 	ESSystemComponentData *es_scd=&data->components[ENTITY_COMPONENT_TRANSFORM];
 	es_scd->size_data=sizeof(ECTransform);
-	es_scd->Component_Ini=ECTransform_Ini;
-	es_scd->Component_DeIni=ECTransform_DeIni;
+	es_scd->Component_Setup		=ECTransform_Setup;
+	es_scd->Component_Ini		=ECTransform_Ini;
+	es_scd->Component_Update	=ECTransform_Update;
+	es_scd->Component_Destroy	=ECTransform_Destroy;
 
 	es_scd=&data->components[ENTITY_COMPONENT_SPRITE_RENDERER];
 	es_scd->size_data=sizeof(ECSpriteRenderer);
-	es_scd->Component_Ini=ECSpriteRenderer_Ini;
-	es_scd->Component_DeIni=ECSpriteRenderer_DeIni;
+	es_scd->Component_Setup		=ECSpriteRenderer_Setup;
+	es_scd->Component_Ini		=ECSpriteRenderer_Ini;
+	es_scd->Component_Update	=ECSpriteRenderer_Update;
+	es_scd->Component_Destroy	=ECSpriteRenderer_Destroy;
 
 	es_scd=&data->components[ENTITY_COMPONENT_ANIMATION_TRANSFORM];
 	es_scd->size_data=sizeof(ECAnimationTransform);
-	es_scd->Component_Ini=ECAnimationTransform_Ini;
-	es_scd->Component_DeIni=ECAnimationTransform_DeIni;
+	es_scd->Component_Setup		=ECAnimationTransform_Setup;
+	es_scd->Component_Ini		=ECAnimationTransform_Ini;
+	es_scd->Component_Update	=ECAnimationTransform_Update;
+	es_scd->Component_Destroy	=ECAnimationTransform_Destroy;
 
 
 	system->data=data;
@@ -75,7 +83,7 @@ void ESSystem_FreeDataComponents(ESSystem *_this,int idx_component){
 	if(component_data->ptr_data!=NULL){ // deinit current
 		uint8_t *ptr_data=component_data->ptr_data;
 		for(unsigned i=0; i < component_data->n_active_elements; i++){
-			component_data->Component_DeIni(ptr_data);
+			component_data->Component_Destroy(ptr_data);
 		}
 		free(component_data->ptr_data);
 		component_data->ptr_data=NULL;
@@ -86,14 +94,30 @@ void ESSystem_FreeDataComponents(ESSystem *_this,int idx_component){
 void ESSystem_ExtendComponent(ESSystem *_this,int idx_component, int extend){
 	ESSystemData *data=_this->data;
 	ESSystemComponentData *component_data=&data->components[idx_component];
+	int current_component_data_len=component_data->n_elements;
+	int n_new_elements=current_component_data_len+extend;
+	uint8_t *old_ptr=component_data->ptr_data;
+	uint8_t *ptr_com=NULL;
 
-	int n_elements=component_data->n_elements+extend;
 
 	// free current...
-	ESSystem_FreeDataComponents(_this,idx_component);
+	//ESSystem_FreeDataComponents(_this,idx_component);
 
-	component_data->ptr_data=malloc(component_data->size_data*n_elements);
-	component_data->n_elements=n_elements;
+	// do a realloc...
+	component_data->ptr_data=malloc(component_data->size_data*n_new_elements);
+	memcpy(component_data->ptr_data,old_ptr,component_data->size_data*component_data->n_elements);
+
+	// initialize new components
+	ptr_com= component_data->ptr_data + component_data->size_data*component_data->n_elements;
+	for(int i=component_data->n_elements; i < n_new_elements; i++){
+		component_data->Component_Setup(ptr_com);
+		ptr_com+=component_data->size_data;
+	}
+
+	// update new elements
+	component_data->n_elements=n_new_elements;
+
+	// finally do a
 }
 
 void  ESSystem_NewEntityType(ESSystem *_this
@@ -143,6 +167,49 @@ Entity  *ESSystem_NewEntity(ESSystem *_this,const char *_str_entity_type){
 	if(entity_type_data == NULL){
 		Log_Error("Entity type %s not exist",_str_entity_type);
 		return NULL;
+	}
+
+	Entity *entity=NULL;
+	if(entity_type_data->active_entities<entity_type_data->max_entities){
+		//uint32_t msk_ec_it=entity_type_data->msk_ec_types;
+		//uint32_t idx_component=0;
+		//uint16_t entity_id=entity_type_data->active_entities++;
+		//Entity entity=entity_type_data->id|entity_id;
+		entity=entity_type_data->entities[entity_type_data->active_entities];
+		Entity_Reset(entity);
+
+		for(unsigned idx_component=0; idx_component < ENTITY_COMPONENT_MAX; idx_component++){ //(msk_ec_it>>idx_component){ // attach all components
+			//uint32_t msk_component=(msk_ec_it & (msk_ec_it<<idx_component));
+			if(entity_type_data->entity_components[idx_component]){// msk_component){ // attach component to entity
+
+				uint8_t *ref_component=ESSystem_NewComponent(_this,idx_component); // request free & set default values component
+				//entity_type_data->ref_component_entity[idx_component][entity_id]=ref_component; // attach component to entity
+				Entity_AttachComponent(entity,idx_component,ref_component);
+			}
+			//idx_component++;
+		}
+
+		entity_type_data->active_entities++;
+	}
+
+	return entity;
+}
+
+
+Entity *ESSystem_NewEntityFromComponents(ESSystem *_this, ,EntityComponent *entity_components, size_t entity_components_len){
+	ESSystemData *data=_this->data;
+	const char *_str_entity_type="component_xxx_yyy";
+	// create anonymous id...
+
+	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type);
+
+	if(entity_type_data == NULL){ // create ...
+		//Log_Error("Entity type %s not exist",_str_entity_type);
+		//return NULL;
+		entity_type_data=ESSystem_NewEntityType(_this,_str_entity_type ,entity_components, entity_components_len);
+	}
+	else{ // extend by one
+		entity_type_data
 	}
 
 	Entity *entity=NULL;
@@ -269,9 +336,18 @@ void ESSystem_DeleteComponent(ESSystem *_this,int idx_component, uint8_t * compo
 void ESSystem_Update(ESSystem * _this){
 	ESSystemData *data=(ESSystemData *)_this->data;
 
+	ESSystemComponentData *component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
+	for(int i=0; i < ENTITY_COMPONENT_MAX; i++){
+		uint8_t *ptr_data=component_data->ptr_data;
+		for(unsigned i=0; i < component_data->n_active_elements; i++){
+			component_data->Component_Update(ptr_data);
+			ptr_data+=component_data->size_data;
+		}
+		component_data++;
+	}
 	//----------------------------------------------------------------------------------
 	// UPDATE TRANSFORM COMPONENT
-	ESSystemComponentData *component_data=&data->components[ENTITY_COMPONENT_TRANSFORM];
+	/*ESSystemComponentData *component_data=&data->components[ENTITY_COMPONENT_TRANSFORM];
 	uint8_t *ptr_data=component_data->ptr_data;
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
 		ECTransform_Update(((ECTransform *)ptr_data));
@@ -285,7 +361,7 @@ void ESSystem_Update(ESSystem * _this){
 	for(unsigned i=0; i < component_data->n_active_elements; i++){
 		ECSpriteRenderer_Update(((ECSpriteRenderer *)ptr_data));
 		ptr_data+=component_data->size_data;
-	}
+	}*/
 
 	/*ESSystemComponentData *component_data=&data->components[ENTITY_COMPONENT_VIEWER2D];
 	uint8_t *ptr_data=component_data->ptr_data;

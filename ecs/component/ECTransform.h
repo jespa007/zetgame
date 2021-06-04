@@ -19,8 +19,8 @@ struct ECTransform{
 	void 			*data;
 };
 
+void			ECTransform_Setup(void *_this);
 void			ECTransform_Ini(void *_this,Entity *_entity);
-
 
 bool			ECTransform_Attach(ECTransform *_this, ECTransform *node);
 bool			ECTransform_Detach(ECTransform *_this, ECTransform *node);
@@ -36,9 +36,9 @@ Transform *		ECTransform_GetTransform(ECTransform *node, ECTransformType ec_tran
 
 void 			ECTransform_SetRotate3f(ECTransform *_this,float x, float y, float z);
 void 			ECTransform_SetScale3f(ECTransform *_this,float x, float y, float z);
-void			ECTransform_Update(ECTransform *_this);
 
-void 	 		ECTransform_DeIni(void *_this);
+void			ECTransform_Update(void *_this);
+void 	 		ECTransform_Destroy(void *_this);
 
 
 

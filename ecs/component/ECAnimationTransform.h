@@ -8,7 +8,9 @@ struct ECAnimationTransform{
 	void *data;
 };
 
-ECAnimationTransform *	ECAnimationTransform_Ini(void *_this,Entity *_entity);
-void 					ECAnimationTransform_Delete(void *_this);
+void					ECAnimationTransform_Setup(void *_this);
+void					ECAnimationTransform_Ini(void *_this,Entity *_entity);
+void 					ECAnimationTransform_Update(void *_this);
+void 					ECAnimationTransform_Destroy(void *_this);
 
 #endif
