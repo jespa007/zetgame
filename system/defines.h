@@ -80,6 +80,6 @@ va_end(ap);}
 
 #define ARRAY_SIZE(s) (sizeof(s)/sizeof(s[0]))
 #define STRCMP(str1,op,str2) (strcmp(str1,str2)op(0))
-#define INVALID_VALUE -1
+#define ZG_ERROR -1
 
 #endif

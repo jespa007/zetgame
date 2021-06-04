@@ -13,6 +13,8 @@ static TextureVars * g_texture_vars=NULL;
 //void			* 	Texture_OnDeleteNode(MapStringNode *node);
 Texture 		* 	Texture_GetDefault(void);
 
+//--------------
+// STATIC PUBLIC
 void	 	Texture_Init(void){
 	if(g_texture_vars !=NULL){
 		Log_Error("Texture already initialized!");
@@ -29,6 +31,35 @@ void	 	Texture_Init(void){
 
 	//g_texture_vars->textures->on_delete=Texture_OnDeleteNode;
 }
+
+void	 	Texture_DeInit(){
+	if(g_texture_vars ==NULL){
+		Log_Error("Texture not initialized!");
+		return;
+	}
+
+
+	// erase all loaded fonts...
+	if(g_texture_vars->texture_embedded != NULL){
+		Texture_Delete(g_texture_vars->texture_embedded);
+		g_texture_vars->texture_embedded = NULL;
+	}
+
+	/*if(g_texture_vars->textures!=NULL){
+		MapString_Delete(g_texture_vars->textures);
+		g_texture_vars->textures=NULL;
+	}*/
+
+
+
+	//MapString_Delete(g_texture_vars->textures);
+	FREE(g_texture_vars);
+	g_texture_vars=NULL;
+
+}
+
+
+
 /*
 Texture * 		Texture_Get(const char * texture_name){
 	char id[100]={0};
@@ -86,6 +117,7 @@ void Texture_Bind(Texture * _this){
 	}
 }
 //--------------
+// MEMBER PUBLIC
 Texture * Texture_New(){
 	Texture *text=NEW(Texture);
 	memset(text,0,sizeof(Texture));
@@ -249,28 +281,3 @@ void Texture_Delete(Texture *_this){
 	FREE(_this);
 }
 
-void	 	Texture_DeInit(){
-	if(g_texture_vars ==NULL){
-		Log_Error("Texture not initialized!");
-		return;
-	}
-
-
-	// erase all loaded fonts...
-	if(g_texture_vars->texture_embedded != NULL){
-		Texture_Delete(g_texture_vars->texture_embedded);
-		g_texture_vars->texture_embedded = NULL;
-	}
-
-	/*if(g_texture_vars->textures!=NULL){
-		MapString_Delete(g_texture_vars->textures);
-		g_texture_vars->textures=NULL;
-	}*/
-
-
-
-	//MapString_Delete(g_texture_vars->textures);
-	FREE(g_texture_vars);
-	g_texture_vars=NULL;
-
-}

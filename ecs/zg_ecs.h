@@ -10,12 +10,15 @@
 #include "component/ECTransform.h"
 #include "component/ECSpriteRenderer.h"
 #include "component/ECAnimationTransform.h"
+#include "component/ECAnimationMaterial.h"
 
 #include "entity/EntityComponent.h"
 #include "entity/Entity.h"
+
 #include "entity/EntityTransform.h"
 #include "entity/EntitySpriteRenderer.h"
 #include "entity/EntityAnimationTransform.h"
+#include "entity/EntityAnimationMaterial.h"
 
 
 //#include "component/ECCamera.h"
@@ -27,7 +30,7 @@
 //#include "entity/EntityType.h"
 #include "system/ESSystem.h"
 
-
-
+bool ECS_Init(void);
+void ECS_DeInit(void);
 
 #endif

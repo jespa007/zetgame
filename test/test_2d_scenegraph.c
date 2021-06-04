@@ -171,17 +171,22 @@ int main(int argc, char * argv[]){
 			ENTITY_COMPONENT_SPRITE_RENDERER
 	};
 
-	EntityComponent entity_components_sprite_with_movement[]={
+	EntityComponent entity_components_sprite_ani_tr[]={
 			ENTITY_COMPONENT_SPRITE_RENDERER
 			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
 	};
 
+	EntityComponent entity_components_sprite_ani_tr_mat[]={
+			ENTITY_COMPONENT_SPRITE_RENDERER
+			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
+			,ENTITY_COMPONENT_ANIMATION_MATERIAL
+	};
 
 	//----------------------------------------------------------------------------------------------------
 
 	//MapString *map_textures = MapString_New();
 	//map_textures->on_delete=MS_OnDeleteTexture;
-	size_t entity_components_sprite_len=ARRAY_SIZE(entity_components_sprite);
+
 	ZetGameSetupParams setup;
 	memset(&setup,0,sizeof(setup));
 	setup.width=640;
@@ -220,8 +225,8 @@ int main(int argc, char * argv[]){
 	TransformAction 	 *transform_act_car_x=TransformAction_New();
 	TransformAction 	 *transform_act_car_y=TransformAction_New();*/
 
-	MaterialAnimation 	 *mat_ani_sun=MaterialAnimation_New();
-	MaterialAction 	  	 *mat_act_fade_in_out=MaterialAction_New();
+	//MaterialAnimation 	 *mat_ani_sun=MaterialAnimation_New();
+	//MaterialAction 	  	 *mat_act_fade_in_out=MaterialAction_New();
 
 
 	//---
@@ -232,8 +237,8 @@ int main(int argc, char * argv[]){
 	}*/
 
 	// configure entities...
-	Scene_NewEntityType(scene,"nodes",10,NULL,0);
-	Scene_NewEntityType(scene,"sprite2d",20,entity_components_sprite,entity_components_sprite_len);
+	//Scene_NewEntityType(scene,"nodes",10,NULL,0);
+	//Scene_NewEntityType(scene,"sprite2d",20,entity_components_sprite,entity_components_sprite_len);
 
 	// ground
 	spr_image_background=Scene_NewEntity(scene,"sprite2d");//SGViewer2d_New());
@@ -249,7 +254,7 @@ int main(int argc, char * argv[]){
 		Entity *spr_image_fan_base=NULL;
 		Entity *spr_base_van=NULL;
 
-		spr_image_fan_base=Scene_NewEntity(scene,"nodes");
+		spr_image_fan_base=Scene_NewEntity(scene,entity_components_sprite,ARRAY_SIZE(entity_components_sprite));
 
 		// by default it sets default texture... set to no paint
 		//spr_image_fan_base->node->appearance->texture=NULL;
@@ -282,7 +287,7 @@ int main(int argc, char * argv[]){
 	}
 
 	// setup fan animation...
-	TransformAnimation_AddAction(transform_ani_fan,transform_act_fan,true);
+	EntityAnimationTransform_Tween_(transform_ani_fan,transform_act_fan,true);
 	TransformAction_SetKeyFramesRotate(
 			transform_act_fan
 			,COMPONENT_CHANNEL_Z

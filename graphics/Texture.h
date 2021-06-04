@@ -21,7 +21,9 @@ struct Texture{
 
 // static
 void	  	Texture_Init(void);
+void	  	Texture_DeInit(void);
 
+// public
 void 		Texture_SetTextureResourcePath(const char *resource_path);
 
 Texture * 	Texture_GetDefault(void);
@@ -43,7 +45,7 @@ bool 	  	Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t
 bool	  	Texture_UpdateFromSurface(Texture *_this,SDL_Surface * srf);
 void	  	Texture_Delete(Texture * _this);
 
-void	  	Texture_DeInit(void);
+
 
 
 

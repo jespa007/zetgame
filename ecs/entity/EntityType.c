@@ -39,7 +39,7 @@ typedef struct{
 	char *name; // name entity type
 	EntityComponent msk_ec_types; // it says the components it has this entity
 
-	short *component_entity[ENTITY_COMPONENT_MAX]; // givent entity n it get the component from system
+	short **component_entity;//[ENTITY_COMPONENT_MAX]; // givent entity n it get the component from system
 
 }EntityTypeData;
 

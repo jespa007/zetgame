@@ -1,5 +1,5 @@
-#ifndef _EC_TWEEN_TRANSFORM_H__
-#define _EC_TWEEN_TRANSFORM_H__
+#ifndef _EC_ANIMATIONTRANSFORM_H__
+#define _EC_ANIMATION_TRANSFORM_H__
 
 typedef struct ECAnimationTransform ECAnimationTransform;
 
@@ -8,9 +8,9 @@ struct ECAnimationTransform{
 	void *data;
 };
 
-void					ECAnimationTransform_Setup(void *_this);
-void					ECAnimationTransform_Ini(void *_this,Entity *_entity);
-void 					ECAnimationTransform_Update(void *_this);
-void 					ECAnimationTransform_Destroy(void *_this);
+void	ECAnimationTransform_Setup(void *_this);
+void	ECAnimationTransform_Init(void *_this,Entity *_entity);
+void 	ECAnimationTransform_Update(void *_this);
+void 	ECAnimationTransform_Destroy(void *_this);
 
 #endif

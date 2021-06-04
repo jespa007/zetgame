@@ -4,11 +4,11 @@ void	ECAnimationTransform_Setup(void *_this){
 
 }
 
-void	ECAnimationTransform_Ini(void *_this,Entity *_entity){
+void	ECAnimationTransform_Init(void *_this,Entity *_entity){
 
 }
 
-void 					ECAnimationTransform_Update(void *_this){
+void 	ECAnimationTransform_Update(void *_this){
 
 }
 

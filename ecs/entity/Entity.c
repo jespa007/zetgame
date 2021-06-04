@@ -1,22 +1,25 @@
 #include "ecs/zg_ecs.h"
 
 typedef struct{
-	void 		*components[ENTITY_COMPONENT_MAX];
+	void 		**components;//[ENTITY_COMPONENT_MAX];
 	bool is_active;
 }EntityData;
 
 Entity *Entity_New(void){
 	Entity *entity=NEW(Entity);
-	EntityData *entity_data=NEW(EntityData);
-	memset(entity_data,0,sizeof(EntityData));
-	entity->data=entity_data;
+	EntityData *data=NEW(EntityData);
+	memset(data,0,sizeof(EntityData));
+	data->components=malloc(sizeof(void *)*ESSystem_NumComponents());
+	entity->data=data;
 	return entity;
 }
 
 void Entity_Ini(Entity *_this){
 	EntityData *data=(EntityData *)_this->data;
 	data->is_active=true;
-	memset(data->components,0,sizeof(data->components));
+
+	// clear previous used components
+	memset(data->components,0,sizeof(void *)*ESSystem_NumComponents());
 }
 
 void Entity_Die(Entity *_this){

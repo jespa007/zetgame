@@ -116,20 +116,20 @@ void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player){
 	List_Add(data->movie_players,movie_player);
 }
 
-void Scene_NewEntityType(Scene *_this, const char *_str_entity_type,size_t max_entities,EntityComponent * entity_components, size_t entity_components_len){
+void Scene_NewEntityType(Scene *_this, const char *_str_entity_type,unsigned * entity_components, size_t entity_components_len){
 	SceneData *data=_this->data;
-	ESSystem_NewEntityType(data->es_system,_str_entity_type,max_entities,entity_components,entity_components_len);
+	ESSystem_NewEntityType(data->es_system,_str_entity_type,entity_components,entity_components_len);
 }
 
-Entity * Scene_NewEntity(Scene *_this, const char *_str_entity_type,EntityComponent * entity_components, size_t entity_components_len){
+Entity * Scene_NewEntity(Scene *_this, unsigned * entity_components, size_t entity_components_len){
 	SceneData *data=_this->data;
 
-	return ESSystem_NewEntityFromComponents(data->es_system,entity_components,entity_components_len);
+	return ESSystem_NewEntity(data->es_system,entity_components,entity_components_len);
 }
 
-Entity * Scene_NewEntityFromId(Scene *_this, const char *_str_entity_type){
+Entity * Scene_NewEntityFromType(Scene *_this, const char *_str_entity_type){
 	SceneData *data=_this->data;
-	return ESSystem_NewEntity(data->es_system,_str_entity_type);
+	return ESSystem_NewEntityFromType(data->es_system,_str_entity_type);
 }
 
 

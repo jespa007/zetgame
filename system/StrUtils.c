@@ -129,7 +129,7 @@ void StrUtils_StrReplace(const char * str_input, char ch_old,char ch_new){
 
 
 /**
- * Given an integer as a parameter, it returns its equivalent string. Not thread safe
+ * Given an number as a parameter, it returns its equivalent string. Should deallocated when is not used anymore
  */
 char * StrUtils_IntToStr(int input){
 	char number[1000]={0};
@@ -144,7 +144,9 @@ char	*	StrUtils_FloatToStr(float input){
 	return StrUtils_New((const char *)number);
 }
 
-
+/**
+ * Given an string as a parameter, it converts in its equivalent number. Return false if conversion failed
+ */
 bool StrUtils_StrToInt(int * i, const char *s, int base){
 	 char *end;
 	long  l;

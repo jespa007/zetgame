@@ -13,7 +13,7 @@ int MapString_GetIdx(MapInt *t,intptr_t  key){
 	intptr_t idx_max=l->count-1;//n_allocated_pointers-1;
 
 	if(idx_max==0){
-		return INVALID_VALUE;
+		return ZG_ERROR;
 	}
 	// continue searching while [imin,imax] is not empty
 	while (idx_max >= idx_min)
@@ -34,7 +34,7 @@ int MapString_GetIdx(MapInt *t,intptr_t  key){
 		}
     }
 	// key was not found
-	return INVALID_VALUE;
+	return ZG_ERROR;
 }
 
 int MapString_GetIdxToInsert(MapInt *t,intptr_t  key){
@@ -70,13 +70,13 @@ int MapString_GetIdxToInsert(MapInt *t,intptr_t  key){
 	if(idx_min >= 0){
 		return idx_min;
 	}
-	return INVALID_VALUE;
+	return ZG_ERROR;
 }
 
 bool		MapInt_Exist(MapInt *t,intptr_t key){
 	if(t==NULL) return false;
 
-	return MapString_GetIdx(t,key) != INVALID_VALUE;
+	return MapString_GetIdx(t,key) != ZG_ERROR;
 
 }
 
@@ -86,14 +86,14 @@ void 		MapInt_Set(MapInt *t,intptr_t key,void * val){
 	if(t==NULL) return;
 
 	int pos=MapString_GetIdx(t,key);
-	if(pos != INVALID_VALUE){ // value already exist (assign)...
+	if(pos != ZG_ERROR){ // value already exist (assign)...
 		node=t->list->items[pos];
 		node->val=val;
 	}
 	else{ // insert
 
 		// get position to insert...
-		if((pos=MapString_GetIdxToInsert(t,key))!=INVALID_VALUE){
+		if((pos=MapString_GetIdxToInsert(t,key))!=ZG_ERROR){
 			node=malloc(sizeof(MapIntNode));
 			memset(node,0,sizeof(MapIntNode));
 
@@ -113,7 +113,7 @@ void * 		MapInt_Get(MapInt *t,intptr_t key){
 	if(t==NULL) return NULL;
 
 	int pos=MapString_GetIdx(t,key);
-	if(pos != INVALID_VALUE){
+	if(pos != ZG_ERROR){
 		return ((MapIntNode *)t->list->items[pos])->val;
 	}
 
@@ -122,7 +122,7 @@ void * 		MapInt_Get(MapInt *t,intptr_t key){
 
 void MapInt_Erase(MapInt *t,intptr_t key){
 	int pos=MapString_GetIdx(t,key);
-	if(pos == INVALID_VALUE){ // value already exist (assign)...
+	if(pos == ZG_ERROR){ // value already exist (assign)...
 		Log_Error("key not found");
 		return;
 	}

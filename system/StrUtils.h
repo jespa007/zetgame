@@ -19,7 +19,7 @@ List * 			StrUtils_WStrSplit(const wchar_t * s, wchar_t delim);
 List * 			StrUtils_WStrSplitWStr(const wchar_t * s, const wchar_t *str_delim);
 
 /**
- * Converts input int to allocated string. Should be deallocated when not used anymore
+ * Converts input int/float to allocated string. Should be deallocated when not used anymore
  */
 char 	* 		StrUtils_IntToStr(int input);
 char	*		StrUtils_FloatToStr(float input);

@@ -33,11 +33,11 @@ double ease_in_cubic( double t ) {
 }
 
 double ease_out_cubic( double t ) {
-    return 1 + (--t) * t * t;
+    return 1 + (t-1) * t * t;
 }
 
 double ease_in_out_cubic( double t ) {
-    return t < 0.5 ? 4 * t * t * t : 1 + (--t) * (2 * (--t)) * (2 * t);
+    return t < 0.5 ? 4 * t * t * t : 1 + (t-1) * (2 * (t-1)) * (2 * t);
 }
 
 double ease_in_quart( double t ) {
@@ -46,7 +46,7 @@ double ease_in_quart( double t ) {
 }
 
 double ease_out_quart( double t ) {
-    t = (--t) * t;
+    t = (t-1) * t;
     return 1 - t * t;
 }
 
@@ -55,7 +55,7 @@ double ease_in_out_quart( double t ) {
         t *= t;
         return 8 * t * t;
     } else {
-        t = (--t) * t;
+        t = (t-1) * t;
         return 1 - 8 * t * t;
     }
 }
@@ -66,7 +66,7 @@ double ease_in_quint( double t ) {
 }
 
 double ease_out_quint( double t ) {
-    double t2 = (--t) * t;
+    double t2 = (t-1) * t;
     return 1 + t * t2 * t2;
 }
 
@@ -76,7 +76,7 @@ double ease_in_out_quint( double t ) {
         t2 = t * t;
         return 16 * t * t2 * t2;
     } else {
-        t2 = (--t) * t;
+        t2 = (t-1) * t;
         return 1 + 16 * t * t2 * t2;
     }
 }
@@ -118,14 +118,14 @@ double ease_in_back( double t ) {
 }
 
 double ease_out_back( double t ) {
-    return 1 + (--t) * t * (2.70158 * t + 1.70158);
+    return 1 + (t-1) * t * (2.70158 * t + 1.70158);
 }
 
 double ease_in_out_back( double t ) {
     if( t < 0.5 ) {
         return t * t * (7 * t - 2.5) * 2;
     } else {
-        return 1 + (--t) * t * 2 * (7 * t + 2.5);
+        return 1 + (t-1) * t * 2 * (7 * t + 2.5);
     }
 }
 
