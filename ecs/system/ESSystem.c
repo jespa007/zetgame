@@ -24,8 +24,10 @@ typedef struct {
 	unsigned *entity_components;//[ENTITY_COMPONENT_MAX]; // it says the components it has this entity
 	size_t n_components; // available components
 
-	short max_entities; // max entitites of this type (default 1)
-	short active_entities;
+	uint16_t max_entities; // max entitites of this type (default 1)
+	uint16_t n_entities;
+	uint16_t active_entities;
+
 	Entity **entities;
 	//uint8_t **ref_component_entity[ENTITY_COMPONENT_MAX]; // givent entity n it get the component from system
 }EntityTypeData;
@@ -38,14 +40,14 @@ typedef struct{
 
 //---------------------------------------------------
 // PRIVATE FUNCTIONS
-uint8_t *ESSystem_NewComponent(ESSystem *_this,int idx_component);
-void ESSystem_DeleteComponent(ESSystem *_this,int idx_component, uint8_t * component_ref);
+uint8_t *ESSystem_NewComponent(ESSystem *_this,unsigned idx_component);
+void ESSystem_DeleteComponent(ESSystem *_this,unsigned idx_component, uint8_t * component_ref);
 
 //---------------------------------------------------
 // STATIC FUNCTIONS
 bool ESSystem_Init(void){
 
-	int min_iter=0;
+	unsigned min_iter=0;
 
 	// invalid (0)
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
@@ -95,8 +97,8 @@ bool ESSystem_Init(void){
 
 
 	// check component consistency
-	min_iter=MIN(g_es_system_registered_components->count,ENTITY_COMPONENT_MAX);
-	for(int i=0; i < min_iter; i++){
+	 min_iter=MIN(g_es_system_registered_components->count,ENTITY_COMPONENT_MAX);
+	for(unsigned i=0; i < min_iter; i++){
 		ESSystemRegisteredComponentData *component=g_es_system_registered_components->items[i];
 		if(component->id != i){
 			Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
@@ -129,7 +131,7 @@ unsigned	ESSystem_RegisterComponent(ESSystemRegisterComponent es_component_regis
 	return idx_component;
 }
 
-int					ESSystem_NumComponents(void){
+size_t					ESSystem_NumComponents(void){
 	if(g_es_system_registered_components != NULL){
 		return g_es_system_registered_components->count;
 	}
@@ -217,7 +219,12 @@ void ESSystem_ExtendComponent(ESSystem *_this,unsigned idx_component, size_t ext
 }
 
 void ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, size_t extend_entities){
-	size_t total_extend=entity_type_data->max_entities;
+	size_t total_extend=entity_type_data->n_entities;
+
+	if(total_extend >= entity_type_data->max_entities){
+		Log_Error("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_type_data->name,extend_entities,entity_type_data->max_entities);
+	}
+
 	for(unsigned i=0; i < entity_type_data->n_components;i++){
 		unsigned idx_ec=entity_type_data->entity_components[i];
 		// extend components this type will have
@@ -227,19 +234,21 @@ void ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, s
 	// realloc set all entity types as this type
 	Entity **old_ptr=entity_type_data->entities;
 	entity_type_data->entities=malloc(sizeof(Entity)*total_extend);
-	memcpy(entity_type_data->entities,old_ptr,sizeof(Entity)*entity_type_data->max_entities);
+	memcpy(entity_type_data->entities,old_ptr,sizeof(Entity)*entity_type_data->n_entities);
 
-	for(unsigned i=entity_type_data->max_entities; i < total_extend;i++){
+	for(unsigned i=entity_type_data->n_entities; i < total_extend;i++){
 		entity_type_data->entities[i]=Entity_New();
 	}
 
-	entity_type_data->max_entities=total_extend;
+	entity_type_data->n_entities=total_extend;
 }
 
 void * ESSystem_NewEntityType(ESSystem *_this
 		, const char *_str_entity_type
-		,unsigned *entity_components
-		, size_t entity_components_len){
+		, uint16_t max_entities
+		, unsigned *entity_components
+		, size_t entity_components_len
+	){
 	ESSystemData *data=_this->data;
 	EntityTypeData *entity_type_data=NEW(EntityTypeData);
 
@@ -251,6 +260,7 @@ void * ESSystem_NewEntityType(ESSystem *_this
 	memset(entity_type_data->entity_components,0,sizeof(bool)*entity_components_len);
 
 	//entity_type_data->es_system=_this;
+	entity_type_data->n_entities=0;
 	entity_type_data->max_entities=0;
 	entity_type_data->active_entities=0;
 
@@ -270,6 +280,16 @@ void * ESSystem_NewEntityType(ESSystem *_this
 	List_Add(data->lst_entity_types,data);
 	MapString_SetValue(data->map_entity_types,_str_entity_type,data);
 
+	// extend entities
+	entity_type_data->max_entities=max_entities;
+	if(max_entities != (uint16_t)UNLIMITIED_ENTITIES){
+		ESSystem_ExtendEntities(
+			_this
+			,entity_type_data
+			,max_entities
+		);
+	}
+
 	return entity_type_data;
 }
 
@@ -283,11 +303,9 @@ Entity  *ESSystem_NewEntityFromType(ESSystem *_this,const char *_str_entity_type
 	}
 
 	Entity *entity=NULL;
-	if(entity_type_data->active_entities>=entity_type_data->max_entities){ // extend entity
+	if(entity_type_data->active_entities>=entity_type_data->n_entities && entity_type_data->active_entities<entity_type_data->max_entities){ // extend entity
 		ESSystem_ExtendEntities(_this,entity_type_data,1);
-	}
-
-	if(entity_type_data->active_entities>=entity_type_data->max_entities){ // we couldn't extend
+	}else{
 		return NULL;
 	}
 
@@ -338,12 +356,12 @@ Entity *ESSystem_NewEntity(ESSystem *_this,unsigned *entity_components, size_t e
  */
 uint8_t *ESSystem_NewComponent(ESSystem *_this,unsigned idx_component){
 	ESSystemData *data=_this->data;
-	ESSystemComponentData *component_data=&data->components[idx_component];
+	ESSystemComponentData *component_data=data->components[idx_component];
 	ESSystemRegisterComponent  registered_component_data=((ESSystemRegisteredComponentData *)g_es_system_registered_components->items[idx_component])->data;
 	uint8_t *component_ref=NULL;
 
 	if(component_data->n_active_elements<component_data->n_elements){
-		component_ref=component_data->ptr_data+registered_component_data->size_data*component_data->n_active_elements;
+		component_ref=component_data->ptr_data+registered_component_data.size_data*component_data->n_active_elements;
 		component_data->n_active_elements++;
 		return component_ref;
 	}
@@ -351,23 +369,23 @@ uint8_t *ESSystem_NewComponent(ESSystem *_this,unsigned idx_component){
 	return NULL;
 }
 
-void ESSystem_DeleteComponent(ESSystem *_this,int idx_component, uint8_t * component_ref){
+void ESSystem_DeleteComponent(ESSystem *_this,unsigned idx_component, uint8_t * component_ref){
 	// PRE: component_ref is the pointer to the list to be inactive
 	ESSystemData *data=_this->data;
-	ESSystemComponentData *component_data=&data->components[idx_component];
+	ESSystemComponentData *component_data=(ESSystemComponentData *)&data->components[idx_component];
 	ESSystemRegisterComponent  registered_component_data=((ESSystemRegisteredComponentData *)g_es_system_registered_components->items[idx_component])->data;
 
 	if(component_data->n_active_elements>0){
 		// do a swap between last active and the component_ref to be inactive
 
 		// get the last component active...
-		uint8_t *last_component_ref_active=component_data->ptr_data+registered_component_data->size_data*(component_data->n_active_elements-1);
+		uint8_t *last_component_ref_active=component_data->ptr_data+registered_component_data.size_data*(component_data->n_active_elements-1);
 		// copy to swap aux...
-		memcpy(component_data->swap_aux,last_component_ref_active,registered_component_data->size_data);
+		memcpy(component_data->swap_aux,last_component_ref_active,registered_component_data.size_data);
 		// copy component_ref to last active component (this time will be inactive)
-		memcpy(last_component_ref_active,component_ref,registered_component_data->size_data);
+		memcpy(last_component_ref_active,component_ref,registered_component_data.size_data);
 		// copy last active component to the pointer where component_ref is
-		memcpy(component_ref,component_data->swap_aux,registered_component_data->size_data);
+		memcpy(component_ref,component_data->swap_aux,registered_component_data.size_data);
 
 		// decrease n active elements so component_ref data is already inactive
 		component_data->n_active_elements--;
@@ -377,13 +395,15 @@ void ESSystem_DeleteComponent(ESSystem *_this,int idx_component, uint8_t * compo
 
 void ESSystem_Update(ESSystem * _this){
 	ESSystemData *data=(ESSystemData *)_this->data;
-	ESSystemRegisterComponent  *ptr_registered_component_data=(ESSystemRegisteredComponentData *)g_es_system_registered_components->items;
-	ESSystemComponentData *component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
+	ESSystemRegisteredComponentData  *ptr_registered_component_data=(ESSystemRegisteredComponentData *)g_es_system_registered_components->items;
+	ESSystemComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
 	for(int i=0; i < g_es_system_registered_components->count; i++){
-		uint8_t *ptr_data=component_data->ptr_data;
-		for(unsigned i=0; i < component_data->n_active_elements; i++){
-			ptr_registered_component_data->Component_Update(ptr_data);
-			ptr_data+=ptr_registered_component_data->size_data;
+		uint8_t *ptr_data=(*component_data)->ptr_data;
+		for(unsigned i=0; i < (*component_data)->n_active_elements; i++){
+			if(ptr_registered_component_data->data.Component_Update){
+				ptr_registered_component_data->data.Component_Update(ptr_data);
+			}
+			ptr_data+=ptr_registered_component_data->data.size_data;
 		}
 		ptr_registered_component_data++;
 	}

@@ -60,6 +60,10 @@ void Transform_SetPosition2i(Transform *_this,int x, int y){
 	_this->translate=ViewPort_ScreenToWorldDim2i(x,y);
 	//CLR_MSK(_this->transform_properties,TRANSFORM_PROPERTY_POSITION_RELATIVE_X|TRANSFORM_PROPERTY_POSITION_RELATIVE_Y);
 }
+
+Vector2i Transform_GetPosition2i(Transform *_this){
+	return ViewPort_WorldToScreen(_this->translate.x,_this->translate.y);
+}
 /*
 void Transform_SetPositionRelativeX(Transform *_this,int x){
 	_this->translate.x=ViewPort_ScreenToWorldWidth(x);

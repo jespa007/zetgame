@@ -43,7 +43,7 @@ void ECTransform_Setup(void *_this){
 
 }
 
-void			ECTransform_Ini(void *_this, Entity *_entity){
+void			ECTransform_Init(void *_this, Entity *_entity){
 	ECTransform *ec_transform = _this;
 	ec_transform->entity=_entity;
 }

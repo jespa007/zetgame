@@ -28,6 +28,10 @@ void Entity_Die(Entity *_this){
 }
 
 
+void Entity_Reset(Entity *_this){
+
+}
+
 void Entity_AttachComponent(Entity *_this, int idx_component, void *ptr_component){
 	EntityData *data=(EntityData *)_this->data;
 	if(data->components[idx_component] == NULL){

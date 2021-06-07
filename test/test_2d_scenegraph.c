@@ -4,6 +4,44 @@ void MS_OnDeleteTexture(void *text){
 	Texture_Delete(text);
 }
 
+Entity *NewNode(Scene *scene, int posx, int posy){
+	EntityComponent entity_components[]={
+			ENTITY_COMPONENT_TRANSFORM,
+			ENTITY_COMPONENT_ANIMATION_TRANSFORM
+	};
+
+	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+	EntityTransform_SetPosition2i(entity,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+
+	return entity;
+}
+
+
+Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture){
+	EntityComponent entity_components[]={
+			ENTITY_COMPONENT_TRANSFORM
+			,ENTITY_COMPONENT_GEOMETRY
+			,ENTITY_COMPONENT_MATERIAL
+			,ENTITY_COMPONENT_TEXTURE
+			,ENTITY_COMPONENT_SPRITE_RENDERER
+			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
+			,ENTITY_COMPONENT_ANIMATION_MATERIAL
+	};
+
+	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+
+	EntityTransform_SetPosition2i(entity,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+
+	EntitySpriteRenderer_SetTexture(entity,texture);
+	EntitySpriteRenderer_SetDimensions(entity,width, height);
+
+	return entity;
+
+
+
+
+}
+
 
 int main(int argc, char * argv[]){
 
@@ -166,22 +204,6 @@ int main(int argc, char * argv[]){
 			}
 		};
 
-
-	EntityComponent entity_components_sprite[]={
-			ENTITY_COMPONENT_SPRITE_RENDERER
-	};
-
-	EntityComponent entity_components_sprite_ani_tr[]={
-			ENTITY_COMPONENT_SPRITE_RENDERER
-			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
-	};
-
-	EntityComponent entity_components_sprite_ani_tr_mat[]={
-			ENTITY_COMPONENT_SPRITE_RENDERER
-			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
-			,ENTITY_COMPONENT_ANIMATION_MATERIAL
-	};
-
 	//----------------------------------------------------------------------------------------------------
 
 	//MapString *map_textures = MapString_New();
@@ -241,11 +263,13 @@ int main(int argc, char * argv[]){
 	//Scene_NewEntityType(scene,"sprite2d",20,entity_components_sprite,entity_components_sprite_len);
 
 	// ground
-	spr_image_background=Scene_NewEntity(scene,"sprite2d");//SGViewer2d_New());
-	EntityTransform_SetPosition2i(spr_image_background,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
-
-	EntitySpriteRenderer_SetTexture(spr_image_background,text_ground);
-	EntitySpriteRenderer_SetDimensions(spr_image_background,Graphics_GetWidth(), Graphics_GetHeight());
+	spr_image_background=NewViewer2d(scene
+			,Graphics_GetWidth()>>1
+			,Graphics_GetHeight()>>1
+			,Graphics_GetWidth()
+			, Graphics_GetHeight()
+			,text_ground
+			);//SGViewer2d_New());
 
 	//----------------------------------
 	// SETUP FAN...
@@ -254,17 +278,22 @@ int main(int argc, char * argv[]){
 		Entity *spr_image_fan_base=NULL;
 		Entity *spr_base_van=NULL;
 
-		spr_image_fan_base=Scene_NewEntity(scene,entity_components_sprite,ARRAY_SIZE(entity_components_sprite));
+		spr_image_fan_base=NewViewer2d(
+				scene
+				,info->x
+				,info->y
+				,info->w
+				,info->h
+				,NULL
+				);
 
-		// by default it sets default texture... set to no paint
-		//spr_image_fan_base->node->appearance->texture=NULL;
-
-		EntityTransform_SetPosition2i(spr_image_fan_base,info->x,info->y);
-		EntitySpriteRenderer_SetDimensions(spr_image_fan_base,info->w,info->h);
 
 		// van base
-		spr_base_van=Scene_NewEntity(scene,"nodes");
-		EntityTransform_SetPosition2i(spr_base_van,info->vane_disp.x,info->vane_disp.y);
+		spr_base_van=NewNode(scene
+							,info->vane_disp.x
+							,info->vane_disp.y
+							);
+
 		EntityTransform_Attach(spr_image_fan_base,spr_base_van);
 
 		// set animation rotate
@@ -272,15 +301,14 @@ int main(int argc, char * argv[]){
 
 		// setup vans
 		for(unsigned j=0; j < 3; j++){
-			Entity *spr_image_van=Scene_NewEntity(scene,"sprite2d");
+			Entity *spr_image_van=NewViewer2d(scene
+						,info->vane_disp.info_vane[j].x
+						,info->vane_disp.info_vane[j].y
+						,62
+						,9
+						,text_vane);
 
-
-			EntityTransform_SetPosition2i(spr_image_van,info->vane_disp.info_vane[j].x,info->vane_disp.info_vane[j].y);
 			EntityTransform_SetRotate3f(spr_image_van,0,0,info->vane_disp.info_vane[j].rot);
-			EntitySpriteRenderer_SetDimensions(spr_image_van,62,9);
-
-			EntitySpriteRenderer_SetTexture(spr_image_van,text_vane);
-
 			EntityTransform_Attach(spr_base_van,spr_image_van);
 		}
 		//spr_image_background->node->appearance->texture=text_ground;
@@ -300,15 +328,14 @@ int main(int argc, char * argv[]){
 	Scene_AttachAnimation(scene,transform_ani_fan->animation);
 
 	// SETUP ENTITIES WITHOUT PRE CREATION ?
-	spr_base_car=Scene_NewEntity(scene,NULL,0); // --> empty entity without id ? It can be but then it cannot be referenced
 
 	//----
 	// SETUP CAR
-	spr_base_car=Scene_NewEntityFromId(scene,"nodes");
-	spr_image_car_part1=Scene_NewEntityFromId(scene,"sprite2d");
-	spr_image_car_part2=Scene_NewEntityFromId(scene,"sprite2d");
-	spr_image_car_left_wheel=Scene_NewEntityFromId(scene,"sprite2d");
-	spr_image_car_right_wheel=Scene_NewEntityFromId(scene,"sprite2d");
+	spr_base_car=NewNode(scene,0,0); // --> empty entity without id ? It can be but then it cannot be referenced
+	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL);
+	spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL);
+	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel);
+	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel);
 
 	/*List_Add(spr_s,spr_base_car=TransformNode_New());
 	List_Add(spr_viewers2d,spr_image_car_part1=SGViewer2d_New());
@@ -318,23 +345,10 @@ int main(int argc, char * argv[]){
 
 	//Scene_AttachNode(scene,spr_base_car);
 
-	EntityTransform_AttachNode(spr_base_car,spr_image_car_part1);
-	EntityTransform_SetPosition2i(spr_image_car_part1,car_info.part1.x,car_info.part1.y);
-	EntitySpriteRenderer_SetDimensions(spr_image_car_part1,car_info.part1.w,car_info.part1.h);
-
-	EntityTransform_AttachNode(spr_base_car,spr_image_car_part2);
-	EntityTransform_SetPosition2i(spr_image_car_part2,car_info.part2.x,car_info.part2.y);
-	EntitySpriteRenderer_SetDimensions(spr_image_car_part2,car_info.part2.w,car_info.part2.h);
-
+	EntityTransform_Attach(spr_base_car,spr_image_car_part1);
+	EntityTransform_Attach(spr_base_car,spr_image_car_part2);
 	EntityTransform_Attach(spr_base_car,spr_image_car_left_wheel);
-	EntityTransform_SetPosition2i(spr_image_car_left_wheel,car_info.wheel[0].x,car_info.wheel[0].y);
-	EntitySpriteRenderer_SetDimensions(spr_image_car_left_wheel,car_info.wheel[0].w,car_info.wheel[0].h);
-	EntitySpriteRenderer_SetTexture(spr_image_car_left_wheel,text_wheel);
-
-	EntityTransform_AttachNode(spr_base_car,spr_image_car_right_wheel);
-	EntityTransform_SetPosition2i(spr_image_car_right_wheel,car_info.wheel[1].x,car_info.wheel[1].y);
-	EntitySpriteRenderer_SetDimensions(spr_image_car_right_wheel,car_info.wheel[1].w,car_info.wheel[1].h);
-	EntitySpriteRenderer_SetTexture(spr_image_car_right_wheel,text_wheel);
+	EntityTransform_Attach(spr_base_car,spr_image_car_right_wheel);
 
 	TransformAction_SetKeyFramesTranslate(
 		 transform_act_car_x
@@ -361,14 +375,9 @@ int main(int argc, char * argv[]){
 	//----
 	// SUN
 
-	spr_image_sun=Scene_NewEntity(scene,"sprite2d");
-	//Scene_AttachNode(scene,spr_image_sun);
-	EntityTransform_SetPosition2i(spr_image_sun,Graphics_GetWidth()-200,100);
+	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun);
 
-	EntitySpriteRenderer_SetTexture(spr_image_sun,text_sun);
-	EntitySpriteRenderer_SetDimensions(spr_image_sun,100,100);
-
-	MaterialAnimation_AddMaterial(mat_ani_sun,spr_image_sun->node->appearance->material);
+	//MaterialAnimation_AddMaterial(mat_ani_sun,spr_image_sun->node->appearance->material);
 
 	EntitySpriteRenderer_SetAlpha(spr_image_sun,ALPHA_VALUE_TRANSPARENT);
 
@@ -381,7 +390,7 @@ int main(int argc, char * argv[]){
 			,ARRAY_SIZE(alpha_fade_in_out_keyframes)
 	);
 
-	Scene_AttachAnimation(scene,mat_ani_sun->animation);
+	//Scene_AttachAnimation(scene,mat_ani_sun->animation);
 
 
 
@@ -406,7 +415,7 @@ int main(int argc, char * argv[]){
 		Graphics_BeginRender();
 
 		if(K_SPACE){
-			MaterialAnimation_TriggerAction(mat_ani_sun,mat_act_fade_in_out,false);
+			EntityMaterialAnimation_TriggerAction(spr_image_sun,mat_act_fade_in_out,false);
 		}
 
 		Scene_Update(scene);

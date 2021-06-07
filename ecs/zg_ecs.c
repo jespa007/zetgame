@@ -1,9 +1,12 @@
 
 #include "component/ECTransform.c"
 #include "component/ECSpriteRenderer.c"
-#include "component/ECAnimationTransform.c"
-#include "component/ECAnimationMaterial.c"
+#include "component/ECGeometry.c"
+#include "component/ECMaterial.c"
+#include "component/ECTexture.c"
 
+#include "component/ECAnimationTransform.c"
+#include "component/ECMaterialAnimation.c"
 #include "entity/Entity.c"
 #include "entity/EntitySpriteRenderer.c"
 #include "entity/EntityAnimationTransform.c"

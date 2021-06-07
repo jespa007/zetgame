@@ -180,6 +180,14 @@ int ViewPort_WorldToScreenPosY(float y3d){
 	return ViewPort_WorldToScreenPosY_BuiltIn(&g_viewport_vars->current_viewport, y3d);
 }
 
+Vector2i ViewPort_WorldToScreen(float x3d, float y3d){
+	return (Vector2i){
+		.x=ViewPort_WorldToScreenPosY(x3d)
+		,.y=ViewPort_WorldToScreenPosY(y3d)
+	};
+
+}
+
 float ViewPort_ScreenToWorldPosX(int x2d){
 	return ViewPort_ScreenToWorldPosX_BuiltIn(&g_viewport_vars->current_viewport, x2d);
 }
@@ -211,7 +219,6 @@ Vector3f ViewPort_ScreenToWorldDim2i(int width, int height){
 
 	return v3d;
 }
-
 
 void 		ViewPort_DeInit(void){
 	if(g_viewport_vars == NULL) {

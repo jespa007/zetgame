@@ -31,7 +31,7 @@ void 		ViewPort_DeInit(void);
 // it converts 3d to 2d. It suposses camera at origin ( tr(0,0,-1) rot(0,0,0))
 int ViewPort_WorldToScreenPosX(float x3d);
 int ViewPort_WorldToScreenPosY(float y3d);
-
+Vector2i ViewPort_WorldToScreen(float x3d, float y3d);
 
 // it converts 2d to 3d. It supposes camera at origin ( tr(0,0,-1) rot(0,0,0))
 float ViewPort_ScreenToWorldPosX(int x2d);

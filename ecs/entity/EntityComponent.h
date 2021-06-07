@@ -5,7 +5,14 @@
 typedef enum{
 	ENTITY_COMPONENT_INVALID=0,			// reserver for invalid component
 	ENTITY_COMPONENT_TRANSFORM,			// entity transform
-	ENTITY_COMPONENT_SPRITE_RENDERER, 	// entity sprite render
+	// to render...
+	ENTITY_COMPONENT_GEOMETRY,			// entity sprite render
+	ENTITY_COMPONENT_MATERIAL,			// entity sprite render
+	ENTITY_COMPONENT_TEXTURE,			// entity sprite render
+
+	ENTITY_COMPONENT_SPRITE_RENDERER,	// entity sprite render
+
+	// animations...
 	ENTITY_COMPONENT_ANIMATION_TRANSFORM,
 	ENTITY_COMPONENT_ANIMATION_MATERIAL,
 	/*ENTITY_COMPONENT_CAMERA, 			// entity has camera

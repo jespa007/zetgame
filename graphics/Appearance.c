@@ -2,7 +2,7 @@
 
 Appearance * Appearance_New(void){
 	Appearance * appearance=NEW(Appearance);
-	appearance->material=appearance->material_default=Material_New(0);
+	appearance->material=NULL;//appearance->material_default=Material_New(0);
 	appearance->transform_texture=NULL;
 	appearance->texture=NULL;//Texture_GetDefault();
 
@@ -49,7 +49,7 @@ void Appearance_Restore(Appearance *_this){
 
 void Appearance_Delete(Appearance * _this){
 	if(_this != NULL){
-		Material_Delete(_this->material_default);
+		//Material_Delete(_this->material_default);
 
 		FREE(_this);
 	}

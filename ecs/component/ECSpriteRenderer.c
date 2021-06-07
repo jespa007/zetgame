@@ -5,6 +5,8 @@ typedef struct{
 	//Shape2d *shape2d;
 	Geometry 		*	geometry;
 	Appearance	 	*  	appearance;
+	Material		*   material;
+	Texture			*   texture;
 	uint16_t 			width, height;
 }ECSpriteRendererData;
 
@@ -21,9 +23,21 @@ void ECSpriteRenderer_Setup(void *_this){
 	ec_sprite_renderer->data=data;
 }
 
-void ECSpriteRenderer_Ini(void *_this,Entity *_entity){
+void ECSpriteRenderer_Init(void *_this,Entity *_entity){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
+	ECSpriteRendererData *data=ec_sprite_renderer->data;
 	ec_sprite_renderer->entity=_entity;
+
+	ECGeometry *ec_geometry=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_GEOMETRY);
+	ECMaterial *ec_material=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_MATERIAL);
+	ECTexture *ec_texture=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TEXTURE);
+
+	data->geometry=ec_geometry->geometry;
+	data->appearance->material=ec_material->material;
+	data->appearance->texture=ec_texture->texture;
+
+
+
 }
 
 
@@ -75,14 +89,18 @@ void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,Texture *texture){
 
 void ECSpriteRenderer_Update(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
-	ECTransform *ec_transform=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TRANSFORM);
 	ECSpriteRendererData * data= ec_sprite_renderer->data;
-	Graphics_Draw(&ec_transform->transform,data->geometry,data->appearance);
+	Transform *transform = NULL;
+	ECTransform *ec_transform=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TRANSFORM);
+	if(ec_transform){
+		transform=&ec_transform->transform;
+	}
+
+	Graphics_Draw(transform,data->geometry,data->appearance);
 }
 
-void ECSpriteRenderer_DeIni(void *_this){
+void ECSpriteRenderer_Destroy(void *_this){
 	ECSpriteRendererData * data= ((ECSpriteRenderer *)_this)->data;
-
 	Appearance_Delete(data->appearance);
 	Geometry_Delete(data->geometry);
 

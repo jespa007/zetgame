@@ -1,4 +1,4 @@
-#ifndef _EC_ANIMATIONTRANSFORM_H__
+#ifndef _EC_ANIMATION_TRANSFORM_H__
 #define _EC_ANIMATION_TRANSFORM_H__
 
 typedef struct ECAnimationTransform ECAnimationTransform;

@@ -12,7 +12,7 @@
 typedef struct Appearance Appearance;
 
 struct Appearance{
-	Material 	*	material, * material_default;
+	Material 	*	material;//, * material_default;
 	Texture  	*	texture;
 	Transform * 	transform_texture;
 	uint32_t 			properties;

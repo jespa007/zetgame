@@ -8,6 +8,10 @@
 #include "mmedia/zg_mmedia.h"
 
 #include "component/ECTransform.h"
+#include "component/ECGeometry.h"
+#include "component/ECMaterial.h"
+#include "component/ECTexture.h"
+
 #include "component/ECSpriteRenderer.h"
 #include "component/ECAnimationTransform.h"
 #include "component/ECAnimationMaterial.h"
