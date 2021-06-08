@@ -8,7 +8,7 @@ static unsigned g_ec_transform_animation_required_components[]={
 		ENTITY_COMPONENT_TRANSFORM
 };
 
-ComponentList ECTransformAnimation_RequirementsComponents(){
+ComponentList ECTransformAnimation_RequiredComponents(void){
 	ComponentList cl;
 	cl.components=g_ec_transform_animation_required_components;
 	cl.n_components=ARRAY_SIZE(g_ec_transform_animation_required_components);
@@ -33,7 +33,7 @@ void 	ECTransformAnimation_Update(void *_this){
 	ECTransformAnimationData *data=ec_ani_transform->data;
 
 	if(Animation_Update(data->ani_transform,SDL_GetTicks())){ // let animation do the move...
-		ECTransform *ec_transform=Entity_GetComponent(ec_ani_transform->entity,ENTITY_COMPONENT_TRANSFORM);
+		ECTransform *ec_transform=ec_ani_transform->entity->components[ENTITY_COMPONENT_TRANSFORM];
 		if(ec_transform != NULL){
 			Animation_CopyChannelValues(data->ani_transform,&ec_transform->transform.translate.x);
 		}

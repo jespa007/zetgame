@@ -251,7 +251,7 @@ static void Graphics_PrintAdapterInformation(void){
 	}
 
 	for(unsigned i = 0;i < g_graphics_vars->adapters->count; i++){
-		AdapterInfo *adapter=g_graphics_vars->adapters->items[i];
+		AdapterInfo *adapter=(void *)g_graphics_vars->adapters->items[i];
 		Log_Info("--------------------------------------");
 		Log_Info("MonitorModel: %s",adapter->monitor_model);
 		Log_Info("Width: %i",adapter->pixels_width);

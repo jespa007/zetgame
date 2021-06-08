@@ -11,7 +11,7 @@ Entity *NewNode(Scene *scene, int posx, int posy){
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
-	EntityTransform_SetPosition2i(entity,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	ECTransform_SetPosition2i(entity->components[ENTITY_COMPONENT_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
 
 	return entity;
 }
@@ -30,10 +30,9 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
-	EntityTransform_SetPosition2i(entity,Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
-
-	EntitySpriteRenderer_SetTexture(entity,texture);
-	EntitySpriteRenderer_SetDimensions(entity,width, height);
+	ECTransform_SetPosition2i(entity->components[ENTITY_COMPONENT_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	ECTexture_SetTexture(entity->components[ENTITY_COMPONENT_TEXTURE],texture);
+	ECSpriteRenderer_SetDimensions(entity->components[ENTITY_COMPONENT_SPRITE_RENDERER],width, height);
 
 	return entity;
 
@@ -294,7 +293,11 @@ int main(int argc, char * argv[]){
 							,info->vane_disp.y
 							);
 
-		EntityTransform_Attach(spr_image_fan_base,spr_base_van);
+		ECTransform_Attach(
+			spr_image_fan_base->components[ENTITY_COMPONENT_TRANSFORM]
+			,spr_base_van->components[ENTITY_COMPONENT_TRANSFORM]
+		);
+		//EntityTransform_Attach(spr_image_fan_base,spr_base_van);
 
 		// set animation rotate
 		//TransformAnimation_AddTransform(transform_ani_fan,spr_base_van->transform);
@@ -308,14 +311,14 @@ int main(int argc, char * argv[]){
 						,9
 						,text_vane);
 
-			EntityTransform_SetRotate3f(spr_image_van,0,0,info->vane_disp.info_vane[j].rot);
-			EntityTransform_Attach(spr_base_van,spr_image_van);
+			ECTransform_SetRotate3f(spr_image_van->components[ENTITY_COMPONENT_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
+			ECTransform_Attach(spr_base_van->components[ENTITY_COMPONENT_TRANSFORM],spr_image_van->components[ENTITY_COMPONENT_TRANSFORM]);
 		}
 		//spr_image_background->node->appearance->texture=text_ground;
 	}
 
 	// setup fan animation...
-	EntityTransformAnimation_Tween_(transform_ani_fan,transform_act_fan,true);
+	ECTransformAnimation_Tween(transform_ani_fan,transform_act_fan,true);
 	TransformAction_SetKeyFramesRotate(
 			transform_act_fan
 			,COMPONENT_CHANNEL_Z
@@ -325,7 +328,7 @@ int main(int argc, char * argv[]){
 
 
 
-	Scene_AttachAnimation(scene,transform_ani_fan->animation);
+	//Scene_AttachAnimation(scene,transform_ani_fan->animation);
 
 	// SETUP ENTITIES WITHOUT PRE CREATION ?
 
@@ -345,10 +348,10 @@ int main(int argc, char * argv[]){
 
 	//Scene_AttachNode(scene,spr_base_car);
 
-	EntityTransform_Attach(spr_base_car,spr_image_car_part1);
-	EntityTransform_Attach(spr_base_car,spr_image_car_part2);
-	EntityTransform_Attach(spr_base_car,spr_image_car_left_wheel);
-	EntityTransform_Attach(spr_base_car,spr_image_car_right_wheel);
+	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_part1->components[ENTITY_COMPONENT_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_part2->components[ENTITY_COMPONENT_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_left_wheel->components[ENTITY_COMPONENT_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_right_wheel->components[ENTITY_COMPONENT_TRANSFORM]);
 
 	TransformAction_SetKeyFramesTranslate(
 		 transform_act_car_x
@@ -370,7 +373,7 @@ int main(int argc, char * argv[]){
 	TransformAnimation_AddAction(transform_ani_car,transform_act_car_y,true);
 	Scene_AttachAnimation(scene,transform_ani_car->animation);
 
-	TransformAnimation_AddTransform(transform_ani_car,spr_base_car->transform);
+	//TransformAnimation_AddTransform(transform_ani_car,spr_base_car->transform);
 
 	//----
 	// SUN
@@ -379,7 +382,7 @@ int main(int argc, char * argv[]){
 
 	//MaterialAnimation_AddMaterial(mat_ani_sun,spr_image_sun->node->appearance->material);
 
-	EntitySpriteRenderer_SetAlpha(spr_image_sun,ALPHA_VALUE_TRANSPARENT);
+	ECMaterial_SetAlpha(spr_image_sun->components[ENTITY_COMPONENT_MATERIAL],ALPHA_VALUE_TRANSPARENT);
 
 
 	// ani
@@ -415,7 +418,7 @@ int main(int argc, char * argv[]){
 		Graphics_BeginRender();
 
 		if(K_SPACE){
-			EntityMaterialAnimation_TriggerAction(spr_image_sun,mat_act_fade_in_out,false);
+			ECMaterialAnimation_TriggerAction(spr_image_sun,mat_act_fade_in_out,false);
 		}
 
 		Scene_Update(scene);

@@ -20,10 +20,6 @@
 
 #include "entity/Entity.h"
 
-#include "entity/EntityTransform.h"
-#include "entity/EntitySpriteRenderer.h"
-#include "entity/EntityTransformAnimation.h"
-#include "entity/EntityMaterialAnimation.h"
 
 
 //#include "component/ECCamera.h"

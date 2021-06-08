@@ -17,7 +17,7 @@ static unsigned g_ec_sprite_renderer_required_components[]={
 		,ENTITY_COMPONENT_TEXTURE
 };
 
-ComponentList ECSpriteRenderer_RequirementsComponents(){
+ComponentList ECSpriteRenderer_RequiredComponents(void){
 	ComponentList cl;
 	cl.components=g_ec_sprite_renderer_required_components;
 	cl.n_components=ARRAY_SIZE(g_ec_sprite_renderer_required_components);
@@ -43,9 +43,9 @@ void ECSpriteRenderer_Init(void *_this,Entity *_entity){
 	ECSpriteRendererData *data=ec_sprite_renderer->data;
 	ec_sprite_renderer->entity=_entity;
 
-	ECGeometry *ec_geometry=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_GEOMETRY);
-	ECMaterial *ec_material=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_MATERIAL);
-	ECTexture *ec_texture=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TEXTURE);
+	ECGeometry *ec_geometry=ec_sprite_renderer->entity->components[ENTITY_COMPONENT_GEOMETRY];
+	ECMaterial *ec_material=ec_sprite_renderer->entity->components[ENTITY_COMPONENT_MATERIAL];
+	ECTexture *ec_texture=ec_sprite_renderer->entity->components[ENTITY_COMPONENT_TEXTURE];
 
 	// set sprite
 	data->geometry=ec_geometry->geometry;
@@ -107,7 +107,7 @@ void ECSpriteRenderer_Update(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 	ECSpriteRendererData * data= ec_sprite_renderer->data;
 	Transform *transform = NULL;
-	ECTransform *ec_transform=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TRANSFORM);
+	ECTransform *ec_transform=ec_sprite_renderer->entity->components[ENTITY_COMPONENT_TRANSFORM];
 	if(ec_transform){
 		transform=&ec_transform->transform;
 	}

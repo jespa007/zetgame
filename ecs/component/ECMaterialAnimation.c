@@ -9,7 +9,7 @@ static unsigned g_ec_material_animation_required_components[]={
 };
 
 
-ComponentList ECTransformAnimation_RequirementsComponents(){
+ComponentList ECMaterialAnimation_RequiredComponents(void){
 	ComponentList cl;
 	cl.components=g_ec_material_animation_required_components;
 	cl.n_components=ARRAY_SIZE(g_ec_material_animation_required_components);
@@ -34,7 +34,7 @@ void 	ECMaterialAnimation_Update(void *_this){
 	ECMaterialAnimationData *data=ec_ani_material->data;
 
 	if(Animation_Update(data->ani_material,SDL_GetTicks())){ // let animation do the move...
-		ECMaterial *ec_material=Entity_GetComponent(ec_ani_material->entity,ENTITY_COMPONENT_MATERIAL);
+		ECMaterial *ec_material=ec_ani_material->entity->components[ENTITY_COMPONENT_MATERIAL];
 		if(ec_material != NULL){
 			Animation_CopyChannelValues(data->ani_material,&ec_material->material->color.r);
 		}

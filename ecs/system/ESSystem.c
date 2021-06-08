@@ -42,6 +42,7 @@ typedef struct{
 // PRIVATE FUNCTIONS
 uint8_t *ESSystem_NewComponent(ESSystem *_this,unsigned idx_component);
 void ESSystem_DeleteComponent(ESSystem *_this,unsigned idx_component, uint8_t * component_ref);
+void ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, size_t extend_entities);
 
 //---------------------------------------------------
 // STATIC FUNCTIONS
@@ -52,7 +53,7 @@ bool ESSystem_Init(void){
 	// invalid (0)
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
 		.size_data				=0
-		,.required_components	=NULL
+		,.required_components	=(ComponentList){0,0}
 		,.Component_Setup		=NULL
 		,.Component_Init		=NULL
 		,.Component_Update		=NULL
@@ -62,7 +63,7 @@ bool ESSystem_Init(void){
 	// transform
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
 		.size_data				=sizeof(ECTransform)
-		,.required_components	=NULL
+		,.required_components	=(ComponentList){0,0}
 		,.Component_Setup		=ECTransform_Setup
 		,.Component_Init		=ECTransform_Init
 		,.Component_Update		=ECTransform_Update
@@ -72,10 +73,10 @@ bool ESSystem_Init(void){
 	// geometry
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
 		.size_data				=sizeof(ECGeometry)
-		,.required_components	=NULL
+		,.required_components	=(ComponentList){0,0}
 		,.Component_Setup		=ECGeometry_Setup
-		,.Component_Init		=ECGeometry_Init
-		,.Component_Update		=ECGeometry_Update
+		,.Component_Init		=NULL
+		,.Component_Update		=NULL
 		,.Component_Destroy		=ECGeometry_Destroy
 	});
 
@@ -84,8 +85,8 @@ bool ESSystem_Init(void){
 		.size_data				=sizeof(ECMaterial)
 		,.required_components	= (ComponentList){0,0}
 		,.Component_Setup		=ECMaterial_Setup
-		,.Component_Init		=ECMaterial_Init
-		,.Component_Update		=ECMaterial_Update
+		,.Component_Init		=NULL
+		,.Component_Update		=NULL
 		,.Component_Destroy		=ECMaterial_Destroy
 	});
 
@@ -94,15 +95,15 @@ bool ESSystem_Init(void){
 		.size_data				=sizeof(ECTexture)
 		,.required_components	=(ComponentList){0,0}
 		,.Component_Setup		=ECTexture_Setup
-		,.Component_Init		=ECTexture_Init
-		,.Component_Update		=ECTexture_Update
+		,.Component_Init		=NULL
+		,.Component_Update		=NULL
 		,.Component_Destroy		=ECTexture_Destroy
 	});
 
 	// sprite renderer (1)
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
 		.size_data				=sizeof(ECSpriteRenderer)
-		,.required_components	= ECSpriteRenderer_RequiredComponents()
+		,.required_components	=ECSpriteRenderer_RequiredComponents()
 		,.Component_Setup		=ECSpriteRenderer_Setup
 		,.Component_Init		=ECSpriteRenderer_Init
 		,.Component_Update		=ECSpriteRenderer_Update
@@ -112,7 +113,7 @@ bool ESSystem_Init(void){
 	// Animation transform
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
 		.size_data				=sizeof(ECTransformAnimation)
-		,.required_components	= ECTransformAnimation_RequiredComponents()
+		,.required_components	=ECTransformAnimation_RequiredComponents()
 		,.Component_Setup		=ECTransformAnimation_Setup
 		,.Component_Init		=ECTransformAnimation_Init
 		,.Component_Update		=ECTransformAnimation_Update
@@ -205,10 +206,11 @@ List * ESSystem_CheckComponentRequirements(unsigned *entity_components, size_t e
 		unsigned idx=entity_components[i];
 		ESSystemRegisteredComponentData *registered_component=g_es_system_registered_components->items[i];
 		ComponentList req_com=registered_component->data.required_components;
+		bool found=false;
 		for(unsigned j=0; j < req_com.n_components;j++){
 			// check if exists...
 			unsigned idx_component_req_to_find=req_com.components[j];
-			bool found=false;
+			found=false;
 			for(unsigned k=0; k < entity_components_len && found==false;k++){
 				if(idx_component_req_to_find == entity_components[i]){
 					found=true;
@@ -220,12 +222,14 @@ List * ESSystem_CheckComponentRequirements(unsigned *entity_components, size_t e
 					list=List_New();
 				}
 
-				List_Add(list,idx_component_req_to_find);
+				List_Add(list,(void *)((intptr_t)idx_component_req_to_find));
 			}
 		}
 
-		if(list != NULL){ // add this component it self
-			List_Add(list,idx);
+		// add the component if not exist
+
+		if(list != NULL){ // add the component itself
+			List_Add(list,(void *)((intptr_t)idx));
 		}
 	}
 
@@ -241,8 +245,9 @@ Entity *ESSystem_NewEntity(ESSystem *_this,unsigned *entity_components, size_t e
 
 	// 1. check component requirements
 
-
 	// 2. sort numbers
+
+	// 3. erase repeated numbers
 
 
 	// internal type that is generated according used components...

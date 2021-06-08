@@ -8,9 +8,7 @@
 #include "component/ECTexture.c"
 
 #include "entity/Entity.c"
-#include "entity/EntitySpriteRenderer.c"
-#include "entity/EntityTransformAnimation.c"
-#include "entity/EntityMaterialAnimation.c"
+
 
 
 

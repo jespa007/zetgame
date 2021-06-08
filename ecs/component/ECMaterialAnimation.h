@@ -8,9 +8,10 @@ struct ECMaterialAnimation{
 	void *data;
 };
 
-void	ECMaterialAnimation_Setup(void *_this);
-void	ECMaterialAnimation_Init(void *_this,Entity *_entity);
-void 	ECMaterialAnimation_Update(void *_this);
-void 	ECMaterialAnimation_Destroy(void *_this);
+ComponentList	ECMaterialAnimation_RequiredComponents(void);
+void			ECMaterialAnimation_Setup(void *_this);
+void			ECMaterialAnimation_Init(void *_this,Entity *_entity);
+void 			ECMaterialAnimation_Update(void *_this);
+void 			ECMaterialAnimation_Destroy(void *_this);
 
 #endif

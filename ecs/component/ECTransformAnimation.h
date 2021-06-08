@@ -8,10 +8,10 @@ struct ECTransformAnimation{
 	void *data;
 };
 
-ComponentList ECTransformAnimation_RequirementsComponents();
-void	ECTransformAnimation_Setup(void *_this);
-void	ECTransformAnimation_Init(void *_this,Entity *_entity);
-void 	ECTransformAnimation_Update(void *_this);
-void 	ECTransformAnimation_Destroy(void *_this);
+ComponentList 	ECTransformAnimation_RequiredComponents(void);
+void			ECTransformAnimation_Setup(void *_this);
+void			ECTransformAnimation_Init(void *_this,Entity *_entity);
+void 			ECTransformAnimation_Update(void *_this);
+void 			ECTransformAnimation_Destroy(void *_this);
 
 #endif

@@ -8,7 +8,7 @@ struct ECSpriteRenderer{
 	void *data;
 };
 
-ComponentList ECSpriteRenderer_RequirementsComponents();
+ComponentList ECSpriteRenderer_RequiredComponents(void);
 void ECSpriteRenderer_Setup(void *_this);
 void ECSpriteRenderer_Init(void *_this,Entity *_entity);
 

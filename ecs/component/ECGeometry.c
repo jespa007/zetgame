@@ -3,10 +3,12 @@
 
 void ECGeometry_Setup(void *_this){
 	ECGeometry *ec_geometry = _this;
-	ec_geometry->geometry=Geometry_New();
+	ec_geometry->geometry=NULL;//Geometry_New();
 }
 
 void ECGeometry_Destroy(void *_this){
 	ECGeometry *ec_geometry = _this;
-	Geometry_Delete(ec_geometry->geometry);
+	if(ec_geometry->geometry!=NULL){
+		Geometry_Delete(ec_geometry->geometry);
+	}
 }
