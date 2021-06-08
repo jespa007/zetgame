@@ -1,6 +1,7 @@
 /bin/
 /build/
 /.settings/
+/3rdparty/
 /.pydevproject
 /Doxyfile.bak
 /DoxygenZetgineLayout.xml
