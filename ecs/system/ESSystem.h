@@ -6,8 +6,10 @@
 
 typedef struct ESSystem ESSystem;
 
+
 typedef struct{
 	size_t 	size_data; // len data component
+	ComponentList required_components;
 	void   (*Component_Setup)(void *); // function to Setup component
 	void   (*Component_Init)(void *, Entity *); // function to Ini component
 	void   (*Component_Update)(void *); // function to update component

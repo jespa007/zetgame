@@ -7,7 +7,7 @@ void MS_OnDeleteTexture(void *text){
 Entity *NewNode(Scene *scene, int posx, int posy){
 	EntityComponent entity_components[]={
 			ENTITY_COMPONENT_TRANSFORM,
-			ENTITY_COMPONENT_ANIMATION_TRANSFORM
+			ENTITY_COMPONENT_TRANSFORM_ANIMATION
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
@@ -24,8 +24,8 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 			,ENTITY_COMPONENT_MATERIAL
 			,ENTITY_COMPONENT_TEXTURE
 			,ENTITY_COMPONENT_SPRITE_RENDERER
-			,ENTITY_COMPONENT_ANIMATION_TRANSFORM
-			,ENTITY_COMPONENT_ANIMATION_MATERIAL
+			,ENTITY_COMPONENT_TRANSFORM_ANIMATION
+			,ENTITY_COMPONENT_MATERIAL_ANIMATION
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
@@ -315,7 +315,7 @@ int main(int argc, char * argv[]){
 	}
 
 	// setup fan animation...
-	EntityAnimationTransform_Tween_(transform_ani_fan,transform_act_fan,true);
+	EntityTransformAnimation_Tween_(transform_ani_fan,transform_act_fan,true);
 	TransformAction_SetKeyFramesRotate(
 			transform_act_fan
 			,COMPONENT_CHANNEL_Z

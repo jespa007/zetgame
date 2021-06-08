@@ -10,6 +10,21 @@ typedef struct{
 	uint16_t 			width, height;
 }ECSpriteRendererData;
 
+static unsigned g_ec_sprite_renderer_required_components[]={
+		ENTITY_COMPONENT_TRANSFORM
+		,ENTITY_COMPONENT_GEOMETRY
+		,ENTITY_COMPONENT_MATERIAL
+		,ENTITY_COMPONENT_TEXTURE
+};
+
+ComponentList ECSpriteRenderer_RequirementsComponents(){
+	ComponentList cl;
+	cl.components=g_ec_sprite_renderer_required_components;
+	cl.n_components=ARRAY_SIZE(g_ec_sprite_renderer_required_components);
+
+	return cl;
+}
+
 void ECSpriteRenderer_Setup(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 
@@ -32,6 +47,7 @@ void ECSpriteRenderer_Init(void *_this,Entity *_entity){
 	ECMaterial *ec_material=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_MATERIAL);
 	ECTexture *ec_texture=Entity_GetComponent(ec_sprite_renderer->entity,ENTITY_COMPONENT_TEXTURE);
 
+	// set sprite
 	data->geometry=ec_geometry->geometry;
 	data->appearance->material=ec_material->material;
 	data->appearance->texture=ec_texture->texture;

@@ -7,22 +7,23 @@
 #include "graphics/zg_graphics.h"
 #include "mmedia/zg_mmedia.h"
 
+#include "component/EntityComponent.h"
 #include "component/ECTransform.h"
 #include "component/ECGeometry.h"
 #include "component/ECMaterial.h"
 #include "component/ECTexture.h"
 
 #include "component/ECSpriteRenderer.h"
-#include "component/ECAnimationTransform.h"
-#include "component/ECAnimationMaterial.h"
+#include "component/ECTransformAnimation.h"
+#include "component/ECMaterialAnimation.h"
 
-#include "entity/EntityComponent.h"
+
 #include "entity/Entity.h"
 
 #include "entity/EntityTransform.h"
 #include "entity/EntitySpriteRenderer.h"
-#include "entity/EntityAnimationTransform.h"
-#include "entity/EntityAnimationMaterial.h"
+#include "entity/EntityTransformAnimation.h"
+#include "entity/EntityMaterialAnimation.h"
 
 
 //#include "component/ECCamera.h"

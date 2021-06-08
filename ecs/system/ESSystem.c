@@ -51,47 +51,82 @@ bool ESSystem_Init(void){
 
 	// invalid (0)
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
-		.size_data			=0
-		,.Component_Setup	=NULL
-		,.Component_Init	=NULL
-		,.Component_Update	=NULL
-		,.Component_Destroy	=NULL
+		.size_data				=0
+		,.required_components	=NULL
+		,.Component_Setup		=NULL
+		,.Component_Init		=NULL
+		,.Component_Update		=NULL
+		,.Component_Destroy		=NULL
 	});
 
 	// transform
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
-		.size_data			=sizeof(ECTransform)
-		,.Component_Setup	=ECTransform_Setup
-		,.Component_Init	=ECTransform_Init
-		,.Component_Update	=ECTransform_Update
-		,.Component_Destroy	=ECTransform_Destroy
+		.size_data				=sizeof(ECTransform)
+		,.required_components	=NULL
+		,.Component_Setup		=ECTransform_Setup
+		,.Component_Init		=ECTransform_Init
+		,.Component_Update		=ECTransform_Update
+		,.Component_Destroy		=ECTransform_Destroy
+	});
+
+	// geometry
+	ESSystem_RegisterComponent((ESSystemRegisterComponent){
+		.size_data				=sizeof(ECGeometry)
+		,.required_components	=NULL
+		,.Component_Setup		=ECGeometry_Setup
+		,.Component_Init		=ECGeometry_Init
+		,.Component_Update		=ECGeometry_Update
+		,.Component_Destroy		=ECGeometry_Destroy
+	});
+
+	// material
+	ESSystem_RegisterComponent((ESSystemRegisterComponent){
+		.size_data				=sizeof(ECMaterial)
+		,.required_components	= (ComponentList){0,0}
+		,.Component_Setup		=ECMaterial_Setup
+		,.Component_Init		=ECMaterial_Init
+		,.Component_Update		=ECMaterial_Update
+		,.Component_Destroy		=ECMaterial_Destroy
+	});
+
+	// texture
+	ESSystem_RegisterComponent((ESSystemRegisterComponent){
+		.size_data				=sizeof(ECTexture)
+		,.required_components	=(ComponentList){0,0}
+		,.Component_Setup		=ECTexture_Setup
+		,.Component_Init		=ECTexture_Init
+		,.Component_Update		=ECTexture_Update
+		,.Component_Destroy		=ECTexture_Destroy
 	});
 
 	// sprite renderer (1)
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
-		.size_data			=sizeof(ECSpriteRenderer)
-		,.Component_Setup	=ECSpriteRenderer_Setup
-		,.Component_Init	=ECSpriteRenderer_Init
-		,.Component_Update	=ECSpriteRenderer_Update
-		,.Component_Destroy	=ECSpriteRenderer_Destroy
+		.size_data				=sizeof(ECSpriteRenderer)
+		,.required_components	= ECSpriteRenderer_RequiredComponents()
+		,.Component_Setup		=ECSpriteRenderer_Setup
+		,.Component_Init		=ECSpriteRenderer_Init
+		,.Component_Update		=ECSpriteRenderer_Update
+		,.Component_Destroy		=ECSpriteRenderer_Destroy
 	});
 
 	// Animation transform
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
-		.size_data			=sizeof(ECAnimationTransform)
-		,.Component_Setup	=ECAnimationTransform_Setup
-		,.Component_Init	=ECAnimationTransform_Init
-		,.Component_Update	=ECAnimationTransform_Update
-		,.Component_Destroy	=ECAnimationTransform_Destroy
+		.size_data				=sizeof(ECTransformAnimation)
+		,.required_components	= ECTransformAnimation_RequiredComponents()
+		,.Component_Setup		=ECTransformAnimation_Setup
+		,.Component_Init		=ECTransformAnimation_Init
+		,.Component_Update		=ECTransformAnimation_Update
+		,.Component_Destroy		=ECTransformAnimation_Destroy
 	});
 
 	// Animation material
 	ESSystem_RegisterComponent((ESSystemRegisterComponent){
-		.size_data			=sizeof(ECAnimationMaterial)
-		,.Component_Setup	=ECAnimationMaterial_Setup
-		,.Component_Init	=ECAnimationMaterial_Init
-		,.Component_Update	=ECAnimationMaterial_Update
-		,.Component_Destroy	=ECAnimationMaterial_Destroy
+		.size_data				=sizeof(ECMaterialAnimation)
+		,.required_components	= ECMaterialAnimation_RequiredComponents()
+		,.Component_Setup		=ECMaterialAnimation_Setup
+		,.Component_Init		=ECMaterialAnimation_Init
+		,.Component_Update		=ECMaterialAnimation_Update
+		,.Component_Destroy		=ECMaterialAnimation_Destroy
 	});
 
 
@@ -160,6 +195,105 @@ ESSystem *ESSystem_New(void){
 	g_user_can_register_components=false;
 
 	return system;
+}
+
+List * ESSystem_CheckComponentRequirements(unsigned *entity_components, size_t entity_components_len){
+	// check number of whether there's no component
+	List *list=NULL;//List_New();
+
+	for(unsigned i=0; i < entity_components_len;i++){
+		unsigned idx=entity_components[i];
+		ESSystemRegisteredComponentData *registered_component=g_es_system_registered_components->items[i];
+		ComponentList req_com=registered_component->data.required_components;
+		for(unsigned j=0; j < req_com.n_components;j++){
+			// check if exists...
+			unsigned idx_component_req_to_find=req_com.components[j];
+			bool found=false;
+			for(unsigned k=0; k < entity_components_len && found==false;k++){
+				if(idx_component_req_to_find == entity_components[i]){
+					found=true;
+				}
+			}
+
+			if(found==false){
+				if(list == NULL){
+					list=List_New();
+				}
+
+				List_Add(list,idx_component_req_to_find);
+			}
+		}
+
+		if(list != NULL){ // add this component it self
+			List_Add(list,idx);
+		}
+	}
+
+	return list;
+}
+
+Entity *ESSystem_NewEntity(ESSystem *_this,unsigned *entity_components, size_t entity_components_len){
+	ESSystemData *data=_this->data;
+	char _str_entity_type[1024]="__@_comp";
+
+	unsigned *new_entity_components_by_requirements=NULL;
+	unsigned *new_entity_components_by_requirements_len=NULL;
+
+	// 1. check component requirements
+
+
+	// 2. sort numbers
+
+
+	// internal type that is generated according used components...
+	for(unsigned i=0; i < entity_components_len; i++){
+		char *num=StrUtils_IntToStr(entity_components[i]);
+		strcat(_str_entity_type,"_");
+		strcat(_str_entity_type,num);
+		free(num);
+	}
+
+	strcat(_str_entity_type,"_@__");
+
+	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type);
+
+	if(entity_type_data == NULL){ // create ...
+		//Log_Error("Entity type %s not exist",_str_entity_type);
+		//return NULL;
+		entity_type_data=(EntityTypeData *)ESSystem_NewEntityType(_this,_str_entity_type ,1,entity_components, entity_components_len);
+
+	}
+
+	return ESSystem_NewEntityFromType(_this,_str_entity_type);
+}
+
+Entity  *ESSystem_NewEntityFromType(ESSystem *_this,const char *_str_entity_type){
+	ESSystemData *data=_this->data;
+	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type);
+
+	if(entity_type_data == NULL){
+		Log_Error("Entity type %s not exist",_str_entity_type);
+		return NULL;
+	}
+
+	Entity *entity=NULL;
+	if(entity_type_data->active_entities>=entity_type_data->n_entities && entity_type_data->active_entities<entity_type_data->max_entities){ // extend entity
+		ESSystem_ExtendEntities(_this,entity_type_data,1);
+	}else{
+		return NULL;
+	}
+
+	entity=entity_type_data->entities[entity_type_data->active_entities];
+	Entity_Reset(entity);
+
+	for(unsigned idx_component=0; idx_component < entity_type_data->n_components; idx_component++){ //(msk_ec_it>>idx_component){ // attach all components
+		int idx_ec=entity_type_data->entity_components[idx_component];
+		uint8_t *ref_component=ESSystem_NewComponent(_this,idx_ec); // request free & set default values component
+		Entity_AttachComponent(entity,idx_component,ref_component);
+	}
+
+	entity_type_data->active_entities++;
+	return entity;
 }
 
 void ESSystem_FreeDataComponents(ESSystem *_this,unsigned idx_component){
@@ -256,6 +390,9 @@ void * ESSystem_NewEntityType(ESSystem *_this
 		return NULL;
 	}
 
+	// check and extend required components if needed ...
+
+
 	entity_type_data->entity_components=malloc(sizeof(bool)*entity_components_len);
 	memset(entity_type_data->entity_components,0,sizeof(bool)*entity_components_len);
 
@@ -291,63 +428,6 @@ void * ESSystem_NewEntityType(ESSystem *_this
 	}
 
 	return entity_type_data;
-}
-
-Entity  *ESSystem_NewEntityFromType(ESSystem *_this,const char *_str_entity_type){
-	ESSystemData *data=_this->data;
-	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type);
-
-	if(entity_type_data == NULL){
-		Log_Error("Entity type %s not exist",_str_entity_type);
-		return NULL;
-	}
-
-	Entity *entity=NULL;
-	if(entity_type_data->active_entities>=entity_type_data->n_entities && entity_type_data->active_entities<entity_type_data->max_entities){ // extend entity
-		ESSystem_ExtendEntities(_this,entity_type_data,1);
-	}else{
-		return NULL;
-	}
-
-	entity=entity_type_data->entities[entity_type_data->active_entities];
-	Entity_Reset(entity);
-
-	for(unsigned idx_component=0; idx_component < entity_type_data->n_components; idx_component++){ //(msk_ec_it>>idx_component){ // attach all components
-		int idx_ec=entity_type_data->entity_components[idx_component];
-		uint8_t *ref_component=ESSystem_NewComponent(_this,idx_ec); // request free & set default values component
-		Entity_AttachComponent(entity,idx_component,ref_component);
-	}
-
-	entity_type_data->active_entities++;
-	return entity;
-}
-
-
-Entity *ESSystem_NewEntity(ESSystem *_this,unsigned *entity_components, size_t entity_components_len){
-	ESSystemData *data=_this->data;
-	char _str_entity_type[1024]="__@_comp";
-
-	// internal type that is generated according used components...
-	for(unsigned i=0; i < entity_components_len; i++){
-		char *num=StrUtils_IntToStr(entity_components[i]);
-		strcat(_str_entity_type,"_");
-		strcat(_str_entity_type,num);
-		free(num);
-	}
-
-	strcat(_str_entity_type,"_@__");
-
-	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type);
-
-	if(entity_type_data == NULL){ // create ...
-		//Log_Error("Entity type %s not exist",_str_entity_type);
-		//return NULL;
-		entity_type_data=(EntityTypeData *)ESSystem_NewEntityType(_this,_str_entity_type ,1,entity_components, entity_components_len);
-
-	}
-
-	return ESSystem_NewEntityFromType(_this,_str_entity_type);
-
 }
 
 
