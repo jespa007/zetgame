@@ -13,7 +13,7 @@ void ECTransform_SetParent(ECTransform *_this, ECTransform *_parent);
 
 void ECTransform_ClearChilds(ECTransform * node){
 	ECTransformData *data=node->data;
-	for(unsigned i = 0; i < data->child_nodes->count; i++){
+	for(uint16_t i = 0; i < data->child_nodes->count; i++){
 		ECTransform_ClearChilds(data->child_nodes->items[i]);
 	}
 
@@ -56,7 +56,7 @@ void ECTransform_ClearNodes(ECTransform *_this){
 	ECTransformData *data = _this->data;
 
 
-	for(unsigned i=0; i < data->child_nodes->count; i++){
+	for(uint16_t i=0; i < data->child_nodes->count; i++){
 		ECTransform_ClearNodes(data->child_nodes->items[i]);
 	}
 
@@ -169,7 +169,7 @@ void ECTransform_UpdateChilds(ECTransform *_this) {
 	ECTransformData *data = _this->data;
 	ECTransform *o;
 	//-------- UPDATE TRANFORMS OF THEIR CHILDS ----
-	for(unsigned i=0; i < data->child_nodes->count; i++) {
+	for(uint16_t i=0; i < data->child_nodes->count; i++) {
 		o = data->child_nodes->items[i];
 		ECTransform_Update(o);
 	}

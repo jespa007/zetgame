@@ -31,7 +31,7 @@ void Entity_Reset(Entity *_this){
 
 }
 
-void Entity_AttachComponent(Entity *_this, unsigned idx_component, void *ptr_component){
+void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_component){
 
 	if(_this->components[idx_component] == NULL){
 		_this->components[idx_component]=ptr_component;
@@ -40,7 +40,7 @@ void Entity_AttachComponent(Entity *_this, unsigned idx_component, void *ptr_com
 	}
 }
 
-void Entity_DeAttachComponent(Entity *_this, unsigned idx_component){
+void Entity_DeAttachComponent(Entity *_this, uint16_t idx_component){
 
 	if(_this->components[idx_component] != NULL){
 		_this->components[idx_component]=NULL;

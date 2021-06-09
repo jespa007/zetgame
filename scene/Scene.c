@@ -81,7 +81,7 @@ bool Scene_IsRunning(Scene *_this){
 uint32_t Scene_CallbackGetTimeScene(void *_this){
 	return ((Scene*)(_this))->current_time;
 }
-
+/*
 void Scene_AttachAnimation(Scene *_this,Animation *animation){
 
 	if(animation == NULL) {
@@ -114,7 +114,7 @@ void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player){
 	}
 
 	List_Add(data->movie_players,movie_player);
-}
+}*/
 
 void Scene_NewEntityType(Scene *_this, const char *_str_entity_type,uint16_t max_entities, unsigned * entity_components, size_t entity_components_len){
 	SceneData *data=_this->data;

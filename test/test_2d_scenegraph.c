@@ -5,69 +5,42 @@ void MS_OnDeleteTexture(void *text){
 }
 
 Entity *NewNode(Scene *scene, int posx, int posy){
-	EntityComponent entity_components[]={
-			ENTITY_COMPONENT_TRANSFORM,
-			ENTITY_COMPONENT_TRANSFORM_ANIMATION
+	EComponent entity_components[]={
+			ECOMPONENT_TRANSFORM,
+			ECOMPONENT_TRANSFORM_ANIMATION
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
-	ECTransform_SetPosition2i(entity->components[ENTITY_COMPONENT_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	ECTransform_SetPosition2i(entity->components[ECOMPONENT_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
 
 	return entity;
 }
 
 
 Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture){
-	EntityComponent entity_components[]={
-			ENTITY_COMPONENT_TRANSFORM
-			,ENTITY_COMPONENT_GEOMETRY
-			,ENTITY_COMPONENT_MATERIAL
-			,ENTITY_COMPONENT_TEXTURE
-			,ENTITY_COMPONENT_SPRITE_RENDERER
-			,ENTITY_COMPONENT_TRANSFORM_ANIMATION
-			,ENTITY_COMPONENT_MATERIAL_ANIMATION
+	EComponent entity_components[]={
+			ECOMPONENT_TRANSFORM
+			,ECOMPONENT_GEOMETRY
+			,ECOMPONENT_MATERIAL
+			,ECOMPONENT_TEXTURE
+			,ECOMPONENT_SPRITE_RENDERER
+			,ECOMPONENT_TRANSFORM_ANIMATION
+			,ECOMPONENT_MATERIAL_ANIMATION
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
-	ECTransform_SetPosition2i(entity->components[ENTITY_COMPONENT_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
-	ECTexture_SetTexture(entity->components[ENTITY_COMPONENT_TEXTURE],texture);
-	ECSpriteRenderer_SetDimensions(entity->components[ENTITY_COMPONENT_SPRITE_RENDERER],width, height);
+	ECTransform_SetPosition2i(entity->components[ECOMPONENT_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	ECTexture_SetTexture(entity->components[ECOMPONENT_TEXTURE],texture);
+	ECSpriteRenderer_SetDimensions(entity->components[ECOMPONENT_SPRITE_RENDERER],width, height);
 
 	return entity;
-
-
-
-
 }
-
 
 int main(int argc, char * argv[]){
 
 	//---------------------------------
-	// ROTATION ANI FRAMES
-	float rotate_z_keyframes[]={
-	//   t   rz
-	//-----------
-		 0	 ,0
-		,1000,360
-	};
-
-	float translate_x_keyframes[]={
-	//   t    tx
-	//-----------
-		    0,-2
-	   ,10000, 0
-	};
-
-	float translate_y_keyframes[]={
-			 // t    ty
-			 //---- ---
-			 0   ,    -0.24-0.1,
-			 100 ,    -0.23-0.1,
-			 200 ,    -0.24-0.1,
-	};
-
+	// ALPHA ANIMATION
 
 	float alpha_fade_in_out_keyframes[]={
 	//   t   a
@@ -76,15 +49,6 @@ int main(int argc, char * argv[]){
 		,1000,1
 		,2000,0
 	};
-
-	float selected_index_keyframes[]={
-	//   t   a
-	//-----------
-		 0	 ,0
-		,10000,1
-		//,3500,1
-	};
-
 
 	//---------------------------------
 	// FAN
@@ -160,7 +124,6 @@ int main(int argc, char * argv[]){
 
 	//---------------------------------
 	// CAR
-
 	struct
 	{
 		struct{
@@ -193,7 +156,6 @@ int main(int argc, char * argv[]){
 
 			// PART 1
 			,{
-
 				-40,-40,100,100
 			}
 
@@ -205,9 +167,6 @@ int main(int argc, char * argv[]){
 
 	//----------------------------------------------------------------------------------------------------
 
-	//MapString *map_textures = MapString_New();
-	//map_textures->on_delete=MS_OnDeleteTexture;
-
 	ZetGameSetupParams setup;
 	memset(&setup,0,sizeof(setup));
 	setup.width=640;
@@ -218,17 +177,13 @@ int main(int argc, char * argv[]){
 	ZetGame_Init(&setup);
 
 	Scene * scene = Scene_New();
-	Entity *spr_image_background=NULL
-				,*spr_image_sun=NULL
+	Entity
+				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
 				,*spr_image_car_part2=NULL
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
 	Entity *spr_base_car=NULL;
-
-	//List *spr_viewers2d = List_New(); // list of graph nodes...
-	//List *spr_s = List_New(); // list of graph nodes...
-
 
 
 	TTFont_SetFontResourcePath("data/fonts");
@@ -240,35 +195,17 @@ int main(int argc, char * argv[]){
 	Texture * text_wheel=Texture_LoadFromFile("data/images/wheel.png");
 
 	// setup animations/actions...
-	/*TransformAnimation *transform_ani_fan=TransformAnimation_New();
-	TransformAction 	 *transform_act_fan=TransformAction_New();
-	TransformAnimation *transform_ani_car=TransformAnimation_New();
-	TransformAction 	 *transform_act_car_x=TransformAction_New();
-	TransformAction 	 *transform_act_car_y=TransformAction_New();*/
-
-	//MaterialAnimation 	 *mat_ani_sun=MaterialAnimation_New();
-	//MaterialAction 	  	 *mat_act_fade_in_out=MaterialAction_New();
-
+	Action 	  	 			*mat_act_fade_in_out=Action_New(MATERIAL_CHANNEL_MAX);
 
 	//---
-/*
-	for(unsigned i=0; i < ARRAY_SIZE(text_info); i++){
-		_text_info *info=&text_info[i];
-		MapString_SetValue(map_textures,info->name,Texture_Load(info->name));
-	}*/
-
-	// configure entities...
-	//Scene_NewEntityType(scene,"nodes",10,NULL,0);
-	//Scene_NewEntityType(scene,"sprite2d",20,entity_components_sprite,entity_components_sprite_len);
-
 	// ground
-	spr_image_background=NewViewer2d(scene
-			,Graphics_GetWidth()>>1
-			,Graphics_GetHeight()>>1
-			,Graphics_GetWidth()
-			, Graphics_GetHeight()
-			,text_ground
-			);//SGViewer2d_New());
+	NewViewer2d(scene
+		,Graphics_GetWidth()>>1
+		,Graphics_GetHeight()>>1
+		,Graphics_GetWidth()
+		, Graphics_GetHeight()
+		,text_ground
+	);//SGViewer2d_New());
 
 	//----------------------------------
 	// SETUP FAN...
@@ -294,15 +231,11 @@ int main(int argc, char * argv[]){
 							);
 
 		ECTransform_Attach(
-			spr_image_fan_base->components[ENTITY_COMPONENT_TRANSFORM]
-			,spr_base_van->components[ENTITY_COMPONENT_TRANSFORM]
+			spr_image_fan_base->components[ECOMPONENT_TRANSFORM]
+			,spr_base_van->components[ECOMPONENT_TRANSFORM]
 		);
-		//EntityTransform_Attach(spr_image_fan_base,spr_base_van);
 
-		// set animation rotate
-		//TransformAnimation_AddTransform(transform_ani_fan,spr_base_van->transform);
-
-		// setup vans
+		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
 			Entity *spr_image_van=NewViewer2d(scene
 						,info->vane_disp.info_vane[j].x
@@ -311,25 +244,18 @@ int main(int argc, char * argv[]){
 						,9
 						,text_vane);
 
-			ECTransform_SetRotate3f(spr_image_van->components[ENTITY_COMPONENT_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
-			ECTransform_Attach(spr_base_van->components[ENTITY_COMPONENT_TRANSFORM],spr_image_van->components[ENTITY_COMPONENT_TRANSFORM]);
+			ECTransform_SetRotate3f(spr_image_van->components[ECOMPONENT_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
+			ECTransform_Attach(spr_base_van->components[ECOMPONENT_TRANSFORM],spr_image_van->components[ECOMPONENT_TRANSFORM]);
+			ECTransformAnimation_StartTween(
+						spr_base_van->components[ECOMPONENT_TRANSFORM_ANIMATION]
+						,TRANSFORM_CHANNEL_ROTATE_Z
+						, 1000
+						, EASE_OUT_SINE
+						, 0
+						, 360
+						, true);
 		}
-		//spr_image_background->node->appearance->texture=text_ground;
 	}
-
-	// setup fan animation...
-	ECTransformAnimation_Tween(transform_ani_fan,transform_act_fan,true);
-	TransformAction_SetKeyFramesRotate(
-			transform_act_fan
-			,COMPONENT_CHANNEL_Z
-			,INTERPOLATOR_TYPE_LINEAR
-			,rotate_z_keyframes
-			,ARRAY_SIZE(rotate_z_keyframes));
-
-
-
-	//Scene_AttachAnimation(scene,transform_ani_fan->animation);
-
 	// SETUP ENTITIES WITHOUT PRE CREATION ?
 
 	//----
@@ -340,77 +266,46 @@ int main(int argc, char * argv[]){
 	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel);
 	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel);
 
-	/*List_Add(spr_s,spr_base_car=TransformNode_New());
-	List_Add(spr_viewers2d,spr_image_car_part1=SGViewer2d_New());
-	List_Add(spr_viewers2d,spr_image_car_part2=SGViewer2d_New());
-	List_Add(spr_viewers2d,spr_image_car_left_wheel=SGViewer2d_New());
-	List_Add(spr_viewers2d,spr_image_car_right_wheel=SGViewer2d_New());*/
+	ECTransform_Attach(spr_base_car->components[ECOMPONENT_TRANSFORM],spr_image_car_part1->components[ECOMPONENT_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[ECOMPONENT_TRANSFORM],spr_image_car_part2->components[ECOMPONENT_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[ECOMPONENT_TRANSFORM],spr_image_car_left_wheel->components[ECOMPONENT_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[ECOMPONENT_TRANSFORM],spr_image_car_right_wheel->components[ECOMPONENT_TRANSFORM]);
 
-	//Scene_AttachNode(scene,spr_base_car);
-
-	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_part1->components[ENTITY_COMPONENT_TRANSFORM]);
-	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_part2->components[ENTITY_COMPONENT_TRANSFORM]);
-	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_left_wheel->components[ENTITY_COMPONENT_TRANSFORM]);
-	ECTransform_Attach(spr_base_car->components[ENTITY_COMPONENT_TRANSFORM],spr_image_car_right_wheel->components[ENTITY_COMPONENT_TRANSFORM]);
-
-	TransformAction_SetKeyFramesTranslate(
-		 transform_act_car_x
-		,COMPONENT_CHANNEL_X
-		,INTERPOLATOR_TYPE_LINEAR
-		,translate_x_keyframes
-		,ARRAY_SIZE(translate_x_keyframes)
+	ECTransformAnimation_StartTween(
+		spr_base_car->components[ECOMPONENT_TRANSFORM_ANIMATION]
+		,TRANSFORM_CHANNEL_TRANSLATE_X
+		,EASE_OUT_SINE
+		,10000
+		,-2
+		,0
+		,false
 	);
 
-	TransformAction_SetKeyFramesTranslate(
-			 transform_act_car_y
-			,COMPONENT_CHANNEL_Y
-			,INTERPOLATOR_TYPE_LINEAR
-			,translate_y_keyframes
-			,ARRAY_SIZE(translate_y_keyframes)
+	ECTransformAnimation_StartTween(
+		spr_base_car->components[ECOMPONENT_TRANSFORM_ANIMATION]
+		,TRANSFORM_CHANNEL_TRANSLATE_Y
+		,EASE_OUT_SINE
+		,100
+		,-0.24-0.1
+		,-0.23-0.1
+		,true
 	);
-
-	TransformAnimation_AddAction(transform_ani_car,transform_act_car_x,false);
-	TransformAnimation_AddAction(transform_ani_car,transform_act_car_y,true);
-	Scene_AttachAnimation(scene,transform_ani_car->animation);
-
-	//TransformAnimation_AddTransform(transform_ani_car,spr_base_car->transform);
 
 	//----
 	// SUN
 
 	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun);
-
-	//MaterialAnimation_AddMaterial(mat_ani_sun,spr_image_sun->node->appearance->material);
-
-	ECMaterial_SetAlpha(spr_image_sun->components[ENTITY_COMPONENT_MATERIAL],ALPHA_VALUE_TRANSPARENT);
-
+	ECMaterial_SetAlpha(spr_image_sun->components[ECOMPONENT_MATERIAL],ALPHA_VALUE_TRANSPARENT);
 
 	// ani
-	MaterialAction_SetKeyFramesAlpha(
+	Action_SetKeyFramesTrack(
 			 mat_act_fade_in_out
-			,INTERPOLATOR_TYPE_LINEAR
+			,MATERIAL_CHANNEL_COLOR_A
+			,EASE_IN_OUT_SINE
 			,alpha_fade_in_out_keyframes
 			,ARRAY_SIZE(alpha_fade_in_out_keyframes)
 	);
 
-	//Scene_AttachAnimation(scene,mat_ani_sun->animation);
-
-
-
-	/*for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
-		_fan_info *info=&fan_info[i];
-
-
-	}*/
-
-	// load textures
-	/*Texture *text_ground=Texture_Load("ground.png");
-	Texture *text_sun=Texture_Load("sun.png");
-	Texture *text_vane=Texture_Load("vane.png");
-	Texture *text_wheel=Texture_Load("wheel.png");*/
-
-	// create objects
-	//Viewer2d *v2d_ground=Viewer2d_New();
 	Graphics_SetBackgroundColor(Color4f_FromHex(0xFFFF));
 	Scene_Start(scene);
 	do{
@@ -418,11 +313,13 @@ int main(int argc, char * argv[]){
 		Graphics_BeginRender();
 
 		if(K_SPACE){
-			ECMaterialAnimation_TriggerAction(spr_image_sun,mat_act_fade_in_out,false);
+			ECMaterialAnimation_StartAction(
+					spr_image_sun->components[ECOMPONENT_MATERIAL_ANIMATION]
+					,mat_act_fade_in_out
+					,false);
 		}
 
 		Scene_Update(scene);
-		//Graphics_Draw(spr_image_background->node->transform,spr_image_background->node->geometry,spr_image_background->node->appearance);
 
 		if(Input_IsMouseButtonPressed()){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
@@ -445,27 +342,7 @@ int main(int argc, char * argv[]){
 	Texture_Delete(text_vane);
 	Texture_Delete(text_wheel);
 
-	/*for(unsigned i = 0; i < spr_viewers2d->count; i++){
-		SGViewer2d *spr_viewer2d=spr_viewers2d->items[i];
-		SGViewer2d_Delete(spr_viewer2d);
-	}
-
-	List_Delete(spr_viewers2d);*/
-
-	/*for(unsigned i = 0; i < spr_s->count; i++){
-		TransformNode *spr_=spr_s->items[i];
-		TransformNode_Delete(spr_);
-	}
-
-	List_Delete(spr_s);*/
-
-	TransformAnimation_Delete(transform_ani_fan);
-	TransformAction_Delete(transform_act_fan);
-	TransformAnimation_Delete(transform_ani_car);
-	TransformAction_Delete(transform_act_car_x);
-	TransformAction_Delete(transform_act_car_y);
-	MaterialAnimation_Delete(mat_ani_sun);
-	MaterialAction_Delete(mat_act_fade_in_out);
+	Action_Delete(mat_act_fade_in_out);
 
 
 	ZetGame_DeInit();

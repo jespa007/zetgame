@@ -33,8 +33,8 @@ typedef struct{
 
 typedef struct{
 	//Entity *entities; // max entities it'll have this type
-	short max_entities; // max entitites of this type (default 1)
-	short active_entities;
+	uint16_t max_entities; // max entitites of this type (default 1)
+	uint16_t active_entities;
 	ESSystem *es_system;
 	char *name; // name entity type
 	EntityComponent msk_ec_types; // it says the components it has this entity
@@ -85,12 +85,12 @@ Entity  EntityType_NewEntity(EntityType *entity_type, int posx, int posy){
 	if(data->active_entities<data->max_entities){
 		uint32_t msk_ec_it=data->msk_ec_types;
 		uint32_t component_id=0;
-		unsigned int entity_id=data->active_entities;
+		uint16_t entity_id=data->active_entities;
 		Entity entity=entity_type->id|entity_id;
 		while(msk_ec_it>>component_id){
 			uint32_t msk_component=(msk_ec_it & (msk_ec_it<<component_id));
 			if(msk_component){ // attach component to entity
-				unsigned id_component=ESSystem_NewComponent(data->es_system,msk_component); // request free component
+				uint16_t id_component=ESSystem_NewComponent(data->es_system,msk_component); // request free component
 				data->component_entity[component_id][entity_id]=id_component; // attach component to entity
 			}
 			component_id++;

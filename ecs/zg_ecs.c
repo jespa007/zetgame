@@ -1,11 +1,13 @@
 
 #include "component/ECTransform.c"
 #include "component/ECTransformAnimation.c"
-#include "component/ECSpriteRenderer.c"
 #include "component/ECGeometry.c"
 #include "component/ECMaterial.c"
 #include "component/ECMaterialAnimation.c"
 #include "component/ECTexture.c"
+#include "component/ECSpriteRenderer.c"
+
+
 
 #include "entity/Entity.c"
 

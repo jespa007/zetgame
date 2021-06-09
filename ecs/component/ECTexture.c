@@ -7,7 +7,11 @@ void ECTexture_Setup(void *_this){
 }
 
 void ECTexture_SetTexture(ECTexture *_this,Texture *_texture){
-	_this->texture=_texture;
+	Texture *texture=_texture;
+	if(texture==NULL){ // set default
+		texture=Texture_GetDefault();
+	}
+	_this->texture=texture;
 }
 
 void ECTexture_Destroy(void *_this){

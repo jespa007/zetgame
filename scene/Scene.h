@@ -24,8 +24,8 @@ void Scene_Clean(void);
 		, Callback update);*/
 
 /*void Scene_AttachNode(Scene *_this,SGNode *node);*/
-void Scene_AttachAnimation(Scene *_this,Animation *animation);
-void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player);
+//void Scene_AttachAnimation(Scene *_this,Animation *animation);
+//void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player);
 //void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter);
 
 void 	Scene_NewEntityType(Scene *_this, const char *_str_entity_type,uint16_t max_entities,unsigned * entity_components, size_t entity_components_len);

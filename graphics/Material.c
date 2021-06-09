@@ -39,6 +39,12 @@ void Material_SetColor3i(Material *material,uint8_t r,uint8_t g,uint8_t b){
 
 }
 
+void Material_SetAlpha(Material *material,float alpha){
+	if(material == NULL) return;
+
+	material->color.a=alpha;
+}
+
 void Material_Delete(Material *material){
 	if(material != NULL){
 		FREE(material);

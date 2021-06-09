@@ -8,6 +8,7 @@ struct ECMaterial{
 };
 
 void ECMaterial_Setup(void *_this);
+void ECMaterial_SetAlpha(void *_this, float alpha);
 void ECMaterial_Destroy(void *_this);
 
 
