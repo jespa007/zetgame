@@ -19,13 +19,11 @@ Entity *NewNode(Scene *scene, int posx, int posy){
 
 Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture){
 	EComponent entity_components[]={
-			ECOMPONENT_TRANSFORM
-			,ECOMPONENT_GEOMETRY
-			,ECOMPONENT_MATERIAL
-			,ECOMPONENT_TEXTURE
-			,ECOMPONENT_SPRITE_RENDERER
+
+			ECOMPONENT_SPRITE_RENDERER
 			,ECOMPONENT_TRANSFORM_ANIMATION
 			,ECOMPONENT_MATERIAL_ANIMATION
+			,ECOMPONENT_TRANSFORM
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
@@ -171,7 +169,7 @@ int main(int argc, char * argv[]){
 	memset(&setup,0,sizeof(setup));
 	setup.width=640;
 	setup.height=480;
-	setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
+	//setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
 
 
 	ZetGame_Init(&setup);

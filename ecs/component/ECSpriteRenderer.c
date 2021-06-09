@@ -32,10 +32,11 @@ void ECSpriteRenderer_Setup(void *_this){
 
 	data->appearance=Appearance_New();
 	data->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE); // Quad by default ?
-	ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 
 	ec_sprite_renderer->entity=NULL;
 	ec_sprite_renderer->data=data;
+
+	ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 }
 
 void ECSpriteRenderer_Init(void *_this,Entity *_entity){

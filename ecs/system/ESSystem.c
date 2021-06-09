@@ -1,10 +1,10 @@
 #include "ecs/zg_ecs.h"
 
 List *g_es_system_registered_components=NULL;
-bool  g_user_can_register_components=false;
+bool  g_user_can_register_components=true;
 
 typedef struct{
-	uint16_t id;
+	EComponent id;
 	ESSystemRegisterEComponent data;
 }ESSystemRegisteredEComponentData;
 
@@ -57,7 +57,7 @@ bool ESSystem_Init(void){
 		,.EComponent_Setup		=NULL
 		,.EComponent_Init		=NULL
 		,.EComponent_Update		=NULL
-		,.EComponent_Destroy		=NULL
+		,.EComponent_Destroy	=NULL
 	});
 
 	// transform
@@ -67,7 +67,7 @@ bool ESSystem_Init(void){
 		,.EComponent_Setup		=ECTransform_Setup
 		,.EComponent_Init		=ECTransform_Init
 		,.EComponent_Update		=ECTransform_Update
-		,.EComponent_Destroy		=ECTransform_Destroy
+		,.EComponent_Destroy	=ECTransform_Destroy
 	});
 
 	// geometry
@@ -77,7 +77,7 @@ bool ESSystem_Init(void){
 		,.EComponent_Setup		=ECGeometry_Setup
 		,.EComponent_Init		=NULL
 		,.EComponent_Update		=NULL
-		,.EComponent_Destroy		=ECGeometry_Destroy
+		,.EComponent_Destroy	=ECGeometry_Destroy
 	});
 
 	// material
@@ -162,6 +162,7 @@ EComponent	ESSystem_RegisterComponent(ESSystemRegisterEComponent es_component_re
 	EComponent idx_component=g_es_system_registered_components->count;
 	ESSystemRegisteredEComponentData *new_component_register=NEW(ESSystemRegisteredEComponentData);
 	new_component_register->data=es_component_register;
+	new_component_register->id=idx_component;
 	List_Add(g_es_system_registered_components,new_component_register);
 
 	return idx_component;
@@ -190,6 +191,10 @@ ESSystem *ESSystem_New(void){
 	data->components=malloc(sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
 	memset(data->components,0,sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
 
+	for(unsigned i=0; i < g_es_system_registered_components->count;i++){
+		data->components[i]=NEW(ESSystemEComponentData);
+	}
+
 	system->data=data;
 
 	// after first system is created, user cannot register any component anymore
@@ -211,15 +216,17 @@ EComponent *ESSystem_GenerateComponentRequirementList(EComponent *in_data, size_
 
 	for(unsigned i=0; i < in_len;i++){
 		EComponent entity_component=in_data[i];
-		ESSystemRegisteredEComponentData *registered_component=g_es_system_registered_components->items[i];
+		ESSystemRegisteredEComponentData *registered_component=g_es_system_registered_components->items[entity_component];
 		EComponentList req_com=registered_component->data.required_components;
 		bool found=false;
 		for(uint16_t j=0; j < req_com.n_components;j++){
 			// check if exists...
 			EComponent idx_component_req_to_find=req_com.components[j];
-			EComponent idx_component_in_list=(intptr_t)list->items[j];
+
 			found=false;
+			// check whether it's int the list or not
 			for(uint16_t k=0; k < list->count && found==false;k++){
+				EComponent idx_component_in_list=(intptr_t)list->items[k];
 				if(idx_component_req_to_find == idx_component_in_list){
 					found=true;
 				}
@@ -421,6 +428,7 @@ void * ESSystem_NewEntityType(ESSystem *_this
 
 	entity_type_data->entity_components=malloc(sizeof(bool)*entity_components_len);
 	memset(entity_type_data->entity_components,0,sizeof(bool)*entity_components_len);
+	entity_type_data->n_components=entity_components_len;
 
 	//entity_type_data->es_system=_this;
 	entity_type_data->n_entities=0;
