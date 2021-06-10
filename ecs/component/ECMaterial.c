@@ -3,6 +3,8 @@
 
 void ECMaterial_Setup(void *_this){
 	ECMaterial *ec_material=_this;
+	ec_material->id=EC_MATERIAL;
+
 	ec_material->material=NULL;//Material_New();
 }
 

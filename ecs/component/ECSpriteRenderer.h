@@ -4,8 +4,9 @@
 typedef struct ECSpriteRenderer ECSpriteRenderer;
 
 struct ECSpriteRenderer{
-	Entity *entity;
-	void *data;
+	EComponent 	id;
+	Entity 		*entity;
+	void 		*data;
 };
 
 EComponentList ECSpriteRenderer_RequiredComponents(void);

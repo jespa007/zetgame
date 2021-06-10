@@ -5,7 +5,7 @@ typedef struct{
 }ECMaterialAnimationData;
 
 static EComponent g_ec_material_animation_required_components[]={
-		ECOMPONENT_MATERIAL
+		EC_MATERIAL
 };
 
 
@@ -18,15 +18,18 @@ EComponentList ECMaterialAnimation_RequiredComponents(void){
 }
 
 void	ECMaterialAnimation_Setup(void *_this){
-	ECMaterialAnimation *ec_ani_material =_this;
+	ECMaterialAnimation *ec_material_animation =_this;
+	ec_material_animation->id=EC_MATERIAL_ANIMATION;
+
 	ECMaterialAnimationData *data=NEW(ECMaterialAnimationData);
 	data->ani_material=Animation_New(MATERIAL_CHANNEL_MAX);
 
-	ec_ani_material->data=data;
+	ec_material_animation->data=data;
 }
 
 void	ECMaterialAnimation_Init(void *_this,Entity *_entity){
-
+	ECMaterialAnimation *ec_material_animation=_this;
+	ec_material_animation->entity=_entity;
 }
 
 void			ECMaterialAnimation_StartAction(void *_this, Action *action, int repeat){
@@ -40,11 +43,11 @@ void			ECMaterialAnimation_StartAction(void *_this, Action *action, int repeat){
 }
 
 void 	ECMaterialAnimation_Update(void *_this){
-	ECMaterialAnimation *ec_ani_material =_this;
-	ECMaterialAnimationData *data=ec_ani_material->data;
+	ECMaterialAnimation *ec_material_animation =_this;
+	ECMaterialAnimationData *data=ec_material_animation->data;
 
 	if(Animation_Update(data->ani_material,SDL_GetTicks())){ // let animation do the move...
-		ECMaterial *ec_material=ec_ani_material->entity->components[ECOMPONENT_MATERIAL];
+		ECMaterial *ec_material=ec_material_animation->entity->components[EC_MATERIAL];
 		if(ec_material != NULL){
 			Animation_CopyChannelValues(data->ani_material,&ec_material->material->color.r);
 		}
@@ -52,8 +55,8 @@ void 	ECMaterialAnimation_Update(void *_this){
 }
 
 void	ECMaterialAnimation_Destroy(void *_this){
-	ECMaterialAnimation *ec_ani_material =_this;
-	ECMaterialAnimationData *data=ec_ani_material->data;
+	ECMaterialAnimation *ec_material_animation =_this;
+	ECMaterialAnimationData *data=ec_material_animation->data;
 	Animation_Delete(data->ani_material);
 	FREE(data);
 }

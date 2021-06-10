@@ -3,6 +3,8 @@
 
 void ECTexture_Setup(void *_this){
 	ECTexture *ec_texture=_this;
+	ec_texture->id=EC_TEXTURE;
+
 	ec_texture->texture=NULL;//Texture_New();
 }
 

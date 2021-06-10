@@ -28,9 +28,10 @@ void Entity_Die(Entity *_this){
 
 
 void Entity_Reset(Entity *_this){
+	// set all components...
 
 }
-
+/*
 void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_component){
 
 	if(_this->components[idx_component] == NULL){
@@ -48,5 +49,5 @@ void Entity_DeAttachComponent(Entity *_this, uint16_t idx_component){
 		Log_Error("Entity component already null");
 	}
 }
-
+*/
 

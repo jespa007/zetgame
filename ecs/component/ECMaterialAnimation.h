@@ -4,8 +4,9 @@
 typedef struct ECMaterialAnimation ECMaterialAnimation;
 
 struct ECMaterialAnimation{
-	Entity *entity;
-	void *data;
+	EComponent 	id;
+	Entity 		*entity;
+	void 		*data;
 };
 
 EComponentList	ECMaterialAnimation_RequiredComponents(void);

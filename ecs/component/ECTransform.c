@@ -25,6 +25,8 @@ void ECTransform_ClearChilds(ECTransform * node){
 void ECTransform_Setup(void *_this){
 
 	ECTransform * ec_transform = _this;
+	ec_transform->id=EC_TRANSFORM;
+
 	ec_transform->entity=NULL;
 	ECTransformData *data= NEW(ECTransformData);
 	ec_transform->data=data;

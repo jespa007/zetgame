@@ -14,6 +14,7 @@ typedef enum{
 }ECTransformType;
 
 struct ECTransform{
+	EComponent 		id;
 	Entity 			*entity;
 	Transform 		transform; // world coordinates
 	void 			*data;

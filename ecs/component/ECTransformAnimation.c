@@ -5,7 +5,7 @@ typedef struct{
 }ECTransformAnimationData;
 
 static EComponent g_ec_transform_animation_required_components[]={
-		ECOMPONENT_TRANSFORM
+		EC_TRANSFORM
 };
 
 EComponentList ECTransformAnimation_RequiredComponents(void){
@@ -17,15 +17,18 @@ EComponentList ECTransformAnimation_RequiredComponents(void){
 }
 
 void	ECTransformAnimation_Setup(void *_this){
-	ECTransformAnimation *ec_ani_transform=_this;
+	ECTransformAnimation *ec_transform_animation=_this;
+	ec_transform_animation->id=EC_TRANSFORM_ANIMATION;
+
 	ECTransformAnimationData *data=NEW(ECTransformAnimationData);
 	data->ani_transform=Animation_New(TRANSFORM_CHANNEL_MAX);
 
-	ec_ani_transform->data=data;
+	ec_transform_animation->data=data;
 }
 
 void	ECTransformAnimation_Init(void *_this,Entity *_entity){
-
+	ECTransformAnimation *ec_transform_animation=_this;
+	ec_transform_animation->entity=_entity;
 }
 
 void ECTransformAnimation_StartTween(
@@ -57,11 +60,11 @@ void ECTransformAnimation_StartTween(
 
 
 void 	ECTransformAnimation_Update(void *_this){
-	ECTransformAnimation *ec_ani_transform =_this;
-	ECTransformAnimationData *data=ec_ani_transform->data;
+	ECTransformAnimation *ec_transform_animation =_this;
+	ECTransformAnimationData *data=ec_transform_animation->data;
 
 	if(Animation_Update(data->ani_transform,SDL_GetTicks())){ // let animation do the move...
-		ECTransform *ec_transform=ec_ani_transform->entity->components[ECOMPONENT_TRANSFORM];
+		ECTransform *ec_transform=ec_transform_animation->entity->components[EC_TRANSFORM];
 		if(ec_transform != NULL){
 			Animation_CopyChannelValues(data->ani_transform,&ec_transform->transform.translate.x);
 		}
@@ -70,8 +73,8 @@ void 	ECTransformAnimation_Update(void *_this){
 
 
 void	ECTransformAnimation_Destroy(void *_this){
-	ECTransformAnimation *ec_ani_transform =_this;
-	ECTransformAnimationData *data=ec_ani_transform->data;
+	ECTransformAnimation *ec_transform_animation =_this;
+	ECTransformAnimationData *data=ec_transform_animation->data;
 	Animation_Delete(data->ani_transform);
 	FREE(data);
 }

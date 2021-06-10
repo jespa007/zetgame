@@ -204,7 +204,7 @@ void Scene_Update(Scene *_this){
 		Animation_Update(data->animations->items[i],_this->current_time);
 	}
 
-
+	ESSystem_Update(data->es_system);
 	//SGNode_Update(data->node_root);
 
 	/*if(data->current_state != NULL){

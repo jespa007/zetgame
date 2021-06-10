@@ -4,7 +4,8 @@
 typedef struct ECGeometry ECGeometry;
 
 struct ECGeometry{
-	Geometry *geometry;
+	EComponent 	id;
+	Geometry 	*geometry;
 };
 
 void ECGeometry_Setup(void *_this);

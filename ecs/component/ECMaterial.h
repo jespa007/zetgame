@@ -4,7 +4,8 @@
 typedef struct ECMaterial ECMaterial;
 
 struct ECMaterial{
-	Material *material;
+	EComponent 	id;
+	Material 	*material;
 };
 
 void ECMaterial_Setup(void *_this);

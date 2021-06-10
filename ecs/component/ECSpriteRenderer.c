@@ -11,10 +11,10 @@ typedef struct{
 }ECSpriteRendererData;
 
 static EComponent g_ec_sprite_renderer_required_components[]={
-		ECOMPONENT_TRANSFORM
-		,ECOMPONENT_GEOMETRY
-		,ECOMPONENT_MATERIAL
-		,ECOMPONENT_TEXTURE
+		EC_TRANSFORM
+		,EC_GEOMETRY
+		,EC_MATERIAL
+		,EC_TEXTURE
 };
 
 EComponentList ECSpriteRenderer_RequiredComponents(void){
@@ -27,6 +27,7 @@ EComponentList ECSpriteRenderer_RequiredComponents(void){
 
 void ECSpriteRenderer_Setup(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
+	ec_sprite_renderer->id=EC_SPRITE_RENDERER;
 
 	ECSpriteRendererData *data=NEW(ECSpriteRendererData);
 
@@ -44,9 +45,12 @@ void ECSpriteRenderer_Init(void *_this,Entity *_entity){
 	ECSpriteRendererData *data=ec_sprite_renderer->data;
 	ec_sprite_renderer->entity=_entity;
 
-	ECGeometry *ec_geometry=ec_sprite_renderer->entity->components[ECOMPONENT_GEOMETRY];
-	ECMaterial *ec_material=ec_sprite_renderer->entity->components[ECOMPONENT_MATERIAL];
-	ECTexture *ec_texture=ec_sprite_renderer->entity->components[ECOMPONENT_TEXTURE];
+	ECGeometry *ec_geometry=ec_sprite_renderer->entity->components[EC_GEOMETRY];
+	ECMaterial *ec_material=ec_sprite_renderer->entity->components[EC_MATERIAL];
+	ECTexture *ec_texture=ec_sprite_renderer->entity->components[EC_TEXTURE];
+
+	ec_geometry->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE);
+	ec_material->material=Material_New(0);
 
 	// set sprite
 	data->geometry=ec_geometry->geometry;
@@ -108,7 +112,7 @@ void ECSpriteRenderer_Update(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 	ECSpriteRendererData * data= ec_sprite_renderer->data;
 	Transform *transform = NULL;
-	ECTransform *ec_transform=ec_sprite_renderer->entity->components[ECOMPONENT_TRANSFORM];
+	ECTransform *ec_transform=ec_sprite_renderer->entity->components[EC_TRANSFORM];
 	if(ec_transform){
 		transform=&ec_transform->transform;
 	}

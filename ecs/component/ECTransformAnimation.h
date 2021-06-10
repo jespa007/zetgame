@@ -4,8 +4,9 @@
 typedef struct ECTransformAnimation ECTransformAnimation;
 
 struct ECTransformAnimation{
-	Entity *entity;
-	void *data;
+	EComponent 	id;
+	Entity 		*entity;
+	void 		*data;
 };
 
 EComponentList 	ECTransformAnimation_RequiredComponents(void);
