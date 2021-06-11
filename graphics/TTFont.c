@@ -308,7 +308,7 @@ TTFont * 		TTFont_GetFontFromMemory( const uint8_t * ptr, unsigned int ptr_len,u
 			MapString_SetValue(g_ttfont_vars->fonts,id,font);
 		}
 	}else{
-		font = MapString_GetValue(g_ttfont_vars->fonts,id);
+		font = MapString_GetValue(g_ttfont_vars->fonts,id,NULL);
 	}
 
 

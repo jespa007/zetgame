@@ -14,6 +14,7 @@
 #include "Log.c"
 #include "MapInt.c"
 #include "MapString.c"
+#include "MapStringIterator.c"
 #include "Path.c"
 #include "sdl/zg_sdl.c"
 //#include "sdl/SDL_windows_main.c"

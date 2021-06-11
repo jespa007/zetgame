@@ -17,9 +17,11 @@ EComponentList ECMaterialAnimation_RequiredComponents(void){
 	return cl;
 }
 
-void	ECMaterialAnimation_Setup(void *_this){
+void	ECMaterialAnimation_Setup(void *_this, Entity *_entity){
 	ECMaterialAnimation *ec_material_animation =_this;
+	ec_material_animation->entity=_entity;
 	ec_material_animation->id=EC_MATERIAL_ANIMATION;
+	_entity->components[EC_MATERIAL_ANIMATION]=_this;
 
 	ECMaterialAnimationData *data=NEW(ECMaterialAnimationData);
 	data->ani_material=Animation_New(MATERIAL_CHANNEL_MAX);

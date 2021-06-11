@@ -95,6 +95,7 @@
 #include	"Log.h"
 #include	"List.h"
 #include	"MapString.h"
+#include	"MapStringIterator.h"
 #include	"MapInt.h"
 #include	"StrUtils.h"
 #include	"BufferByte.h"

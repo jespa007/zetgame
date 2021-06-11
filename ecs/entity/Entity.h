@@ -10,6 +10,7 @@ typedef struct Entity Entity;
 
 struct Entity{
 	void 		**components;//[ENTITY_COMPONENT_MAX];
+	bool		active;
 	void 		*data;
 
 };

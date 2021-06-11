@@ -16,10 +16,8 @@ Entity *NewNode(Scene *scene, int posx, int posy){
 	return entity;
 }
 
-
 Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture){
 	EComponent entity_components[]={
-
 			EC_SPRITE_RENDERER
 			,EC_TRANSFORM_ANIMATION
 			,EC_MATERIAL_ANIMATION
@@ -203,7 +201,7 @@ int main(int argc, char * argv[]){
 		,Graphics_GetWidth()
 		, Graphics_GetHeight()
 		,text_ground
-	);//SGViewer2d_New());
+	);
 
 	//----------------------------------
 	// SETUP FAN...
@@ -291,7 +289,6 @@ int main(int argc, char * argv[]){
 
 	//----
 	// SUN
-
 	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun);
 	ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ALPHA_VALUE_TRANSPARENT);
 

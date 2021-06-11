@@ -4,8 +4,8 @@
 typedef struct{
 	ECTransform		*parent;
 	List		*child_nodes;
-	Transform 	transform_default;
-	Transform 	*transform_local;
+	//Transform 	transform_default;
+	Transform 	transform_local;
 	uint16_t	transform_attributes;
 }ECTransformData;
 
@@ -22,16 +22,22 @@ void ECTransform_ClearChilds(ECTransform * node){
 }
 //------------------------------------------------------------------------------------
 
-void ECTransform_Setup(void *_this){
+void ECTransform_Setup(void *_this, Entity *_entity){
 
 	ECTransform * ec_transform = _this;
+	ec_transform->entity=_entity;
 	ec_transform->id=EC_TRANSFORM;
+	_entity->components[EC_TRANSFORM]=_this;
 
-	ec_transform->entity=NULL;
+
+
+
 	ECTransformData *data= NEW(ECTransformData);
 	ec_transform->data=data;
 
-	data->transform_local=&data->transform_default;
+	ec_transform->transform=Transform_ResetValues();
+	data->transform_local=Transform_ResetValues();
+
 	data->child_nodes=List_New();
 
 
@@ -44,12 +50,6 @@ void ECTransform_Setup(void *_this){
 	//sg_node->sgnode_type=ECTransformTypeNode;
 
 }
-
-void			ECTransform_Init(void *_this, Entity *_entity){
-	ECTransform *ec_transform = _this;
-	ec_transform->entity=_entity;
-}
-
 
 void ECTransform_ClearNodes(ECTransform *_this){
 
@@ -85,7 +85,7 @@ bool ECTransform_IsParentNodeRoot(ECTransform *_this){
 void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
 	Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
-	Transform_SetPosition2i(data->transform_local,v.x,v.y);
+	Transform_SetPosition2i(&data->transform_local,v.x,v.y);
 }
 
 Vector2i	ECTransform_GetPosition2i(ECTransform *_this){
@@ -95,17 +95,17 @@ Vector2i	ECTransform_GetPosition2i(ECTransform *_this){
 
 void ECTransform_SetRotateZ(ECTransform *_this,float z){
 	ECTransformData *data=_this->data;
-	Transform_SetRotateZ(data->transform_local,z);
+	Transform_SetRotateZ(&data->transform_local,z);
 }
 
 void ECTransform_SetRotate3f(ECTransform *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetRotate3f(data->transform_local,x,y,z);
+	Transform_SetRotate3f(&data->transform_local,x,y,z);
 }
 
 void ECTransform_SetScale3f(ECTransform *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetScale3f(data->transform_local,x,y,z);
+	Transform_SetScale3f(&data->transform_local,x,y,z);
 }
 
 void	ECTransform_SetParent(ECTransform *_this, ECTransform *parent_node){
@@ -188,7 +188,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 
 	Quaternion local_quaternion;
 	Transform *transform_world=&_this->transform;
-	Transform *transform_local=data->transform_local;
+	Transform *transform_local=&data->transform_local;
 
 	// transfer local -> absolute ...
 	*transform_world=*transform_local;
@@ -270,7 +270,7 @@ Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_trans
 		return &_this->transform;
 	}
 
-	return data->transform_local;
+	return &data->transform_local;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------v

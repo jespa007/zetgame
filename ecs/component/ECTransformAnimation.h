@@ -4,13 +4,12 @@
 typedef struct ECTransformAnimation ECTransformAnimation;
 
 struct ECTransformAnimation{
-	EComponent 	id;
-	Entity 		*entity;
+	EComponentHeader;
 	void 		*data;
 };
 
 EComponentList 	ECTransformAnimation_RequiredComponents(void);
-void			ECTransformAnimation_Setup(void *_this);
+void			ECTransformAnimation_Setup(void *_this, Entity *_entity);
 void			ECTransformAnimation_Init(void *_this,Entity *_entity);
 void 			ECTransformAnimation_StartTween(
 					void *_this

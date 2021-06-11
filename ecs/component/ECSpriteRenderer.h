@@ -4,14 +4,12 @@
 typedef struct ECSpriteRenderer ECSpriteRenderer;
 
 struct ECSpriteRenderer{
-	EComponent 	id;
-	Entity 		*entity;
+	EComponentHeader;
 	void 		*data;
 };
 
 EComponentList ECSpriteRenderer_RequiredComponents(void);
-void ECSpriteRenderer_Setup(void *_this);
-void ECSpriteRenderer_Init(void *_this,Entity *_entity);
+void ECSpriteRenderer_Setup(void *_this, Entity *_entity);
 
 //void ECSpriteRenderer_SetQuadPixels(uint16 width, uint16 height);
 void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height);

@@ -49,8 +49,6 @@ void Appearance_Restore(Appearance *_this){
 
 void Appearance_Delete(Appearance * _this){
 	if(_this != NULL){
-		//Material_Delete(_this->material_default);
-
 		FREE(_this);
 	}
 }

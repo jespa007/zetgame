@@ -1,6 +1,8 @@
 #ifndef _ECOMPONENT_H__
 #define _ECOMPONENT_H__
 
+typedef struct Entity Entity;
+
 // Builtin components
 typedef enum{
 	EC_INVALID=0,			// reserver for invalid component
@@ -23,6 +25,11 @@ typedef enum{
 
 	EC_MAX_COMPONENTS
 }EComponent;
+
+typedef struct{
+	EComponent  id;
+	Entity		*entity;
+}EComponentHeader;
 
 
 typedef struct{

@@ -4,13 +4,12 @@
 typedef struct ECMaterialAnimation ECMaterialAnimation;
 
 struct ECMaterialAnimation{
-	EComponent 	id;
-	Entity 		*entity;
+	EComponentHeader;
 	void 		*data;
 };
 
 EComponentList	ECMaterialAnimation_RequiredComponents(void);
-void			ECMaterialAnimation_Setup(void *_this);
+void			ECMaterialAnimation_Setup(void *_this, Entity *_entity);
 void			ECMaterialAnimation_Init(void *_this,Entity *_entity);
 void			ECMaterialAnimation_StartAction(void *_this, Action *action, int repeat);
 void 			ECMaterialAnimation_Update(void *_this);

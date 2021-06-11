@@ -5,8 +5,6 @@ typedef struct{
 	//Shape2d *shape2d;
 	Geometry 		*	geometry;
 	Appearance	 	*  	appearance;
-	Material		*   material;
-	Texture			*   texture;
 	uint16_t 			width, height;
 }ECSpriteRendererData;
 
@@ -25,42 +23,25 @@ EComponentList ECSpriteRenderer_RequiredComponents(void){
 	return cl;
 }
 
-void ECSpriteRenderer_Setup(void *_this){
+void ECSpriteRenderer_Setup(void *_this,Entity *_entity){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
+	ec_sprite_renderer->entity=_entity;
 	ec_sprite_renderer->id=EC_SPRITE_RENDERER;
+	_entity->components[EC_SPRITE_RENDERER]=_this;
 
 	ECSpriteRendererData *data=NEW(ECSpriteRendererData);
 
-	data->appearance=Appearance_New();
-	data->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE); // Quad by default ?
+	ECGeometry *ec_geometry=_entity->components[EC_GEOMETRY];
+	ECMaterial *ec_material=_entity->components[EC_MATERIAL];
 
-	ec_sprite_renderer->entity=NULL;
+	data->appearance=Appearance_New();
+	ec_geometry->geometry=data->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE); // Quad by default ?
+	ec_material->material=data->appearance->material=Material_New(0); // Mat by default ?
+
 	ec_sprite_renderer->data=data;
 
 	ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 }
-
-void ECSpriteRenderer_Init(void *_this,Entity *_entity){
-	ECSpriteRenderer *ec_sprite_renderer=_this;
-	ECSpriteRendererData *data=ec_sprite_renderer->data;
-	ec_sprite_renderer->entity=_entity;
-
-	ECGeometry *ec_geometry=ec_sprite_renderer->entity->components[EC_GEOMETRY];
-	ECMaterial *ec_material=ec_sprite_renderer->entity->components[EC_MATERIAL];
-	ECTexture *ec_texture=ec_sprite_renderer->entity->components[EC_TEXTURE];
-
-	ec_geometry->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE);
-	ec_material->material=Material_New(0);
-
-	// set sprite
-	data->geometry=ec_geometry->geometry;
-	data->appearance->material=ec_material->material;
-	data->appearance->texture=ec_texture->texture;
-
-
-
-}
-
 
 void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height){
 
@@ -113,8 +94,13 @@ void ECSpriteRenderer_Update(void *_this){
 	ECSpriteRendererData * data= ec_sprite_renderer->data;
 	Transform *transform = NULL;
 	ECTransform *ec_transform=ec_sprite_renderer->entity->components[EC_TRANSFORM];
+	ECTexture *ec_texture=ec_sprite_renderer->entity->components[EC_TEXTURE];
 	if(ec_transform){
 		transform=&ec_transform->transform;
+	}
+
+	if(ec_texture){
+		data->appearance->texture=ec_texture->texture;
 	}
 
 	Graphics_Draw(transform,data->geometry,data->appearance);
@@ -123,7 +109,5 @@ void ECSpriteRenderer_Update(void *_this){
 void ECSpriteRenderer_Destroy(void *_this){
 	ECSpriteRendererData * data= ((ECSpriteRenderer *)_this)->data;
 	Appearance_Delete(data->appearance);
-	Geometry_Delete(data->geometry);
-
-	free(data);
+	FREE(data);
 }

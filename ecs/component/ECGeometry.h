@@ -4,11 +4,11 @@
 typedef struct ECGeometry ECGeometry;
 
 struct ECGeometry{
-	EComponent 	id;
+	EComponentHeader;
 	Geometry 	*geometry;
 };
 
-void ECGeometry_Setup(void *_this);
+void ECGeometry_Setup(void *_this, Entity *_entity);
 void ECGeometry_Destroy(void *_this);
 
 #endif

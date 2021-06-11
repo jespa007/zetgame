@@ -14,14 +14,12 @@ typedef enum{
 }ECTransformType;
 
 struct ECTransform{
-	EComponent 		id;
-	Entity 			*entity;
+	EComponentHeader;
 	Transform 		transform; // world coordinates
 	void 			*data;
 };
 
-void			ECTransform_Setup(void *_this);
-void			ECTransform_Init(void *_this,Entity *_entity);
+void			ECTransform_Setup(void *_this, Entity *_entity);
 
 bool			ECTransform_Attach(ECTransform *_this, ECTransform *node);
 bool			ECTransform_Detach(ECTransform *_this, ECTransform *node);

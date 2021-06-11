@@ -9,6 +9,7 @@ struct MapStringNode{
     char  *key;
     void * val;
     MapStringNode *next;
+    MapStringNode *previous;
 };
 
 struct MapString{
@@ -18,10 +19,12 @@ struct MapString{
 };
 
 MapString * MapString_New(void);
-bool		MapString_Exist(MapString *t,const char * key);
-void 		MapString_SetValue(MapString *t,const char * key,void * val);
-void * 		MapString_GetValue(MapString *t,const char * key);
-void 		MapString_Delete(MapString *m);
+bool		MapString_Exist(MapString *_this,const char * key);
+void 		MapString_SetValue(MapString *_this,const char * key,void * val);
+void 		MapString_Erase(MapString *_this,const char * key);
+void * 		MapString_GetValue(MapString *_this,const char * key, bool *exists);
+void		MapString_Clear(MapString *_this);
+void 		MapString_Delete(MapString *_this);
 
 
 

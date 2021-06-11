@@ -4,12 +4,12 @@
 typedef struct ECTexture ECTexture;
 
 struct ECTexture{
-	EComponent 	id;
+	EComponentHeader;
 	Texture 	*texture;
 };
 
 
-void ECTexture_Setup(void *_this);
+void ECTexture_Setup(void *_this, Entity *entity);
 void ECTexture_SetTexture(ECTexture *_this,Texture *_texture);
 void ECTexture_Destroy(void *_this);
 

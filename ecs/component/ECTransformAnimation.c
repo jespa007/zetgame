@@ -16,19 +16,17 @@ EComponentList ECTransformAnimation_RequiredComponents(void){
 	return cl;
 }
 
-void	ECTransformAnimation_Setup(void *_this){
+void	ECTransformAnimation_Setup(void *_this, Entity *_entity){
 	ECTransformAnimation *ec_transform_animation=_this;
+	ec_transform_animation->entity=_entity;
 	ec_transform_animation->id=EC_TRANSFORM_ANIMATION;
+	_entity->components[EC_TRANSFORM_ANIMATION]=_this;
+
 
 	ECTransformAnimationData *data=NEW(ECTransformAnimationData);
 	data->ani_transform=Animation_New(TRANSFORM_CHANNEL_MAX);
 
 	ec_transform_animation->data=data;
-}
-
-void	ECTransformAnimation_Init(void *_this,Entity *_entity){
-	ECTransformAnimation *ec_transform_animation=_this;
-	ec_transform_animation->entity=_entity;
 }
 
 void ECTransformAnimation_StartTween(
