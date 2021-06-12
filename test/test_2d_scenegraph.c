@@ -303,6 +303,9 @@ int main(int argc, char * argv[]){
 
 	Graphics_SetBackgroundColor(Color4f_FromHex(0xFFFF));
 	Scene_Start(scene);
+
+	Transform transform_camera=Transform_ResetValues();
+
 	do{
 
 		Graphics_BeginRender();
@@ -319,7 +322,6 @@ int main(int argc, char * argv[]){
 		if(Input_IsMouseButtonPressed()){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
 		}
-
 
 		Graphics_EndRender();
 

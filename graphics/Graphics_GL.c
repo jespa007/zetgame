@@ -5,13 +5,14 @@ uint32_t start_ticks;
 
 
 
-static SDL_GLContext * sdl_gl_context = NULL;
+static SDL_GLContext * g_sdl_gl_context = NULL;
+
 
 bool Graphics_GL_Init(void){
 
 	// Attach the OpenGL context to our window
-	sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
-	if(sdl_gl_context == NULL){
+	g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
+	if(g_sdl_gl_context == NULL){
 		Log_Error("Cannot create gl context:%s",SDL_GetError());
 		return false;
 	}
@@ -34,11 +35,23 @@ bool Graphics_GL_Init(void){
 	glEnable(GL_DEPTH_TEST);
 
 	// we will create own custom z-buffer
-	glEnable(GL_LIGHTING);
+	glDisable(GL_LIGHTING);
 
-	 // To avoid see triangles back side must configure OpenGL  _GL_CULL_FACE with only _GL_BACK and FrontFace ClockWise orientation
+	 /** To avoid see triangles back side must configure OpenGL  _GL_CULL_FACE with only _GL_BACK and FrontFace ClockWise orientation
+	  * https://www.khronos.org/opengl/wiki/Face_Culling
+	  */
 	 glEnable(GL_CULL_FACE);
-	 glCullFace(GL_BACK); // we want to hide back faces
+	 /** glCullFace specifies whether front- or back-facing facets are culled (as specified by mode) when facet culling is enabled
+	  * OpenGL checks all the faces that are front facing towards the viewer and renders those while discarding all the faces that are back facing
+	  * , saving us a lot of fragment shader calls. We do need to tell OpenGL which of the faces we use are actually the front faces and which faces
+	  * are the back faces. OpenGL uses a clever trick for this by analyzing the winding order of the vertex data.
+	  */
+	 glCullFace(GL_BACK); // we want to (cull or erase) the back faces
+	 /**
+	  * Facet culling is initially disabled. To enable and disable facet culling, call the glEnable and glDisable commands with the argument GL_CULL_FACE.
+	  * Facets include triangles, quadrilaterals, polygons, and rectangles.
+	  * glFrontFace specifies which of the clockwise and counterclockwise facets are front-facing and back-facing. See glFrontFace.
+	  */
 	 glFrontFace(GL_CW); // we stablish front face side in ClockWise order
 
 	glClearDepth(1.0f);                         // 0 is near, 1 is far
@@ -46,7 +59,7 @@ bool Graphics_GL_Init(void){
 
 
 	//---- BEGIN POINT SPRITES SETUP FOR SYSTEM PARTICLE (Don't touch these values, everything works fine now!)
-	GLfloat psr[2];
+    GLfloat psr[2];
 	GLfloat pda[3] = { 1.0f, 0.0f, 0.01f }; // defaults are (1.0, 0.0, 0.0)
 
 	glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, psr);
@@ -66,8 +79,36 @@ bool Graphics_GL_Init(void){
 
 	// select 2d model view as default...
 	Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
+
 	return true;
 
+}
+
+void Graphics_GL_SetCameraTransform(Transform *transform){
+	Vector3f rotate,translate;
+	Quaternion q_inv;
+	Matrix4f m_inv;
+
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+
+	translate = transform->translate;
+	rotate = transform->rotate;
+
+	// rotate negate...
+	q_inv=Quaternion_FromEulerV3f(
+			(Vector3f){
+				.x=-rotate.x
+				,.y=-rotate.y
+				,.z=-rotate.z
+			}
+	);
+	m_inv=Quaternion_ToMatrix4f(q_inv);
+
+
+	glLoadMatrixf(&m_inv.e11);
+
+	glTranslatef(-translate.x, -translate.y,-translate.z);
 }
 
 void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){

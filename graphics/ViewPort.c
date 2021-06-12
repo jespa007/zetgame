@@ -196,6 +196,17 @@ float ViewPort_ScreenToWorldPosY(int y2d){
 	return ViewPort_ScreenToWorldPosY_BuiltIn(&g_viewport_vars->current_viewport, y2d);
 }
 
+Vector3f ViewPort_ScreenToWorld(int x, int y){
+	Vector3f v3d=(Vector3f){
+		.x=ViewPort_ScreenToWorldPosX(x)
+		,.y=ViewPort_ScreenToWorldPosY(y)
+		,.z=0
+	};
+
+	return v3d;
+}
+
+
 Vector3f ViewPort_GetProjectionOrigin(void){
 	return g_viewport_vars->current_viewport.projection_origin;
 }

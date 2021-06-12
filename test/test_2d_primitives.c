@@ -18,7 +18,6 @@ int main(int argc, char *argv[]){
 	List *textures= List_New();
 
 	// circle with without border...
-
 	// foreach image create a texture...
 	for(unsigned i=0; i < ARRAY_SIZE(circle_info);i++){
 		Texture *texture=NULL;
@@ -32,32 +31,45 @@ int main(int argc, char *argv[]){
 
 		Texture_UpdateFromSurface(texture,srf);
 
-
-
-//		List_Add(images,SDL_NewCircle(SHAPE_WIDTH>>1,SHAPER_COLOR,0,0));
-//		List_Add(images,SDL_NewCircle(SHAPE_WIDTH>>1,SHAPER_COLOR,SHAPE_WIDTH*0.1,SHAPE_BORDER_COLOR));
+		SDL_FreeSurface(srf);
 	}
 
+	Graphics_SetBackgroundColor(Color4f_FromHex(0xFF));
 
-
-
-	Graphics_SetBackgroundColor(Color4f_FromHex(0x0));
-
-	//img=SDL_NewArrow(10,10);
-	//List_Add(l_texture,text=Texture_New());
-	//Texture_SetImage(text,img);
-	//SDL_FreeSurface(img);
-	//SDL_NewSurface(10,10,4);
+	Geometry *geometry=Geometry_NewQuad(GEOMETRY_TEXTURE);
+	Appearance *appearance=Appearance_New();
 
 	do{
 		Graphics_BeginRender();
 
 		int x=10,y=10;
 
+		//Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
+
 		for(unsigned i=0; i < textures->count; i++){
 
+			/*glBegin(GL_TRIANGLES); // draw something with the texture on
+				glVertex2f(-1,-1);
+				glVertex2f(0,1);
+				glVertex2f(1,-1);
+		   glEnd();*/
+			appearance->texture=textures->items[i];
+			//Graphics_Draw(NULL,geometry,appearance);
 			// circle
 			Graphics_DrawRectangleTextured(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR4F_WHITE,textures->items[i],NULL);
+			//glLoadIdentity();
+			/*glColor4f(0.5,0.5,1,0.5);
+
+			glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
+					glVertex3f(0.2, 0.2,0.0);
+					  glVertex3f(0.8, 0.2,0.0);
+					   glVertex3f(0.2, 0.5,0.0);
+					   glVertex3f(0.8, 0.5,0.0);
+					  glVertex3f(0.2, 0.8,0.0);
+					  glVertex3f(0.8, 0.8,0.0);
+			   glEnd();*/
+			//Graphics_DrawRectangle(x,y,SHAPE_WIDTH,SHAPE_WIDTH,2,COLOR4F_WHITE);//,textures->items[i],NULL);
+			//Shape_DrawRectangle(0.5f,0.5f,true);
 			x+=SHAPE_WIDTH+10;
 
 			if((i%2==0) && i > 0){
@@ -70,6 +82,14 @@ int main(int argc, char *argv[]){
 		// square
 
 		// cross
+		/*if(KR_UP){
+			transform_camera.translate.z+=0.01;
+		}
+
+		if(KR_DOWN){
+			transform_camera.translate.z-=0.01;
+		}*/
+
 
 
 		Graphics_EndRender();
@@ -81,6 +101,9 @@ int main(int argc, char *argv[]){
 	for(unsigned i=0; i < textures->count; i++){
 		Texture_Delete(textures->items[i]);
 	}
+
+	Geometry_Delete(geometry);
+	Appearance_Delete(appearance);
 
 	List_Delete(textures);
 

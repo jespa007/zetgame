@@ -24,6 +24,7 @@ bool 	Graphics_Init(int start_posx
 		,uint16_t properties);
 
 void 	Graphics_SetProjectionMode(PROJECTION_MODE);
+void 	Graphics_SetCameraTransform(Transform *transform);
 void 	Graphics_SetResolutionDesign(int _width, int _height);
 
 Vector2f Graphics_GetScale(void);

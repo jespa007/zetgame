@@ -34,10 +34,14 @@ typedef struct{
 	 List	*adapters;
 	 List   *capture_screen_callbacks;
 	 int 	n_screenshoot;
+
+	Geometry *geometry_quad_default;
+
 }GraphicsVars;
 
 
 GraphicsVars *g_graphics_vars=NULL;
+
 
 
 #include "Graphics_GL.c"
@@ -137,20 +141,20 @@ bool Graphics_Init(
 		);
 	}
 
-
-
 	Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
+	Log_Info("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
 
 	//Input_SetupCursors();
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
 		ok=Graphics_GL_Init();
 		break;
-
 	}
 
-	// adapter list
+	// init gl vars
+	g_graphics_vars->geometry_quad_default=Geometry_NewQuad(GEOMETRY_TEXTURE);
 
+	// adapter list
 	g_graphics_vars->adapters=NULL;
 
 #ifdef _WIN32
@@ -178,6 +182,16 @@ void Graphics_SetProjectionMode(PROJECTION_MODE projection_mode){
 		Graphics_GL_SetProjectionMode(projection_mode);
 		break;
 
+	}
+}
+
+void Graphics_SetCameraTransform(Transform *transform){
+	switch(Graphics_GetGraphicsApi()){
+		default:
+			break;
+		case GRAPHICS_API_GL:
+			Graphics_GL_SetCameraTransform(transform);
+			break;
 	}
 }
 
@@ -460,8 +474,8 @@ void Graphics_DrawRectangle(int x, int y, uint16_t width, uint16_t height, uint8
 	Vector2i p1_2d=Vector2i_New2i(x,y);
 	Vector2i p2_2d=Vector2i_New2i(x+width,y+height);
 
-	Vector3f p1_3d=ViewPort_ScreenToWorldDim2i(p1_2d.x,p1_2d.y);
-	Vector3f p2_3d=ViewPort_ScreenToWorldDim2i(p2_2d.x,p2_2d.y);
+	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
+	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 
 	switch(g_graphics_vars->graphics_api){
@@ -482,8 +496,8 @@ void Graphics_DrawRectangleFilled(int x, int y, uint16_t width, uint16_t height,
 	Vector2i p1_2d=Vector2i_New2i(x,y);
 	Vector2i p2_2d=Vector2i_New2i(x+width,y+height);
 
-	Vector3f p1_3d=ViewPort_ScreenToWorldDim2i(p1_2d.x,p1_2d.y);
-	Vector3f p2_3d=ViewPort_ScreenToWorldDim2i(p2_2d.x,p2_2d.y);
+	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
+	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 
 	switch(g_graphics_vars->graphics_api){
@@ -505,8 +519,8 @@ void Graphics_DrawRectangleTextured(int x, int y, uint16_t width, uint16_t heigh
 	Vector2i p1_2d=Vector2i_New2i(x,y);
 	Vector2i p2_2d=Vector2i_New2i(x+width,y+height);
 
-	Vector3f p1_3d=ViewPort_ScreenToWorldDim2i(p1_2d.x,p1_2d.y);
-	Vector3f p2_3d=ViewPort_ScreenToWorldDim2i(p2_2d.x,p2_2d.y);
+	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
+	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
@@ -570,6 +584,11 @@ void Graphics_DeInit(void) {
 	TTFont_DeInit();
 	ViewPort_DeInit();
 
+
+	// deinit gl vars first
+	Geometry_Delete(g_graphics_vars->geometry_quad_default);
+
+	// ...then deini gl context
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
 		Graphics_GL_DeInit();
@@ -583,6 +602,7 @@ void Graphics_DeInit(void) {
 	// Remove adapter lists
 	List_DeleteAndFreeAllItems(g_graphics_vars->adapters);
 	List_DeleteAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
+
 
 	FREE(g_graphics_vars);
 }
