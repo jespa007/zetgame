@@ -123,7 +123,7 @@ void IconManager_DrawIcon(IconManager * _this,uint16_t idx_icon, int x,int y,uin
 
 		if(icon.texture != NULL){
 
-			Graphics_DrawRectangleTextured(x,y,width,height,COLOR4F_WHITE,icon.texture,&icon.texture_crop);
+			Graphics_DrawRectangleTexturedTranslate2i(x,y,width,height,COLOR4F_WHITE,icon.texture,&icon.texture_crop);
 		}
 	}
 }

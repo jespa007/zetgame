@@ -139,7 +139,7 @@ int main(int argc, char *argv[]){
 		if(scale< 0.5f || scale > 2.0f) inc_scale*=-1;
 
 
-		Graphics_DrawRectangleFilled(10,10,100,100,Color4f_FromHex(0xFF));
+		Graphics_DrawRectangleFilledTranslate2i(10,10,100,100,Color4f_FromHex(0xFF));
 		/*Graphics_DrawRectangle(20,20,100,100,Color4f_FromHexa(0xFFFF));
 		Graphics_DrawRectangleTextured(200,200,100,100,text_png);
 		Graphics_DrawRectangleTextured(300,300,100,100,text_jpg);

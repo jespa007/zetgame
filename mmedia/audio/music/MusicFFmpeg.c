@@ -50,6 +50,16 @@ AVSampleFormat MusicFFmpeg_GetFormat(){
 	return AV_SAMPLE_FMT_S16;
 }
 
+bool MusicFFmpeg_IsFileSupported(){
+	long int str_len=strlen(file);
+
+	if(str_len < 4) return false;
+
+	return
+			strncmp("ogg", (file+str_len)-3, 3) == 0;
+
+}
+
 
 int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 

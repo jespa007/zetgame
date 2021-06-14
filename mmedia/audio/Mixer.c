@@ -206,7 +206,7 @@ void Mixer_ConfigureAudioFormat(AudioFormat format){
 	g_mixer_vars->frame_size =  (SPLAYER_SAMPLES*SPLAYER_N_CHANNELS*g_mixer_vars->bytes_per_sample);
 }
 
-void Mixer_SoundDriverList(void){
+void Mixer_PrintListSoundDriver(void){
 	for (uint8_t i = 0; i < SDL_GetNumAudioDrivers(); ++i) {
 		Log_Info("Audio driver %d: %s", i, SDL_GetAudioDriver(i));
 	}
@@ -239,7 +239,7 @@ bool Mixer_Init(AudioFormat format){
 		}
 	}
 
-	Mixer_SoundDriverList();
+	//Mixer_PrintListSoundDriver();
 
 	g_mixer_vars = (MixerVars *)malloc(sizeof(MixerVars));
 	memset(g_mixer_vars,0,sizeof(MixerVars));

@@ -268,7 +268,7 @@ void Input_Update() {
 			SDL_MouseMotionEvent *mouse_motion_2=&event.motion;
 
 
-			mouse_event.position=Vector2i_Mulv2f(Vector2i_New2i(
+			mouse_event.position=Vector2i_Mulv2f(Vector2i_New(
 					mouse_motion_2->x
 					,mouse_motion_2->y
 			),Graphics_GetScale());

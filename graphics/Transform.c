@@ -57,7 +57,7 @@ void Transform_SetTranslateZ(Transform *_this,float z){
 }
 
 void Transform_SetPosition2i(Transform *_this,int x, int y){
-	_this->translate=ViewPort_ScreenToWorldDim2i(x,y);
+	_this->translate=ViewPort_ScreenToWorld(x,y);
 	//CLR_MSK(_this->transform_properties,TRANSFORM_PROPERTY_POSITION_RELATIVE_X|TRANSFORM_PROPERTY_POSITION_RELATIVE_Y);
 }
 
@@ -82,7 +82,7 @@ void Transform_SetPositionRelative2i(Transform *_this,int x, int y){
 }
 
 Vector2i 	Transform_GetPosition2i(Transform *_this){
-	return Vector2i_New2i(
+	return Vector2i_New(
 		 ViewPort_WorldToScreenPosX(_this->translate.x)
 		,ViewPort_WorldToScreenPosY(_this->translate.y)
 	);

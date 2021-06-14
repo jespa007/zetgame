@@ -62,13 +62,14 @@ void Graphics_EndRender(void);
  */
 void Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance);
 
-void Graphics_DrawRectangle(int x, int y, uint16_t width, uint16_t height,  uint8_t thickness, Color4f color);
+void Graphics_DrawRectangle(uint16_t width, uint16_t height, uint8_t thickness, Color4f color);
+void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t height,  uint8_t thickness, Color4f color);
 void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, uint8_t thickness, Color4f color);
 
-void Graphics_DrawRectangleFilled(int x, int y, uint16_t width, uint16_t height, Color4f color);
+void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color);
 void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color);
 
-void Graphics_DrawRectangleTextured(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, Rectanglef * text_crop);
+void Graphics_DrawRectangleTexturedTranslate2i(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, Rectanglef * text_crop);
 void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, Rectanglef * text_crop);
 
 

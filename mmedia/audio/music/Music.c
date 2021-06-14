@@ -126,13 +126,16 @@ MUSIC Music_Load(const char *file){
 		}
 	}
 
-	if(MusicXmp_Load(sp_info,file)){
-		return sp_n_loaded_music++;
+	if(MusicXmp_IsFileSupported(file)){
+		if(MusicXmp_Load(sp_info,file)){
+			return sp_n_loaded_music++;
+		}
 	}
-
 #ifdef __WITH_FFMPEG__
-	if(MusicFFmpeg_Load(sp_info,file)){
-		return sp_n_loaded_music++;
+	else if(MusicFFmpeg_IsFileSupported(file)){
+		if(MusicFFmpeg_Load(sp_info,file)){
+			return sp_n_loaded_music++;
+		}
 	}
 #endif
 
@@ -230,6 +233,7 @@ bool Music_Play(MUSIC id){
 		switch(sp_info->type){
 		case SOUND_TYPE_XMP:
 			MusicXmp_Seek(sp_info,0);
+			MusicXmp_Play(sp_info);
 			break;
 		case SOUND_TYPE_FFMPEG:
 #ifdef __WITH_FFMPEG__

@@ -1,7 +1,95 @@
 #include "../ZetGame.h"
 
+#include <SDL2/SDL.h>
+#include <xmp.h>
+
+static void fill_audio(void *udata, unsigned char *stream, int len)
+{
+   // xmp_play_buffer(udata, stream, len, 0);
+}
+
+int sound_init(xmp_context ctx, int sampling_rate, int channels)
+{
+    SDL_AudioSpec a;
+
+    a.freq = sampling_rate;
+    a.format = (AUDIO_S16);
+    a.channels = channels;
+    a.samples = 2048;
+    a.callback = fill_audio;
+    a.userdata = ctx;
+
+    if (SDL_OpenAudio(&a, NULL) < 0) {
+            fprintf(stderr, "%s\n", SDL_GetError());
+            return -1;
+    }
+}
+
+int test_sdl(int argc, char **argv)
+{
+    xmp_context ctx;
+
+    BufferByte *buffer=FileSystem_ReadFile(argv[1]);
+
+    if(buffer==NULL){
+    	return -1;
+    }
+
+
+    if ((ctx = xmp_create_context()) == NULL)
+            return 1;
+
+    sound_init(ctx, 44100, 2);
+
+
+
+
+    xmp_load_module_from_memory(ctx, buffer->ptr,buffer->len);
+    xmp_start_player(ctx, 44100, 0);
+
+    SDL_PauseAudio(0);
+
+    long sample_data=2048;
+    long data_sample_len=2*2*2048;
+    uint8_t data_sample[2*2*2048];
+
+	for(unsigned i=0; i<10;i++){
+		xmp_play_buffer((char *)ctx
+				, (void *)data_sample
+				, data_sample_len, 0);
+
+		uint8_t * ptr_data_sample=data_sample;
+		for(unsigned i=0; i < sample_data; i++){
+			for(unsigned c=0; c < 2; c++){// 2 channels
+				if(i>0) printf(" ");
+
+				printf("%x",(Sint16 *)ptr_data_sample);
+
+				ptr_data_sample+=2; // 16 bits (2 bytes)
+			}
+		}
+	}
+
+    sleep(10);              // Do something important here
+
+    SDL_PauseAudio(1);
+
+    xmp_end_player(ctx);
+    xmp_release_module(ctx);
+    xmp_free_context(ctx);
+
+    SDL_CloseAudio();
+
+    BufferByte_Delete(buffer);
+
+    return 0;
+}
+
+
 
 int main(int argc, char *argv[]){
+
+	//return test_sdl(argc,argv);
 
 	ZetGameSetupParams default_setup={
 			.graphics_api=GRAPHICS_API_GL
@@ -49,6 +137,7 @@ int main(int argc, char *argv[]){
 		id_wav = Music_Load("data/musics/music.wav");
 		id_ogg = Music_Load("data/musics/music.ogg");
 		id_xm = Music_Load("data/musics/music.xm");
+
 	}
 
 	Log_Info("duration 0: %2i:%02i s",Sample_GetDuration(id_effect)/60000		,(int)(((float)(Sample_GetDuration(id_effect))/60000.0f)*60.0f));

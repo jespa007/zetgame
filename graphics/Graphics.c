@@ -468,11 +468,25 @@ void Graphics_EndRender(void)
 //
 // Drawing functions
 //
+void Graphics_DrawRectangle(uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
+	Vector3f dim_3d=ViewPort_ScreenToWorldDim2i(width>>1,height>>1);
 
-void Graphics_DrawRectangle(int x, int y, uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
+	switch(g_graphics_vars->graphics_api){
+	case GRAPHICS_API_GL:
+		Graphics_GL_DrawRectangle4f(
+				-dim_3d.x
+				,dim_3d.y
+				,dim_3d.x
+				,-dim_3d.y
+				,thickness
+				,color);
+	}
+}
 
-	Vector2i p1_2d=Vector2i_New2i(x,y);
-	Vector2i p2_2d=Vector2i_New2i(x+width,y+height);
+void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
+
+	Vector2i p1_2d=Vector2i_New(x,y);
+	Vector2i p2_2d=Vector2i_New(x+width,y+height);
 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
@@ -491,10 +505,10 @@ void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, uint8_t th
 	}
 }
 
-void Graphics_DrawRectangleFilled(int x, int y, uint16_t width, uint16_t height, Color4f color){
+void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color){
 
-	Vector2i p1_2d=Vector2i_New2i(x,y);
-	Vector2i p2_2d=Vector2i_New2i(x+width,y+height);
+	Vector2i p1_2d=Vector2i_New(x,y);
+	Vector2i p2_2d=Vector2i_New(x+width,y+height);
 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
@@ -513,11 +527,11 @@ void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Colo
 	}
 }
 
-void Graphics_DrawRectangleTextured(int x, int y, uint16_t width, uint16_t height, Color4f color, Texture *text, Rectanglef * text_crop){
+void Graphics_DrawRectangleTexturedTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color, Texture *text, Rectanglef * text_crop){
 
 
-	Vector2i p1_2d=Vector2i_New2i(x,y);
-	Vector2i p2_2d=Vector2i_New2i(x+width,y+height);
+	Vector2i p1_2d=Vector2i_New(x,y);
+	Vector2i p2_2d=Vector2i_New(x+width,y+height);
 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);

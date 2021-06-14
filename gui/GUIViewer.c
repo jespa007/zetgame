@@ -37,7 +37,7 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 	Vector2i dim=GUIWidget_GetDimensions(_this->widget);
 
-	Graphics_DrawRectangleTextured(position.x,position.y,dim.x,dim.y,COLOR4F_WHITE,_this->widget->texture,NULL);
+	Graphics_DrawRectangleTexturedTranslate2i(position.x,position.y,dim.x,dim.y,COLOR4F_WHITE,_this->widget->texture,NULL);
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
 	Textbox_Draw(_this->widget->textbox,&transform,&_this->widget->color);

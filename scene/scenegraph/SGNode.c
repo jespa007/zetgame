@@ -115,7 +115,7 @@ void SGNode_SetScale3f(SGNode *_this,float x, float y, float z){
 }
 
 void 		SGNode_SetDimensions2i(SGNode *_this,uint16_t width, uint16_t height){
-	_this->dimensions=ViewPort_ScreenToWorldDimv2i(Vector2i_New2i(width,height));
+	_this->dimensions=ViewPort_ScreenToWorldDimv2i(Vector2i_New(width,height));
 
 }*/
 /*

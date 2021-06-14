@@ -28,8 +28,8 @@ int main(int argc, char *argv[]){
 			Transform_SetPosition2i(&transform,10,10);
 
 			Graphics_ClearScreen(Color4f_FromRGB(32+i*10,32+i*10,32+i*10));
-			Graphics_DrawRectangleTextured(0,0,100,100,Color4f_FromRGB(0,200,0),text_png,NULL);
-			Graphics_DrawRectangleFilled(0,0,10,10,COLOR4F_WHITE);
+			Graphics_DrawRectangleTexturedTranslate2i(0,0,100,100,Color4f_FromRGB(0,200,0),text_png,NULL);
+			Graphics_DrawRectangleFilledTranslate2i(0,0,10,10,COLOR4F_WHITE);
 			Textbox_Draw(textbox,&transform,NULL);
 
 			ViewPort_Pop();

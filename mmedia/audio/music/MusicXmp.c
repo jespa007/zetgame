@@ -35,6 +35,7 @@ typedef struct{
 bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size_t len){
 
 	xmp_context ctx;
+	int error;
 	//current_playing_row = last_played_row = -1;
 
 	if ((ctx = xmp_create_context()) == NULL) {
@@ -42,9 +43,22 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 		return false;
 	}
 
-	if(xmp_load_module_from_memory (ctx,(void *)ptr, len) != 0) {
+	if((error=xmp_load_module_from_memory (ctx,(void *)ptr, len)) != 0) {
+		const char *error_str="unknown error";
+		switch(error){
+		case -XMP_ERROR_FORMAT:
+			error_str="unrecognized file format";
+			break;
+		case -XMP_ERROR_LOAD:
+			error_str="the file format was recognized but the file loading failed";
+			break;
+		case -XMP_ERROR_SYSTEM:
+			error_str=" system error";
+			break;
+		}
+
 		xmp_free_context(ctx);
-		Log_Error("Cannot open module from memory!");
+		Log_Error("Cannot open module from memory: %s!",error_str);
 		return false;
 	}
 
@@ -74,6 +88,19 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 	sp_info->volume=1;
 
 	return true;
+}
+
+bool MusicXmp_IsFileSupported(const char * file){
+
+	long int str_len=strlen(file);
+
+	if(str_len < 4) return false;
+
+	return
+			strncmp("s3m", (file+str_len)-3, 3) == 0
+		|| 	strncmp("xm", (file+str_len)-2, 2) == 0
+		|| 	strncmp("mod", (file+str_len)-3, 3) == 0;
+
 }
 
 bool MusicXmp_Load(MixerSound *sp_info, const char *file){
@@ -109,7 +136,9 @@ void MusicXmp_Seek(MixerSound *sp_info, long t_seek){
 void MusicXmp_Play(MixerSound *sp_info){
 
 	MusicXmp *s_xmp=(MusicXmp *)sp_info->data;
-	xmp_start_player(s_xmp->ctx,SPLAYER_FREQUENCY,0);
+	if(xmp_start_player(s_xmp->ctx,SPLAYER_FREQUENCY,0) != 0){
+		Log_Error("Error starting module");
+	}
 }
 
 /*
@@ -183,12 +212,15 @@ void MusicXmp_Update(MixerSound *sp_info){
 	uint8_t n_current_block = wave_buffer->n_write_block&MASK_MAX_FFM_BLOCKS;
 	MusicXmp *s_xmp = (MusicXmp *)sp_info->data;
 	struct xmp_frame_info frame_info;
+	int error=0;
+	const char *error_str=NULL;
+
 
 	MusicXmp_UpdateEvents(s_xmp);
 
 	xmp_get_frame_info(s_xmp->ctx, &frame_info);
 	if(g_mixer_vars->cvt_16b_to_audio != NULL){ // need reconvert audio ...
-		xmp_play_buffer(
+		error=xmp_play_buffer(
 				(char *)s_xmp->ctx
 				, (void *)wave_buffer->block_ptr[n_current_block]
 				, g_mixer_vars->cvt_16b_to_audio->len, 0);
@@ -198,10 +230,25 @@ void MusicXmp_Update(MixerSound *sp_info){
 
 	}
 	else{
-		xmp_play_buffer((char *)s_xmp->ctx
+		error=xmp_play_buffer((char *)s_xmp->ctx
 				, (void *)wave_buffer->block_ptr[n_current_block]
 				, g_mixer_vars->frame_size, 0);
 	}
+
+	if(error!=0){
+		error_str="unknown error";
+		switch(error){
+		case -XMP_END:
+			error_str="module was stopped or the loop counter was reached";
+			break;
+		case -XMP_ERROR_STATE:
+			error_str="the player is not in playing state";
+			break;
+		}
+
+		Log_Error("Error playing xmp:%s",error_str);
+	}
+
 	wave_buffer->block_len[n_current_block]=g_mixer_vars->frame_size;
 	wave_buffer->n_write_block= (wave_buffer->n_write_block+1)&MASK_MAX_FFM_BLOCKS;
 

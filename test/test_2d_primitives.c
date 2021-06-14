@@ -48,49 +48,17 @@ int main(int argc, char *argv[]){
 
 		for(unsigned i=0; i < textures->count; i++){
 
-			/*glBegin(GL_TRIANGLES); // draw something with the texture on
-				glVertex2f(-1,-1);
-				glVertex2f(0,1);
-				glVertex2f(1,-1);
-		   glEnd();*/
 			appearance->texture=textures->items[i];
-			//Graphics_Draw(NULL,geometry,appearance);
-			// circle
-			Graphics_DrawRectangleTextured(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR4F_WHITE,textures->items[i],NULL);
-			//glLoadIdentity();
-			/*glColor4f(0.5,0.5,1,0.5);
 
-			glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
-					glVertex3f(0.2, 0.2,0.0);
-					  glVertex3f(0.8, 0.2,0.0);
-					   glVertex3f(0.2, 0.5,0.0);
-					   glVertex3f(0.8, 0.5,0.0);
-					  glVertex3f(0.2, 0.8,0.0);
-					  glVertex3f(0.8, 0.8,0.0);
-			   glEnd();*/
-			//Graphics_DrawRectangle(x,y,SHAPE_WIDTH,SHAPE_WIDTH,2,COLOR4F_WHITE);//,textures->items[i],NULL);
-			//Shape_DrawRectangle(0.5f,0.5f,true);
+			// circle
+			Graphics_DrawRectangleTexturedTranslate2i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR4F_WHITE,textures->items[i],NULL);
 			x+=SHAPE_WIDTH+10;
 
 			if((i%2==0) && i > 0){
 				y+=SHAPE_WIDTH+10;
 				x=10;
 			}
-
 		}
-
-		// square
-
-		// cross
-		/*if(KR_UP){
-			transform_camera.translate.z+=0.01;
-		}
-
-		if(KR_DOWN){
-			transform_camera.translate.z-=0.01;
-		}*/
-
-
 
 		Graphics_EndRender();
 

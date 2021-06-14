@@ -297,11 +297,11 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 	TextboxData *data=_this->data;
 
 	// TODO: pos is at center box by default, do a wat yo change render center
-	Vector2i start_pos=Vector2i_New2i(0,0);
+	Vector2i start_pos=Vector2i_New(0,0);
 
 	if(transform != NULL){
 		Transform_Apply(transform);
-		start_pos=Vector2i_New2i(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
+		start_pos=Vector2i_New(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
 	}
 
 	int y=start_pos.y-(data->dimensions.y>>1); // default aligned top-left
@@ -318,9 +318,7 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 
 	if(ZetGame_IsDebugMode()){
 		Graphics_DrawRectangle(
-				start_pos.x-(data->dimensions.x>>1)
-				,start_pos.y-(data->dimensions.y>>1)
-				,data->dimensions.x
+				data->dimensions.x
 				,data->dimensions.y
 				,2
 				,COLOR4F_WHITE);
