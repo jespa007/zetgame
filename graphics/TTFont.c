@@ -348,7 +348,7 @@ void TTFont_RenderTextBegin(Color4f *color){
 	}
 }
 
-void TTFont_Print(TTFont *_this,int x, int y, Color4f color, const char *in,...){
+void TTFont_Print(TTFont *_this,uint16_t _width, uint16_t _height, Color4f color, const char *in,...){
 
 	if(_this==NULL) return;
 
@@ -357,7 +357,7 @@ void TTFont_Print(TTFont *_this,int x, int y, Color4f color, const char *in,...)
 
 	switch(Graphics_GetGraphicsApi()){
 	case GRAPHICS_API_GL:
-		TTFont_GL_Print(_this,x,y,color,out);
+		TTFont_GL_Print(_this,_width,_height,color,out);
 		break;
 	default:
 		break;
@@ -374,7 +374,7 @@ void TTFont_RenderTextEnd(void){
 	}
 }
 
-void TTFont_WPrint(TTFont *_this,int x, int y, Color4f color,const wchar_t *in,...){
+void TTFont_WPrint(TTFont *_this,uint16_t _width, uint16_t _height, Color4f color,const wchar_t *in,...){
 
 	if(_this==NULL) return;
 
@@ -383,7 +383,7 @@ void TTFont_WPrint(TTFont *_this,int x, int y, Color4f color,const wchar_t *in,.
 
 	switch(Graphics_GetGraphicsApi()){
 	case GRAPHICS_API_GL:
-		TTFont_GL_WPrint(_this,x,y,color,out);
+		TTFont_GL_WPrint(_this,_width,_height,color,out);
 		break;
 	default:
 		break;

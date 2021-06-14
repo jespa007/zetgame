@@ -321,7 +321,7 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 				data->dimensions.x
 				,data->dimensions.y
 				,2
-				,COLOR4F_WHITE);
+				,COLOR_WHITE_4F);
 	}
 
 	TTFont_RenderTextBegin(color);
@@ -354,17 +354,17 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 			case TBRT_TOKEN_TYPE_WORD:
 				token_word=((TBRT_TokenWord*)token->token_data);
 				if(w>0){ // render space
-					//TTFont_Print(data->font,x,y,COLOR4F_WHITE," ");
+					//TTFont_Print(data->font,x,y,COLOR_WHITE_4F," ");
 					x+=(data->font->space_width)*inc_x;
 				}
 
 				x_draw=x+(inc_x<1?-token_word->word_width:0);
 
 				if(data->char_type==CHAR_TYPE_WCHAR){
-					TTFont_WPrint(data->font,x_draw,y,COLOR4F_WHITE,token_word->word);
+					TTFont_WPrint(data->font,x_draw,y,COLOR_WHITE_4F,token_word->word);
 				}
 				else{ // char by default.
-					TTFont_Print(data->font,x_draw,y,COLOR4F_WHITE,token_word->word);
+					TTFont_Print(data->font,x_draw,y,COLOR_WHITE_4F,token_word->word);
 				}
 				x+=(token_word->word_width)*inc_x;
 				break;

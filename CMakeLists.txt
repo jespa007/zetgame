@@ -348,24 +348,24 @@ target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} zetgame${POST_NAME} 
 
 
 #Graphics
-add_executable(test_2d_primitives${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/test/test_2d_primitives.c
+add_executable(test_primitives${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/test/test_primitives.c
 )
 
-target_link_libraries(test_2d_primitives${POST_NAME}    ${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 
-add_executable(test_2d_textbox${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/test/test_2d_textbox.c
+add_executable(test_textbox${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/test/test_textbox.c
 )
 
-target_link_libraries(test_2d_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
-add_executable(test_2d_scenegraph${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/test/test_2d_scenegraph.c
+add_executable(test_scenegraph${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/test/test_scenegraph.c
 )
 
-target_link_libraries(test_2d_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/test/test_viewport.c

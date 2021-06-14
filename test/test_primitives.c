@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 			appearance->texture=textures->items[i];
 
 			// circle
-			Graphics_DrawRectangleTexturedTranslate2i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR4F_WHITE,textures->items[i],NULL);
+			Graphics_DrawRectangleTexturedTranslate2i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR_WHITE_4F,textures->items[i],NULL);
 			x+=SHAPE_WIDTH+10;
 
 			if((i%2==0) && i > 0){

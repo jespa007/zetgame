@@ -26,8 +26,8 @@ GUIWidget  * GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 	widget->data=data;
 
 	widget->is_enabled=true;
-	widget->color=COLOR4F_WHITE;
-	widget->background_color=COLOR4F_WHITE;
+	widget->color=COLOR_WHITE_4F;
+	widget->background_color=COLOR_WHITE_4F;
 	widget->opacity=ALPHA_VALUE_SOLID;
 
 	data->position_local.x=x;

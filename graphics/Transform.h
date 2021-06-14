@@ -27,10 +27,10 @@ struct Transform{
 
 	Quaternion 	quaternion;	// keep to perform fast interpolations between rotations
 	//Matrix3f	matrix3f; 	// keep to perform fast transformations as well as flush into gl
-	uint32_t	transform_properties;
+	//uint32_t	transform_properties;
 };
 
-Transform * Transform_New(void);
+Transform     Transform_New(void);
 Transform	  Transform_ResetValues(void);
 void 		  Transform_Update(Transform *_this);
 

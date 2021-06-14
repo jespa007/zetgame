@@ -50,7 +50,7 @@ int main(int argc, char * argv[]){
 
 	//TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",16);
 	Textbox *textbox=Textbox_New();
-	Transform *transform=Transform_New();
+	Transform transform=Transform_New();
 
 	do
 	{
@@ -65,8 +65,8 @@ int main(int argc, char * argv[]){
 			Textbox_SetTextAlign(textbox,aux_ptr->text_align);
 			Textbox_SetVerticalAlign(textbox,aux_ptr->vertical_align);
 
-			Transform_SetPosition2i(transform,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
-			Textbox_Draw(textbox,transform,NULL);
+			Transform_SetPosition2i(&transform,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
+			Textbox_Draw(textbox,&transform,NULL);
 
 			aux_ptr++;
 
@@ -80,7 +80,7 @@ int main(int argc, char * argv[]){
 	}
 	while(!K_ESC);
 
-	Transform_Delete(transform);
+	//Transform_Delete(transform);
 
 
 	Textbox_Delete(textbox);

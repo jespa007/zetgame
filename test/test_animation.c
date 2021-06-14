@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
 	Appearance_SetColor3i(appearance,1,0,0);
 	appearance->texture=text_png;
 
-	Transform *transform=Transform_New();
+	Transform transform=Transform_New();
 
 
 	Graphics_SetBackgroundColor(Color4f_FromHex(0xFFFF));
@@ -77,14 +77,14 @@ int main(int argc, char *argv[]){
 
 		if(Animation_Update(trs_animation,SDL_GetTicks())){ // let animation do the move...
 			// transfer last values
-			Animation_CopyChannelValues(trs_animation,&transform->translate.x);
+			Animation_CopyChannelValues(trs_animation,&transform.translate.x);
 
 			//trs_animation
 		}else{ // my custom move
 			//Shape2d_SetDimensions(shape2d,100,100);
-			transform->translate=Vector3f_New3f(x,y,0);
-			Transform_SetScale3f(transform,scale,scale,1);
-			Transform_SetRotate3f(transform,0,0,rotate+=5);
+			transform.translate=Vector3f_New3f(x,y,0);
+			Transform_SetScale3f(&transform,scale,scale,1);
+			Transform_SetRotate3f(&transform,0,0,rotate+=5);
 		}
 
 		if(K_S){
@@ -112,9 +112,9 @@ int main(int argc, char *argv[]){
 		}
 
 		//Shape2d_Draw(shape2d,transform);
-		Transform_Apply(transform);
+		Transform_Apply(&transform);
 		Shape_DrawRectangle(0.5f,0.5f,true);
-		Transform_Restore(transform);
+		Transform_Restore(&transform);
 
 
 		x+=inc_x;
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]){
 	Action_Delete(act_rotate);
 	Action_Delete(act_scale);
 
-	Transform_Delete(transform);
+	//Transform_Delete(transform);
 
 
 	Texture_Delete(text_png);

@@ -68,7 +68,7 @@ void ECTransform_ClearNodes(ECTransform *_this){
 void ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z){
 	Transform_SetTranslate3f(&_this->transform,x,y,z);
 }
-
+/*
 bool ECTransform_IsParentNodeRoot(ECTransform *_this){
 	ECTransformData *data=_this->data;
 	if(data->parent != NULL){
@@ -81,15 +81,20 @@ bool ECTransform_IsParentNodeRoot(ECTransform *_this){
 	}
 	return false;
 }
-
+*/
 void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
-	Transform_SetPosition2i(&data->transform_local,v.x,v.y);
+	//Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
+	//Transform_SetPosition2i(&data->transform_local,x,y);
+	data->transform_local.translate=(Vector3f){
+			.x=ViewPort_ScreenToWorldWidth(x)
+			,.y=-ViewPort_ScreenToWorldHeight(y)
+			,.z=0
+		};
+	//=ViewPort_ScreenToWorldDim2i(x,y);
 }
 
 Vector2i	ECTransform_GetPosition2i(ECTransform *_this){
-
 	return Transform_GetPosition2i(&_this->transform);
 }
 
@@ -152,7 +157,7 @@ bool ECTransform_Attach(ECTransform *_this,ECTransform * obj) {
 	ECTransform_SetParent(obj,_this);
 	List_Add(data->child_nodes,obj);
 
-	return false;
+	return true;
 }
 /*
 bool ECTransform_Detach(ECTransform *_this){
@@ -165,7 +170,7 @@ bool ECTransform_Detach(ECTransform *_this){
 	return true;
 
 }*/
-
+/*
 void ECTransform_UpdateChilds(ECTransform *_this) {
 
 	ECTransformData *data = _this->data;
@@ -173,13 +178,13 @@ void ECTransform_UpdateChilds(ECTransform *_this) {
 	//-------- UPDATE TRANFORMS OF THEIR CHILDS ----
 	for(uint16_t i=0; i < data->child_nodes->count; i++) {
 		o = data->child_nodes->items[i];
-		ECTransform_Update(o);
+		ECTransform_UpdateSceneGraph(o);
 	}
 }
 
 void ECTransform_PostUpdate(ECTransform *_this){
 	ECTransform_UpdateChilds(_this);
-}
+}*/
 
 //--------------------------- MAIN UPDATE SCENEGRAPH ----------------------------
 void ECTransform_UpdateSceneGraph(ECTransform *_this) {
@@ -197,7 +202,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	_this->transform.quaternion = transform_world->quaternion = local_quaternion = Quaternion_FromEulerV3f(transform_local->rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
-	if(!ECTransform_IsParentNodeRoot(_this)) { // Conditioned to transformations of m_scrParent....
+	if(ECTransform_GetParent(_this) != NULL) { // it's not root node....
 
 		ECTransform *parent=data->parent;
 		if(parent == NULL){
@@ -237,14 +242,14 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	}
 	else { // Is the root, then add origin on their initial values ...
 
-		/*Vector3f origin=ViewPort_GetProjectionOrigin();
-		if(_this->transform->transform_properties & TRANSFORM_PROPERTY_POSITION_RELATIVE_X){ //  add x offset origin according opengl
-			transform_absolute->translate.x+=origin.x;
-		}
+		Vector3f origin=ViewPort_GetProjectionOrigin();
+		//if(_this->transform->transform_properties & TRANSFORM_PROPERTY_POSITION_RELATIVE_X){ //  add x offset origin according opengl
+		transform_world->translate.x+=origin.x;
+		//}
 
-		if(_this->transform->transform_properties & TRANSFORM_PROPERTY_POSITION_RELATIVE_Y){ //  add x offset origin according opengl
-			transform_absolute->translate.y+=origin.y;
-		}*/
+		//if(_this->transform->transform_properties & TRANSFORM_PROPERTY_POSITION_RELATIVE_Y){ //  add x offset origin according opengl
+		transform_world->translate.y+=origin.y;
+		//}
 
 		if((data->transform_attributes & EC_TRANSFORM_ROTATE)){
 			transform_world->quaternion=local_quaternion;
@@ -252,16 +257,29 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	}
 }
 
-void ECTransform_Update(void *_this) {
+void ECTransform_UpdateChild(void *_this) {
 	ECTransform *ec_transform=_this;
 	ECTransformData *data = ec_transform->data;
-	if(data->parent!=NULL){ // it has parent, is not update
-		return;
-	}
 
 	// update coord3d  scene graph...
 	ECTransform_UpdateSceneGraph(ec_transform);
-	ECTransform_PostUpdate(ec_transform);
+
+	//-------- UPDATE TRANFORMS OF THEIR CHILDS ----
+	for(uint16_t i=0; i < data->child_nodes->count; i++) {
+		ECTransform *t=data->child_nodes->items[i];
+		ECTransform_UpdateChild(t);
+	}
+}
+
+void ECTransform_Update(void *_this) {
+	ECTransform *ec_transform=_this;
+	ECTransformData *data = ec_transform->data;
+	if(data->parent!=NULL){ // it has parent, not update because it was updated before
+		return;
+	}
+
+	ECTransform_UpdateChild(_this);
+
 }
 
 Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_transform_type){

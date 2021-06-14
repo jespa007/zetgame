@@ -11,7 +11,7 @@ Entity *NewNode(Scene *scene, int posx, int posy){
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
-	ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
 
 	return entity;
 }
@@ -26,7 +26,7 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
-	ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],Graphics_GetWidth()>>1,Graphics_GetHeight()>>1);
+	ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
 	ECTexture_SetTexture(entity->components[EC_TEXTURE],texture);
 	ECSpriteRenderer_SetDimensions(entity->components[EC_SPRITE_RENDERER],width, height);
 
@@ -231,6 +231,15 @@ int main(int argc, char * argv[]){
 			,spr_base_van->components[EC_TRANSFORM]
 		);
 
+		ECTransformAnimation_StartTween(
+					spr_base_van->components[EC_TRANSFORM_ANIMATION]
+					,TRANSFORM_CHANNEL_ROTATE_Z
+					, 1000
+					, EASE_OUT_SINE
+					, 0
+					, 360
+					, true);
+
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
 			Entity *spr_image_van=NewViewer2d(scene
@@ -242,21 +251,14 @@ int main(int argc, char * argv[]){
 
 			ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
 			ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
-			ECTransformAnimation_StartTween(
-						spr_base_van->components[EC_TRANSFORM_ANIMATION]
-						,TRANSFORM_CHANNEL_ROTATE_Z
-						, 1000
-						, EASE_OUT_SINE
-						, 0
-						, 360
-						, true);
+
 		}
 	}
 	// SETUP ENTITIES WITHOUT PRE CREATION ?
 
 	//----
 	// SETUP CAR
-	spr_base_car=NewNode(scene,0,0); // --> empty entity without id ? It can be but then it cannot be referenced
+	spr_base_car=NewNode(scene,Graphics_GetWidth()>>1,Graphics_GetHeight()-150); // --> empty entity without id ? It can be but then it cannot be referenced
 	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL);
 	spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL);
 	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel);
@@ -304,11 +306,15 @@ int main(int argc, char * argv[]){
 	Graphics_SetBackgroundColor(Color4f_FromHex(0xFFFF));
 	Scene_Start(scene);
 
-	Transform transform_camera=Transform_ResetValues();
+	//Transform transform_camera=Transform_ResetValues();
 
 	do{
 
+
+
 		Graphics_BeginRender();
+
+		uint32_t start_time=SDL_GetTicks();
 
 		if(K_SPACE){
 			ECMaterialAnimation_StartAction(
@@ -322,6 +328,9 @@ int main(int argc, char * argv[]){
 		if(Input_IsMouseButtonPressed()){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
 		}
+
+		Graphics_Print(0,Graphics_GetHeight()-30,COLOR_WHITE_4F, "FPS: %.02f",1000.0f/(SDL_GetTicks()-start_time));
+
 
 		Graphics_EndRender();
 

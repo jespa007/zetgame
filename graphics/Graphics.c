@@ -565,10 +565,16 @@ void Graphics_Print(int x, int y, Color4f color, const char *in, ...){
 
 	char out[1024]={0};
 	ZG_VARGS(out,in);
+	Transform tr=Transform_New();
+
+	Transform_SetPosition2i(&tr,x,y);
+	Transform_Apply(&tr);
 
 	TTFont_RenderTextBegin(NULL);
-	TTFont_Print(TTFont_GetDefaultFont(),x,y,color,out);
+	TTFont_Print(TTFont_GetDefaultFont(),Graphics_GetWidth(),40,color,out);
 	TTFont_RenderTextEnd();
+
+	Transform_Restore(&tr);
 
 }
 

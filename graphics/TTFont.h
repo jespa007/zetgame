@@ -58,8 +58,8 @@ const char * 	TTFont_GetFontResourcePath(void);
 TTFont *	TTFont_Get(const char *ttf_file);
 void 		TTFont_RenderTextBegin(Color4f *color);
 void 		TTFont_RenderTextEnd(void);
-void 		TTFont_Print(TTFont *_this,int x, int y,Color4f color, const char *str,...);
-void 		TTFont_WPrint(TTFont *_this,int x, int y,Color4f color, const wchar_t *str,...);
+void 		TTFont_Print(TTFont *_this,uint16_t _width, uint16_t _height,Color4f _color, const char *str,...);
+void 		TTFont_WPrint(TTFont *_this,uint16_t _witdh, uint16_t _height,Color4f _color, const wchar_t *str,...);
 
 
 uint16_t 		TTFont_GetWidth(TTFont *_this, const char *str);

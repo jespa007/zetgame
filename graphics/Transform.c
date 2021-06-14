@@ -15,10 +15,10 @@ Transform	  Transform_ResetValues(void){
 	return transform;
 }
 
-Transform * Transform_New(void){
-	Transform * transform = NEW(Transform);
-	*transform=Transform_ResetValues();
-	return transform;
+Transform  Transform_New(void){
+
+	return Transform_ResetValues();
+
 }
 
 void Transform_Apply(Transform *_this){
