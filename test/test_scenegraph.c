@@ -234,11 +234,11 @@ int main(int argc, char * argv[]){
 		ECTransformAnimation_StartTween(
 					spr_base_van->components[EC_TRANSFORM_ANIMATION]
 					,TRANSFORM_CHANNEL_ROTATE_Z
-					, 1000
 					, EASE_OUT_SINE
 					, 0
 					, 360
-					, true);
+					, 1000
+					, ANIMATION_LOOP_REPEAT_INFINITE);
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
@@ -273,20 +273,20 @@ int main(int argc, char * argv[]){
 		spr_base_car->components[EC_TRANSFORM_ANIMATION]
 		,TRANSFORM_CHANNEL_TRANSLATE_X
 		,EASE_OUT_SINE
-		,10000
 		,-2
 		,0
-		,false
+		,10000
+		,0
 	);
 
 	ECTransformAnimation_StartTween(
 		spr_base_car->components[EC_TRANSFORM_ANIMATION]
 		,TRANSFORM_CHANNEL_TRANSLATE_Y
 		,EASE_OUT_SINE
-		,100
 		,-0.24-0.1
 		,-0.23-0.1
-		,true
+		,100
+		,ANIMATION_LOOP_REPEAT_INFINITE
 	);
 
 	//----
@@ -307,20 +307,15 @@ int main(int argc, char * argv[]){
 	Scene_Start(scene);
 
 	//Transform transform_camera=Transform_ResetValues();
-
 	do{
 
-
-
 		Graphics_BeginRender();
-
-		uint32_t start_time=SDL_GetTicks();
 
 		if(K_SPACE){
 			ECMaterialAnimation_StartAction(
 					spr_image_sun->components[EC_MATERIAL_ANIMATION]
 					,mat_act_fade_in_out
-					,false);
+					,0);
 		}
 
 		Scene_Update(scene);
@@ -329,14 +324,9 @@ int main(int argc, char * argv[]){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
 		}
 
-		Graphics_Print(0,Graphics_GetHeight()-30,COLOR_WHITE_4F, "FPS: %.02f",1000.0f/(SDL_GetTicks()-start_time));
-
-
 		Graphics_EndRender();
 
 		Input_Update();
-		SDL_Delay(10);
-
 
 	}while(!K_ESC);
 

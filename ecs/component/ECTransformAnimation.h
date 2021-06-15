@@ -14,10 +14,10 @@ void			ECTransformAnimation_Init(void *_this,Entity *_entity);
 void 			ECTransformAnimation_StartTween(
 					void *_this
 					, uint8_t _idx_channel
-					, uint32_t _duration
 					, Ease _ease
 					, float _from
 					, float _to
+					, uint32_t _duration
 					, int _repeat);
 
 void 			ECTransformAnimation_Update(void *_this);

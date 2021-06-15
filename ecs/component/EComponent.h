@@ -7,18 +7,20 @@ typedef struct Entity Entity;
 typedef enum{
 	EC_INVALID=0,			// reserver for invalid component
 	EC_TRANSFORM,			// entity transform
+	EC_TRANSFORM_ANIMATION,
 	// to render...
 	EC_GEOMETRY,			// entity sprite render
 	EC_MATERIAL,			// entity sprite render
+	EC_MATERIAL_ANIMATION,
 	EC_TEXTURE,			// entity sprite render
-
 	EC_SPRITE_RENDERER,	// entity sprite render2D
 
-	// animations...
-	EC_TRANSFORM_ANIMATION,
-	EC_MATERIAL_ANIMATION,
+	// later register
 	EC_TEXTURE_ANIMATION,
 	EC_GEOMETRY_ANIMATION,
+
+
+	// animations...
 	/*ENTITY_COMPONENT_CAMERA, 			// entity has camera
 	ENTITY_COMPONENT_VIEWER2D, 			// entity has viewer2d (support texture/video)
 	ENTITY_COMPONENT_TEXT2D, 			// entity dimension + texture + appearance*/

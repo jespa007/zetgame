@@ -35,6 +35,27 @@ typedef struct{
 // PRIVATE FUNCTIONS
 void 	ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, size_t extend_entities);
 
+bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegisterEComponent es_component_register){
+
+	if(g_user_can_register_components==false){
+		Log_Error("Components should registered before create any Entity-System");
+		return false; //
+	}
+
+	if(g_es_system_registered_components == NULL){
+		g_es_system_registered_components=List_New();
+	}
+
+	EComponent idx_component=_idx_component;//g_es_system_registered_components->count;
+	ESSystemRegisteredEComponentData *new_component_register=NEW(ESSystemRegisteredEComponentData);
+	new_component_register->data=es_component_register;
+	new_component_register->id=idx_component;
+	List_Add(g_es_system_registered_components,new_component_register);
+
+	return true;
+}
+
+
 //---------------------------------------------------
 // STATIC FUNCTIONS
 bool ESSystem_Init(void){
@@ -42,7 +63,7 @@ bool ESSystem_Init(void){
 	unsigned min_iter=0;
 
 	// invalid (0)
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
+	ESSystem_RegisterComponentBuiltin(EC_INVALID,(ESSystemRegisterEComponent){
 		.size_data				=0
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=NULL
@@ -51,7 +72,7 @@ bool ESSystem_Init(void){
 	});
 
 	// transform
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
+	ESSystem_RegisterComponentBuiltin(EC_TRANSFORM,(ESSystemRegisterEComponent){
 		.size_data				=sizeof(ECTransform)
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECTransform_Setup
@@ -59,8 +80,17 @@ bool ESSystem_Init(void){
 		,.EComponent_Destroy	=ECTransform_Destroy
 	});
 
+	// Animation transform
+	ESSystem_RegisterComponentBuiltin(EC_TRANSFORM_ANIMATION,(ESSystemRegisterEComponent){
+		.size_data				=sizeof(ECTransformAnimation)
+		,.required_components	=ECTransformAnimation_RequiredComponents()
+		,.EComponent_Setup		=ECTransformAnimation_Setup
+		,.EComponent_Update		=ECTransformAnimation_Update
+		,.EComponent_Destroy	=ECTransformAnimation_Destroy
+	});
+
 	// geometry
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
+	ESSystem_RegisterComponentBuiltin(EC_GEOMETRY,(ESSystemRegisterEComponent){
 		.size_data				=sizeof(ECGeometry)
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECGeometry_Setup
@@ -69,7 +99,7 @@ bool ESSystem_Init(void){
 	});
 
 	// material
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
+	ESSystem_RegisterComponentBuiltin(EC_MATERIAL,(ESSystemRegisterEComponent){
 		.size_data				=sizeof(ECMaterial)
 		,.required_components	= (EComponentList){0,0}
 		,.EComponent_Setup		=ECMaterial_Setup
@@ -77,8 +107,17 @@ bool ESSystem_Init(void){
 		,.EComponent_Destroy	=ECMaterial_Destroy
 	});
 
+	// material animation
+	ESSystem_RegisterComponentBuiltin(EC_MATERIAL_ANIMATION,(ESSystemRegisterEComponent){
+		.size_data				=sizeof(ECMaterialAnimation)
+		,.required_components	= (EComponentList){0,0}
+		,.EComponent_Setup		=ECMaterialAnimation_Setup
+		,.EComponent_Update		=NULL
+		,.EComponent_Destroy	=ECMaterialAnimation_Destroy
+	});
+
 	// texture
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
+	ESSystem_RegisterComponentBuiltin(EC_TEXTURE,(ESSystemRegisterEComponent){
 		.size_data				=sizeof(ECTexture)
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECTexture_Setup
@@ -87,7 +126,7 @@ bool ESSystem_Init(void){
 	});
 
 	// sprite renderer (1)
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
+	ESSystem_RegisterComponentBuiltin(EC_SPRITE_RENDERER,(ESSystemRegisterEComponent){
 		.size_data				=sizeof(ECSpriteRenderer)
 		,.required_components	=ECSpriteRenderer_RequiredComponents()
 		,.EComponent_Setup		=ECSpriteRenderer_Setup
@@ -95,23 +134,7 @@ bool ESSystem_Init(void){
 		,.EComponent_Destroy	=ECSpriteRenderer_Destroy
 	});
 
-	// Animation transform
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
-		.size_data				=sizeof(ECTransformAnimation)
-		,.required_components	=ECTransformAnimation_RequiredComponents()
-		,.EComponent_Setup		=ECTransformAnimation_Setup
-		,.EComponent_Update		=ECTransformAnimation_Update
-		,.EComponent_Destroy	=ECTransformAnimation_Destroy
-	});
 
-	// Animation material
-	ESSystem_RegisterComponent((ESSystemRegisterEComponent){
-		.size_data				=sizeof(ECMaterialAnimation)
-		,.required_components	= ECMaterialAnimation_RequiredComponents()
-		,.EComponent_Setup		=ECMaterialAnimation_Setup
-		,.EComponent_Update		=ECMaterialAnimation_Update
-		,.EComponent_Destroy	=ECMaterialAnimation_Destroy
-	});
 
 	// check component consistency
 	 min_iter=MIN(g_es_system_registered_components->count,EC_MAX_COMPONENTS);
@@ -128,22 +151,15 @@ bool ESSystem_Init(void){
 }
 
 EComponent	ESSystem_RegisterComponent(ESSystemRegisterEComponent es_component_register){
+	EComponent idx_component=0;
 
-	if(g_user_can_register_components==false){
-		Log_Error("Components should registered before create any Entity-System");
-		return EC_INVALID; //
+	if(g_es_system_registered_components != NULL){
+		idx_component=g_es_system_registered_components->count;
 	}
 
-	if(g_es_system_registered_components == NULL){
-		g_es_system_registered_components=List_New();
+	if(ESSystem_RegisterComponentBuiltin(idx_component,es_component_register)==false){
+		return EC_INVALID;
 	}
-
-	EComponent idx_component=g_es_system_registered_components->count;
-	ESSystemRegisteredEComponentData *new_component_register=NEW(ESSystemRegisteredEComponentData);
-	new_component_register->data=es_component_register;
-	new_component_register->id=idx_component;
-	List_Add(g_es_system_registered_components,new_component_register);
-
 	return idx_component;
 }
 
@@ -469,8 +485,7 @@ void ESSystem_Delete(ESSystem *_this){
 		if(EComponent_Destroy != NULL){
 			for(unsigned i=0; i < (*component_data)->n_elements; i++){
 				EComponent_Destroy(*ptr_data);
-				FREE(*ptr_data);
-				ptr_data++;
+				FREE(*ptr_data++);
 			}
 			FREE((*component_data)->ptr_data);
 		}

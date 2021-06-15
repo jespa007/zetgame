@@ -16,7 +16,11 @@ Action * 			Action_New(uint8_t n_channels){
 }
 
 
-void 	Action_SetKeyFramesTrack(Action *_this, uint8_t idx_channel, Ease ease,float *keyframe_points, size_t keyframe_points_count){
+void 	Action_SetKeyFramesTrack(Action *_this
+		, uint8_t idx_channel
+		, Ease ease
+		,float *keyframe_points
+		, size_t keyframe_points_count){
 
 	if(keyframe_points == NULL) return;
 

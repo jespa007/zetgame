@@ -90,23 +90,23 @@ int main(int argc, char *argv[]){
 		if(K_S){
 			Animation_StartTween(
 				  trs_animation
+				 , SDL_GetTicks()
 				, TRANSFORM_CHANNEL_SCALE_Y
-				, SDL_GetTicks()
-				, 500
 				, EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
+				, 500
 				, false
 			);
 
 			Animation_StartTween(
 				  trs_animation
+				  , SDL_GetTicks()
 				, TRANSFORM_CHANNEL_SCALE_X
-				, SDL_GetTicks()
-				, 500
 				, EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
+				, 500
 				, false
 			);
 		}

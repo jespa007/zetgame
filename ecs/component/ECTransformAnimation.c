@@ -32,10 +32,10 @@ void	ECTransformAnimation_Setup(void *_this, Entity *_entity){
 void ECTransformAnimation_StartTween(
 		  void *_this
 		, uint8_t _idx_channel
-		, uint32_t _duration
 		, Ease _ease
 		, float _from
 		, float _to
+		, uint32_t _duration
 		, int _repeat){
 	ECTransformAnimation *ec_transform_animation=_this;
 	ECTransformAnimationData *ec_transform_animation_data=ec_transform_animation->data;
@@ -45,12 +45,12 @@ void ECTransformAnimation_StartTween(
 
 	Animation_StartTween(
 		  ec_transform_animation_data->ani_transform
-		, _idx_channel
 		, _start_time
-		, _duration
+		, _idx_channel
 		, _ease
 		, _from
 		, _to
+		, _duration
 		, _repeat
 	);
 
@@ -64,7 +64,8 @@ void 	ECTransformAnimation_Update(void *_this){
 	if(Animation_Update(data->ani_transform,SDL_GetTicks())){ // let animation do the move...
 		ECTransform *ec_transform=ec_transform_animation->entity->components[EC_TRANSFORM];
 		if(ec_transform != NULL){
-			Animation_CopyChannelValues(data->ani_transform,&ec_transform->transform.translate.x);
+			Transform *local=ECTransform_GetTransform(ec_transform,EC_TRANSFORM_TYPE_LOCAL);
+			Animation_CopyChannelValues(data->ani_transform,&local->translate.x);
 		}
 	}
 }

@@ -69,12 +69,12 @@ void Animation_ClearAction(Animation *_this, Action *_action);
  * Trigger action (independent to time line)
  */
 void Animation_StartTween(Animation *_this
-		, uint8_t  _idx_channel
 		, uint32_t _start_time
-		, uint32_t _duration
+		, uint8_t  _idx_channel
 		, Ease _ease
 		, float _from
 		, float _to
+		, uint32_t _duration
 		, int _repeat);
 
 

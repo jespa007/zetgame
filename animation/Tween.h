@@ -11,7 +11,15 @@ struct Tween{
 
 Tween *Tween_New(Uint8 n_channels);
 
-void Tween_Start(Tween *_this, uint8_t _idx_channel,uint32_t _start_time, uint32_t _duration, Ease _ease, float _from, float _to, int _repeat);
+void Tween_Start(Tween *_this
+		,uint32_t _start_time
+		, uint8_t _idx_channel
+		, Ease _ease
+		, float _from
+		, float _to
+		, uint32_t _duration
+		, int _repeat
+		);
 
 void Tween_Update(Tween *_this, uint32_t _time);
 

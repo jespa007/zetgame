@@ -109,15 +109,15 @@ void Animation_ClearAction(Animation *_this,Action *_action){
 }
 
 void Animation_StartTween(Animation *_this
-		, uint8_t _idx_channel
 		, uint32_t _start_time
-		, uint32_t _duration
+		, uint8_t _idx_channel
 		, Ease _ease
 		, float _from
 		, float _to
+		, uint32_t _duration
 		, int _repeat){
 	AnimationData *data = (AnimationData *)_this->data;
-	Tween_Start(data->tween,_idx_channel, _start_time, _duration, _ease, _from, _to,_repeat);
+	Tween_Start(data->tween, _start_time,_idx_channel, _ease, _from, _to, _duration,_repeat);
 
 }
 

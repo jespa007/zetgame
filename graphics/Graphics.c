@@ -409,6 +409,25 @@ void Graphics_AddCaptureScreenCallback(Callback fun){
 
 void Graphics_EndRender(void)
 {
+
+#ifdef __DEBUG__
+
+	//if(g_graphics_vars->elapsed_seconds<SDL_GetTicks()){
+		uint32_t diff=SDL_GetTicks()-g_graphics_vars->start_ms;
+		float FPS=60.0f;
+		if(diff > 16){
+			FPS=1000.0f/diff;
+		}
+
+		Graphics_Print(0,Graphics_GetHeight()-30,COLOR_WHITE_4F, "FPS: %.02f",FPS);
+//			printf("%.2f fps\n",1000.0f/diff);
+
+
+		//g_graphics_vars->elapsed_seconds=SDL_GetTicks()+1000;
+	//}
+#endif
+
+
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
 		Graphics_GL_EndRender();
@@ -448,21 +467,6 @@ void Graphics_EndRender(void)
 		}
 
 	}
-
-
-
-#ifdef __SHOW_FPS__
-
-	if(g_graphics_vars->elapsed_seconds<SDL_GetTicks()){
-		uint32_t diff=SDL_GetTicks()-g_graphics_vars->start_ms;
-
-		if(diff>0){
-			printf("%.2f fps\n",1000.0f/diff);
-		}
-
-		g_graphics_vars->elapsed_seconds=SDL_GetTicks()+1000;
-	}
-#endif
 }
 //---------------------------------------------------------------------------------------------------------------------------
 //
