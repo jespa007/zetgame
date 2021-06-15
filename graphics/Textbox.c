@@ -150,10 +150,10 @@ void Textbox_RT_Build(Textbox *_this){
 	List *lines=NULL;
 
 	if(data->char_type==CHAR_TYPE_WCHAR){
-		lines=StrUtils_WStrSplit(data->text,'\n'); // get lines ...
+		lines=StrUtils_WStrSplitWStr(data->text,L"<br>"); // get lines ...
 	}
 	else{
-		lines=StrUtils_StrSplit(data->text,'\n'); // get lines ...
+		lines=StrUtils_StrSplitStr(data->text,"<br>"); // get lines ...
 	}
 
 
@@ -185,7 +185,7 @@ void Textbox_RT_Build(Textbox *_this){
 			// skip chars...
 			if(ch!=0){
 				do{
-						ch=StrUtils_GetCharAndAdvance(&text_line,data->char_type);
+					ch=StrUtils_GetCharAndAdvance(&text_line,data->char_type);
 				}while(!(ch == 0 || ch != ch_space));
 			}
 

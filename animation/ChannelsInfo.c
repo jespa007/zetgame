@@ -21,11 +21,6 @@ void ChannelsInfo_Copy(ChannelsInfo * dst, ChannelsInfo * src){
 void ChannelsInfo_CopyToFloatArray(ChannelsInfo	*_this,float *_dst){
 	float *src=_this->channels;
 
-	if(_this->msk_active_channels == 0x1){
-		int i=0;
-		i++;
-	}
-
 	// Set all components to each transform3d vars...
 	for(unsigned j=0; j < _this->n_channels; j++){
 		if(_this->msk_active_channels & (0x1<<j)){ // match components...

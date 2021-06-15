@@ -70,8 +70,8 @@ void ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z){
 	Transform_SetTranslate3f(&data->transform_local,x,y,z);
 
 	// erase relative flags flags...
-	data->transform_attributes&=~EC_TRANSFORM_POSITION_RELATIVE_X;
-	data->transform_attributes&=~EC_TRANSFORM_POSITION_RELATIVE_Y;
+	//data->transform_attributes&=~EC_TRANSFORM_POSITION_RELATIVE_X;
+	//data->transform_attributes&=~EC_TRANSFORM_POSITION_RELATIVE_Y;
 
 }
 /*
@@ -92,14 +92,25 @@ void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
 	//Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
 	//Transform_SetPosition2i(&data->transform_local,x,y);
+	data->transform_local.translate = ViewPort_ScreenToWorld(x,y);
+
+	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
+	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
+	//=ViewPort_ScreenToWorldDim2i(x,y);
+}
+
+void ECTransform_SetDisplacement2i(ECTransform *_this,int x, int y){
+	ECTransformData *data=_this->data;
+	//Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
+	//Transform_SetPosition2i(&data->transform_local,x,y);
 	data->transform_local.translate=(Vector3f){
 			.x=ViewPort_ScreenToWorldWidth(x)
 			,.y=-ViewPort_ScreenToWorldHeight(y)
 			,.z=0
 		};
 
-	data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
-	data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
+	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
+	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
 	//=ViewPort_ScreenToWorldDim2i(x,y);
 }
 
@@ -251,14 +262,14 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	}
 	else { // Is the root, then add origin on their initial values ...
 
-		Vector3f origin=ViewPort_GetProjectionOrigin();
-		if(data->transform_attributes & EC_TRANSFORM_POSITION_RELATIVE_X){ //  add x offset origin according opengl
-			transform_world->translate.x+=origin.x;
-		}
+		//Vector3f origin=ViewPort_GetProjectionOrigin();
+		//if(data->transform_attributes & EC_TRANSFORM_POSITION_RELATIVE_X){ //  add x offset origin according opengl
+		//	transform_world->translate.x+=origin.x;
+		//}
 
-		if(data->transform_attributes & EC_TRANSFORM_POSITION_RELATIVE_Y){ //  add x offset origin according opengl
-			transform_world->translate.y+=origin.y;
-		}
+		//if(data->transform_attributes & EC_TRANSFORM_POSITION_RELATIVE_Y){ //  add x offset origin according opengl
+		//	transform_world->translate.y+=origin.y;
+		//}
 
 		if((data->transform_attributes & EC_TRANSFORM_ROTATE)){
 			transform_world->quaternion=local_quaternion;

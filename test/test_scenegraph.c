@@ -4,19 +4,24 @@ void MS_OnDeleteTexture(void *text){
 	Texture_Delete(text);
 }
 
-Entity *NewNode(Scene *scene, int posx, int posy){
+Entity *NewNode(Scene *scene, int posx, int posy, bool set_displacement){
 	EComponent entity_components[]={
 			EC_TRANSFORM,
 			EC_TRANSFORM_ANIMATION
 	};
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
-	ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+
+	if(set_displacement){
+		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
+	}else{
+		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+	}
 
 	return entity;
 }
 
-Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture){
+Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture, bool set_displacement){
 	EComponent entity_components[]={
 			EC_SPRITE_RENDERER
 			,EC_TRANSFORM_ANIMATION
@@ -26,9 +31,14 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 
 	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
-	ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
 	ECTexture_SetTexture(entity->components[EC_TEXTURE],texture);
 	ECSpriteRenderer_SetDimensions(entity->components[EC_SPRITE_RENDERER],width, height);
+
+	if(set_displacement){
+		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
+	}else{
+		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+	}
 
 	return entity;
 }
@@ -201,6 +211,7 @@ int main(int argc, char * argv[]){
 		,Graphics_GetWidth()
 		, Graphics_GetHeight()
 		,text_ground
+		,false
 	);
 
 	//----------------------------------
@@ -217,6 +228,7 @@ int main(int argc, char * argv[]){
 				,info->w
 				,info->h
 				,NULL
+				,false
 				);
 
 
@@ -224,6 +236,7 @@ int main(int argc, char * argv[]){
 		spr_base_van=NewNode(scene
 							,info->vane_disp.x
 							,info->vane_disp.y
+							,true
 							);
 
 		ECTransform_Attach(
@@ -247,7 +260,8 @@ int main(int argc, char * argv[]){
 						,info->vane_disp.info_vane[j].y
 						,62
 						,9
-						,text_vane);
+						,text_vane
+						,true);
 
 			ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
 			ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
@@ -258,30 +272,30 @@ int main(int argc, char * argv[]){
 
 	//----
 	// SETUP CAR
-	spr_base_car=NewNode(scene,Graphics_GetWidth()>>1,Graphics_GetHeight()-150); // --> empty entity without id ? It can be but then it cannot be referenced
-	spr_track_car=NewNode(scene,0,0);
-	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,390,car_info.part1.w,car_info.part1.h,NULL);
-	/*spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL);
-	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel);
-	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel);
+	spr_base_car=NewNode(scene,Graphics_GetWidth()>>1,Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
+	spr_track_car=NewNode(scene,0,0,true);
+	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
+	spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
+	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
+	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
 
 	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_track_car->components[EC_TRANSFORM]);
 	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
 	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
 	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);*/
+	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);
 
 	ECTransformAnimation_StartTween(
-			spr_image_car_part1->components[EC_TRANSFORM_ANIMATION]
+		spr_base_car->components[EC_TRANSFORM_ANIMATION]
 		,TRANSFORM_CHANNEL_TRANSLATE_X
 		,EASE_OUT_SINE
+		,-2
 		,0
-		,0.5
 		,10000
 		,0
 	);
 
-	/*ECTransformAnimation_StartTween(
+	ECTransformAnimation_StartTween(
 		spr_base_car->components[EC_TRANSFORM_ANIMATION]
 		,TRANSFORM_CHANNEL_TRANSLATE_Y
 		,EASE_OUT_SINE
@@ -289,11 +303,11 @@ int main(int argc, char * argv[]){
 		,-0.23-0.1
 		,100
 		,ANIMATION_LOOP_REPEAT_INFINITE
-	);*/
+	);
 
 	//----
 	// SUN
-	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun);
+	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun,false);
 	ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ALPHA_VALUE_TRANSPARENT);
 
 	// ani
