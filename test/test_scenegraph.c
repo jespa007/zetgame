@@ -179,7 +179,7 @@ int main(int argc, char * argv[]){
 				,*spr_image_car_part2=NULL
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
-	Entity *spr_base_car=NULL;
+	Entity *spr_base_car=NULL,*spr_track_car=NULL;
 
 
 	TTFont_SetFontResourcePath("data/fonts");
@@ -259,27 +259,29 @@ int main(int argc, char * argv[]){
 	//----
 	// SETUP CAR
 	spr_base_car=NewNode(scene,Graphics_GetWidth()>>1,Graphics_GetHeight()-150); // --> empty entity without id ? It can be but then it cannot be referenced
-	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL);
-	spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL);
+	spr_track_car=NewNode(scene,0,0);
+	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,390,car_info.part1.w,car_info.part1.h,NULL);
+	/*spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL);
 	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel);
 	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel);
 
-	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);
+	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_track_car->components[EC_TRANSFORM]);
+	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
+	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
+	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
+	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);*/
 
 	ECTransformAnimation_StartTween(
-		spr_base_car->components[EC_TRANSFORM_ANIMATION]
+			spr_image_car_part1->components[EC_TRANSFORM_ANIMATION]
 		,TRANSFORM_CHANNEL_TRANSLATE_X
 		,EASE_OUT_SINE
-		,-2
 		,0
+		,0.5
 		,10000
 		,0
 	);
 
-	ECTransformAnimation_StartTween(
+	/*ECTransformAnimation_StartTween(
 		spr_base_car->components[EC_TRANSFORM_ANIMATION]
 		,TRANSFORM_CHANNEL_TRANSLATE_Y
 		,EASE_OUT_SINE
@@ -287,7 +289,7 @@ int main(int argc, char * argv[]){
 		,-0.23-0.1
 		,100
 		,ANIMATION_LOOP_REPEAT_INFINITE
-	);
+	);*/
 
 	//----
 	// SUN

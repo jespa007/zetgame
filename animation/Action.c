@@ -35,7 +35,7 @@ void 	Action_SetKeyFramesTrack(Action *_this
 	_this->min_time_ms=MIN(_this->min_time_ms,_this->channel_keyframe_tracks[idx_channel]->minx_interval);
 	_this->max_time_ms=MAX(_this->max_time_ms,_this->channel_keyframe_tracks[idx_channel]->maxx_interval);
 
-	_this->total_time_ms = _this->max_time_ms - _this->min_time_ms;
+	_this->duration = _this->max_time_ms - _this->min_time_ms;
 
 	_this->channels_info->msk_active_channels|=(0x1<<idx_channel);
 }
@@ -101,12 +101,13 @@ void 				Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first 
 	KeyframeTrackGroup_FreeXYZW(&x,&y,&z,&w);
 }
 
-void Action_Update(Action *_this, uint32_t current_time_ms, uint32_t start_time_ms, bool loop){
+bool Action_Update(Action *_this, uint32_t current_time_ms, uint32_t *start_time_ms, int * repeat){
 
 	float point=0;
+	bool update=true;
 
 	if(_this->channels_info == NULL){
-		return;
+		return false;
 	}
 
 	// reset components to unit...
@@ -114,21 +115,37 @@ void Action_Update(Action *_this, uint32_t current_time_ms, uint32_t start_time_
 		_this->channels_info->on_reset_channels.ptr_function(_this->channels_info,_this->channels_info->on_reset_channels.user_data);
 	}
 
-	uint32_t relative_time_ms=current_time_ms-start_time_ms;//[MAX_MATERIAL_COMPONENTS];
+	uint32_t time_ms=current_time_ms-*start_time_ms;//[MAX_MATERIAL_COMPONENTS];
 
-	for(int i = 0; i < _this->channels_info->n_channels; i++){
-		if(_this->channel_keyframe_tracks[i] != NULL){
-			uint32_t time_ms = relative_time_ms;
-			if((_this->channel_keyframe_tracks[i]->maxx_interval>1) && loop){
-				time_ms %= (uint32_t)(_this->channel_keyframe_tracks[i]->maxx_interval);
+	if(
+		(time_ms < _this->duration ) || ((time_ms >= _this->duration)
+		&& (((*repeat) > 0) || ((*repeat) < 0)))
+	){
+
+		if(time_ms >= _this->duration ) {// clamp start time
+			*start_time_ms=current_time_ms;// set start time
+
+			if(*repeat > 0){
+				(*repeat)--;
 			}
 
+			// clamp
+			time_ms %= _this->duration;
+		}
+	}else{ //update last
+		update=false;
+	}
+
+	// update all channels...
+	for(int i = 0; i < _this->channels_info->n_channels; i++){
+		if(_this->channel_keyframe_tracks[i] != NULL){
 			if(KeyframeTrack_Interpolate(_this->channel_keyframe_tracks[i],time_ms,&point)){
 				_this->channels_info->channels[i]  = point;
 			}
 		}
 	}
 
+	return update;
 }
 
 void Action_Unload(Action *_this){

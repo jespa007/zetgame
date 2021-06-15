@@ -58,7 +58,10 @@ int main(int argc, char *argv[]){
 			,ARRAY_SIZE(tr_values)
 	);
 
-	Animation_StartAction(trs_animation,act_translate,SDL_GetTicks(),-1);
+	Animation_StartAction(trs_animation
+			,act_translate
+			,SDL_GetTicks()
+			,1);
 
 	Appearance *appearance=Appearance_New();
 	Appearance_SetColor3i(appearance,1,0,0);
@@ -82,9 +85,9 @@ int main(int argc, char *argv[]){
 			//trs_animation
 		}else{ // my custom move
 			//Shape2d_SetDimensions(shape2d,100,100);
-			transform.translate=Vector3f_New3f(x,y,0);
+			/*transform.translate=Vector3f_New3f(x,y,0);
 			Transform_SetScale3f(&transform,scale,scale,1);
-			Transform_SetRotate3f(&transform,0,0,rotate+=5);
+			Transform_SetRotate3f(&transform,0,0,rotate+=5);*/
 		}
 
 		if(K_S){

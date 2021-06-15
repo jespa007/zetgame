@@ -112,7 +112,7 @@ bool ESSystem_Init(void){
 		.size_data				=sizeof(ECMaterialAnimation)
 		,.required_components	= (EComponentList){0,0}
 		,.EComponent_Setup		=ECMaterialAnimation_Setup
-		,.EComponent_Update		=NULL
+		,.EComponent_Update		=ECMaterialAnimation_Update
 		,.EComponent_Destroy	=ECMaterialAnimation_Destroy
 	});
 

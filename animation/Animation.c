@@ -1,10 +1,9 @@
 #include "zg_animation.h"
 
 typedef struct{
-	uint32_t start_time;
-	uint32_t end_time;
-	int repeat;
 	Action *action;
+	uint32_t start_time;
+	int repeat;
 }InfoAction;
 
 
@@ -20,7 +19,6 @@ typedef struct{
 InfoAction * InfoAniAction_New(Action *_action,uint32_t _start_time, int  _repeat){
 	InfoAction * action_info = NEW(InfoAction);
 	action_info->start_time=_start_time; // only for triggered info_actions...
-	action_info->end_time=_start_time+_action->total_time_ms;
 	action_info->repeat=_repeat;
 	action_info->action = _action;
 
@@ -155,26 +153,26 @@ bool Animation_Update(Animation * _this, uint32_t _time){
 	while(i< data->info_actions->count){
 
 		InfoAction * info_action=(InfoAction *)data->info_actions->items[i];
-
+		bool update_action = true;
 
 		// render frame...
-		Action_Update(
+		if(Action_Update(
 				info_action->action
 				,_time
-				,info_action->start_time
-				,info_action->repeat
-		);
+				,&info_action->start_time
+				,&info_action->repeat
+		)==false){ //remove action...
+			update_action=false;
+		}
 
+		// update last channels...
 		ChannelsInfo_Copy(data->channels_info,info_action->action->channels_info);
 		data->channels_info->msk_active_channels |= info_action->action->channels_info->msk_active_channels;
 
 
-		if(
-			_time < info_action->end_time
-		 || (info_action->repeat)
-		){
+		if(update_action){
 			i++;
-		}else{
+		}else{ // remove
 			InfoAniAction_Delete(info_action);
 			List_Erase(data->info_actions,i);
 		}

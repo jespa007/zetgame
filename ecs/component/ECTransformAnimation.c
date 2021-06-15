@@ -66,6 +66,9 @@ void 	ECTransformAnimation_Update(void *_this){
 		if(ec_transform != NULL){
 			Transform *local=ECTransform_GetTransform(ec_transform,EC_TRANSFORM_TYPE_LOCAL);
 			Animation_CopyChannelValues(data->ani_transform,&local->translate.x);
+
+			// to ensure is 3d
+			ECTransform_SetTranslate3f(ec_transform,local->translate.x,local->translate.y,local->translate.z);
 		}
 	}
 }

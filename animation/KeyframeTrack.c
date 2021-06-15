@@ -269,7 +269,7 @@ bool KeyframeTrack_Interpolate(KeyframeTrack * _this,float _t, float * _value)
 				_t < point_i2->point[I1D_IDX_TIME]  //.independent_variable
 		) // Calcule interpolated point...
 		{
-			float normalized_t=(_t-point_i1->point[I1D_IDX_TIME])*point_i2->inc_one_over_diff_interval;
+			float normalized_t=(_t-point_i1->point[I1D_IDX_TIME])*point_i1->inc_one_over_diff_interval;
 			switch(_this->ease)
 			{
 			/*case EASE_BEZIER:

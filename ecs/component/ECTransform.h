@@ -4,9 +4,11 @@
 typedef struct ECTransform 	ECTransform;
 typedef struct Entity		Entity;
 
-#define EC_TRANSFORM_SCALE			0x0001
-#define EC_TRANSFORM_TRANSLATE		0x0002
-#define EC_TRANSFORM_ROTATE			0x0004
+#define EC_TRANSFORM_SCALE					0x0001
+#define EC_TRANSFORM_TRANSLATE			 	0x0002
+#define EC_TRANSFORM_ROTATE				 	0x0004
+#define EC_TRANSFORM_POSITION_RELATIVE_X 	0x0008
+#define EC_TRANSFORM_POSITION_RELATIVE_Y 	0x0010
 
 typedef enum{
 	 EC_TRANSFORM_TYPE_LOCAL=0
