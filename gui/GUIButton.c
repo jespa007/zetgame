@@ -148,7 +148,7 @@ void GUIButton_PostUpdate(void *gui_button){
 static void  GUIButton_Draw(void *gui_button){
 	GUIButton *_this=gui_button;
 	GUIButtonData *data = _this->data;
-	Transform transform=Transform_ResetValues();
+	Transform transform=Transform_DefaultValues();
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
 

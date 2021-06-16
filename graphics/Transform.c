@@ -5,7 +5,7 @@ void Transform_UpdateRotate(Transform *_this){
 	//_this->matrix3f=Quaternion_ToMatrix3f(_this->quaternion);
 }
 
-Transform	  Transform_ResetValues(void){
+Transform	  Transform_DefaultValues(void){
 	Transform transform;
 	transform.translate=Vector3f_Zeros();
 	transform.rotate=Vector3f_Zeros();
@@ -17,7 +17,7 @@ Transform	  Transform_ResetValues(void){
 
 Transform  Transform_New(void){
 
-	return Transform_ResetValues();
+	return Transform_DefaultValues();
 
 }
 

@@ -348,21 +348,7 @@ void TTFont_RenderTextBegin(Color4f *color){
 	}
 }
 
-void TTFont_Print(TTFont *_this,uint16_t _width, uint16_t _height, Color4f color, const char *in,...){
 
-	if(_this==NULL) return;
-
-	char out[1024]={0};
-	ZG_VARGS(out,in);
-
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_Print(_this,_width,_height,color,out);
-		break;
-	default:
-		break;
-	}
-}
 
 void TTFont_RenderTextEnd(void){
 	switch(Graphics_GetGraphicsApi()){
@@ -373,8 +359,26 @@ void TTFont_RenderTextEnd(void){
 		break;
 	}
 }
+//---------------------------------------------------------------------------------
+//
+//
+void TTFont_Print(TTFont *_this,float x, float y, Color4f color, const char *in,...){
 
-void TTFont_WPrint(TTFont *_this,uint16_t _width, uint16_t _height, Color4f color,const wchar_t *in,...){
+	if(_this==NULL) return;
+
+	char out[1024]={0};
+	ZG_VARGS(out,in);
+
+	switch(Graphics_GetGraphicsApi()){
+	case GRAPHICS_API_GL:
+		TTFont_GL_Print(_this,x,y,color,out);
+		break;
+	default:
+		break;
+	}
+}
+
+void TTFont_WPrint(TTFont *_this,float x, float y, Color4f color,const wchar_t *in,...){
 
 	if(_this==NULL) return;
 
@@ -383,13 +387,15 @@ void TTFont_WPrint(TTFont *_this,uint16_t _width, uint16_t _height, Color4f colo
 
 	switch(Graphics_GetGraphicsApi()){
 	case GRAPHICS_API_GL:
-		TTFont_GL_WPrint(_this,_width,_height,color,out);
+		TTFont_GL_WPrint(_this,x,y,color,out);
 		break;
 	default:
 		break;
 	}
 }
-
+//
+//
+//----------------------------------------------------------------------------------------------
 uint16_t TTFont_GetWidthBuiltInt(TTFont *_this, const void *text, size_t len, CharType fftont_text){
 	void *ptr=(void *)text;
 	uint32_t c=0;

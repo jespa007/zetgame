@@ -129,13 +129,13 @@ void Textbox_RT_Init(TextboxData *data){
 void Textbox_RT_Build(Textbox *_this){
 	TextboxData *data=_this->data;
 	unsigned long ch_space=(unsigned long)' ';
-	size_t sizeofchar=sizeof(char);
+	size_t sizeof_char=sizeof(char);
 	if(data->char_type==CHAR_TYPE_WCHAR){
-		sizeofchar=sizeof(wchar_t);
+		sizeof_char=sizeof(wchar_t);
 		ch_space=(unsigned long)L' ';
 	}
 
-	float inv_size_of_char=1.0f/sizeofchar;
+	float inv_sizeof_char=1.0f/sizeof_char;
 
 	// reset current render text data...
 	Textbox_RT_Init(data);
@@ -173,27 +173,44 @@ void Textbox_RT_Build(Textbox *_this){
 			void *word_ini=text_line;
 			void *word_end=text_line;
 			size_t word_len=0;
+			bool end_char=false;
 
 
 			do{
-				ch=StrUtils_GetCharAndAdvance(&text_line,data->char_type);
-			}while(!(ch == 0 || ch == ch_space));
+
+				ch=StrUtils_GetChar(text_line,data->char_type);
+				if(!(ch == 0 || ch == ch_space)){
+					StrUtils_Advance(&text_line,data->char_type);
+
+				}else{
+					end_char=true;
+				}
+			}while(!end_char);
+
+			word_end=text_line;
 
 			//TBRT_NEXT_CHAR(text_line,' ',data->char_type==CHAR_TYPE_WCHAR?wchar_t:char);
-			word_end=text_line;
+			//word_end=text_line;
 
 			// skip chars...
 			if(ch!=0){
+				end_char=false;
+
 				do{
-					ch=StrUtils_GetCharAndAdvance(&text_line,data->char_type);
-				}while(!(ch == 0 || ch != ch_space));
+					ch=StrUtils_GetChar(text_line,data->char_type);
+					if((ch == 0 || ch == ch_space)){
+						StrUtils_Advance(&text_line,data->char_type);
+					}else{
+						end_char=true;
+					}
+				}while(!end_char);
 			}
 
 
-			word_len=(word_end-word_ini)*inv_size_of_char; // div size of char or wchar
+			word_len=(word_end-word_ini)*inv_sizeof_char; // div size of char or wchar
 			word=malloc(word_len+sizeof(wchar_t));
-			memset(word,0,word_len*inv_size_of_char+sizeof(wchar_t));
-			memcpy(word,word_ini,word_len*inv_size_of_char);
+			memset(word,0,word_len*inv_sizeof_char+sizeof(wchar_t));
+			memcpy(word,word_ini,word_len*inv_sizeof_char);
 
 			// get len word...
 			if(data->char_type==CHAR_TYPE_WCHAR){
@@ -297,29 +314,37 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 	TextboxData *data=_this->data;
 
 	// TODO: pos is at center box by default, do a wat yo change render center
-	Vector2i start_pos=Vector2i_New(0,0);
+	//Vector2i start_pos=Vector2i_New(0,0);
 
 	if(transform != NULL){
 		Transform_Apply(transform);
-		start_pos=Vector2i_New(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
+		//start_pos=Vector2i_New(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
 	}
 
-	int y=start_pos.y-(data->dimensions.y>>1); // default aligned top-left
+	int y=-(data->dimensions.y>>1); // default aligned top-left
 	int x=0;
-	int x_draw;
+	float x_draw=0;
+	float y_draw=0;
+	float y_draw_inc=0;
+	Vector3f dim3d_mid=ViewPort_ScreenToWorldDim2i(data->dimensions.x>>1,data->dimensions.y>>1);
 	uint16_t text_total_height=data->render_text.token_lines->count*data->font->ascender;
 
 	if(data->vertical_align == VERTICAL_ALIGN_CENTER){
-		y=start_pos.y-(text_total_height>>1);
+		y=-(text_total_height>>1);
 	}
 	else if(data->vertical_align == VERTICAL_ALIGN_BOTTOM){
-		y=start_pos.y+(data->dimensions.y>>1)-text_total_height;
+		y=+(data->dimensions.y>>1)-text_total_height;
 	}
 
+	y_draw=-ViewPort_ScreenToWorldHeight(y);
+	y_draw_inc=-ViewPort_ScreenToWorldHeight(data->font->ascender);
+
 	if(ZetGame_IsDebugMode()){
-		Graphics_DrawRectangle(
-				data->dimensions.x
-				,data->dimensions.y
+		Graphics_DrawRectangle4f(
+				-dim3d_mid.x
+				,dim3d_mid.y
+				,+dim3d_mid.x
+				,-dim3d_mid.y
 				,2
 				,COLOR_WHITE_4F);
 	}
@@ -329,13 +354,16 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 	for(unsigned i=0; i < data->render_text.token_lines->count; i++){
 		int inc_x=1;
 		TBRT_TokenLine *token_line = data->render_text.token_lines->items[i];
-		x=start_pos.x-(data->dimensions.x>>1); // default text_align_right
+		x=-(data->dimensions.x>>1); // default text_align_right
 		if(data->text_align == TEXT_ALIGN_CENTER){
-			x=start_pos.x-(token_line->total_width>>1);
+			x=-(token_line->total_width>>1);
 		}else if(data->text_align == TEXT_ALIGN_RIGHT){
-			x=start_pos.x+(data->dimensions.x>>1);
+			x=(data->dimensions.x>>1);
 			inc_x=-1;
 		}
+
+		//x_draw=ViewPort_ScreenToWorldWidth(x);
+
 
 		for(unsigned w=0; w < token_line->tbrt_tokens->count; w++){
 
@@ -358,13 +386,13 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 					x+=(data->font->space_width)*inc_x;
 				}
 
-				x_draw=x+(inc_x<1?-token_word->word_width:0);
+				x_draw=ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
 
 				if(data->char_type==CHAR_TYPE_WCHAR){
-					TTFont_WPrint(data->font,x_draw,y,COLOR_WHITE_4F,token_word->word);
+					TTFont_WPrint(data->font,x_draw,y_draw,COLOR_WHITE_4F,token_word->word);
 				}
 				else{ // char by default.
-					TTFont_Print(data->font,x_draw,y,COLOR_WHITE_4F,token_word->word);
+					TTFont_Print(data->font,x_draw,y_draw,COLOR_WHITE_4F,token_word->word);
 				}
 				x+=(token_word->word_width)*inc_x;
 				break;
@@ -372,7 +400,7 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 			}
 		}
 
-		y+=data->font->ascender;
+		y_draw+=y_draw_inc;
 	}
 
 	TTFont_RenderTextEnd();

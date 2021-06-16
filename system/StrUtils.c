@@ -1,5 +1,55 @@
 #include "zg_system.h"
 
+//------------------------------------------------------------------------------
+
+static List  * StrUtils_WStrSplitByAnyWCharInDelim(const wchar_t *str_in, const wchar_t *str_delim) {
+	List *elems=List_New();
+
+	if(str_in!=0 && wcscmp(str_in,L"")!=0){
+
+	#ifdef __linux__
+		wchar_t *ptr;
+	#endif
+		wchar_t * token = wcstok((wchar_t *)str_in, str_delim
+	#ifdef __linux__
+				,&ptr
+	#endif
+				);
+	   // loop through the string to extract all other tokens
+	   while( token != NULL ) {
+		   size_t len=wcslen(token)*sizeof(wchar_t);
+		   wchar_t *text=malloc(len+sizeof(wchar_t));
+		   wcscpy(text,token);
+		   List_Add(elems,text);
+		   token = wcstok(NULL, str_delim
+	#ifdef __linux__
+				   ,&ptr
+	#endif
+				   );
+	   }
+   }
+
+   return elems;
+}
+
+static List * StrUtils_StrSplitByAnyCharInDelim(const char *str_in, const char *str_delim) {
+	List *elems=List_New();
+	//char delim_str[2]={delim,0};
+	char * token = strtok((char *)str_in, str_delim);
+   // loop through the string to extract all other tokens
+   while( token != NULL ) {
+	   size_t len=strlen(token)+1;
+	   char *text=malloc(len+1);
+	   strcpy(text,token);
+	   List_Add(elems,text);
+	   token = strtok(NULL, str_delim);
+   }
+
+   return elems;
+}
+
+//------------------------------------------------------------------------------
+
 char *StrUtils_New(const char *in_str){
 
 	if(in_str==NULL){
@@ -60,63 +110,69 @@ char * StrUtils_ToLower(const char *input){
 	return output;
 }
 
-List  * StrUtils_WStrSplitWStr(const wchar_t *str_in, const wchar_t *str_delim) {
-	List *elems=List_New();
-
-	if(str_in!=0 && wcscmp(str_in,L"")!=0){
-
-	#ifdef __linux__
-		wchar_t *ptr;
-	#endif
-		wchar_t * token = wcstok((wchar_t *)str_in, str_delim
-	#ifdef __linux__
-				,&ptr
-	#endif
-				);
-	   // loop through the string to extract all other tokens
-	   while( token != NULL ) {
-		   size_t len=wcslen(token)*sizeof(wchar_t);
-		   wchar_t *text=malloc(len+sizeof(wchar_t));
-		   wcscpy(text,token);
-		   List_Add(elems,text);
-		   token = wcstok(NULL, str_delim
-	#ifdef __linux__
-				   ,&ptr
-	#endif
-				   );
-	   }
-   }
-
-   return elems;
-}
-
 List * StrUtils_WStrSplit(const wchar_t * str_in, wchar_t delim) {
 
 	wchar_t str_delim[2]={delim,0};
-	return StrUtils_WStrSplitWStr(str_in, str_delim);
-}
-
-
-List * StrUtils_StrSplitStr(const char *str_in, const char *str_delim) {
-	List *elems=List_New();
-	//char delim_str[2]={delim,0};
-	char * token = strtok((char *)str_in, str_delim);
-   // loop through the string to extract all other tokens
-   while( token != NULL ) {
-	   size_t len=strlen(token)+1;
-	   char *text=malloc(len+1);
-	   strcpy(text,token);
-	   List_Add(elems,text);
-	   token = strtok(NULL, str_delim);
-   }
-
-   return elems;
+	return StrUtils_WStrSplitByAnyWCharInDelim(str_in, str_delim);
 }
 
 
 List *  StrUtils_StrSplit(const char *str_in, char delim) {
 	char str_delim[2]={delim,0};
-	return StrUtils_StrSplitStr(str_in,str_delim);
+	return StrUtils_StrSplitByAnyCharInDelim(str_in,str_delim);
+}
+
+
+List *  StrUtils_StrSplitStr(const char *str_in, const char *delim) {
+    List *elems=List_New();
+    char *str_it = (char *)str_in;
+    char *str_found = NULL;
+    size_t size_delim=strlen(delim);
+    size_t size_end=0;
+    char *token=NULL;
+    while ((str_found=strstr(str_it,delim))!=NULL){
+    	size_t word_len=str_found-str_it;
+    	if(word_len>0){
+			token=malloc((word_len+1)*sizeof(char));
+			memset(token,0,(word_len+1)*sizeof(char));
+			strncpy(token,str_it,word_len);
+			List_Add(elems,token);
+    	}
+        str_it=str_found+size_delim;
+    }
+    // adds the last word
+    size_end=strlen(str_it)+1;
+	token=malloc((size_end+1)*sizeof(char));
+    memset(token,0,(size_end+1)*sizeof(char));
+    strncpy(token,str_it,size_end);
+    List_Add(elems,token);
+    return elems;
+}
+
+List *  StrUtils_WStrSplitWStr(const wchar_t *str_in, const wchar_t *delim) {
+    List *elems=List_New();
+    wchar_t *str_it = (wchar_t *)str_in;
+    wchar_t *str_found = NULL;
+    size_t size_delim=wcslen(delim);
+    size_t size_end=0;
+    wchar_t *token=NULL;
+    while ((str_found=wcsstr(str_it,delim))!=NULL){
+    	size_t word_len=str_found-str_it;
+    	if(word_len>0){
+			token=malloc((word_len+1)*sizeof(wchar_t));
+			memset(token,0,(word_len+1)*sizeof(wchar_t));
+			wcsncpy(token,str_it,word_len);
+			List_Add(elems,token);
+    	}
+        str_it=str_found+size_delim;
+    }
+    // adds the last word
+    size_end=wcslen(str_it)+1;
+	token=malloc((size_end+1)*sizeof(wchar_t));
+    memset(token,0,(size_end+1)*sizeof(wchar_t));
+    wcsncpy(token,str_it,size_end);
+    List_Add(elems,token);
+    return elems;
 }
 
 void StrUtils_StrReplace(const char * str_input, char ch_old,char ch_new){
@@ -294,6 +350,31 @@ wchar_t         *StrUtils_ToWStr(const char *str_in){
 	}
 
 	return str_out;
+}
+
+unsigned long StrUtils_GetChar(void *ptr, CharType char_text){
+	uint32_t res=0;
+	if(char_text==CHAR_TYPE_WCHAR){
+		wchar_t c=*((wchar_t *)ptr);
+		res = c;
+	}else{
+		char c=*((char *)ptr);
+		res = c;
+	}
+
+	return res;
+}
+
+void StrUtils_Advance(void **ptr, CharType char_text){
+	size_t len = sizeof(char);
+	if(char_text==CHAR_TYPE_WCHAR){
+		len=sizeof(wchar_t);
+	}else{
+		len=sizeof(char);
+	}
+
+	(*(uint8_t **)ptr)+=len;
+
 }
 
 unsigned long StrUtils_GetCharAndAdvance(void **ptr, CharType char_text){

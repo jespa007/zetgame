@@ -38,6 +38,8 @@ bool			StrUtils_StrIsNullOrEmpty(const char *str);
 wchar_t         *StrUtils_ToWStr(const char *str_in);
 
 unsigned long 	StrUtils_GetCharAndAdvance(void **ptr, CharType char_text);
+unsigned long 	StrUtils_GetChar(void *ptr, CharType char_text);
+void 			StrUtils_Advance(void **ptr, CharType char_text);
 
 
 #endif

@@ -113,7 +113,7 @@ void TTFont_GL_RenderTextBegin(Color4f *color){
 
 }
 
-void TTFont_GL_RenderText(TTFont *font,uint16_t width, uint16_t  height, Color4f color, const void *text, CharType fftont_text){
+void TTFont_GL_RenderText(TTFont *font,float x3d, float y3d, Color4f color, const void *text, CharType fftont_text){
 	void *ptr=(void *)text;
 	unsigned long c=0;
 	//int x_ini=x;
@@ -122,14 +122,7 @@ void TTFont_GL_RenderText(TTFont *font,uint16_t width, uint16_t  height, Color4f
 	//TTFontDataGL * font_data=(TTFontDataGL *)font->font_data;
 	glColor3f(color.r,color.g, color.b);
 
-	Vector2i current_pos2i=Vector2i_New(-(width>>1),-(height>>1));
-
-	// start x3d/y3d
-	Vector3f dim3d=ViewPort_ScreenToWorldDim2i(width>>1,height>>1);
-	Vector3f start_pos3d;
-
-	start_pos3d.x=dim3d.x;
-	start_pos3d.y=-dim3d.y;
+	//Vector3f start_pos3d=ViewPort_ScreenToWorld(x,y);
 
 
 	while((c=StrUtils_GetCharAndAdvance(&ptr,fftont_text))!=0)
@@ -145,11 +138,11 @@ void TTFont_GL_RenderText(TTFont *font,uint16_t width, uint16_t  height, Color4f
 
 		CharacterDataGL *ch_data=ch->character_data;
 		//int offset_origin=(ch->size.y - ch->bearing.y);
-		Vector2i p1_2d=Vector2i_New(current_pos2i.x + ch->bearing.x	,current_pos2i.y + font->ascender - ch->size.y);
-		Vector2i p2_2d=Vector2i_New(current_pos2i.x + ch->size.x	,current_pos2i.y + font->ascender);
+		//Vector2i p1_2d=Vector2i_New(ch->bearing.x	,font->ascender - ch->size.y);
+		//Vector2i p2_2d=Vector2i_New(ch->size.x	,font->ascender);
 
-		Vector3f p1_3d=ViewPort_ScreenToWorldDim2i(p1_2d.x,p1_2d.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDim2i(p2_2d.x,p2_2d.y);
+		Vector3f p1_3d=ViewPort_ScreenToWorldDim2i(ch->bearing.x,font->ascender - ch->size.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDim2i(ch->size.x,font->ascender);
 
 		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch_data->texture);
@@ -158,19 +151,19 @@ void TTFont_GL_RenderText(TTFont *font,uint16_t width, uint16_t  height, Color4f
 		//Geometry_Draw(font_data->char_geometry);
 		glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
 				glTexCoord2f(0, 0);
-				glVertex2f(start_pos3d.x+p1_3d.x, start_pos3d.y-p1_3d.y);
+				glVertex2f(x3d+p1_3d.x, y3d-p1_3d.y);
 
 				glTexCoord2f(1, 0);
-				glVertex2f(start_pos3d.x+p2_3d.x, start_pos3d.y-p1_3d.y);
+				glVertex2f(x3d+p2_3d.x, y3d-p1_3d.y);
 
 				glTexCoord2f(0, 1);
-				glVertex2f(start_pos3d.x+p1_3d.x,start_pos3d.y-p2_3d.y);
+				glVertex2f(x3d+p1_3d.x,y3d-p2_3d.y);
 
 				glTexCoord2f(1, 1);
-				glVertex2f(start_pos3d.x+p2_3d.x,start_pos3d.y-p2_3d.y);
+				glVertex2f(x3d+p2_3d.x,y3d-p2_3d.y);
 		glEnd();
 
-		current_pos2i.x += (ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		x3d += ViewPort_ScreenToWorldWidth(ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 
 
@@ -183,12 +176,12 @@ void TTFont_GL_RenderTextEnd(void){
 }
 
 
-void TTFont_GL_Print(TTFont *font,uint16_t width, uint16_t height,Color4f color,const char *str){
-	TTFont_GL_RenderText(font,width,height,color,str,CHAR_TYPE_CHAR);
+void TTFont_GL_Print(TTFont *font,float x, float y,Color4f color,const char *str){
+	TTFont_GL_RenderText(font,x,y,color,str,CHAR_TYPE_CHAR);
 }
 
-void TTFont_GL_WPrint(TTFont *font,uint16_t width, uint16_t height,Color4f color,const wchar_t *str){
-	TTFont_GL_RenderText(font,width,height,color,str,CHAR_TYPE_WCHAR);
+void TTFont_GL_WPrint(TTFont *font,float x, float y,Color4f color,const wchar_t *str){
+	TTFont_GL_RenderText(font,x,y,color,str,CHAR_TYPE_WCHAR);
 }
 
 

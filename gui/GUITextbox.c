@@ -25,7 +25,7 @@ GUITextbox *GUITextbox_New(int x, int y, uint16_t width, uint16_t height){
 
 static void GUITextbox_Draw(void *gui_textbox){
 	GUITextbox *_this=gui_textbox;
-	Transform	transform=Transform_ResetValues();
+	Transform	transform=Transform_DefaultValues();
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 

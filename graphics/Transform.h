@@ -31,7 +31,7 @@ struct Transform{
 };
 
 Transform     Transform_New(void);
-Transform	  Transform_ResetValues(void);
+Transform	  Transform_DefaultValues(void);
 void 		  Transform_Update(Transform *_this);
 
 void 		Transform_Apply(Transform *_this);

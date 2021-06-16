@@ -35,8 +35,8 @@ void ECTransform_Setup(void *_this, Entity *_entity){
 	ECTransformData *data= NEW(ECTransformData);
 	ec_transform->data=data;
 
-	ec_transform->transform=Transform_ResetValues();
-	data->transform_local=Transform_ResetValues();
+	ec_transform->transform=Transform_DefaultValues();
+	data->transform_local=Transform_DefaultValues();
 
 	data->child_nodes=List_New();
 

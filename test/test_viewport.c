@@ -8,7 +8,7 @@ int main(int argc, char *argv[]){
 
 	Texture * text_png = Texture_LoadFromFile("data/images/test.png");
 	Textbox *textbox	=Textbox_New();
-	Transform transform=Transform_ResetValues();
+	Transform transform=Transform_DefaultValues();
 
 	do{
 		Graphics_BeginRender();

@@ -51,11 +51,10 @@ int main(int argc, char * argv[]){
 	//TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",16);
 	Textbox *textbox=Textbox_New();
 	Transform transform=Transform_New();
-
+	Textbox_SetText(textbox,"H L");
 	do
 	{
 		Graphics_BeginRender();
-
 
 		PrintFontInfo *aux_ptr=(PrintFontInfo *)print_font_info;
 		while(aux_ptr->text !=NULL){
@@ -69,16 +68,13 @@ int main(int argc, char * argv[]){
 			Textbox_Draw(textbox,&transform,NULL);
 
 			aux_ptr++;
-
 		}
 
 		Graphics_EndRender();
 
 		Input_Update();
-		SDL_Delay(10);
 
-	}
-	while(!K_ESC);
+	}while(!K_ESC);
 
 	//Transform_Delete(transform);
 
