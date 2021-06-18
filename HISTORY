@@ -20,5 +20,8 @@ Zetgine Core 1.0.0
 > #12 Implement Tilemap rendering
 > #13 Implement particle system  
 > #14 Adapt zetgame for Android (NDK) 
-#28 Different resolutions from game design resolution
+#15 Integrate cJson 
+> #16 Support load from Tiled 
+> #17 Support load from Aseprite 
+#18 Different resolutions from game design resolution
  

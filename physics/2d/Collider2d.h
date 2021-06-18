@@ -2,6 +2,7 @@
 #define __COLLIDER2D_H__
 
 typedef struct Collider2d Collider2d;
+typedef struct Transform Transform;
 
 typedef enum{
 	 COLLIDER2D_TYPE_RECTANGLE=0
