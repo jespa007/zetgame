@@ -24,4 +24,5 @@ Zetgine Core 1.0.0
 > #16 Support load from Tiled 
 > #17 Support load from Aseprite 
 #18 Different resolutions from game design resolution
+> #19 Implement GlTF support
  
