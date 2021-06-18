@@ -1,1 +1,1 @@
-#include "2d/Physics2dCollider.c"
+#include "2d/Collider2d.c"

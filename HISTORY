@@ -7,5 +7,18 @@ Zetgine Core
 
 Zetgine Core 1.0.0
 
-[ ] TextBox_Draw Do a function for draw to x,y and Transform respectively 
+> #1 Implement Collider2d 
+> #2 Implement FrameAnimator
+> #3 Get rid of deprecated fixed opengl pipeline
+> #5 Compile and Run shader+fragment shader
+> #6 organize component update by system, physics and render
+> #7 Adapt zetgame for Rasperry-PI 
+> #8 Adapt zetgame for RetroFW RS-97 
+> #9 Texture manager 
+> #10 Port to Emmscripten 
+> #11 Implement Physics Entity-Tilemap colliding 
+> #12 Implement Tilemap rendering
+> #13 Implement particle system  
+> #14 Adapt zetgame for Android (NDK) 
 #28 Different resolutions from game design resolution
+ 
