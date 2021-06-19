@@ -23,6 +23,8 @@ Zetgame 1.0.0
 > #16 Support load from Tiled 
 > #17 Support load from Aseprite 
 #18 Different resolutions from game design resolution
-> #19 Implement GlTF support
-> #20 Integrate ezxml 
+> #19 Implement SceneManager
+#20 Integrate ezxml 
 > #21 Implement SpriteKeyFrameManager 
+> #22 Implement GUIWindowManager 
+> #23 Implement Scene
