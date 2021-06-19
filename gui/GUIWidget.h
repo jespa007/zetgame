@@ -9,6 +9,15 @@
 #define GUI_GET_RELATIVE_Y(widget) (widget->position_local.y + widget->position_offset.y)
 
 typedef enum{
+	WIDGET_TYPE_WIDGET=0
+	,WIDGET_TYPE_FRAME
+	,WIDGET_TYPE_LABEL
+	,WIDGET_TYPE_TEXTBOX
+	,WIDGET_TYPE_VIEWER
+	,WIDGET_TYPE_WINDOW
+}WidgetType;
+
+typedef enum{
 	WIDGET_POSITION_LOCAL=0,
 	WIDGET_POSITION_WORLD,
 	WIDGET_POSITION_SCREEN
@@ -33,6 +42,7 @@ typedef struct{
 
 
 struct GUIWidget{
+	WidgetType			type;
 	Color4f				color,background_color;
 	float 				opacity;
 	bool 				is_enabled;
@@ -42,8 +52,6 @@ struct GUIWidget{
 
 	void *data;
 };
-
-
 
 GUIWidget * GUIWidget_New(int x, int y, uint16_t width, uint16_t height);
 void GUIWidget_SetDrawFunction(GUIWidget *_this,CallbackWidgetUpdate draw);

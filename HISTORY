@@ -1,14 +1,13 @@
-Zetgine Core
-============
+Zetgame
+=======
 
 
 
 //-------------------------------------------
-
-Zetgine Core 1.0.0
+Zetgame 1.0.0
 
 > #1 Implement Collider2d 
-> #2 Implement FrameAnimator
+> #2 Implement SpriteKeyFrame
 > #3 Get rid of deprecated fixed opengl pipeline
 > #5 Compile and Run shader+fragment shader
 > #6 organize component update by system, physics and render
@@ -25,4 +24,5 @@ Zetgine Core 1.0.0
 > #17 Support load from Aseprite 
 #18 Different resolutions from game design resolution
 > #19 Implement GlTF support
- 
+> #20 Integrate ezxml 
+> #21 Implement SpriteKeyFrameManager 

@@ -44,6 +44,8 @@
 // system
 
 /* Libraries completely written in C, so we need to tell the C++ compiler that so it links correctly. */
+#define EZXML_NOMMAP
+#include "ezxml/ezxml.h"
 #include "cJSON/cJSON.h"
 #include "sdl/zg_sdl.h"
 #include <jpeglib.h>

@@ -16,6 +16,7 @@
 #include "MapString.c"
 #include "MapStringIterator.c"
 #include "Path.c"
+#include "ezxml/ezxml.c"
 #include "cJSON/cJSON.c"
 #include "sdl/zg_sdl.c"
 //#include "sdl/SDL_windows_main.c"
