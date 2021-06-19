@@ -28,3 +28,5 @@ Zetgame 1.0.0
 > #21 Implement SpriteKeyFrameManager 
 > #22 Implement GUIWindowManager 
 > #23 Implement Scene
+> #24 Implement TilemapManager 
+> #25 Implement TilemapCollider 
