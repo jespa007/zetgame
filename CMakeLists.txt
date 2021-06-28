@@ -189,8 +189,6 @@ configure_files(${PROJECT_SOURCE_DIR}/test/data/samples ${PROJECT_SOURCE_DIR}/bi
 # LINK PARAMS
 #
 
-
-
 LINK_DIRECTORIES (
 	${PROJECT_SOURCE_DIR}/3rdparty/lib
 )
