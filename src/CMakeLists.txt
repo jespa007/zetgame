@@ -195,45 +195,6 @@ MESSAGE ("-- Target : " ${TARGET})
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #
-# RESOURCES
-#
-set(
-	embeddFiles 
-)
-
-# Find all the input files
-FILE(GLOB embeddFiles RELATIVE "${PROJECT_SOURCE_DIR}"
-    "${PROJECT_SOURCE_DIR}/assets/image/*.gif" 
-    "${PROJECT_SOURCE_DIR}/assets/image/*.jpg"
-    "${PROJECT_SOURCE_DIR}/assets/image/*.png"
-    "${PROJECT_SOURCE_DIR}/assets/audio/*.mod"
-    "${PROJECT_SOURCE_DIR}/assets/audio/*.s3m"
-    "${PROJECT_SOURCE_DIR}/assets/font/*.ttf"
-)
-    
-
-FOREACH(embeddFileName ${embeddFiles})
-    
-    get_filename_component(filename ${embeddFileName} NAME)
-    get_filename_component(path ${embeddFileName} PATH)
-    MESSAGE(STATUS "Process file: xxd -i ${filename} > ${filename}.c")
-    execute_process(COMMAND xxd -i ${filename} 
-    				OUTPUT_FILE ${filename}.c
-    				WORKING_DIRECTORY ${path}
-    )
-    
-
-ENDFOREACH(embeddFileName)
-
-
-configure_files(${PROJECT_SOURCE_DIR}/../test/data/images ${CMAKE_BINARY_DIR}/bin/${TARGET}/data/images)
-configure_files(${PROJECT_SOURCE_DIR}/../test/data/fonts ${CMAKE_BINARY_DIR}/bin/${TARGET}/data/fonts)
-configure_files(${PROJECT_SOURCE_DIR}/../test/data/musics ${CMAKE_BINARY_DIR}/bin/${TARGET}/data/musics)
-configure_files(${PROJECT_SOURCE_DIR}/../test/data/samples ${CMAKE_BINARY_DIR}/bin/${TARGET}/data/samples)
-
-
-#----------------------------------------------------------------------------------------------------------------------------------------------------
-#
 # LINK PARAMS
 #
 
