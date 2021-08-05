@@ -49,9 +49,9 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.128716184" name="Optimization Level" superClass="gnu.c.compiler.so.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.so.debug.option.debugging.level.1851789020" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1889450924" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/3rdparty/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../zetnet&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../zetpacker&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/3rdparty/gcc/include&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.987390241" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -188,15 +188,7 @@
 			<target name="CMake Release" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>cmake</buildCommand>
 				<buildArguments/>
-				<buildTarget>-H. -Bbuild/gcc  -DTARGET=release -DMEMMANAGER=OFF -DZETDEV=OFF</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>false</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
-			</target>
-			<target name="CMake Debug ZetDev" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>cmake</buildCommand>
-				<buildArguments/>
-				<buildTarget>-H. -Bbuild/gcc  -DTARGET=debug -DMEMMANAGER=ON -DZETDEV=ON</buildTarget>
+				<buildTarget>-H. -Bbuild/gcc  -DTARGET=release</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
@@ -204,7 +196,7 @@
 			<target name="CMake Debug" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>cmake</buildCommand>
 				<buildArguments/>
-				<buildTarget>-H. -Bbuild/gcc  -DTARGET=release -DMEMMANAGER=ON -DZETDEV=OFF</buildTarget>
+				<buildTarget>-H. -Bbuild/gcc  -DTARGET=debug</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>

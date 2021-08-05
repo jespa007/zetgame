@@ -48,7 +48,7 @@ struct GUIWidget{
 	bool 				is_enabled;
 
 	Texture 			*texture;
-	Textbox 			*textbox;
+	TextBox 			*textbox;
 
 	void *data;
 };

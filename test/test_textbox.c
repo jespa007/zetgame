@@ -1,4 +1,4 @@
-#include "../ZetGame.h"
+#include "ZetGame.h"
 
 #define TEXT_WIDTH_BB
 
@@ -49,7 +49,7 @@ int main(int argc, char * argv[]){
 	ZetGame_SetDebugMode(true);
 
 	//TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",16);
-	Textbox *textbox=Textbox_New();
+	TextBox *textbox=Textbox_New();
 	Transform transform=Transform_New();
 	Textbox_SetText(textbox,"H L");
 	do

@@ -1,7 +1,7 @@
 #include "scene/zg_scene.h"
 
 typedef struct{
-	Textbox *textbox;
+	TextBox *textbox;
 }SGTextbox2dData;
 
 

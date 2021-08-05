@@ -55,8 +55,8 @@ typedef struct{
 }TextboxData;
 
 
-Textbox *Textbox_New(void){
-	Textbox *textbox = NEW(Textbox);
+TextBox *Textbox_New(void){
+	TextBox *textbox = NEW(TextBox);
 	TextboxData *data=NEW(TextboxData);
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
@@ -126,7 +126,7 @@ void Textbox_RT_Init(TextboxData *data){
 	data->render_text.token_lines=List_New();
 }
 
-void Textbox_RT_Build(Textbox *_this){
+void Textbox_RT_Build(TextBox *_this){
 	TextboxData *data=_this->data;
 	unsigned long ch_space=(unsigned long)' ';
 	size_t sizeof_char=sizeof(char);
@@ -240,7 +240,7 @@ void Textbox_RT_Build(Textbox *_this){
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void     Textbox_SetText(Textbox *_this,const char *in, ...){
+void     Textbox_SetText(TextBox *_this,const char *in, ...){
 	char out[1024]={0};
 	ZG_VARGS(out,in);
 
@@ -260,7 +260,7 @@ void     Textbox_SetText(Textbox *_this,const char *in, ...){
 }
 
 
-void     Textbox_WSetText(Textbox *_this,const wchar_t *in, ...){
+void     Textbox_WSetText(TextBox *_this,const wchar_t *in, ...){
 	wchar_t out[1024]={0};
 	ZG_WVARGS(out,in);
 
@@ -279,7 +279,7 @@ void     Textbox_WSetText(Textbox *_this,const wchar_t *in, ...){
 	Textbox_RT_Build(_this);
 }
 
-void     Textbox_SetFont(Textbox *_this, TTFont *font){
+void     Textbox_SetFont(TextBox *_this, TTFont *font){
 	TextboxData *data=_this->data;
 
 	if(data->font != font){
@@ -288,18 +288,18 @@ void     Textbox_SetFont(Textbox *_this, TTFont *font){
 	}
 }
 
-void	 Textbox_SetTextAlign(Textbox *_this, TextAlign text_align){
+void	 Textbox_SetTextAlign(TextBox *_this, TextAlign text_align){
 	TextboxData *data=_this->data;
 	data->text_align=text_align;
 }
 
-void	 Textbox_SetVerticalAlign(Textbox *_this, VerticalAlign vertical_align){
+void	 Textbox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align){
 	TextboxData *data=_this->data;
 	data->vertical_align=vertical_align;
 }
 
 
-void	 Textbox_SetDimensions(Textbox *_this, uint16_t w, uint16_t h){
+void	 Textbox_SetDimensions(TextBox *_this, uint16_t w, uint16_t h){
 	TextboxData *data=_this->data;
 
 	if(!(data->dimensions.x==w && data->dimensions.y==h)){
@@ -309,7 +309,7 @@ void	 Textbox_SetDimensions(Textbox *_this, uint16_t w, uint16_t h){
 	}
 }
 
-void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
+void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 	TextboxData *data=_this->data;
 
@@ -411,7 +411,7 @@ void	 Textbox_Draw(Textbox *_this, Transform *transform,Color4f *color){
 
 }
 
-void Textbox_Delete(Textbox * _this){
+void Textbox_Delete(TextBox * _this){
 	if(_this==NULL) return;
 	TextboxData *data=_this->data;
 

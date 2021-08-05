@@ -1,4 +1,4 @@
-#include "../ZetGame.h"
+#include "ZetGame.h"
 
 int main(int argc, char *argv[]){
 

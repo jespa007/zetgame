@@ -20,7 +20,7 @@
 
 
 #include "stream/JpegMPS.c"
-#include "Textbox.c"
+#include "TextBox.c"
 
 
 

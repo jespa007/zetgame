@@ -1,4 +1,4 @@
-#include "../ZetGame.h"
+#include "ZetGame.h"
 
 int main(int argc, char *argv[]){
 
@@ -7,7 +7,7 @@ int main(int argc, char *argv[]){
 	Texture_SetTextureResourcePath("data/images");
 
 	Texture * text_png = Texture_LoadFromFile("data/images/test.png");
-	Textbox *textbox	=Textbox_New();
+	TextBox *textbox	=Textbox_New();
 	Transform transform=Transform_DefaultValues();
 
 	do{

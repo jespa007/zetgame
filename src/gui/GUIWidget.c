@@ -12,7 +12,7 @@ typedef struct{
 	CallbackWidgetOnSetDimension on_set_width;
 	CallbackWidgetOnSetDimension on_set_height;
 	CallbackWidgetAttachWidget attach_widget;
-	Textbox				*	textbox; // only for label/button/textarea
+	TextBox				*	textbox; // only for label/button/textarea
 	Texture				*texture; // label/textarea
 
 

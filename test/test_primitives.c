@@ -1,4 +1,4 @@
-#include "../ZetGame.h"
+#include "ZetGame.h"
 
 #define SHAPE_WIDTH			50
 #define SHAPER_COLOR		0xff707070

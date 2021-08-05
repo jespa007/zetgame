@@ -1,4 +1,4 @@
-#include "../ZetGame.h"
+#include "ZetGame.h"
 
 #include <SDL2/SDL.h>
 #include <xmp.h>
