@@ -1,12 +1,16 @@
 
 // gldebug must be the first one....
 
-
 #include "BufferByte.c"
 #include "BufferFloat.c"
 #include "BufferShort.c"
 #include "gl/glextra.c"
-#include "image/image.c"
+#include "jpeg/jpeg.c"
+#include "3rdparty/xml.c/src/xml.c"
+#include "3rdparty/cJSON/cJSON.c"
+#include "3rdparty/gifdec/gifdec.c"
+#include "3rdparty/lodepng/lodepng.c"
+
 #include "Directory.c"
 #include "File.c"
 

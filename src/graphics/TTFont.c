@@ -2,7 +2,7 @@
 #include "assets/font/pf_arma_five.ttf.c"
 
 #define MAX_FONT_NAME 		100
-#define DEFAULT_FONT_FAMILY "pf_arma_five.ttf"
+#define DEFAULT_FONT_FAMILY "pf_arma_five"
 #define DEFAULT_FONT_SIZE	16
 
 #define BOLD_WEIGHT 	1.1
@@ -253,38 +253,51 @@ const char *	TTFont_GetDefaultFontName(){
 	return g_ttfont_vars->default_font_name;
 }
 
-TTFont * 		TTFont_GetFontFromName(const char * font_name,uint8_t size){
+TTFont * 		TTFont_GetFontFromName(const char * _filename,uint8_t _font_size){
+	char *id_tmp=0;
 	char id[100]={0};
 	TTFont * font=NULL;
-	char filename[MAX_PATH];
+	char filename[PATH_MAX]={0};
 	char *ttf_font_file_to_lower=NULL;
 
-	sprintf(filename,"%s/%s",g_ttfont_vars->font_resource_path,font_name);
+	id_tmp=Path_GetFilenameWithoutExtension(_filename);
+
+	if(id_tmp == NULL){ return NULL; }
+
+	strcpy(id,id_tmp);
+	free(id_tmp);
 
 	// 1. get filename for absolute path...
-	ttf_font_file_to_lower=StrUtils_ToLower(font_name);
+	ttf_font_file_to_lower=StrUtils_ToLower(id);
 	if(ttf_font_file_to_lower==NULL){
 		return NULL;
 	}
 
-	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,size);
+	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
 	free(ttf_font_file_to_lower);
 
-	if(!MapString_Exist(g_ttfont_vars->fonts,id)){
+	if((font=MapString_GetValue(g_ttfont_vars->fonts,id,NULL))==NULL){
 		if(STRCMP(ttf_font_file_to_lower,==,DEFAULT_FONT_FAMILY)){
-			font=TTFont_LoadFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,size);
+			font=TTFont_LoadFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 		}
 		else{
-			if((font=TTFont_LoadFromFile(filename,size))==NULL){
-				return TTFont_GetEmbeddedFont();
+			char filename[PATH_MAX]={0};
+
+			strcpy(filename,_filename);
+
+			if(File_Exists(filename) == false){
+				sprintf(filename,"%s/%s",g_ttfont_vars->font_resource_path,_filename);
+			}
+
+			if((font=TTFont_LoadFromFile(filename,_font_size))!=NULL){
+				MapString_SetValue(g_ttfont_vars->fonts,id,font);
+			}
+			else{
+				font=TTFont_GetEmbeddedFont();
 			}
 		}
-		MapString_SetValue(g_ttfont_vars->fonts,id,font);
-	}else{
-		MapString_SetValue(g_ttfont_vars->fonts,id,font);
+
 	}
-
-
 
 	return font;
 }
@@ -293,6 +306,7 @@ TTFont * 		TTFont_GetFontFromMemory( const uint8_t * ptr, unsigned int ptr_len,u
 	char id[100]={0};
 	TTFont * font=NULL;
 	char *ttf_font_file_to_lower=NULL;
+	bool exists=false;
 
 	// 1. get filename for absolute path...
 	char *allocated_int_str=StrUtils_IntToStr((intptr_t)ptr);
@@ -302,16 +316,14 @@ TTFont * 		TTFont_GetFontFromMemory( const uint8_t * ptr, unsigned int ptr_len,u
 	free(allocated_int_str);
 	free(ttf_font_file_to_lower);
 
-	if(!MapString_Exist(g_ttfont_vars->fonts,id)){
+	font = MapString_GetValue(g_ttfont_vars->fonts,id,&exists);
+
+	if(exists == false){
 		font=TTFont_LoadFromMemory(ptr,ptr_len,font_size);
 		if(font!=NULL){
 			MapString_SetValue(g_ttfont_vars->fonts,id,font);
 		}
-	}else{
-		font = MapString_GetValue(g_ttfont_vars->fonts,id,NULL);
 	}
-
-
 
 	return font;
 }

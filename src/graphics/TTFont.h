@@ -25,7 +25,7 @@ struct TTFont
 
 typedef struct{
 	const char * 	font_name;
-	uint8_t 		 	font_size;
+	uint8_t 		font_size;
 }TTFontInfo;
 
 
@@ -40,7 +40,7 @@ void 			TTFont_SetDefaultFont(TTFont * _font);
 void 			TTFont_SetDefaultFontName(const char * default_font_name);
 const char *	TTFont_GetDefaultFontName(void);
 void 			TTFont_SetDefaultFontSize(uint8_t font_size);
-uint8_t 			TTFont_GetDefaultFontSize(void);
+uint8_t 		TTFont_GetDefaultFontSize(void);
 
 
 TTFont * 		TTFont_GetEmbeddedFont(void);
@@ -49,10 +49,6 @@ TTFont * 		TTFont_GetFontFromMemory( const uint8_t * ptr, unsigned int ptr_len,u
 TTFont * 		TTFont_GetFontFromFontInfo(TTFontInfo * font_info);
 void 			TTFont_SetFontResourcePath(const char * path);
 const char * 	TTFont_GetFontResourcePath(void);
-
-
-
-
 
 // public
 TTFont *	TTFont_Get(const char *ttf_file);

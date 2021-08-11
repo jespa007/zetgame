@@ -44,9 +44,6 @@
 // system
 
 /* Libraries completely written in C, so we need to tell the C++ compiler that so it links correctly. */
-#include "3rdparty/ezxml/ezxml.h"
-#include "3rdparty/cJSON/cJSON.h"
-#include "sdl/zg_sdl.h"
 #include <jpeglib.h>
 
 #include <freetype2/ft2build.h>
@@ -81,6 +78,14 @@
 #include "memmgr.h"
 #endif
 
+#include "3rdparty/gifdec/gifdec.h"
+#include "3rdparty/cJSON/cJSON.h"
+#include "3rdparty/xml.c/src/xml.h"
+#include "3rdparty/lodepng/lodepng.h"
+#include "jpeg/jpeg.h"
+#include "sdl/zg_sdl.h"
+
+
 
 #include 	"zetpacker.h"
 #include 	"zetnet.h"
@@ -90,7 +95,7 @@
 #include	"zg_memory.h"
 #include	"util-fmemopen.h"
 #include	"gl/glextra.h"
-#include	"image/image.h"
+
 
 #include	"Term.h"
 #include	"Path.h"

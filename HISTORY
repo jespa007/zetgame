@@ -30,3 +30,8 @@ Zetgame 1.0.0
 > #23 Implement Scene
 > #24 Implement Managing functions for Tilemap 
 > #25 Implement TilemapCollider 
+#26 restruct project 
+> #27 replace giflib by gifdec 
+> #28 adapt xml.c 
+
+

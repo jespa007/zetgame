@@ -47,10 +47,12 @@ ENDIF ()
 message("-- Install drectory: " ${CMAKE_INSTALL_PREFIX})
 
 
+set( POST_NAME "")
 set(ZETGAME_LIB_SRCS "")
-SET(TOOLCHAIN "unknown")
+
 
 if(MSVC)
+	SET(COMPILER "msvc")
 	MESSAGE ("-- Plataform: MSVC" )
 	
 	
@@ -61,8 +63,8 @@ if(MSVC)
 	add_definitions(/wd4800)
 	add_definitions(/wd4244)
 	
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 	
 	
 	if(BUILD_SHARED_LIBS)
@@ -73,15 +75,15 @@ if(MSVC)
 
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 
-	
-	SET(TOOLCHAIN "gcc")
+	set( POST_NAME "")
+	SET(COMPILER "gcc")
 
-	SET( COMMON_PARAMS " ${COMMON_PARAMS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
+	SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
 	  
 	if (MINGW)
 		MESSAGE("-- Plataform: MINGW" )
 		message("-- Mingw path: $ENV{MINGWDIR} ")
-		SET( COMMON_PARAMS " ${COMMON_PARAMS} -DEZXML_NOMMAP " )
+		SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -DEZXML_NOMMAP " )
 		set(CMAKE_LEGACY_MINGW_WIN32 0)
 	elseif(UNIX)
     	MESSAGE ("-- Plataform: UNIX" )
@@ -90,48 +92,43 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 	endif()
 	
 
-	set( POST_NAME "")
-	
-
 	IF ( "${TARGET}" STREQUAL "debug")
 		
 		set( POST_NAME "_d")	
-		
-		set(TARGET_FLAGS " -O0 ")
-		set(TARGET_FLAGS " ${TARGET_FLAGS} -g -D__DEBUG__ ")
+		set(COMMON_C_PARAMS " ${COMMON_C_PARAMS} -g -O0 -D__DEBUG__ ")
 	
-
 		IF( EXISTS ${PROJECT_SOURCE_DIR}/../../memmgr )
 			message("-- Memmanager: ON")
-			SET( COMPILE_COMMON_FLAGS " ${COMPILE_COMMON_FLAGS} -D__MEMMANAGER__")
+			SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -D__MEMMANAGER__")
 			include_directories (
 				${PROJECT_SOURCE_DIR}/../../memmgr
 			)
 		
-	   		set(ZETSCRIPT_LIB_SRCS ${ZETSCRIPT_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.cpp)
+	   		set(ZETSCRIPT_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.cpp)
 	   	else()
 	   		message("-- Memmanager: OFF (../../memmgr not exist)")
 	   	endif()
 	   		
 	else()
 		set(TARGET "release")
-		set(COMPILE_TARGET_FLAGS " -O2")
+		set(COMMON_C_PARAMS " ${COMMON_C_PARAMS} -O2 ")
 	endif()	
 	
 	#Redefine output dir ...
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${TARGET})
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${TARGET})
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${TARGET})
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
 	LINK_DIRECTORIES(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})	
+	
+	SET(CMAKE_C_FLAGS   	" ${COMMON_C_PARAMS}  " )
 	
 endif()
 
-MESSAGE ("-- Toolchain: " ${TOOLCHAIN})
 
 include_directories (
 	${PROJECT_SOURCE_DIR}
-	${PROJECT_SOURCE_DIR}/../3rdparty/${TOOLCHAIN}/include
-	${PROJECT_SOURCE_DIR}/../3rdparty/${TOOLCHAIN}/include/freetype2
+	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include
+	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/freetype2
 	${OPEN_GL_INCLUDE_DIRS}  
 	${GLU_INCLUDE_DIRS}
 )
@@ -145,16 +142,6 @@ elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 
-IF ( "${TARGET}" STREQUAL "")
-   SET ( TARGET "release" )
-ENDIF ()
-
-set( POST_NAME "")
-IF ( "${TARGET}" STREQUAL "debug")
-	set( POST_NAME "_d")
-ENDIF()
-  
-
 if ( "${FFMPEG}" STREQUAL "ON" )
 	MESSAGE ("-- FFMPEG: ON" )
 	set(TARGET_FLAGS " ${TARGET_FLAGS} -D__WITH_FFMPEG__ ")
@@ -162,35 +149,8 @@ else()
 	MESSAGE ("-- FFMPEG: OFF" )
 endif()
 
-IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
- 	MESSAGE ("-- zetpacker_dev: ON" )
-	include_directories (
-		${PROJECT_SOURCE_DIR}/../../zetpacker
-	) 	
-else()
-	include_directories (
-		${PROJECT_SOURCE_DIR}/3rdparty/${TOOLCHAIN}/include/zetpacker
-	)
-endif()
-
-IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
- 	MESSAGE ("-- zetnet_dev: ON" )
-	include_directories (
-		${PROJECT_SOURCE_DIR}/../../zetnet
-	) 	
-else()
-	include_directories (
-		${PROJECT_SOURCE_DIR}/3rdparty/${TOOLCHAIN}/include/zetnet
-	)
-endif()
-
-
-
-# Set C flags.
-SET(CMAKE_C_FLAGS   " ${TARGET_FLAGS} ${COMMON_PARAMS}  " )
-
-
 MESSAGE ("-- Target : " ${TARGET})
+MESSAGE ("-- Compiler: " ${COMPILER})
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -199,7 +159,7 @@ MESSAGE ("-- Target : " ${TARGET})
 #
 
 LINK_DIRECTORIES (
-	${PROJECT_SOURCE_DIR}/../3rdparty/${TOOLCHAIN}/lib
+	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/lib
 )
 
 
@@ -221,21 +181,41 @@ endif()
 
 
 IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
+	MESSAGE ("-- zetpacker_dev: ON" )
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../../zetpacker/src
+	) 	
 	set( LIB_DEPS ${LIB_DEPS} 
-		${PROJECT_SOURCE_DIR}/../../zetpacker/bin/${TARGET}/libzetpacker${POST_NAME}.a
+		${PROJECT_SOURCE_DIR}/../../zetpacker/build/${COMPILER}/${TARGET}/libzetpacker${POST_NAME}.a
 	) 
 
 else()
+	IF ( "${TARGET}" STREQUAL "debug" )
+		MESSAGE ("-- zetpacker_dev: OFF" )
+	ENDIF()
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetpacker
+	)
 	set( LIB_DEPS ${LIB_DEPS} 
  		zetpacker
  	)
 endif()
 
 IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
+	MESSAGE ("-- zetnet_dev: ON" )
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../../zetnet/src
+	) 	
 	set( LIB_DEPS ${LIB_DEPS} 
-		${PROJECT_SOURCE_DIR}/../../zetnet/bin/${TARGET}/libzetnet${POST_NAME}.a
+		${PROJECT_SOURCE_DIR}/../../zetnet/build/${COMPILER}/${TARGET}/libzetnet${POST_NAME}.a
 	)
 else()
+	IF ( "${TARGET}" STREQUAL "debug" )
+		MESSAGE ("-- zetnet_dev: OFF" )
+	ENDIF()
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet
+	)
  	set( LIB_DEPS ${LIB_DEPS} 
  		zetnet 
  	)
@@ -298,11 +278,6 @@ ENDIF()
 
 
 set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
-
-	#-- 3rd party --
-	3rdparty/ezxml/ezxml.c
-	3rdparty/cJSON/cJSON.c
- 
 
 	#-- System --
 	system/zg_system.c

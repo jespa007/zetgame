@@ -27,10 +27,12 @@ void  Log_Print(const  char  *file,  int  line, LogLevel level, bool with_cr, co
 	}
 
 	if(file != NULL){
-		const char *filename_aux = Path_GetFilename(file);
+		char *filename_aux = Path_GetFilename(file);
 		if(filename_aux != NULL){
 			strcpy(filename,filename_aux);
+			free(filename_aux);
 		}
+
 	}
 
 	if(!ansi_escape){

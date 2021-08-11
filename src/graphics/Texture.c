@@ -2,7 +2,7 @@
 
 
 typedef struct{
-	//MapString 	* 	textures;
+	MapString 	* 	textures;
 	const char 	*	texture_resource_path;
 	Texture		* 	texture_embedded;
 }TextureVars;
@@ -10,7 +10,7 @@ typedef struct{
 // prototypes
 static TextureVars * g_texture_vars=NULL;
 
-//void			* 	Texture_OnDeleteNode(MapStringNode *node);
+void			* 	Texture_OnDeleteNode(MapStringNode *node);
 Texture 		* 	Texture_GetDefault(void);
 
 //--------------
@@ -23,13 +23,13 @@ void	 	Texture_Init(void){
 
 	g_texture_vars=NEW(TextureVars);
 
-	//g_texture_vars->textures=NULL;
+	g_texture_vars->textures=NULL;
 	g_texture_vars->texture_resource_path=".";
 	g_texture_vars->texture_embedded=NULL;
 
-	//g_texture_vars->textures = MapString_New();//new std::map<std::string,TTFont *>();
+	g_texture_vars->textures = MapString_New();//new std::map<std::string,TTFont *>();
 
-	//g_texture_vars->textures->on_delete=Texture_OnDeleteNode;
+	g_texture_vars->textures->on_delete=Texture_OnDeleteNode;
 }
 
 void	 	Texture_DeInit(){
@@ -45,52 +45,60 @@ void	 	Texture_DeInit(){
 		g_texture_vars->texture_embedded = NULL;
 	}
 
-	/*if(g_texture_vars->textures!=NULL){
+	if(g_texture_vars->textures!=NULL){
 		MapString_Delete(g_texture_vars->textures);
 		g_texture_vars->textures=NULL;
-	}*/
+	}
 
 
-
-	//MapString_Delete(g_texture_vars->textures);
+	MapString_Delete(g_texture_vars->textures);
 	FREE(g_texture_vars);
 	g_texture_vars=NULL;
 
 }
 
 
-
-/*
-Texture * 		Texture_Get(const char * texture_name){
+Texture * 		Texture_Get(const char * _filename){
+	char *id_tmp=0;
 	char id[100]={0};
 	Texture * texture=NULL;
-	char filename[MAX_PATH];
-	char *ttf_font_file_to_lower=NULL;
+	//char filename[MAX_PATH];
+	char *texture_file_to_lower=NULL;
 
-	sprintf(filename,"%s/%s",g_texture_vars->texture_resource_path,texture_name);
+	id_tmp=Path_GetFilenameWithoutExtension(_filename);
+
+	if(id_tmp == NULL) { return NULL;}
+
+	strcpy(id,id_tmp);
+	free(id_tmp);
 
 	// 1. get filename for absolute path...
-	ttf_font_file_to_lower=StrUtils_ToLower(texture_name);
-	if(ttf_font_file_to_lower==NULL){
+	texture_file_to_lower=StrUtils_ToLower(id);
+	if(texture_file_to_lower==NULL){
 		return NULL;
 	}
 
-	sprintf(id,"%s",ttf_font_file_to_lower);
-	free(ttf_font_file_to_lower);
+	sprintf(id,"%s",texture_file_to_lower);
+	free(texture_file_to_lower);
 
-	if(!MapString_Exist(g_texture_vars->textures,id)){
-		if((texture=Texture_Load(filename))==NULL){
-			return Texture_GetDefault();
+	if((texture=MapString_GetValue(g_texture_vars->textures,id,NULL)) == NULL){
+		char filename[PATH_MAX]={0};
+
+		strcpy(filename,_filename);
+
+		if(File_Exists(filename) == false){
+			sprintf(filename,"%s/%s",g_texture_vars->texture_resource_path,_filename);
 		}
-		MapString_SetValue(g_texture_vars->textures,id,texture);
-	}else{
-		MapString_SetValue(g_texture_vars->textures,id,texture);
+
+		if((texture=Texture_LoadFromFile(filename))!=NULL){
+			MapString_SetValue(g_texture_vars->textures,id,texture);
+		}
+		else{
+			texture=Texture_GetDefault();
+		}
 	}
-
-
-
 	return texture;
-}*/
+}
 
 void 			Texture_SetTextureResourcePath(const char * path){
 	g_texture_vars->texture_resource_path=path;
@@ -255,14 +263,14 @@ bool Texture_UpdateFromSurface(Texture *_this, SDL_Surface *srf){
 	return Texture_Update(_this,srf->pixels,srf->w,srf->h,srf->format->BytesPerPixel);
 }
 
-/*
+
 void	* Texture_OnDeleteNode(MapStringNode *node){
 	Texture * texture = node->val;
 	if(texture!=NULL){
 		Texture_Delete(texture);
 	}
 	return NULL;
-}*/
+}
 
 void Texture_Delete(Texture *_this){
 

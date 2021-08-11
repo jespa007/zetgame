@@ -192,13 +192,13 @@ int main(int argc, char * argv[]){
 	Entity *spr_base_car=NULL,*spr_track_car=NULL;
 
 
-	TTFont_SetFontResourcePath("data/fonts");
-	Texture_SetTextureResourcePath("data/images");
+	TTFont_SetFontResourcePath("../../../test/data/fonts");
+	Texture_SetTextureResourcePath("../../../test/data/images");
 
-	Texture * text_ground=Texture_LoadFromFile("data/images/ground.png");
-	Texture * text_sun=Texture_LoadFromFile("data/images/sun.png");
-	Texture * text_vane=Texture_LoadFromFile("data/images/vane.png");
-	Texture * text_wheel=Texture_LoadFromFile("data/images/wheel.png");
+	Texture * text_ground=Texture_LoadFromFile("ground.png");
+	Texture * text_sun=Texture_LoadFromFile("sun.png");
+	Texture * text_vane=Texture_LoadFromFile("vane.png");
+	Texture * text_wheel=Texture_LoadFromFile("wheel.png");
 
 	// setup animations/actions...
 	Action 	  	 			*mat_act_fade_in_out=Action_New(MATERIAL_CHANNEL_MAX);
