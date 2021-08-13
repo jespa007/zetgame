@@ -14,20 +14,21 @@ Entity *Entity_New(void){
 	return entity;
 }
 
+/*
 void Entity_Ini(Entity *_this){
-	/*EntityData *data=(EntityData *)_this->data;
-	data->is_active=true;*/
+	EntityData *data=(EntityData *)_this->data;
+	data->is_active=true;
 }
-
+*/
 void Entity_Die(Entity *_this){
 	/*EntityData *data=(EntityData *)_this->data;
 	data->is_active=false;*/
 	_this->active=false;
 }
 
-
+/*
 void Entity_Reset(Entity *_this){
-}
+}*/
 
 void Entity_Delete(Entity *_this){
 	//EntityData *data=_this->data;

@@ -145,6 +145,7 @@ ECTransform	*	ECTransform_GetParent(ECTransform *_this){
 
 
 bool ECTransform_Detach(ECTransform *_this,ECTransform * obj) {
+	UNUSUED_PARAM(_this);
 
 	ECTransformData *obj_data = obj->data;
 

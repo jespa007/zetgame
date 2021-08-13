@@ -48,13 +48,13 @@ typedef struct {
 }Callback;
 
 
-#define 	IS_POW2(x)   (!(bool)((x) & ((x)-1)))
-
+#define 	IS_POW2(x)   		(!(bool)((x) & ((x)-1)))
+#define 	UNUSUED_PARAM(x) 	((void)(x))
 
 
 #define ZG_VARGS(text_out, text_in)\
 {va_list  ap;\
-size_t max_len=sizeof(text_out);\
+size_t max_len=sizeof(text_out)/sizeof(char);\
 va_start(ap,  text_in);\
 int n=vsnprintf(text_out,max_len,text_in,  ap);\
 if(n==(int)max_len){\
@@ -67,7 +67,7 @@ va_end(ap);}
 
 #define ZG_WVARGS(text_out, text_in)\
 {va_list  ap;\
-size_t max_len=sizeof(text_out);\
+size_t max_len=sizeof(text_out)/sizeof(wchar_t);\
 va_start(ap,  text_in);\
 int n=vswprintf(text_out,max_len,text_in,  ap);\
 if(n==(int)max_len){\

@@ -24,7 +24,7 @@ void GUIButton_Init(void){
 		return;
 	}
 
-	g_default_texture_button=Texture_LoadFromMemory(button1_png,button1_png_len);
+	g_default_texture_button=Texture_NewFromMemory(button1_png,button1_png_len);
 }
 
 void GUIButton_DeInit(void){

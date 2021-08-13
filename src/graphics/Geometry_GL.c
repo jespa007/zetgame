@@ -8,7 +8,8 @@ typedef struct{
 			normal; // normal object id
 }GeometryDataGL;
 
-void  Geometry_GL_New(Geometry *geometry, size_t index_count, uint32_t properties){
+void  Geometry_GL_New(Geometry *geometry, uint32_t properties){
+
 	GeometryDataGL * geometry_data= NEW(GeometryDataGL);
 	*geometry_data=(GeometryDataGL){
 		.index = GL_INVALID_VALUE, 	// index object id

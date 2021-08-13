@@ -47,7 +47,7 @@ void			SDL_DestroyResources(void);
 void 			SDL_SetPixel(SDL_Surface *surface, int x, int y, uint32_t pixel);
 SDL_Surface * 	SDL_NewSurface(uint16_t w, uint16_t h, uint8_t bytes_per_pixel);
 SDL_Surface * 	SDL_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-SDL_Surface * 	SDL_NewCross(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+SDL_Surface * 	SDL_NewCross(uint16_t dimension, uint32_t fill_color, uint16_t border_width);
 SDL_Surface * 	SDL_NewRectangle(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 SDL_Surface * 	SDL_NewTriangle(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 SDL_Surface * 	SDL_NewArrow(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);

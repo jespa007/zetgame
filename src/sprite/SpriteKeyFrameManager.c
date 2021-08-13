@@ -1,310 +1,187 @@
-/**
- * aseprite 1.2.28
- * parse json using cjon. xxxx.json and xxxx.png where xxxx is the name of both exported json/png
- */
+#include "zg_sprite.h"
 
-/*
-{ "frames": {
-   "mario_small (idle) 0.ase": {
-    "frame": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (idle) 1.ase": {
-    "frame": { "x": 16, "y": 0, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (idle) 2.ase": {
-    "frame": { "x": 32, "y": 0, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (idle) 3.ase": {
-    "frame": { "x": 48, "y": 0, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (idle) 4.ase": {
-    "frame": { "x": 64, "y": 0, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (walk) 0.ase": {
-    "frame": { "x": 0, "y": 16, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (walk) 1.ase": {
-    "frame": { "x": 16, "y": 16, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (walk) 2.ase": {
-    "frame": { "x": 32, "y": 16, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (walk) 3.ase": {
-    "frame": { "x": 48, "y": 16, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (walk) 4.ase": {
-    "frame": { "x": 64, "y": 16, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (break) 0.ase": {
-    "frame": { "x": 0, "y": 32, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (break) 1.ase": {
-    "frame": { "x": 16, "y": 32, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (break) 2.ase": {
-    "frame": { "x": 32, "y": 32, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (break) 3.ase": {
-    "frame": { "x": 48, "y": 32, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (break) 4.ase": {
-    "frame": { "x": 64, "y": 32, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (jump) 0.ase": {
-    "frame": { "x": 0, "y": 48, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (jump) 1.ase": {
-    "frame": { "x": 16, "y": 48, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (jump) 2.ase": {
-    "frame": { "x": 32, "y": 48, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (jump) 3.ase": {
-    "frame": { "x": 48, "y": 48, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (jump) 4.ase": {
-    "frame": { "x": 64, "y": 48, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (die) 0.ase": {
-    "frame": { "x": 0, "y": 64, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (die) 1.ase": {
-    "frame": { "x": 16, "y": 64, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (die) 2.ase": {
-    "frame": { "x": 32, "y": 64, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (die) 3.ase": {
-    "frame": { "x": 48, "y": 64, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (die) 4.ase": {
-    "frame": { "x": 64, "y": 64, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (crush) 0.ase": {
-    "frame": { "x": 0, "y": 80, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (crush) 1.ase": {
-    "frame": { "x": 16, "y": 80, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (crush) 2.ase": {
-    "frame": { "x": 32, "y": 80, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (crush) 3.ase": {
-    "frame": { "x": 48, "y": 80, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (crush) 4.ase": {
-    "frame": { "x": 64, "y": 80, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (swimming) 0.ase": {
-    "frame": { "x": 0, "y": 96, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (swimming) 1.ase": {
-    "frame": { "x": 16, "y": 96, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (swimming) 2.ase": {
-    "frame": { "x": 32, "y": 96, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (swimming) 3.ase": {
-    "frame": { "x": 48, "y": 96, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   "mario_small (swimming) 4.ase": {
-    "frame": { "x": 64, "y": 96, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   }
- },
- "meta": {
-  "app": "http://www.aseprite.org/",
-  "version": "1.2.28-x64",
-  "format": "RGBA8888",
-  "size": { "w": 80, "h": 112 },
-  "scale": "1",
-  "frameTags": [
-  ],
-  "layers": [
-   { "name": "idle", "opacity": 255, "blendMode": "normal" },
-   { "name": "walk", "opacity": 255, "blendMode": "normal" },
-   { "name": "break", "opacity": 255, "blendMode": "normal" },
-   { "name": "jump", "opacity": 255, "blendMode": "normal" },
-   { "name": "die", "opacity": 255, "blendMode": "normal" },
-   { "name": "crush", "opacity": 255, "blendMode": "normal" },
-   { "name": "swimming", "opacity": 255, "blendMode": "normal", "cels": [{ "frame": 4, "data": "hola que tal" }] }
-  ],
-  "slices": [
-  ]
- }
+typedef struct{
+	SpriteKeyFrame 	* 	sprite_keyframes;
+	size_t				sprite_keyframes_len;
+	Texture			*	texture;
+}SpriteKeyFramePack;
+
+typedef struct{
+	MapString 	* 	sprite_keyframes;
+	List 	* 	sprite_keyframe_packs;
+}SpriteKeyFrameManagerData;
+
+// STATIC
+/*void	* SpriteKeyFrameManager_OnDeleteNode(MapStringNode *node){
+	SpriteKeyFramePack * keyframepack = node->val;
+	if(keyframepack!=NULL){
+		Texture_Delete(keyframepack->texture);
+
+		for(unsigned i=0; i < keyframepack->sprite_keyframes_len; i++){
+			SpriteKeyFrame_Delete(keyframepack->sprite_keyframes[i]);
+		}
+
+		FREE(keyframepack);
+
+	}
+	return NULL;
+}*/
+
+
+
+// MEMBERS
+SpriteKeyFrameManager *SpriteKeyFrameManager_New(void){
+	SpriteKeyFrameManager *skfm=NEW(SpriteKeyFrameManager);
+	SpriteKeyFrameManagerData *data=NEW(SpriteKeyFrameManagerData);
+
+	data->sprite_keyframes = MapString_New();//new std::map<std::string,TTFont *>();
+
+	data->sprite_keyframe_packs= List_New();
+	//data->sprite_keyframes->on_delete=SpriteKeyFrameManager_OnDeleteNode;
+
+
+	skfm->data=data;
+
+	return skfm;
 }
-*/
+
+bool SpriteKeyFrameManager_LoadFromMemory(
+		SpriteKeyFrameManager *_this
+		,const char *key_id_prefix
+		,uint8_t *buf_texture
+		,size_t buf_texture_len
+		,uint8_t * buf_json
+		,size_t buf_json_len
+		){
+
+	// 1. read & parse json
+	if(key_id_prefix == NULL){
+		Log_Error("key_id_prefix id NULL");
+		return false;
+	}
+
+	if(buf_texture && buf_json && buf_texture_len && buf_json_len){
+
+		cJSON * root = cJSON_ParseWithLength((char *)buf_json,buf_json_len);
+		cJSON * frames = cJSON_GetObjectItem(root,"frames");
+		cJSON * meta = cJSON_GetObjectItem(root,"meta");
+		cJSON * layers=NULL;
+
+
+		if(frames == NULL){
+			Log_Error("Cannot get 'frames' identifier in json");
+			return false;
+		}
+
+		if(meta == NULL){
+			Log_Error("Cannot get 'meta' identifier in json");
+			return false;
+		}
+
+		layers = cJSON_GetObjectItem(meta,"layers");
+
+		if(layers == NULL){
+			Log_Error("Cannot get 'meta.layers' identifier in json");
+			return false;
+		}
+
+		// everything ok, so we can proceed with loading
+		Texture *texture=Texture_NewFromMemory(buf_texture,buf_texture_len);
+		if(texture){
+
+			cJSON *layer = NULL;
+			cJSON *frame = NULL;
+
+			printf("printing layers\n");
+			cJSON_ArrayForEach(layer, layers) {
+			    /* Each element is an object with unknown field(s) */
+			    cJSON *elem;
+			    cJSON_ArrayForEach(elem, layer) {
+			      printf("Found key '%s', set to %d\n", elem->string, elem->valueint);
+			    }
+			  }
+
+			printf("printing frames\n");
+			cJSON_ArrayForEach(frame, frames) {
+			    /* Each element is an object with unknown field(s) */
+			    cJSON *elem;
+			    cJSON_ArrayForEach(elem, frame) {
+			      printf("Found key '%s', set to %d\n", elem->string, elem->valueint);
+			    }
+			  }
+
+
+			//SpriteKeyFrame *skf=SpriteKeyFrame_New(texture);
+			return true;
+
+		}
+	}
+
+	return false;
+
+}
+
+/**
+ * Load a set of SpriteKeyFrame from exported files from Aseprite
+ * @_this: SpriteKeyFrameManager object
+ * @_texture_filename: Texture filename (it can be .png,jpg,etc)
+ * @_json_filename: Json file generated by Aseprite
+ * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
+ */
+bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this,const char *_key_id_prefix, const char *_texture_filename,const char *_json_filename, const char *_extra_json_filename){
+	//UNUSUED_PARAM(_extra_json);
+
+	BufferByte *text_buffer=NULL, *json_buffer=NULL, *extra_buffer=NULL;bool ok=false;
+
+	/*if(File_Exists(_texture_filename) == false){
+		Log_Error("Cannot load sprite key frame. File '%s' not exist",_texture_filename);
+		return false;
+	}
+
+	if(File_Exists(_json_filename) == false){
+		Log_Error("Cannot load sprite key frame. File '%s' not exist",_json_filename);
+		return false;
+	}
+
+	;*/
+
+	if((text_buffer=File_Read(_texture_filename))!=NULL){
+		if((json_buffer=File_Read(_json_filename))!=NULL){
+			ok=SpriteKeyFrameManager_LoadFromMemory(
+					_this
+					,_key_id_prefix
+					,text_buffer->ptr
+					,text_buffer->len
+					,json_buffer->ptr
+					,json_buffer->len
+			);
+		}
+	}
+
+	if(text_buffer) BufferByte_Delete(text_buffer);
+	if(json_buffer) BufferByte_Delete(json_buffer);
+
+
+	return ok;
+}
+
+void  SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this){
+	SpriteKeyFrameManagerData 	*data=_this->data;
+
+	for(unsigned i=0; i < data->sprite_keyframe_packs->count;i++){
+		SpriteKeyFramePack *keyframepack=data->sprite_keyframe_packs->items[i];
+		Texture_Delete(keyframepack->texture);
+
+		/*for(unsigned i=0; i < keyframepack->sprite_keyframes_len; i++){
+			SpriteKeyFrame_Delete(keyframepack->sprite_keyframes[i]);
+		}*/
+
+		FREE(keyframepack);
+	}
+
+
+	List_Delete(data->sprite_keyframe_packs);
+	MapString_Delete(data->sprite_keyframes);
+	FREE(data);
+	FREE(_this);
+}

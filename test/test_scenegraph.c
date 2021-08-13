@@ -44,7 +44,8 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 }
 
 int main(int argc, char * argv[]){
-
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
 	//---------------------------------
 	// ALPHA ANIMATION
 
@@ -183,6 +184,8 @@ int main(int argc, char * argv[]){
 	ZetGame_Init(&setup);
 
 	Scene * scene = Scene_New();
+	TextureManager *tm=TextureManager_New();
+	TTFontManager *ttfm=TTFontManager_New();
 	Entity
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
@@ -192,13 +195,13 @@ int main(int argc, char * argv[]){
 	Entity *spr_base_car=NULL,*spr_track_car=NULL;
 
 
-	TTFont_SetFontResourcePath("../../../test/data/fonts");
-	Texture_SetTextureResourcePath("../../../test/data/images");
+	TTFontManager_SetFontResourcePath(ttfm,"../../../test/data/fonts");
+	TextureManager_SetTextureResourcePath(tm,"../../../test/data/images");
 
-	Texture * text_ground=Texture_LoadFromFile("ground.png");
-	Texture * text_sun=Texture_LoadFromFile("sun.png");
-	Texture * text_vane=Texture_LoadFromFile("vane.png");
-	Texture * text_wheel=Texture_LoadFromFile("wheel.png");
+	Texture * text_ground=TextureManager_Get(tm,"ground.png");
+	Texture * text_sun=TextureManager_Get(tm,"sun.png");
+	Texture * text_vane=TextureManager_Get(tm,"vane.png");
+	Texture * text_wheel=TextureManager_Get(tm,"wheel.png");
 
 	// setup animations/actions...
 	Action 	  	 			*mat_act_fade_in_out=Action_New(MATERIAL_CHANNEL_MAX);
@@ -348,11 +351,9 @@ int main(int argc, char * argv[]){
 
 	Scene_Delete(scene);
 
+	TextureManager_Delete(tm);
+	TTFontManager_Delete(ttfm);
 
-	Texture_Delete(text_ground);
-	Texture_Delete(text_sun);
-	Texture_Delete(text_vane);
-	Texture_Delete(text_wheel);
 
 	Action_Delete(mat_act_fade_in_out);
 

@@ -210,6 +210,8 @@ void 	__glGetFloatv__(const char *file, int line,GLenum pname,	GLfloat * params)
 }
 
 void 	__glBegin__(const char *file, int line,	GLenum mode){
+	UNUSUED_PARAM(file);
+	UNUSUED_PARAM(line);
 	glBegin(mode);
 	// we do not call glPrintError due is not allowed while we are defining drawing points (should do it after glEnd)
 }

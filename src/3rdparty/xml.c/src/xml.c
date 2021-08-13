@@ -33,6 +33,12 @@
 #include "xml.h"
 
 
+#ifndef min
+	#define min(X,Y) ((X) < (Y) ? (X) : (Y))
+#endif
+#ifndef max
+	#define max(X,Y) ((X) > (Y) ? (X) : (Y))
+#endif
 
 
 
@@ -222,12 +228,7 @@ static void xml_parser_info(struct xml_parser* parser, char const* message) {
 static void xml_parser_error(struct xml_parser* parser, enum xml_parser_offset offset, char const* message) {
 	int row = 0;
 	int column = 0;
-
-	#define min(X,Y) ((X) < (Y) ? (X) : (Y))
-	#define max(X,Y) ((X) > (Y) ? (X) : (Y))
 	size_t character = max(0, min(parser->length, parser->position + offset));
-	#undef min
-	#undef max
 
 	size_t position = 0; for (; position < character; ++position) {
 		column++;
@@ -288,11 +289,10 @@ static void xml_parser_consume(struct xml_parser* parser, size_t n) {
 	/* Debug information
 	 */
 	#ifdef XML_PARSER_VERBOSE
-	#define min(X,Y) ((X) < (Y) ? (X) : (Y))
+
 	char* consumed = alloca((n + 1) * sizeof(char));
 	memcpy(consumed, &parser->buffer[parser->position], min(n, parser->length - parser->position));
 	consumed[n] = 0;
-	#undef min
 
 	size_t message_buffer_length = 512;
 	char* message_buffer = alloca(512 * sizeof(char));
@@ -816,7 +816,7 @@ struct xml_node* xml_easy_child(struct xml_node* node, uint8_t const* child_name
 		 */
 		struct xml_string cn = {
 			.buffer = child_name,
-			.length = strlen(child_name)
+			.length = strlen((const char *)child_name)
 		};
 
 		/* Interate through all children
@@ -905,10 +905,7 @@ void xml_string_copy(struct xml_string* string, uint8_t* buffer, size_t length) 
 		return;
 	}
 
-	#define min(X,Y) ((X) < (Y) ? (X) : (Y))
 	length = min(length, string->length);
-	#undef min
-
 	memcpy(buffer, string->buffer, length);
 }
 

@@ -134,8 +134,10 @@ BOOL CGraphics_Win32_GetMonitorInfo(int nDeviceIndex, LPSTR lpszMonitorInfo) {
      return bResult;
 }
 
-BOOL CALLBACK CGraphics_Win32_MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
+BOOL CALLBACK CGraphics_Win32_MonitorEnumProc(LPARAM dwData)
 {
+
+
     int *Count = (int*)dwData;
     (*Count)++;
     return TRUE;

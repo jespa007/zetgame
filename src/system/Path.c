@@ -68,7 +68,7 @@ char *  Path_GetFilename(const char * _absolute_filename) {
 char *  Path_GetFilenameWithoutExtension(const char * _absolute_filename) {
 	char *dst=0;
 	char *last_dot_found = NULL;
-	const char *filename_aux = Path_GetFilename(_absolute_filename);
+	char *filename_aux = Path_GetFilename(_absolute_filename);
 	size_t len;
 
 	if(filename_aux == NULL) return NULL;
@@ -87,6 +87,9 @@ char *  Path_GetFilenameWithoutExtension(const char * _absolute_filename) {
 	}else{
 		Log_Error("Reached MAX_PATH or 0 ('%s':%i)",filename_aux,len);
 	}
+
+	free(filename_aux);
+
 	return dst;
 }
 

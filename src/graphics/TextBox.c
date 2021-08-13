@@ -60,7 +60,7 @@ TextBox *Textbox_New(void){
 	TextboxData *data=NEW(TextboxData);
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
-	data->font=TTFont_GetDefaultFont();
+	data->font=TTFontManager_GetEmbeddedFont();
 	Textbox_SetText(textbox,"Hello World");
 	return textbox;
 }

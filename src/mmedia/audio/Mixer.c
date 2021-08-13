@@ -112,7 +112,7 @@ uint_t Mixer_TimeToLengthSamples(uint_t time){
 
 void Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
 {
-
+	UNUSUED_PARAM(udata);
 	// extern const uint8_t *mixData;
 	SDL_memset(stream, 0, len);  // make sure this is silence.
 	//SDL_memset(stream_aux, 0, SPLAYER_FRAME_SIZE);
@@ -220,7 +220,9 @@ void Mixer_PrintListSoundDriver(void){
 	}
 }
 
-bool Mixer_Init(AudioFormat format){
+bool Mixer_Init(void){
+
+	//UNUSUED_PARAM(format);
 
 	if(g_mixer_vars != NULL){
 		Log_Error("Mixer already init");

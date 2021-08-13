@@ -482,8 +482,8 @@ void ESSystem_Delete(ESSystem *_this){
 	for(unsigned i=0; i < g_es_system_registered_components->count; i++){
 		void **ptr_data=(*component_data)->ptr_data;
 		void (*EComponent_Destroy)(void *) =(*ptr_registered_component_data)->data.EComponent_Destroy;
-		if(EComponent_Destroy != NULL){
-			for(unsigned i=0; i < (*component_data)->n_elements; i++){
+		if(EComponent_Destroy != NULL && ptr_data != NULL){
+			for(unsigned j=0; j < (*component_data)->n_elements; j++){
 				EComponent_Destroy(*ptr_data);
 				FREE(*ptr_data++);
 			}

@@ -12,7 +12,7 @@ struct source_mgr {
   size_t       len;
 };
 
-static void mgr_init_source(j_decompress_ptr cinfo) {}
+static void mgr_init_source(j_decompress_ptr cinfo) {UNUSUED_PARAM(cinfo);}
 
 static boolean mgr_fill_input_buffer(j_decompress_ptr cinfo) {
   source_mgr* src = (source_mgr*)cinfo->src;
@@ -33,7 +33,7 @@ static void mgr_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
 	src->pub.bytes_in_buffer -= num_bytes;
   }
 }
-static void mgr_term_source(j_decompress_ptr cinfo) {}
+static void mgr_term_source(j_decompress_ptr cinfo) {UNUSUED_PARAM(cinfo);}
 
 static void mgr_set_source(j_decompress_ptr cinfo, const char* data, size_t len) {
   source_mgr* src;

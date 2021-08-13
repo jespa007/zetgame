@@ -26,17 +26,14 @@ void	  	Texture_DeInit(void);
 // public
 void 		Texture_SetTextureResourcePath(const char *resource_path);
 
-Texture * 	Texture_GetDefault(void);
-Texture * 	Texture_New(void);
-Texture * 	Texture_LoadFromFile(const char *file);
-//Texture * 	Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-//Texture * 	Texture_NewRectangle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-//Texture * 	Texture_NewCross(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-//Texture * 	Texture_NewArrow(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-Texture * 	Texture_LoadFromMemory(uint8_t *ptr, size_t size_len);
 
-//Texture * 	Texture_Load(const char *image);
-//Texture	*	Texture_Get(const char *name);
+Texture * 	Texture_New(void);
+Texture * 	Texture_NewFromFile(const char *file);
+Texture * 	Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len);
+Texture * 	Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+Texture * 	Texture_NewRectangle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+Texture * 	Texture_NewCross(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+Texture * 	Texture_NewArrow(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 
 void 		Texture_Bind(Texture *_this);
 void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);

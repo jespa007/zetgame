@@ -33,7 +33,7 @@ void ZetGame_Init(ZetGameSetupParams * info){
 #endif
 	ZetNet_Init();
 
-	Mixer_Init(AUDIO_FORMAT_INT_16);
+	Mixer_Init();
 
 	if(!Graphics_Init(
 			 info->wposx

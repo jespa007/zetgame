@@ -16,94 +16,15 @@ typedef struct{
     GLuint 	 advance;    		// Horizontal offset to advance to next glyph
 }TTFontCharacter;
 
-typedef struct{
-	MapString 	* 	fonts;
-	TTFont 		* 	default_font;
-	const char 	*	font_resource_path;
-	TTFont 		* 	font_embedded;
-	char 			default_font_name[MAX_FONT_NAME];
-	FT_Library	 	ft;
-}TTFontVars;
 
 // prototypes
 
-static TTFontVars * g_ttfont_vars=NULL;
 
 #include "TTFont_GL.c"
 
-void	* 	TTFont_OnDeleteNode(MapStringNode *node);
-static void		TTFont_Delete(TTFont *_this);
-static TTFont *	TTFont_New(FT_Face face,uint8_t font_size);
-
-void	TTFont_Init(void){
-
-	if(g_ttfont_vars !=NULL){
-		Log_Error("TTFont already initialized!");
-		return;
-	}
-
-	g_ttfont_vars=NEW(TTFontVars);
-
-	g_ttfont_vars->fonts=NULL;
-	g_ttfont_vars->default_font=NULL;
-	g_ttfont_vars->font_resource_path=".";
-	g_ttfont_vars->font_embedded=NULL;
-	strcpy(g_ttfont_vars->default_font_name,DEFAULT_FONT_FAMILY);
-
-	// All functions return a value different than 0 whenever an error occurred
-	if (FT_Init_FreeType(&g_ttfont_vars->ft)){
-		Log_Error("FREETYPE: Could not init FreeType Library");
-	}
-
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_Init();
-		break;
-	}
-
-
-	g_ttfont_vars->fonts = MapString_New();//new std::map<std::string,TTFont *>();
-
-	g_ttfont_vars->fonts->on_delete=TTFont_OnDeleteNode;
-
-}
-
-void	TTFont_DeInit(){
-
-	if(g_ttfont_vars ==NULL){
-		Log_Error("TTFont not initialized!");
-		return;
-	}
-
-
-	// erase all loaded fonts...
-	if(g_ttfont_vars->font_embedded != NULL){
-		TTFont_Delete(g_ttfont_vars->font_embedded);
-		g_ttfont_vars->font_embedded = NULL;
-	}
-
-	if(g_ttfont_vars->fonts!=NULL){
-		MapString_Delete(g_ttfont_vars->fonts);
-		g_ttfont_vars->fonts=NULL;
-	}
-
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_DeInit();
-		break;
-	}
-
-	FT_Done_FreeType(g_ttfont_vars->ft);
-
-	MapString_Delete(g_ttfont_vars->fonts);
-	FREE(g_ttfont_vars);
-	g_ttfont_vars=NULL;
-
-}
 
 //-----
-
-static TTFont * TTFont_New(FT_Face face,uint8_t font_size){
+TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
     TTFont *font=NEW(TTFont);
     memset(font,0,sizeof(TTFont));
@@ -161,38 +82,14 @@ TTFontCharacter * TTFont_BuildChar(TTFont * _this, unsigned long c){
 }
 
 
-TTFont * TTFont_LoadFromMemory(const uint8_t *buffer, size_t buffer_len, size_t font_size){
-	FT_Face face;
-	TTFont *font=NULL;
 
-	// Load font as face
-	if (FT_New_Memory_Face(g_ttfont_vars->ft, buffer, buffer_len, 0, &face)){
-		Log_Error("FT_New_Memory_Face: Failed to load");
-		return NULL;
-	}
-
-    // Create new font with size...
-    font=TTFont_New(face,font_size);
-
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_BuildChars(font,0,MAX_CHARACTER_VALUE);
-		break;
-	default:
-		break;
-
-	}
-
-	return font;
-}
-
-TTFont * TTFont_LoadFromFile(const char *ttf_file, size_t font_size){
+TTFont * TTFont_NewFromFile(const char *ttf_file, size_t font_size){
 
 	FT_Face face;
 	TTFont *font=NULL;
 
 	// Load font as face
-	if (FT_New_Face(g_ttfont_vars->ft, ttf_file, 0, &face)){
+	if (FT_New_Face(TTFontManager_GetFreeTypeHandler(), ttf_file, 0, &face)){
 		Log_Error("FT_New_Memory_Face: Cannot open file %s",ttf_file);
 		return NULL;
 	}
@@ -213,136 +110,33 @@ TTFont * TTFont_LoadFromFile(const char *ttf_file, size_t font_size){
 	return font;
 }
 
-TTFont * 		TTFont_GetEmbeddedFont(){
-	if(g_ttfont_vars->font_embedded == NULL){
-		g_ttfont_vars->font_embedded=TTFont_LoadFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,DEFAULT_FONT_SIZE);
-	}
-	return g_ttfont_vars->font_embedded;
-}
+TTFont * TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, size_t font_size){
+	FT_Face face;
+	TTFont *font=NULL;
 
-TTFontInfo 		TTFont_GetDefaultFontInfo(void){
-	TTFontInfo font_info;
-	TTFont *font=TTFont_GetDefaultFont();
-
-	font_info.font_name=g_ttfont_vars->default_font_name;
-	font_info.font_size=font->font_size;
-
-	return font_info;
-}
-
-TTFont * 		TTFont_GetDefaultFont(void){
-	if(g_ttfont_vars->default_font == NULL){
-		return TTFont_GetEmbeddedFont();
-	}
-	return g_ttfont_vars->default_font;
-}
-
-void 			TTFont_SetDefaultFont(TTFont * _font){
-	if(_font!=NULL){
-		g_ttfont_vars->default_font=_font;
-	}
-}
-
-void 			TTFont_SetDefaultFontName(const char * _default_font_name){
-	if(g_ttfont_vars->default_font_name!=NULL){
-		strcpy(g_ttfont_vars->default_font_name,_default_font_name);
-	}
-}
-
-const char *	TTFont_GetDefaultFontName(){
-	return g_ttfont_vars->default_font_name;
-}
-
-TTFont * 		TTFont_GetFontFromName(const char * _filename,uint8_t _font_size){
-	char *id_tmp=0;
-	char id[100]={0};
-	TTFont * font=NULL;
-	char filename[PATH_MAX]={0};
-	char *ttf_font_file_to_lower=NULL;
-
-	id_tmp=Path_GetFilenameWithoutExtension(_filename);
-
-	if(id_tmp == NULL){ return NULL; }
-
-	strcpy(id,id_tmp);
-	free(id_tmp);
-
-	// 1. get filename for absolute path...
-	ttf_font_file_to_lower=StrUtils_ToLower(id);
-	if(ttf_font_file_to_lower==NULL){
+	// Load font as face
+	if (FT_New_Memory_Face(TTFontManager_GetFreeTypeHandler(), buffer, buffer_len, 0, &face)){
+		Log_Error("FT_New_Memory_Face: Failed to load");
 		return NULL;
 	}
 
-	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
-	free(ttf_font_file_to_lower);
+    // Create new font with size...
+    font=TTFont_New(face,font_size);
 
-	if((font=MapString_GetValue(g_ttfont_vars->fonts,id,NULL))==NULL){
-		if(STRCMP(ttf_font_file_to_lower,==,DEFAULT_FONT_FAMILY)){
-			font=TTFont_LoadFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
-		}
-		else{
-			char filename[PATH_MAX]={0};
-
-			strcpy(filename,_filename);
-
-			if(File_Exists(filename) == false){
-				sprintf(filename,"%s/%s",g_ttfont_vars->font_resource_path,_filename);
-			}
-
-			if((font=TTFont_LoadFromFile(filename,_font_size))!=NULL){
-				MapString_SetValue(g_ttfont_vars->fonts,id,font);
-			}
-			else{
-				font=TTFont_GetEmbeddedFont();
-			}
-		}
+	switch(Graphics_GetGraphicsApi()){
+	case GRAPHICS_API_GL:
+		TTFont_GL_BuildChars(font,0,MAX_CHARACTER_VALUE);
+		break;
+	default:
+		break;
 
 	}
 
 	return font;
 }
 
-TTFont * 		TTFont_GetFontFromMemory( const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size){
-	char id[100]={0};
-	TTFont * font=NULL;
-	char *ttf_font_file_to_lower=NULL;
-	bool exists=false;
 
-	// 1. get filename for absolute path...
-	char *allocated_int_str=StrUtils_IntToStr((intptr_t)ptr);
-	ttf_font_file_to_lower=StrUtils_ToLower(allocated_int_str);
 
-	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,font_size);
-	free(allocated_int_str);
-	free(ttf_font_file_to_lower);
-
-	font = MapString_GetValue(g_ttfont_vars->fonts,id,&exists);
-
-	if(exists == false){
-		font=TTFont_LoadFromMemory(ptr,ptr_len,font_size);
-		if(font!=NULL){
-			MapString_SetValue(g_ttfont_vars->fonts,id,font);
-		}
-	}
-
-	return font;
-}
-
-TTFont * 		TTFont_GetFontFromFontInfo(TTFontInfo * font_info){
-	if(font_info==NULL){
-		return TTFont_GetEmbeddedFont();
-	}
-
-	return TTFont_GetFontFromName(font_info->font_name, font_info->font_size);
-}
-
-void 			TTFont_SetFontResourcePath(const char * path){
-	g_ttfont_vars->font_resource_path=path;
-}
-
-const char * 	TTFont_GetFontResourcePath(){
-	return g_ttfont_vars->font_resource_path;
-}
 
 //-------------------------------------------------------------
 //
@@ -453,7 +247,7 @@ uint16_t 		TTFont_WGetWidthN(TTFont *_this, const wchar_t *str, size_t len){
 }
 
 
-static void	TTFont_Delete(TTFont *_this){
+void	TTFont_Delete(TTFont *_this){
 	if(_this ==NULL){
 		return;
 	}
@@ -477,12 +271,5 @@ static void	TTFont_Delete(TTFont *_this){
 
 }
 
-void	* TTFont_OnDeleteNode(MapStringNode *node){
-	TTFont * font = node->val;
-	if(font!=NULL){
-		TTFont_Delete(font);
-	}
-	return NULL;
-}
 
 

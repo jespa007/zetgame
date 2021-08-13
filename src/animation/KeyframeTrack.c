@@ -46,6 +46,12 @@ void KeyframeTrack_CalculeFx(
     , const  float  end_control_point_2[I1D_POINT_SIZE]
     , float iv_end)
 {
+
+	UNUSUED_PARAM(ini_control_point_1);
+	UNUSUED_PARAM(ini_control_point_2);
+	UNUSUED_PARAM(end_control_point_1);
+	UNUSUED_PARAM(end_control_point_2);
+
 	//
 	// PRE: Assumes that result, ini_point && end_point is equal to n_dimension
 

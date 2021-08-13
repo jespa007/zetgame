@@ -49,5 +49,6 @@ void Transform_GL_Apply(Transform *_this){
 
 
 void Transform_GL_Restore(Transform *transform){
+	UNUSUED_PARAM(transform);
 	glPopMatrix();
 }

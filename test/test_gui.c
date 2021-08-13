@@ -1,6 +1,8 @@
 #include "ZetGame.h"
 
 int main(int argc, char *argv[]){
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
 
 	ZetGame_Init(NULL);
 

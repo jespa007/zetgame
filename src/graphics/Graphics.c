@@ -163,8 +163,7 @@ bool Graphics_Init(
 
 	Graphics_PrintAdapterInformation();
 
-	TTFont_Init();
-	Texture_Init();
+	TTFontManager_Init();
 	IconManager_Init();
 	ViewPort_Init(_width,_height);
 
@@ -402,11 +401,11 @@ void Graphics_BeginRender(void){
 void Graphics_SetBackgroundColor(Color4f color){
 	g_graphics_vars->background_color=color;
 }
-
+/*
 void Graphics_AddCaptureScreenCallback(Callback fun){
 
 }
-
+*/
 void Graphics_EndRender(void)
 {
 
@@ -573,7 +572,7 @@ void Graphics_Print(int x, int y, Color4f color, const char *in, ...){
 	Vector3f pos3d=ViewPort_ScreenToWorld(x,y);
 
 	TTFont_RenderTextBegin(NULL);
-	TTFont_Print(TTFont_GetDefaultFont(),pos3d.x,pos3d.y,color,out);
+	TTFont_Print(TTFontManager_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
 	TTFont_RenderTextEnd();
 
 
@@ -586,7 +585,7 @@ void Graphics_WPrint(int x, int y, Color4f color, const wchar_t *in, ...){
 	ZG_WVARGS(out,in);
 
 	TTFont_RenderTextBegin(NULL);
-	TTFont_WPrint(TTFont_GetDefaultFont(),x,y,color,out);
+	TTFont_WPrint(TTFontManager_GetEmbeddedFont(),x,y,color,out);
 	TTFont_RenderTextEnd();
 }
 
@@ -600,10 +599,10 @@ void Graphics_DeInit(void) {
 	}
 
 	IconManager_DeInit();
-	Texture_DeInit();
+	TextureManager_DeInit();
 	Geometry_DeInit();
 
-	TTFont_DeInit();
+	TTFontManager_DeInit();
 	ViewPort_DeInit();
 
 

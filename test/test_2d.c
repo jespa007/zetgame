@@ -3,16 +3,19 @@
 
 int main(int argc, char *argv[]){
 
-	ZetGame_Init(NULL);
-	TTFont_SetFontResourcePath("data/fonts");
-	Texture_SetTextureResourcePath("data/images");
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
 
-	Texture * text_default = Texture_GetDefault();
-	Texture * text_png = Texture_LoadFromFile("test.png");
-	Texture * text_jpg = Texture_LoadFromFile("test.jpg");
-	TTFont * font = TTFont_GetFontFromName("pf_arma_five.ttf",16);
-	TTFont * font1 = TTFont_GetFontFromName("g5lis1b.ttf",36);
-	TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",36);
+	ZetGame_Init(NULL);
+	//TTFontManager_SetFontResourcePath("data/fonts");
+	//TextureManager_SetTextureResourcePath("data/images");
+
+	Texture * text_default = TextureManager_GetDefaultTexture();
+	Texture * text_png = Texture_NewFromFile("data/imagestest.png");
+	Texture * text_jpg = Texture_NewFromFile("data/imagestest.jpg");
+	TTFont * font = TTFont_NewFromFile("data/fonts/pf_arma_five.ttf",16);
+	TTFont * font1 = TTFont_NewFromFile("data/fonts/g5lis1b.ttf",36);
+	TTFont * font2 = TTFont_NewFromFile("data/fonts/Trebuchet MS.ttf",36);
 	//Shape2d * shape2d = Shape2d_New();
 	Geometry *geometry=Geometry_NewQuad(GEOMETRY_TEXTURE);
 	Appearance *appearance=Appearance_New();
@@ -61,6 +64,11 @@ int main(int argc, char *argv[]){
 
 	Texture_Delete(text_png);
 	Texture_Delete(text_jpg);
+
+
+	TTFont_Delete(font);
+	TTFont_Delete(font1);
+	TTFont_Delete(font2);
 	//TTFont_Delete(font);
 	Appearance_Delete(appearance);
 

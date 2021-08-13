@@ -21,7 +21,7 @@ typedef enum{
 }AudioFormat;
 
 
-bool Mixer_Init(AudioFormat format);//int freq, int keyframe_tracks);
+bool Mixer_Init(void);//int freq, int keyframe_tracks);
 
 /**
 * unload music

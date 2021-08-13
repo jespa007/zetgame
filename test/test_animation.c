@@ -17,6 +17,9 @@ void normalize_from_relative_pixels(float *v, size_t count){
 
 int main(int argc, char *argv[]){
 
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
+
 	ZetGame_Init(NULL);
 	float rotate=0;
 	float scale=1;
@@ -26,11 +29,11 @@ int main(int argc, char *argv[]){
 	float inc_y=STEP_INC; // [-1 to 1]
 	float inc_scale=STEP_INC; // [0.5 to 1.5]
 
-	Texture_SetTextureResourcePath("data/images");
+	//Texture_SetTextureResourcePath("data/images");
 
 	//Texture * text_default = Texture_GetDefault();
-	Texture * text_png = Texture_LoadFromFile("test.png");
-	Texture * text_jpg = Texture_LoadFromFile("test.jpg");
+	Texture * text_png = Texture_NewFromFile("data/images/test.png");
+	Texture * text_jpg = Texture_NewFromFile("data/images/test.jpg");
 	//TTFont * font = TTFont_GetFontFromName("pf_arma_five.ttf",16);
 	//TTFont * font1 = TTFont_GetFontFromName("Trebuchet MS.ttf",36);
 	Animation 			*trs_animation=Animation_New(TRANSFORM_CHANNEL_MAX);

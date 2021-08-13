@@ -1,12 +1,14 @@
 #include "ZetGame.h"
 
 int main(int argc, char *argv[]){
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
 
 	ZetGame_Init(NULL);
-	ViewPort *v1;
-	Texture_SetTextureResourcePath("data/images");
+	//ViewPort *v1;
+	//TextureManager_SetTextureResourcePath("data/images");
 
-	Texture * text_png = Texture_LoadFromFile("data/images/test.png");
+	Texture * text_png = Texture_NewFromFile("data/images/test.png");
 	TextBox *textbox	=Textbox_New();
 	Transform transform=Transform_DefaultValues();
 
@@ -23,7 +25,7 @@ int main(int argc, char *argv[]){
 			int x=(i%n_view_port_row)*w;
 			int y=(i/n_view_port_row)*h;
 
-			v1=ViewPort_Push(x,y,w,h,PROJECTION_MODE_ORTHO);
+			ViewPort_Push(x,y,w,h,PROJECTION_MODE_ORTHO);
 
 			Transform_SetPosition2i(&transform,10,10);
 

@@ -173,10 +173,11 @@ Vector3f  Quaternion_InverseTransformV3f(Quaternion q,Vector3f v){
 	};
 }
 
+/*
 Vector2f  Quaternion_TransformV2f(Quaternion q,float x, float y){
 	Vector2f v;
 	return v;
-}
+}*/
 
 Quaternion Quaternion_Normalize(Quaternion q) {
 	float mag = 1.0f/Quaternion_Magnitude(q);

@@ -12,7 +12,7 @@ Appearance * Appearance_New(void){
 
 	return appearance;
 }
-
+/*
 void Appearance_SetTexture(Appearance * _this, Texture * texure){
 
 }
@@ -20,7 +20,7 @@ void Appearance_SetTexture(Appearance * _this, Texture * texure){
 void Appearance_SetMaterial(Appearance * _this, Material * material){
 
 }
-
+*/
 void Appearance_Apply(Appearance *_this){
 
 	switch(Graphics_GetGraphicsApi()){

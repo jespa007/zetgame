@@ -4,7 +4,7 @@ typedef struct{
 	Vector2f dim;
 	Collider2dType type;
 }Collider2dData;
-
+/*
 static bool Collider2d_CheckCollisionRectangleRectangle(
 		  Vector3f _position_1
 		, Vector2f bounding_rect_1
@@ -26,6 +26,7 @@ static bool Collider2d_CheckCollisionRectangleRectangle(
 	}
 	return true;
 }
+
 
 static bool Collider2d_CheckCollisionRectangleCircle(
 		  Vector3f _position_1
@@ -57,7 +58,7 @@ bool Collider2d_CheckCollision(
 
 	return false;
 }
-
+*/
 
 Collider2d * Collider2d_NewRectangle(uint16_t _width, uint16_t _height){
 	Collider2d *collider=NEW(Collider2d);

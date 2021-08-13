@@ -136,6 +136,9 @@ void GUIWindow_SetColorBackground3i(GUIWindow * _this, uint8_t r, uint8_t g, uin
 }
 
 void GUIWindow_OnSetWidth(void *gui_window, uint16_t width){
+
+	UNUSUED_PARAM(width);
+
 	GUIWindow *_this=gui_window;
 	GUIWindowData *data=_this->data;
 
@@ -196,6 +199,8 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 
 void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 
+	UNUSUED_PARAM(event);
+
 	 GUIWindow *_this=gui_window;
 	 GUIWindowData *data=_this->data;
 
@@ -224,6 +229,7 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 }
 
  void GUIWindow_OnMouseButtonUp(MouseEvent * event, void *gui_window){
+	 UNUSUED_PARAM(event);
 
 	 GUIWindow *_this=gui_window;
 	 GUIWindowData *data=_this->data;

@@ -37,6 +37,8 @@ const PrintFontInfo print_font_info[]={
 };
 
 int main(int argc, char * argv[]){
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
 
 	ZetGameSetupParams setup_options;
 	memset(&setup_options,0,sizeof(ZetGameSetupParams));

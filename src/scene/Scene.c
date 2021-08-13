@@ -146,11 +146,11 @@ void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter)
 	}
 
 	List_Add(data->sprite2d_emitters,sprite2d_emitter);
-}*/
+}
 
 void Scene_SetBackgroundColor3i(Scene *_this,uint8_t r,uint8_t g,uint8_t b){
 
-}
+}*/
 
 void Scene_Start(Scene *_this){
 	SceneData *data = _this->data;
@@ -173,15 +173,10 @@ void Scene_Start(Scene *_this){
 	data->scene_status=SCENE_STATUS_RUNNING;
 
 }
+/*
 void Scene_Resume(Scene *_this){
 
 }
-
-void Scene_Stop(Scene *_this){
-	SceneData *data = _this->data;
-	data->scene_status=SCENE_STATUS_STOP;
-}
-
 void Scene_Pause(Scene *_this){
 
 }
@@ -189,6 +184,13 @@ void Scene_Pause(Scene *_this){
 void Scene_OnPostRender(Scene *_this,Callback cf){
 
 }
+*/
+
+void Scene_Stop(Scene *_this){
+	SceneData *data = _this->data;
+	data->scene_status=SCENE_STATUS_STOP;
+}
+
 
 
 void Scene_Update(Scene *_this){

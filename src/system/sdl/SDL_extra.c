@@ -438,7 +438,9 @@ SDL_Surface * SDL_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t width
 	}
 }*/
 
-SDL_Surface   * SDL_NewCross(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color){
+SDL_Surface   * SDL_NewCross(uint16_t dimension, uint32_t fill_color, uint16_t border_width){
+
+	//UNUSUED_PARAM(border_color);
 
 	if(dimension < 32){ // minimum is 32 ...
 		dimension = 32;
@@ -498,10 +500,12 @@ SDL_Surface * SDL_NewRectangle(uint16_t dimension,  uint32_t fill_color, uint16_
 	return srf1;
 }
 
+/*
 SDL_Surface * SDL_NewTriangle(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color){
+	UNUSUED_PARAM(border_color);
 	return NULL;
 }
-
+*/
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

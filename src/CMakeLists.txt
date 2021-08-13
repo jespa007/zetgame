@@ -309,6 +309,8 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- ECS --
 	ecs/zg_ecs.c
 
+	#-- Sprite --
+	sprite/zg_sprite.c
 	
 	#-- Core --
 	ZetGame.c		
@@ -379,4 +381,10 @@ add_executable(test_animation${POST_NAME}
 )
 
 target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
+add_executable(test_sprite${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_sprite.c
+)
+
+target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 

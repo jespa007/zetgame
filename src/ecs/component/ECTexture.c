@@ -14,7 +14,7 @@ void ECTexture_Setup(void *_this, Entity *_entity){
 void ECTexture_SetTexture(ECTexture *_this,Texture *_texture){
 	Texture *texture=_texture;
 	if(texture==NULL){ // set default
-		texture=Texture_GetDefault();
+		texture=TextureManager_GetDefaultTexture();
 	}
 	_this->texture=texture;
 }

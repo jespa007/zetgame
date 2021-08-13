@@ -1,9 +1,11 @@
 #include "Color4f.c"
 #include "IconManager.c"
 #include "Texture.c"
+#include "TextureManager.c"
 #include "Shader.c"
 #include "Geometry.c"
 #include "TTFont.c"
+#include "TTFontManager.c"
 
 #include "Appearance.c"
 

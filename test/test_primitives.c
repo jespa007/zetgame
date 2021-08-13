@@ -5,6 +5,8 @@
 #define SHAPE_BORDER_COLOR	0xffe0e0e0
 
 int main(int argc, char *argv[]){
+	UNUSUED_PARAM(argc);
+	UNUSUED_PARAM(argv);
 
 	struct{
 		uint32_t width, fill_color, border_width,border_color;

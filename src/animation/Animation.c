@@ -48,6 +48,7 @@ void InfoAniAction_Delete(InfoAction *info_ani){
 // PUBLIC FUNCTIONS
 
 uint32_t Animation_GetDefaultStartTimeTriggerAction(void *user_data){
+	UNUSUED_PARAM(user_data);
 	return SDL_GetTicks();
 }
 

@@ -9,6 +9,7 @@
 #include "graphics/zg_graphics.h"
 #include "scene/zg_scene.h"
 #include "gui/zg_gui.h"
+#include "sprite/zg_sprite.h"
 
 
 #define ZETGAME_MAJOR_VERSION	1

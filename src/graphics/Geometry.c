@@ -29,7 +29,7 @@ Geometry	* Geometry_New(size_t n_vertexs,uint32_t properties){
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_New(geometry,n_vertexs, properties);
+		Geometry_GL_New(geometry,properties);
 		break;
 	}
 
