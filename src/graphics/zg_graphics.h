@@ -8,7 +8,6 @@
 #include "TextureRect.h"
 #include "TextureManager.h"
 #include "IconManager.h"
-
 #include "Material.h"
 
 #include "Appearance.h"
