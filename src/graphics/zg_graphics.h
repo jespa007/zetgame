@@ -24,7 +24,7 @@
 //--- objects
 #include "Light.h"
 
-//--- strema
+//--- stream
 #include "stream/JpegMPS.h"
 
 
