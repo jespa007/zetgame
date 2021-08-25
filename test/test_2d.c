@@ -33,12 +33,12 @@ int main(int argc, char *argv[]){
 
 		Graphics_DrawRectangleFilledTranslate2i(10,10,100,100,Color4f_FromHex(0xFF));
 		Graphics_DrawRectangleFilledTranslate2i(20,20,100,100,Color4f_FromHex(0xFFFF));
-		Graphics_DrawRectangleTexturedTranslate2i(200,200,100,100,COLOR_WHITE_4F,text_png,NULL);
-		Graphics_DrawRectangleTexturedTranslate2i(300,300,100,100,COLOR_WHITE_4F,text_jpg,NULL);
-		Graphics_DrawRectangleTexturedTranslate2i(100,200,100,100,COLOR_WHITE_4F,text_default,NULL);
+		Graphics_DrawRectangleTexturedTranslate2i(200,200,100,100,COLOR4F_WHITE,text_png,NULL);
+		Graphics_DrawRectangleTexturedTranslate2i(300,300,100,100,COLOR4F_WHITE,text_jpg,NULL);
+		Graphics_DrawRectangleTexturedTranslate2i(100,200,100,100,COLOR4F_WHITE,text_default,NULL);
 
 
-		Graphics_Print(50,50,COLOR_WHITE_4F,"%s %i",s,TTFont_GetWidth(font2,s));
+		Graphics_Print(50,50,COLOR4F_WHITE,"%s %i",s,TTFont_GetWidth(font2,s));
 
 		//Shape_SetAppearance(v2d->shape2d->shape,appearance); // 10000 sprites at 4FPS
 		//Appearance_Apply(appearance);// 10000 sprites at 20FPS

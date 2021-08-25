@@ -28,12 +28,12 @@ Color4f Color4f_FromHexStr(const char * _hex_str){
 	char *hex_str=(char *)_hex_str;
 	if(hex_str==NULL || *hex_str==0) {
 		Log_Error("string empty or null");
-		return COLOR_WHITE_4F;
+		return COLOR4F_WHITE;
 	}
 
 	if(*hex_str!='#') {
 		Log_Error("Invalid hex colorit should start by # (example #0e0e0e)");
-		return COLOR_WHITE_4F;
+		return COLOR4F_WHITE;
 	}
 
 
@@ -48,7 +48,7 @@ Color4f Color4f_FromHexStr(const char * _hex_str){
 
 		};
 	}
-	return COLOR_WHITE_4F;
+	return COLOR4F_WHITE;
 }
 
 

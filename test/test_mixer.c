@@ -31,10 +31,10 @@ int main(int argc, char *argv[]){
 
 		Log_Info("Load from memory");
 
-		BufferByte *bb_effect = File_Read("data/samples/sample.wav");
-		BufferByte *bb_wav = File_Read("data/musics/music.wav");
-		BufferByte *bb_ogg = File_Read("data/musics/music.ogg");
-		BufferByte *bb_xm = File_Read("data/musics/music.xm");
+		BufferByte *bb_effect = File_Read("../../../test/data/samples/sample.wav");
+		BufferByte *bb_wav = File_Read("../../../test/data/musics/music.wav");
+		BufferByte *bb_ogg = File_Read("../../../test/data/musics/music.ogg");
+		BufferByte *bb_xm = File_Read("../../../test/data/musics/music.xm");
 
 		id_effect = Sample_LoadFromMemory(bb_effect->ptr, bb_effect->len);
 		id_wav = Music_LoadFromMemory(bb_wav->ptr, bb_wav->len);
@@ -47,10 +47,10 @@ int main(int argc, char *argv[]){
 		if(bb_xm!=NULL)BufferByte_Delete(bb_xm);
 
 	}else{
-		id_effect = Sample_Load("data/samples/sample.wav");
-		id_wav = Music_Load("data/musics/music.wav");
-		id_ogg = Music_Load("data/musics/music.ogg");
-		id_xm = Music_Load("data/musics/music.xm");
+		id_effect = Sample_Load("../../../test/data/samples/sample.wav");
+		id_wav = Music_Load("../../../test/data/musics/music.wav");
+		id_ogg = Music_Load("../../../test/data/musics/music.ogg");
+		id_xm = Music_Load("../../../test/data/musics/music.xm");
 
 	}
 

@@ -21,7 +21,6 @@ void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame){
 	}
 
 
-
 }
 
 // TODO: support colliders per frame

@@ -181,11 +181,11 @@ void Graphics_GL_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, C
 }
 
 
-void Graphics_GL_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, Rectanglef *text_crop ){
+void Graphics_GL_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, TextureRect *text_crop ){
 
 	glPushAttrib( GL_CURRENT_BIT | GL_TEXTURE_BIT | GL_LIGHTING_BIT | GL_COLOR_BUFFER_BIT);
 
-	Rectanglef default_text_crop= Rectanglef_New4f(0,0,1,1);
+	TextureRect default_text_crop= {.u1=0,.v1=0,.u2=1,.v2=1};
 
 	if(text_crop == NULL){
 		text_crop=&default_text_crop;
@@ -207,16 +207,16 @@ void Graphics_GL_DrawRectangleTextured4f(float x1, float y1, float x2, float y2,
 	glColor4f(color.r,color.g,color.b,color.a);
 
 	glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
-			glTexCoord2f(text_crop->x1, text_crop->y1);
+			glTexCoord2f(text_crop->u1, text_crop->v1);
 			glVertex2f(x1, y1);
 
-			glTexCoord2f(text_crop->x2, text_crop->y1);
+			glTexCoord2f(text_crop->u2, text_crop->v1);
 			glVertex2f(x2, y1);
 
-			glTexCoord2f(text_crop->x1, text_crop->y2);
+			glTexCoord2f(text_crop->u1, text_crop->v2);
 			glVertex2f(x1,y2);
 
-			glTexCoord2f(text_crop->x2, text_crop->y2);
+			glTexCoord2f(text_crop->u2, text_crop->v2);
 			glVertex2f(x2,y2);
 	glEnd();
 

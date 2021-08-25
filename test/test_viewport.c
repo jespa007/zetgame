@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 
 			Graphics_ClearScreen(Color4f_FromRGB(32+i*10,32+i*10,32+i*10));
 			Graphics_DrawRectangleTexturedTranslate2i(0,0,100,100,Color4f_FromRGB(0,200,0),text_png,NULL);
-			Graphics_DrawRectangleFilledTranslate2i(0,0,10,10,COLOR_WHITE_4F);
+			Graphics_DrawRectangleFilledTranslate2i(0,0,10,10,COLOR4F_WHITE);
 			Textbox_Draw(textbox,&transform,NULL);
 
 			ViewPort_Pop();

@@ -1,14 +1,5 @@
 #include "Texture_GL.c"
 
-
-
-
-// prototypes
-
-void			* 	Texture_OnDeleteNode(MapStringNode *node);
-Texture 		* 	Texture_GetDefault(void);
-
-
 //--------------
 // MEMBER PUBLIC
 Texture * Texture_New(){

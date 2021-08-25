@@ -123,7 +123,7 @@ void IconManager_DrawIcon(IconManager * _this,uint16_t idx_icon, int x,int y,uin
 
 		if(icon.texture != NULL){
 
-			Graphics_DrawRectangleTexturedTranslate2i(x,y,width,height,COLOR_WHITE_4F,icon.texture,&icon.texture_crop);
+			Graphics_DrawRectangleTexturedTranslate2i(x,y,width,height,COLOR4F_WHITE,icon.texture,&icon.texture_crop);
 		}
 	}
 }
@@ -146,17 +146,17 @@ Icon IconManager_GetIcon(IconManager *_this,uint16_t idx_icon){
 			//return;
 		}*/
 
-		icon.texture_crop.x1 = (idx_icon%_this->icons_per_row)*(_this->icon_width +_this->icon_offset_x);
-		icon.texture_crop.y1 = (idx_icon/_this->icons_per_row)*(_this->icon_height +_this->icon_offset_y);
+		icon.texture_crop.u1 = (idx_icon%_this->icons_per_row)*(_this->icon_width +_this->icon_offset_x);
+		icon.texture_crop.v1 = (idx_icon/_this->icons_per_row)*(_this->icon_height +_this->icon_offset_y);
 
-		icon.texture_crop.x2 = icon.texture_crop.x1 + (_this->icon_width);
-		icon.texture_crop.y2 = icon.texture_crop.y1 + (_this->icon_height);
+		icon.texture_crop.u2 = icon.texture_crop.u1 + (_this->icon_width);
+		icon.texture_crop.v2 = icon.texture_crop.v1 + (_this->icon_height);
 
-		icon.texture_crop.x1 /= (float)_this->texture->width;
-		icon.texture_crop.x2 /= (float)_this->texture->width;
+		icon.texture_crop.u1 /= (float)_this->texture->width;
+		icon.texture_crop.u2 /= (float)_this->texture->width;
 
-		icon.texture_crop.y1 /= (float)_this->texture->height;
-		icon.texture_crop.y2 /= (float)_this->texture->height;
+		icon.texture_crop.v1 /= (float)_this->texture->height;
+		icon.texture_crop.v2 /= (float)_this->texture->height;
 
 
 		icon.texture = _this->texture;

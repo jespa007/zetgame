@@ -66,7 +66,6 @@
 	#include 	<libswresample/swresample.h>
 #endif
 
-#include	<gif_lib.h>
 
 // xmp is build as static so we have to define BUILDING_STATIC
 #include 	<xmp.h>

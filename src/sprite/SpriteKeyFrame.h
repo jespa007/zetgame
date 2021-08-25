@@ -1,15 +1,18 @@
 #ifndef __SPRITE_KEYFRAME_H__
 #define __SPRITE_KEYFRAME_H__
 
+#define MAX_SPRITE_KEYFRAME_NAME	25
+
 typedef struct SpriteKeyFrame SpriteKeyFrame;
 
 typedef struct {
 	TextureRect frame;
-	uint32_t	time;
+	uint32_t	duration;
 }SpriteKeyFrameInfo;
 
 struct SpriteKeyFrame{
-	SpriteKeyFrameInfo *frames;
+	char				name[MAX_SPRITE_KEYFRAME_NAME];
+	SpriteKeyFrameInfo 	*frames;
 	size_t				frames_len;
 	Texture				*texture;
 };

@@ -7,23 +7,43 @@ int main(int argc, char *argv[]){
 	ZetGame_Init(NULL);
 
 	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New();
+	SpriteKeyFrame *skf_current=NULL;
 
-	SpriteKeyFrameManager_Load(
+	if(SpriteKeyFrameManager_Load(
 			skfm
 			,"mario_small"
 			,"../../../test/data/sprites/mario_small.png"
 			,"../../../test/data/sprites/mario_small.json"
 			,NULL
-			);
+			)){
+
+		skf_current=GetSpriteKeyFrame(skfm,"mario_small_idle");
+	}
+
+
 
 	do{
 		Graphics_BeginRender();
 
-		glBegin(GL_TRIANGLES); // draw something with the texture on
+
+		if(skf_current != NULL){
+			Graphics_DrawRectangleTexturedTranslate2i(
+			0
+			,0
+			,64
+			,64
+			,COLOR4F_WHITE
+			,skf_current->texture
+			,&skf_current->frames[0].frame
+			);
+
+		}
+
+		/*glBegin(GL_TRIANGLES); // draw something with the texture on
 			glVertex2f(-1,1);
 			glVertex2f(1,-1);
 			glVertex2f(-1,-1);
-	   glEnd();
+	   glEnd();*/
 
 	   Graphics_EndRender();
 

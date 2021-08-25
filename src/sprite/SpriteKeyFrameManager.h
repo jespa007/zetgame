@@ -20,7 +20,7 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 
 bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this
 		,const char *_key_id_prefix
-		, const char *_texture_filename
+		, const char *_image_filename
 		,const char *_json_filename
 		, const char *_extra_json_filename
 );

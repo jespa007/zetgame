@@ -418,7 +418,7 @@ void Graphics_EndRender(void)
 			FPS=1000.0f/diff;
 		}
 
-		Graphics_Print(0,Graphics_GetHeight()-30,COLOR_WHITE_4F, "FPS: %.02f",FPS);
+		Graphics_Print(0,Graphics_GetHeight()-30,COLOR4F_WHITE, "FPS: %.02f",FPS);
 //			printf("%.2f fps\n",1000.0f/diff);
 
 
@@ -530,22 +530,22 @@ void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Colo
 	}
 }
 
-void Graphics_DrawRectangleTexturedTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color, Texture *text, Rectanglef * text_crop){
+void Graphics_DrawRectangleTexturedTranslate2i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
 
 
-	Vector2i p1_2d=Vector2i_New(x,y);
-	Vector2i p2_2d=Vector2i_New(x+width,y+height);
+	Vector2i p1_2d=Vector2i_New(_x,_y);
+	Vector2i p2_2d=Vector2i_New(_x+_width,_y+_height);
 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangleTextured4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color,text,text_crop);
+		Graphics_GL_DrawRectangleTextured4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,_color,text,text_crop);
 	}
 }
 
-void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2,  Color4f color,Texture *text, Rectanglef * text_crop){
+void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2,  Color4f color,Texture *text, TextureRect * text_crop){
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
 		Graphics_GL_DrawRectangleTextured4f(x1,y1,x2,y2,color,text, text_crop);

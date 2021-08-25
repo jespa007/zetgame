@@ -12,12 +12,10 @@ ZLIB_VERSION="zlib-1.2.8"
 SDL2_VERSION="SDL2-2.0.14"
 LIBPNG_VERSION="libpng-1.6.37"
 LIBJPEG_VERSION="jpeg-9b"
-GIFLIB_VERSION="giflib-5.1.0"
 SDL2_IMAGE_VERSION="SDL2_image-2.0.0"
 SDL2_NET_VERSION="SDL2_net-2.0.0"
-TINYXML2_VERSION="tinyxml2-7.0.1"
 FREETYPE2_VERSION="freetype-2.5.2"
-LIBXMP_VERSION="libxmp-4.4.1"
+LIBXMP_VERSION="libxmp-lite-4.5.0"
 X264_VERSION="x264-stable"
 LIBOGG_VERSION="libogg-1.3.4"
 LIBVORBIS_VERSION="libvorbis-1.3.6"
@@ -29,7 +27,6 @@ ZLIB_FILE=$ZLIB_VERSION".tar.gz"
 SDL2_FILE=$SDL2_VERSION".tar.gz"
 LIBPNG_FILE=$LIBPNG_VERSION".tar.gz"
 LIBJPEG_FILE=$LIBJPEG_VERSION".tar.gz"
-GIFLIB_FILE=$GIFLIB_VERSION".tar.gz"
 SDL2_IMAGE_FILE=$SDL2_IMAGE_VERSION".tar.gz"
 SDL2_NET_FILE=$SDL2_NET_VERSION".tar.gz"
 FREETYPE2_FILE=$FREETYPE2_VERSION".tar.gz"
@@ -39,7 +36,6 @@ LIBOGG_FILE=$LIBOGG_VERSION".tar.gz"
 LIBVORBIS_FILE=$LIBVORBIS_VERSION".tar.gz"
 FFMPEG_FILE=$FFMPEG_VERSION".tar.gz"
 SQLITE3_FILE=$SQLITE3_VERSION".tar.gz"
-CHAISCRIPT_FILE=$CHAISCRIPT_VERSION".tar.gz"
 
 EXTENSION_STATIC_LIB=".a"
 EXTENSION_DYNAMIC_LIB=".so"
@@ -310,80 +306,6 @@ fi
 cd ..
 
 
-#------------------------------------------------------------------------------------------------------------------------
-#
-# GIFLIB
-#
-
-echo building giflib...
-
-if ! [ -d $THIRD_PARTY_BUILD_DIR"/$GIFLIB_VERSION" ] 
-then
-	tar xf $THIRD_PARTY_SOURCES_DIR"/"$GIFLIB_FILE
-fi
-
-cd $GIFLIB_VERSION
-
-if ! [ -f $THIRD_PARTY_INSTALL_DIR"/lib/libgif"$EXTENSION_STATIC_LIB ] 
-then
-
-	./configure $COMMON_CONFIGURE_OPTIONS
-
-	if ! [ $? -eq 0 ] 
-	then
-		exit 1
-	fi
-
-	make clean
-	make -j2  install
-
-	if ! [ $? -eq 0 ] 
-	then
-		exit 1
-	fi
-
-fi
-
-cd ..
-
-
-#------------------------------------------------------------------------------------------------------------------------
-#
-# TINYXML
-#
-
-echo building tinyxml...
-
-if ! [ -d $THIRD_PARTY_BUILD_DIR"/$TINYXML2_VERSION" ] 
-then
-	tar xf $THIRD_PARTY_SOURCES_DIR"/"$TINYXML2_VERSION".tar.gz"
-fi
-
-cd $TINYXML2_VERSION
-
-if ! [ -f $THIRD_PARTY_INSTALL_DIR"/lib/libtinyxml2"$EXTENSION_STATIC_LIB ] 
-then
-
-	rm -rf build/gcc
-
-	cmake "${CMAKE_CONFIG[@]}" -DBUILD_SHARED_LIBS:BOOL=OFF
-
-	if ! [ $? -eq 0 ] 
-	then
-		exit 1
-	fi
-
-	make clean -C $BUILD_DIR
-	make -j2  install -C $BUILD_DIR
-
-	if ! [ $? -eq 0 ] 
-	then
-		exit 1
-	fi
-
-fi
-
-cd ..
 
 #------------------------------------------------------------------------------------------------------------------------
 #
@@ -420,8 +342,6 @@ then
 	then
 		exit 1
 	fi
-	
-	cd ..
 
 fi
 

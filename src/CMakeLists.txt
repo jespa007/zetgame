@@ -129,6 +129,7 @@ include_directories (
 	${PROJECT_SOURCE_DIR}
 	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include
 	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/freetype2
+	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/libxmp-lite
 	${OPEN_GL_INCLUDE_DIRS}  
 	${GLU_INCLUDE_DIRS}
 )
@@ -166,9 +167,8 @@ LINK_DIRECTORIES (
 # 3rd party libraries
 set( LIB_DEPS
 		jpeg 
-		gif 
-		freetype 
-		xmp
+		freetype
+		xmp-lite 
 		SDL2
 ) 
 

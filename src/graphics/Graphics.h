@@ -69,8 +69,8 @@ void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, uint8_t th
 void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color);
 void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color);
 
-void Graphics_DrawRectangleTexturedTranslate2i(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, Rectanglef * text_crop);
-void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, Rectanglef * text_crop);
+void Graphics_DrawRectangleTexturedTranslate2i(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, TextureRect * text_crop);
+void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, TextureRect * text_crop);
 
 
 //void Graphics_DrawShape(Shape *shape, Transform *transform);

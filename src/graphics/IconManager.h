@@ -32,7 +32,7 @@ typedef enum {
 }DefaultIcon;
 
 typedef struct{
-	Rectanglef    	texture_crop;
+	TextureRect   	texture_crop;
 	Texture  	*	texture;
 }Icon;
 
