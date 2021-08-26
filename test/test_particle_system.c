@@ -3,7 +3,7 @@
 #include "../../../resources/image/dots.png.c"
 #include "../../../resources/image/star.png.c"
 #include "../../../resources/image/streaks.png.c"
-#include "factory/zg_engine_factory.h"
+#include "zetgame.h"
 
 
 /*
