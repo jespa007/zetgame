@@ -13,10 +13,10 @@
 #define N_VERTEX_QUAD	4
 
 
-#define		GEOMETRY_COLOR		(0x1 << 1) // Color ARGB
-#define		GEOMETRY_TEXTURE	(0x1 << 2) // TEXTURE UV 2D
-#define		GEOMETRY_NORMAL 	(0x1 << 3)  // NORMALS
-
+#define		GEOMETRY_PROPERTY_COLOR		(0x1 << 1) // Color ARGB
+#define		GEOMETRY_PROPERTY_TEXTURE	(0x1 << 2) // TEXTURE UV 2D
+#define		GEOMETRY_PROPERTY_NORMAL 	(0x1 << 3)  // NORMALS
+#define		GEOMETRY_PROPERTY_QUADS 	(0x1 << 4)  // NORMALS
 
 
 typedef struct Geometry Geometry;
@@ -33,11 +33,11 @@ Geometry	* 	Geometry_Default(void); // it returns a quad
 Geometry	* 	Geometry_New(size_t index_count, uint32_t properties);
 Geometry	* 	Geometry_NewQuad(uint32_t properties);
 
-void 			Geometry_SetIndices(Geometry *geometry,BufferShort indices);
-void 			Geometry_SetMeshVertex(Geometry *geometry,BufferFloat mesh_vertex);
-void 			Geometry_SetMeshTexture(Geometry *geometry,BufferFloat mesh_texture);
-void 			Geometry_SetMeshColor(Geometry *geometry,BufferFloat mesh_color);
-void 			Geometry_SetMeshNormal(Geometry *geometry,BufferFloat mesh_normal);
+void 			Geometry_SetIndices(Geometry *geometry,short *indices,size_t indices_len);
+void 			Geometry_SetMeshVertex(Geometry *geometry,float *mesh_vertexs,size_t mesh_vertexs_len);
+void 			Geometry_SetMeshTexture(Geometry *geometry,float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len);
+void 			Geometry_SetMeshColor(Geometry *geometry,float *mesh_color_vertexs,size_t mesh_color_vertexs_len);
+void 			Geometry_SetMeshNormal(Geometry *geometry,float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len);
 void 			Geometry_Draw(Geometry *geometry);
 
 void			Geometry_Delete(Geometry *geometry);

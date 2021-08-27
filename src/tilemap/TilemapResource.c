@@ -1,18 +1,18 @@
 typedef struct{
-	SpriteKeyFrame 	* 	sprite_keyframes;
+	Tilemap 	* 	sprite_keyframes;
 	size_t				sprite_keyframes_len;
 	Texture			*	texture;
-}SpriteKeyFramePack;
+}TilemapResource;
 
-SpriteKeyFramePack *SpriteKeyFramePack_New(size_t _sprite_keyframes_len,Texture *_texture){
-	SpriteKeyFramePack *skfp=NEW(SpriteKeyFramePack);
+TilemapResource *TilemapResource_New(size_t _sprite_keyframes_len,Texture *_texture){
+	TilemapResource *skfp=NEW(TilemapResource);
 	skfp->texture=_texture;
-	skfp->sprite_keyframes=malloc(sizeof(SpriteKeyFrame)*_sprite_keyframes_len);
+	skfp->sprite_keyframes=malloc(sizeof(Tilemap)*_sprite_keyframes_len);
 	skfp->sprite_keyframes_len=_sprite_keyframes_len;
 	return skfp;
 }
 
-void SpriteKeyFramePack_Delete(SpriteKeyFramePack * _this){
+void TilemapResource_Delete(TilemapResource * _this){
 
 	for(unsigned i=0; i < _this->sprite_keyframes_len; i++){
 		if(_this->sprite_keyframes[i].frames != NULL){

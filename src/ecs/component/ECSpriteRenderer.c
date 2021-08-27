@@ -62,10 +62,7 @@ void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint
 
 
 		//.. and set vertex to geometry
-	   Geometry_SetMeshVertex(data->geometry,(BufferFloat){
-			.data=vertexs
-			,.len=N_VERTEX_QUAD*VERTEX_COORDS_LEN
-		});
+	   Geometry_SetMeshVertex(data->geometry,vertexs,N_VERTEX_QUAD*VERTEX_COORDS_LEN);
 
 		data->width=width;
 		data->height=height;

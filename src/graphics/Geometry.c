@@ -41,7 +41,7 @@ Geometry	* Geometry_NewQuad(uint32_t properties){
 
 	Geometry *geometry=NULL;
 
-	uint16_t indices[N_INDICES(N_VERTEX_QUAD)]={
+	short indices[N_INDICES(N_VERTEX_QUAD)]={
 			0,1,2,
 			0,2,3
 	};
@@ -65,28 +65,19 @@ Geometry	* Geometry_NewQuad(uint32_t properties){
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,(BufferShort){
-			.data=indices
-			,.len=N_INDICES(N_VERTEX_QUAD)
-		});
+		Geometry_SetIndices(geometry,indices,N_INDICES(N_VERTEX_QUAD));
 
-		Geometry_SetMeshVertex(geometry,(BufferFloat){
-			.data=mesh_vertex
-			,.len=N_VERTEX_QUAD*VERTEX_COORDS_LEN
-		});
+		Geometry_SetMeshVertex(geometry,mesh_vertex,N_VERTEX_QUAD*VERTEX_COORDS_LEN);
 
 		if(properties & GEOMETRY_TEXTURE){
-			Geometry_SetMeshTexture(geometry,(BufferFloat){
-				.data=mesh_texture_coords
-				,.len=N_VERTEX_QUAD*TEXTURE_COORDS_LEN
-			});
+			Geometry_SetMeshTexture(geometry,mesh_texture_coords,N_VERTEX_QUAD*TEXTURE_COORDS_LEN);
 		}
 	}
 
 	return geometry;
 }
 
-void 			Geometry_SetIndices(Geometry *geometry,BufferShort indices){
+void 			Geometry_SetIndices(Geometry *geometry,short *indices,size_t indices_len){
 
 	if(geometry == NULL) return;
 
@@ -95,12 +86,12 @@ void 			Geometry_SetIndices(Geometry *geometry,BufferShort indices){
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetIndices(geometry,indices);
+		Geometry_GL_SetIndices(geometry,indices,indices_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshVertex(Geometry *geometry,BufferFloat mesh_vertex){
+void 			Geometry_SetMeshVertex(Geometry *geometry,float *mesh_vertexs,size_t mesh_vertexs_len){
 
 	if(geometry == NULL) return;
 
@@ -109,12 +100,12 @@ void 			Geometry_SetMeshVertex(Geometry *geometry,BufferFloat mesh_vertex){
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshVertex(geometry,mesh_vertex);
+		Geometry_GL_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshTexture(Geometry *geometry,BufferFloat mesh_texture){
+void 			Geometry_SetMeshTexture(Geometry *geometry,float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len){
 
 	if(geometry == NULL) return;
 
@@ -123,12 +114,12 @@ void 			Geometry_SetMeshTexture(Geometry *geometry,BufferFloat mesh_texture){
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshTexture(geometry,mesh_texture);
+		Geometry_GL_SetMeshTexture(geometry,mesh_texure_vertexs,mesh_texture_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshColor(Geometry *geometry,BufferFloat mesh_color){
+void 			Geometry_SetMeshColor(Geometry *geometry,float *mesh_color_vertexs,size_t mesh_color_vertexs_len){
 
 	if(geometry == NULL) return;
 
@@ -137,12 +128,12 @@ void 			Geometry_SetMeshColor(Geometry *geometry,BufferFloat mesh_color){
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshColor(geometry,mesh_color);
+		Geometry_GL_SetMeshColor(geometry,mesh_color_vertexs,mesh_color_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshNormal(Geometry *geometry,BufferFloat mesh_normal){
+void 			Geometry_SetMeshNormal(Geometry *geometry,float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len){
 	if(geometry == NULL) return;
 
 	switch(Graphics_GetGraphicsApi()){
@@ -150,7 +141,7 @@ void 			Geometry_SetMeshNormal(Geometry *geometry,BufferFloat mesh_normal){
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshNormal(geometry,mesh_normal);
+		Geometry_GL_SetMeshNormal(geometry,mesh_normal_vertexs,mesh_normal_vertexs_len);
 		break;
 	}
 }

@@ -1,15 +1,15 @@
+#include "SpriteKeyFrameResource.c"
 #include "zg_sprite.h"
 
-#include "SpriteKeyFramePack.c"
 
 typedef struct{
 	MapString 	* 	sprite_keyframes;
-	List 	* 	sprite_keyframe_packs;
+	List 	* 	sprite_keyframe_resources;
 }SpriteKeyFrameManagerData;
 
 // STATIC
 /*void	* SpriteKeyFrameManager_OnDeleteNode(MapStringNode *node){
-	SpriteKeyFramePack * keyframepack = node->val;
+	SpriteKeyFrameResource * keyframepack = node->val;
 	if(keyframepack!=NULL){
 		Texture_Delete(keyframepack->texture);
 
@@ -32,7 +32,7 @@ SpriteKeyFrameManager *SpriteKeyFrameManager_New(void){
 
 	data->sprite_keyframes = MapString_New();//new std::map<std::string,TTFont *>();
 
-	data->sprite_keyframe_packs= List_New();
+	data->sprite_keyframe_resources= List_New();
 	//data->sprite_keyframes->on_delete=SpriteKeyFrameManager_OnDeleteNode;
 
 
@@ -87,8 +87,8 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 		Texture *texture=Texture_NewFromMemory(buf_texture,buf_texture_len);
 		if(texture){
 			// create sprite frame packs and add to list/map
-			SpriteKeyFramePack *skp=SpriteKeyFramePack_New(cJSON_GetArraySize(layers),texture);
-			List_Add(data->sprite_keyframe_packs,skp);
+			SpriteKeyFrameResource *skp=SpriteKeyFrameResource_New(cJSON_GetArraySize(layers),texture);
+			List_Add(data->sprite_keyframe_resources,skp);
 
 			char sprite_keyframe_key[150];
 
@@ -257,12 +257,12 @@ SpriteKeyFrame *GetSpriteKeyFrame(SpriteKeyFrameManager *_this, const char *key)
 void  SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this){
 	SpriteKeyFrameManagerData 	*data=_this->data;
 
-	for(unsigned i=0; i < data->sprite_keyframe_packs->count;i++){
-		SpriteKeyFramePack_Delete(data->sprite_keyframe_packs->items[i]);
+	for(unsigned i=0; i < data->sprite_keyframe_resources->count;i++){
+		SpriteKeyFrameResource_Delete(data->sprite_keyframe_resources->items[i]);
 	}
 
 
-	List_Delete(data->sprite_keyframe_packs);
+	List_Delete(data->sprite_keyframe_resources);
 	MapString_Delete(data->sprite_keyframes);
 	FREE(data);
 	FREE(_this);

@@ -6,6 +6,7 @@ typedef struct{
 			color, 	// vertex object id
 			texture,// texture object id
 			normal; // normal object id
+	GLuint  gl_type_geometry;
 }GeometryDataGL;
 
 void  Geometry_GL_New(Geometry *geometry, uint32_t properties){
@@ -38,16 +39,22 @@ void  Geometry_GL_New(Geometry *geometry, uint32_t properties){
 		glGenBuffers(1, &geometry_data->normal);
 	}
 
+	geometry_data->gl_type_geometry=GL_TRIANGLES;
+
+	if(properties & GEOMETRY_PROPERTY_QUADS){
+		geometry_data->gl_type_geometry=GL_QUADS;
+	}
+
 	geometry->geometry_data=geometry_data;
 }
 
 
-void Geometry_GL_SetIndices(Geometry * geometry, BufferShort  indices) {
+void Geometry_GL_SetIndices(Geometry * geometry, short *indices,size_t indices_len) {
 
 	GeometryDataGL * geometry_data = NULL;
 
 	if(geometry==NULL) return;
-	if(indices.len != N_INDICES(geometry->n_vertexs)){
+	if(indices_len != N_INDICES(geometry->n_vertexs)){
 		Log_Error("Index count doesn't matches");
 		return;
 	}
@@ -60,18 +67,18 @@ void Geometry_GL_SetIndices(Geometry * geometry, BufferShort  indices) {
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry_data->index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.len*sizeof(short), indices.data, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_len*sizeof(short), indices, GL_STATIC_DRAW);
 
 
 }
 
 
-void Geometry_GL_SetMeshVertex(Geometry *geometry, BufferFloat mesh_vertex) {
+void Geometry_GL_SetMeshVertex(Geometry *geometry, float *mesh_vertexs,size_t mesh_vertexs_len) {
 
 	GeometryDataGL * geometry_data = NULL;
 
 	if(geometry==NULL ) return;
-	if(mesh_vertex.len != (geometry->n_vertexs*VERTEX_COORDS_LEN)){
+	if(mesh_vertexs_len != (geometry->n_vertexs*VERTEX_COORDS_LEN)){
 		Log_Error("Vertex count doesn't matches");
 		return;
 	}
@@ -84,16 +91,16 @@ void Geometry_GL_SetMeshVertex(Geometry *geometry, BufferFloat mesh_vertex) {
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, geometry_data->vertex);
-	glBufferData(GL_ARRAY_BUFFER, mesh_vertex.len*sizeof(float), mesh_vertex.data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh_vertexs_len*sizeof(float), mesh_vertexs, GL_DYNAMIC_DRAW);
 
 }
 
 
-void Geometry_GL_SetMeshTexture(Geometry * geometry, BufferFloat mesh_texture) {
+void Geometry_GL_SetMeshTexture(Geometry * geometry, float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len) {
 	GeometryDataGL * geometry_data = NULL;
 
 	if(geometry==NULL) return;
-	if(mesh_texture.len != (geometry->n_vertexs*TEXTURE_COORDS_LEN)){
+	if(mesh_texture_vertexs_len != (geometry->n_vertexs*TEXTURE_COORDS_LEN)){
 		Log_Error("Vertex count doesn't matches");
 		return;
 	}
@@ -108,17 +115,17 @@ void Geometry_GL_SetMeshTexture(Geometry * geometry, BufferFloat mesh_texture) {
 
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, geometry_data->texture);
-	glBufferData(GL_ARRAY_BUFFER, mesh_texture.len*sizeof(float), mesh_texture.data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh_texture_vertexs_len*sizeof(float), mesh_texure_vertexs, GL_DYNAMIC_DRAW);
 }
 
 
 
-void Geometry_GL_SetMeshColor(Geometry * geometry,BufferFloat mesh_color) {
+void Geometry_GL_SetMeshColor(Geometry * geometry,float *mesh_color_vertexs,size_t mesh_color_vertexs_len) {
 
 	GeometryDataGL * geometry_data = NULL;
 
 	if(geometry==NULL) return;
-	if(mesh_color.len != (geometry->n_vertexs*(COLOR_COORDS_LEN))){
+	if(mesh_color_vertexs_len != (geometry->n_vertexs*(COLOR_COORDS_LEN))){
 		Log_Error("Vertex count doesn't matches");
 		return;
 	}
@@ -131,16 +138,16 @@ void Geometry_GL_SetMeshColor(Geometry * geometry,BufferFloat mesh_color) {
 	}
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, geometry_data->color);
-	glBufferData(GL_ARRAY_BUFFER, mesh_color.len*sizeof(float), mesh_color.data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh_color_vertexs_len*sizeof(float), mesh_color_vertexs, GL_DYNAMIC_DRAW);
 }
 
 
-void Geometry_GL_SetMeshNormal(Geometry * geometry,BufferFloat mesh_normal) {
+void Geometry_GL_SetMeshNormal(Geometry * geometry,float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len) {
 
 	GeometryDataGL * geometry_data = NULL;
 
 	if(geometry==NULL) return;
-	if(mesh_normal.len != (geometry->n_vertexs*NORMAL_COORDS_LEN)){
+	if(mesh_normal_vertexs_len != (geometry->n_vertexs*NORMAL_COORDS_LEN)){
 		Log_Error("Vertex count doesn't matches");
 		return;
 	}
@@ -154,7 +161,7 @@ void Geometry_GL_SetMeshNormal(Geometry * geometry,BufferFloat mesh_normal) {
 
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, geometry_data->normal);
-	glBufferData(GL_ARRAY_BUFFER, mesh_normal.len*sizeof(float), mesh_normal.data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh_normal_vertexs_len*sizeof(float), mesh_normal_vertexs, GL_DYNAMIC_DRAW);
 }
 
 
@@ -201,7 +208,7 @@ void Geometry_GL_Draw(Geometry * geometry) {
 
 	if(geometry_data->index != GL_INVALID_VALUE) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry_data->index);
-		glDrawElements(GL_TRIANGLES,N_INDICES(geometry->n_vertexs),  GL_UNSIGNED_SHORT, (void *)(NULL));// indicesVertexBuffer->data_buffer);
+		glDrawElements(geometry_data->gl_type_geometry,N_INDICES(geometry->n_vertexs),  GL_UNSIGNED_SHORT, (void *)(NULL));// indicesVertexBuffer->data_buffer);
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
