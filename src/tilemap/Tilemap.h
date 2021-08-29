@@ -10,6 +10,7 @@ struct Tilemap{
 
 
 Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_width, size_t _tile_height, Texture *_texture);
+void Tilemap_Draw(Tilemap *_this);
 void Tilemap_Delete(Tilemap *_this);
 
 

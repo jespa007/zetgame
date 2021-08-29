@@ -90,18 +90,18 @@ bool ECTransform_IsParentNodeRoot(ECTransform *_this){
 */
 void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	//Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
+	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
 	//Transform_SetPosition2i(&data->transform_local,x,y);
 	data->transform_local.translate = ViewPort_ScreenToWorld(x,y);
 
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
-	//=ViewPort_ScreenToWorldDim2i(x,y);
+	//=ViewPort_ScreenToWorldDimension2i(x,y);
 }
 
 void ECTransform_SetDisplacement2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	//Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
+	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
 	//Transform_SetPosition2i(&data->transform_local,x,y);
 	data->transform_local.translate=(Vector3f){
 			.x=ViewPort_ScreenToWorldWidth(x)
@@ -111,7 +111,7 @@ void ECTransform_SetDisplacement2i(ECTransform *_this,int x, int y){
 
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
-	//=ViewPort_ScreenToWorldDim2i(x,y);
+	//=ViewPort_ScreenToWorldDimension2i(x,y);
 }
 
 Vector2i	ECTransform_GetPosition2i(ECTransform *_this){

@@ -7,24 +7,9 @@ struct TilemapManager{
 	void *data;
 };
 
-TilemapManager *TilemapManager_New(void);
-
-bool TilemapManager_LoadFromMemory(
-		TilemapManager *_this
-		,const char *key_id_prefix
-		,uint8_t *buf_texture
-		,size_t buf_texture_len
-		,uint8_t * buf_json
-		,size_t buf_json_len
-);
-
-bool TilemapManager_Load(TilemapManager *_this
-		,const char *_key_id_prefix
-		, const char *_image_filename
-		,const char *_json_filename
-		, const char *_extra_json_filename
-);
-Tilemap *GetTilemap(TilemapManager *_this,const char *_skf_id);
+TilemapManager *TilemapManager_New(TextureManager	* _texture_manager);
+bool 			TilemapManager_Load(TilemapManager *_this,const char *_tmx_filename);
+Tilemap 	  *	TilemapManager_GetTilemap(TilemapManager *_this,const char *_tm_id);
 
 void TilemapManager_Delete(TilemapManager *_this);
 

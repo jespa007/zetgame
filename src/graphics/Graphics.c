@@ -152,7 +152,7 @@ bool Graphics_Init(
 	}
 
 	// init gl vars
-	g_graphics_vars->geometry_quad_default=Geometry_NewQuad(GEOMETRY_TEXTURE);
+	g_graphics_vars->geometry_quad_default=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
 
 	// adapter list
 	g_graphics_vars->adapters=NULL;
@@ -472,7 +472,7 @@ void Graphics_EndRender(void)
 // Drawing functions
 //
 void Graphics_DrawRectangle(uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
-	Vector3f dim_3d=ViewPort_ScreenToWorldDim2i(width>>1,height>>1);
+	Vector3f dim_3d=ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
 
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:

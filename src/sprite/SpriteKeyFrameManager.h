@@ -7,24 +7,21 @@ struct SpriteKeyFrameManager{
 	void *data;
 };
 
-SpriteKeyFrameManager *SpriteKeyFrameManager_New(void);
+SpriteKeyFrameManager *SpriteKeyFrameManager_New(TextureManager	* _texture_manager);
 
 bool SpriteKeyFrameManager_LoadFromMemory(
 		SpriteKeyFrameManager *_this
-		,const char *key_id_prefix
-		,uint8_t *buf_texture
-		,size_t buf_texture_len
-		,uint8_t * buf_json
-		,size_t buf_json_len
+		,const char *_path
+		,const char *_key_id_prefix
+		,uint8_t * _buf_ase_json
+		,size_t _buf_ase_json_len
 );
 
 bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this
 		,const char *_key_id_prefix
-		, const char *_image_filename
-		,const char *_json_filename
-		, const char *_extra_json_filename
+		,const char *_ase_json_filename
 );
-SpriteKeyFrame *GetSpriteKeyFrame(SpriteKeyFrameManager *_this,const char *_skf_id);
+SpriteKeyFrame *SpriteKeyFrameManager_GetSpriteKeyFrame(SpriteKeyFrameManager *_this,const char *_skf_id);
 
 void SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this);
 

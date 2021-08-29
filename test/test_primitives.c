@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 
 	Graphics_SetBackgroundColor(Color4f_FromHex(0xFF));
 
-	Geometry *geometry=Geometry_NewQuad(GEOMETRY_TEXTURE);
+	Geometry *geometry=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
 	Appearance *appearance=Appearance_New();
 
 	do{

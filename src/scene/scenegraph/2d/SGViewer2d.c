@@ -35,7 +35,7 @@ void SGViewer2d_SetDimensions(SGViewer2d *_this,uint16_t width, uint16_t height)
 	SGViewer2dData * data= _this->data;
 	if(!(data->width == width && data->height == height)){
 		// project dimensions
-		Vector3f p=ViewPort_ScreenToWorldDim2i(width>>1,height>>1);
+		Vector3f p=ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
 
 		// setup vertexs...
 		float vertexs[N_VERTEX_QUAD*VERTEX_COORDS_LEN]={

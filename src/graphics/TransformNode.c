@@ -77,7 +77,7 @@ bool IsParentNodeRoot(TransformNode *_this){
 
 void SetPosition2i(TransformNode *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	Vector3f v=ViewPort_ScreenToWorldDim2i(x,y);
+	Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
 	Transform_SetPosition2i(data->transform_local,v.x,v.y);
 }
 

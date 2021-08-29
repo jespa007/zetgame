@@ -6,18 +6,17 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
-	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New();
+	TextureManager *texture_manager = TextureManager_New();
+	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New(texture_manager);
 	SpriteKeyFrame *skf_current=NULL;
 
 	if(SpriteKeyFrameManager_Load(
 			skfm
 			,"mario_small"
-			,"../../../test/data/sprites/mario_small.png"
 			,"../../../test/data/sprites/mario_small.json"
-			,NULL
-			)){
+	)){
 
-		skf_current=GetSpriteKeyFrame(skfm,"mario_small_idle");
+		skf_current=SpriteKeyFrameManager_GetSpriteKeyFrame(skfm,"mario_small_idle");
 	}
 
 
@@ -39,12 +38,6 @@ int main(int argc, char *argv[]){
 
 		}
 
-		/*glBegin(GL_TRIANGLES); // draw something with the texture on
-			glVertex2f(-1,1);
-			glVertex2f(1,-1);
-			glVertex2f(-1,-1);
-	   glEnd();*/
-
 	   Graphics_EndRender();
 
 		Input_Update();
@@ -52,6 +45,7 @@ int main(int argc, char *argv[]){
 
 
 	SpriteKeyFrameManager_Delete(skfm);
+	TextureManager_Delete(texture_manager);
 
 
 	ZetGame_DeInit();

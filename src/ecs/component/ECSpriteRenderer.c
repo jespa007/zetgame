@@ -35,7 +35,7 @@ void ECSpriteRenderer_Setup(void *_this,Entity *_entity){
 	ECMaterial *ec_material=_entity->components[EC_MATERIAL];
 
 	data->appearance=Appearance_New();
-	ec_geometry->geometry=data->geometry=Geometry_NewQuad(GEOMETRY_TEXTURE); // Quad by default ?
+	ec_geometry->geometry=data->geometry=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
 	ec_material->material=data->appearance->material=Material_New(0); // Mat by default ?
 
 	ec_sprite_renderer->data=data;
@@ -50,7 +50,7 @@ void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint
 	ECSpriteRendererData * data= _this->data;
 	if(!(data->width == width && data->height == height)){
 		// project dimensions
-		Vector3f p=ViewPort_ScreenToWorldDim2i(width>>1,height>>1);
+		Vector3f p=ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
 
 		// setup vertexs...
 		float vertexs[N_VERTEX_QUAD*VERTEX_COORDS_LEN]={

@@ -35,12 +35,12 @@ TTFont * 		TTFontManager_GetEmbeddedFont(void){
 	return g_font_embedded;
 }
 
-void	* TTFontManager_OnDeleteNode(MapStringNode *node){
+void	 TTFontManager_OnDeleteNode(MapStringNode *node){
 	TTFont * font = node->val;
 	if(font!=NULL){
 		TTFont_Delete(font);
 	}
-	return NULL;
+
 }
 
 

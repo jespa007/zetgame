@@ -221,7 +221,7 @@ float ViewPort_ScreenToWorldHeight(int h){
 	return 2*(h)*(g_viewport_vars->current_viewport.one_over_height);
 }
 
-Vector3f ViewPort_ScreenToWorldDim2i(int width, int height){
+Vector3f ViewPort_ScreenToWorldDimension2i(int width, int height){
 	Vector3f v3d=(Vector3f){
 		.x=ViewPort_ScreenToWorldWidth(width)
 		,.y=ViewPort_ScreenToWorldHeight(height)

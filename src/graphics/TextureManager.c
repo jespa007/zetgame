@@ -19,12 +19,11 @@ Texture * 	TextureManager_GetDefaultTexture(void){
 	return g_default_texture;
 }
 
-void	* TextureManager_OnDeleteNode(MapStringNode *node){
+void	TextureManager_OnDeleteNode(MapStringNode *node){
 	Texture * texture = node->val;
 	if(texture!=NULL){
 		Texture_Delete(texture);
 	}
-	return NULL;
 }
 
 void	 	TextureManager_DeInit(){
@@ -79,6 +78,7 @@ Texture * 		TextureManager_Get(TextureManager *_this,const char * _filename){
 	sprintf(id,"%s",texture_file_to_lower);
 	free(texture_file_to_lower);
 
+	// if texture not set yet, try to load
 	if((texture=MapString_GetValue(data->textures,id,NULL)) == NULL){
 		char filename[PATH_MAX]={0};
 

@@ -1,23 +1,40 @@
 #include "zg_tilemap.h"
 
-#include "TilemapResource.c"
 
 typedef struct{
-	MapString 	* 	tilemaps;	// it saves its layers
-	List 		* 	tilemap_resources; // it contains a list of tilemaps and texture
+	MapString 			* 	tilemaps;	// it saves its layers
+	TextureManager   	*   texture_manager;
 }TilemapManagerData;
 
 
+void TilemapManager_OnDeleteTilemap(MapStringNode *node){
+	Tilemap *tm=(Tilemap *)node->val;
+
+	if(tm != NULL){
+		Tilemap_Delete(tm);
+	}
+
+
+}
+void TilemapManager_OnDeleteTexture(MapStringNode *node){
+	Texture *texture=(Texture *)node->val;
+
+	if(texture != NULL){
+		Texture_Delete(texture);
+	}
+
+}
+
+
 // MEMBERS
-TilemapManager *TilemapManager_New(void){
+TilemapManager *TilemapManager_New(TextureManager	* _texture_manager){
 	TilemapManager *tmm=NEW(TilemapManager);
 	TilemapManagerData *data=NEW(TilemapManagerData);
 
-	data->sprite_keyframes = MapString_New();//new std::map<std::string,TTFont *>();
+	data->tilemaps = MapString_New();//new std::map<std::string,TTFont *>();
+	data->texture_manager = _texture_manager;
 
-	data->tilemap_resources= List_New();
-	//data->sprite_keyframes->on_delete=TilemapManager_OnDeleteNode;
-
+	data->tilemaps->on_delete=TilemapManager_OnDeleteTilemap;
 
 	tmm->data=data;
 
@@ -26,149 +43,176 @@ TilemapManager *TilemapManager_New(void){
 
 bool TilemapManager_LoadFromMemory(
 		TilemapManager *_this
-		,const char *key_id_prefix
-		,uint8_t *buf_texture
-		,size_t buf_texture_len
-		,uint8_t * buf_json
-		,size_t buf_json_len
-		){
+		,const char *_path
+		,uint8_t *_json_buf
+		,size_t _json_buf_len
+	){
 
+	short *tiles=NULL;
+	char filename[MAX_PATH]={0};
+	bool ok=false;
+
+	Texture *texture;
 	TilemapManagerData *data=_this->data;
 
-	// 1. read & parse json
-	if(key_id_prefix == NULL){
-		Log_Error("key_id_prefix id NULL");
+	// first read tilesets...
+	cJSON * root = cJSON_ParseWithLength((char *)_json_buf,_json_buf_len);
+	cJSON *layers,*layer,*width,*height,*tilesets,*tileset;
+	cJSON *tile,*tilemap_data,*layer_name,*tilemap_width,*tilemap_height,*x,*y;
+	cJSON *firstgid,*image,*margin,*tilecount,*tilewidth,*tileheight;
+
+	cJSONAttribute tilemap_attr[]={
+			 {"layers",&layers}
+			,{"tilewidth",&tilewidth}
+			,{"tileheight",&tileheight}
+			,{"width",&width}
+			,{"height",&height}
+			,{"tilesets",&tilesets}
+	};
+
+
+
+	cJSONAttribute layer_attr[]={
+			{"data",&tilemap_data}
+			,{"name",&layer_name}
+			,{"width",&tilemap_width}
+			,{"height",&tilemap_height}
+
+			,{"x",&x}
+			,{"y",&y}
+	};
+
+	cJSONAttribute tileset_attr[]={
+			{"firstgid",&firstgid}
+			,{"image",&image}
+			,{"margin",&margin}
+			,{"tilecount",&tilecount}
+			,{"tilewidth",&tilewidth}
+			,{"tileheight",&tileheight}
+	};
+
+	for(unsigned i=0; i < ARRAY_SIZE(tilemap_attr); i++){
+		if((*tilemap_attr[i].value = cJSON_GetObjectItem(root,tilemap_attr[i].name))== NULL){
+			Log_Error("JsonParse: Cannot get '%s'",tilemap_attr[i].name);
+			return false;
+		}
+	}
+
+	size_t tileset_data_len=cJSON_GetArraySize(tilesets);
+
+	if(tileset_data_len == 0){
+		Log_Error("JsonParse: there's no tilesets");
 		return false;
 	}
 
-	if(buf_texture && buf_json && buf_texture_len && buf_json_len){
+	cJSON_ArrayForEach(layer, layers) {
 
-		cJSON * root = cJSON_ParseWithLength((char *)buf_json,buf_json_len);
-		cJSON * layers = cJSON_GetObjectItem(root,"layers");
+		bool tileset_found=false;
 
-		if(layers == NULL){
-			Log_Error("JsonParse '%s' : Cannot get 'layers' identifier in json",key_id_prefix);
+		for(unsigned i=0; i < ARRAY_SIZE(tilemap_attr); i++){
+			if((*layer_attr[i].value = cJSON_GetObjectItem(layer,layer_attr[i].name)) == NULL){
+				Log_Error("JsonParse: Cannot get '%s' in 'layer'",layer_attr[i].name);
+				return false;
+			}
+		}
+
+		if(MapString_GetValue(data->tilemaps,layer_name->valuestring,NULL)!=NULL){
+			Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
+			continue;
+		}
+
+		size_t tilemap_data_len=cJSON_GetArraySize(tilemap_data);
+		size_t tilemap_dim= tilemap_width->valueint*tilemap_height->valueint;
+
+		if(tilemap_data_len == 0){
+			Log_Warning("JsonParse: empty tilemap");
+			continue;
+		}
+
+		if(tilemap_data_len != tilemap_dim){
+			Log_Error("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
 			return false;
 		}
 
-		// everything ok, so we can proceed with loading
-		Texture *texture=Texture_NewFromMemory(buf_texture,buf_texture_len);
-		if(texture){
-			// create sprite frame packs and add to list/map
-			TilemapPack *skp=TilemapPack_New(cJSON_GetArraySize(layers),texture);
-			List_Add(data->tilemap_resources,skp);
+		tile=cJSON_GetArrayItem(tilemap_data,0);
 
-			char sprite_keyframe_key[150];
-
-			skp->texture=texture;
-
-
-			cJSON *layer = NULL;
-			cJSON *layer_element = NULL;
-			Log_Info("Loading '%s': %i layers detected",key_id_prefix,skp->sprite_keyframes_len);
-			unsigned i=0;
-
-			cJSON_ArrayForEach(layer, layers) {
-			    /* Each element is an object with unknown field(s) */
-				layer_element = cJSON_GetObjectItem(layer,"name");
-
-				if(layer_element == NULL){
-					Log_Error("JsonParse '%s': Cannot get 'name' attribute in 'layers'",key_id_prefix);
+		// search tileset...
+		cJSON_ArrayForEach(tileset, tilesets) {
+			for(unsigned i=0; i < ARRAY_SIZE(tileset_attr); i++){
+				if((*tileset_attr[i].value = cJSON_GetObjectItem(tileset,tileset_attr[i].name))== NULL){
+					Log_Error("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
 					return false;
 				}
-
-				sprintf(sprite_keyframe_key,"%s_%s",key_id_prefix,layer_element->valuestring);
-
-				if(strlen(layer_element->valuestring) >= MAX_SPRITE_KEYFRAME_NAME){
-					Log_Error("JsonParse '%s' name '%s': length is greater that %i",key_id_prefix,layer_element->valuestring,MAX_SPRITE_KEYFRAME_NAME);
-					return false;
-				}
-
-				skp->sprite_keyframes[i].texture=skp->texture;
-				strcpy(skp->sprite_keyframes[i].name,layer_element->valuestring);
-
-				MapString_SetValue(data->sprite_keyframes,sprite_keyframe_key,&skp->sprite_keyframes[i]);
-
-				i++;
-
-			  }
-
-			// try to get the frames...
-
-
-			/*cJSON_ArrayForEach(frame, frames) {
-			    // Each element is an object with unknown field(s)
-
-			    cJSON *elem;
-			    cJSON_ArrayForEach(elem, frame) {
-
-			      //printf("Found key '%s', set to %d\n", elem->string, elem->valueint);
-			    }
-
-
-			  }*/
-
-			// print load status
-			for(unsigned i=0; i < skp->sprite_keyframes_len; i++){
-				char key_string[150];
-				cJSON *frame_element = NULL;
-				unsigned nframes=0;
-				for(;;){ // get total frames
-					sprintf(key_string,"%s (%s) %i.ase",key_id_prefix,skp->sprite_keyframes[i].name,nframes);
-					frame_element = cJSON_GetObjectItem(frames,key_string);
-					if(frame_element==NULL){
-						break;
-					}
-					nframes++;
-				}
-
-				skp->sprite_keyframes[i].frames_len=nframes;
-				skp->sprite_keyframes[i].frames=malloc(sizeof(TilemapInfo)*nframes);
-
-				for(unsigned nframe=0; nframe < nframes; nframe++){ // get total frames
-					cJSON *frame_property = NULL;
-					cJSON *duration_property=NULL;
-					cJSON *frame_element_property=NULL;
-
-					sprintf(key_string,"%s (%s) %i.ase",key_id_prefix,skp->sprite_keyframes[i].name,nframe);
-					frame_element = cJSON_GetObjectItem(frames,key_string);
-
-					// load stuff here
-					frame_property = cJSON_GetObjectItem(frame_element,"frame");
-					duration_property = cJSON_GetObjectItem(frame_element,"duration");
-
-					if(frame_property && duration_property){
-						if((frame_element_property=cJSON_GetObjectItem(frame_property,"x"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.u1=frame_element_property->valuedouble/texture->width;
-						}
-						if((frame_element_property=cJSON_GetObjectItem(frame_property,"y"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.v1=frame_element_property->valuedouble/texture->height;
-						}
-						if((frame_element_property=cJSON_GetObjectItem(frame_property,"w"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.u2=skp->sprite_keyframes[i].frames->frame.u1+frame_element_property->valuedouble/texture->width;
-						}
-						if((frame_element_property=cJSON_GetObjectItem(frame_property,"h"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.v2=skp->sprite_keyframes[i].frames->frame.v1+frame_element_property->valuedouble/texture->height;
-						}
-
-						skp->sprite_keyframes[i].frames[nframe].duration=duration_property->valueint;
-					}
-
-
-				}
-
-				Log_Info("'%s': %i frames",skp->sprite_keyframes[i].name ,skp->sprite_keyframes[i].frames_len);
-
-
 			}
 
-			//Tilemap *skf=Tilemap_New(texture);
-			return true;
+			if(firstgid->valueint <= tile->valueint && (tile->valueint < (tilecount->valueint))){
+				tileset_found=true;
+				break;
+			}
 
+		}
+
+		if(tileset_found == false){
+			Log_Error("JsonParse layer '%s': tileset not found",layer_name->valuestring);
+			return false;
+		}
+
+		if(tileset_found == false){
+			Log_Error("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
+			return false;
+		}
+
+
+		tiles=malloc(sizeof(short)*tilemap_data_len);
+		int idx_tile=0;
+
+
+		cJSON_ArrayForEach(tile, tilemap_data) {
+			short idx_tile_block=tile->valueint;
+			// check tile and
+			if(firstgid->valueint <= idx_tile_block && idx_tile_block <= tilecount->valueint){
+				*(tiles+idx_tile)=idx_tile_block;
+			}else{
+				Log_Error("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
+						,layer_name->valuestring
+						,idx_tile_block
+						,firstgid->valueint
+						,tilecount->valueint);
+				goto tmm_load_error;
+			}
+
+			idx_tile++;
+		}
+
+		//
+
+		//if(texture == NULL){
+		sprintf(filename,"%s/%s",_path,image->valuestring);
+		if((texture=TextureManager_Get(data->texture_manager,filename)) == NULL){
+			goto tmm_load_error;
+		}
+
+		// load texture...
+		Tilemap *tm=Tilemap_New(
+				tiles
+				,tilemap_width->valueint
+				, tilemap_height->valueint
+				, tilewidth->valueint
+				, tileheight->valueint
+				, texture);
+
+		if(tm != NULL){
+			MapString_SetValue(data->tilemaps,layer_name->valuestring,tm);
+			ok=true;
 		}
 	}
 
-	return false;
+
+tmm_load_error:
+
+	if(tiles) free(tiles);
+
+	return ok;
 
 }
 
@@ -179,59 +223,41 @@ bool TilemapManager_LoadFromMemory(
  * @_json_filename: Json file generated by Aseprite
  * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
  */
-bool TilemapManager_Load(TilemapManager *_this,const char *_key_id_prefix, const char *_image_filename,const char *_json_filename, const char *_extra_json_filename){
-	//UNUSUED_PARAM(_extra_json);
+bool TilemapManager_Load(TilemapManager *_this,const char *_json_tmx_file){
 
-	BufferByte *img_buffer=NULL, *json_buffer=NULL, *extra_buffer=NULL;bool ok=false;
+	BufferByte *_json_buf=NULL;bool ok=false;
+	char *_path=NULL;
 
-	/*if(File_Exists(_texture_filename) == false){
-		Log_Error("Cannot load sprite key frame. File '%s' not exist",_texture_filename);
-		return false;
+
+	if((_json_buf=File_Read(_json_tmx_file))!=NULL){
+		ok=TilemapManager_LoadFromMemory(
+				_this
+				,_path=Path_GetDirectoryName(_json_tmx_file)
+				,_json_buf->ptr
+				,_json_buf->len
+		);
 	}
 
-	if(File_Exists(_json_filename) == false){
-		Log_Error("Cannot load sprite key frame. File '%s' not exist",_json_filename);
-		return false;
-	}
 
-	;*/
-
-	if((img_buffer=File_Read(_image_filename))!=NULL){
-		if((json_buffer=File_Read(_json_filename))!=NULL){
-			ok=TilemapManager_LoadFromMemory(
-					_this
-					,_key_id_prefix
-					,img_buffer->ptr
-					,img_buffer->len
-					,json_buffer->ptr
-					,json_buffer->len
-			);
-		}
-	}
-
-	if(img_buffer) BufferByte_Delete(img_buffer);
-	if(json_buffer) BufferByte_Delete(json_buffer);
+	if(_json_buf) BufferByte_Delete(_json_buf);
+	if(_path) free(_path);
 
 
 	return ok;
 }
 
-Tilemap *GetTilemap(TilemapManager *_this, const char *key){
+Tilemap *TilemapManager_GetTilemap(TilemapManager *_this, const char *key){
 	TilemapManagerData *data=_this->data;
 
-	return MapString_GetValue(data->sprite_keyframes,key,NULL);
+	return MapString_GetValue(data->tilemaps,key,NULL);
 }
 
 void  TilemapManager_Delete(TilemapManager *_this){
 	TilemapManagerData 	*data=_this->data;
 
-	for(unsigned i=0; i < data->tilemap_resources->count;i++){
-		TilemapPack_Delete(data->tilemap_resources->items[i]);
-	}
+	MapString_Delete(data->tilemaps);
+	//MapString_Delete(data->textures);
 
-
-	List_Delete(data->tilemap_resources);
-	MapString_Delete(data->sprite_keyframes);
 	FREE(data);
 	FREE(_this);
 }

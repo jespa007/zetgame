@@ -15,7 +15,7 @@ struct MapStringNode{
 struct MapString{
 	uint16_t count;
 	MapStringNode **list;
-	void * (* on_delete)(MapStringNode *node);
+	void  (* on_delete)(MapStringNode *node);
 };
 
 MapString * MapString_New(void);

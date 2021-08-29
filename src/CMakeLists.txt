@@ -311,6 +311,9 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 
 	#-- Sprite --
 	sprite/zg_sprite.c
+
+	#-- Tilemap --
+	tilemap/zg_tilemap.c
 	
 	#-- Core --
 	ZetGame.c		
@@ -388,3 +391,8 @@ add_executable(test_sprite${POST_NAME}
 
 target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
+add_executable(test_tilemap${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
+)
+
+target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )

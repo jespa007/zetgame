@@ -6,7 +6,7 @@ static Geometry * g_geometry_default=NULL;
 
 Geometry	* Geometry_Default(void){
 	if(g_geometry_default == NULL){
-		g_geometry_default=Geometry_NewQuad(GEOMETRY_TEXTURE);
+		g_geometry_default=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
 	}
 
 	return g_geometry_default;
@@ -41,7 +41,7 @@ Geometry	* Geometry_NewQuad(uint32_t properties){
 
 	Geometry *geometry=NULL;
 
-	short indices[N_INDICES(N_VERTEX_QUAD)]={
+	short indices[GEOMETRY_INDICES_FROM_N_VERTEXS(N_VERTEX_QUAD)]={
 			0,1,2,
 			0,2,3
 	};
@@ -65,11 +65,11 @@ Geometry	* Geometry_NewQuad(uint32_t properties){
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indices,N_INDICES(N_VERTEX_QUAD));
+		Geometry_SetIndices(geometry,indices,GEOMETRY_INDICES_FROM_N_VERTEXS(N_VERTEX_QUAD));
 
 		Geometry_SetMeshVertex(geometry,mesh_vertex,N_VERTEX_QUAD*VERTEX_COORDS_LEN);
 
-		if(properties & GEOMETRY_TEXTURE){
+		if(properties & GEOMETRY_PROPERTY_TEXTURE){
 			Geometry_SetMeshTexture(geometry,mesh_texture_coords,N_VERTEX_QUAD*TEXTURE_COORDS_LEN);
 		}
 	}

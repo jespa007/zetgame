@@ -47,6 +47,11 @@ typedef struct {
 	void 				* user_data;
 }Callback;
 
+typedef struct{
+	const char *name;
+	cJSON **value;
+}cJSONAttribute;
+
 
 #define 	IS_POW2(x)   		(!(bool)((x) & ((x)-1)))
 #define 	UNUSUED_PARAM(x) 	((void)(x))

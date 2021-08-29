@@ -90,7 +90,7 @@
 #include 	"zetnet.h"
 
 
-#include	"defines.h"
+#include	"common.h"
 #include	"zg_memory.h"
 #include	"util-fmemopen.h"
 #include	"gl/glextra.h"

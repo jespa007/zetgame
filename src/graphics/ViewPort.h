@@ -43,7 +43,7 @@ uint16_t ViewPort_CurrentHeight(void);
 
 float 		ViewPort_ScreenToWorldWidth(int width);
 float 		ViewPort_ScreenToWorldHeight(int  height);
-Vector3f 	ViewPort_ScreenToWorldDim2i(int width, int height);
+Vector3f 	ViewPort_ScreenToWorldDimension2i(int width, int height);
 
 Vector3f ViewPort_GetProjectionOrigin(void);
 

@@ -141,8 +141,8 @@ void TTFont_GL_RenderText(TTFont *font,float x3d, float y3d, Color4f color, cons
 		//Vector2i p1_2d=Vector2i_New(ch->bearing.x	,font->ascender - ch->size.y);
 		//Vector2i p2_2d=Vector2i_New(ch->size.x	,font->ascender);
 
-		Vector3f p1_3d=ViewPort_ScreenToWorldDim2i(ch->bearing.x,font->ascender - ch->size.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDim2i(ch->size.x,font->ascender);
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,font->ascender - ch->size.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,font->ascender);
 
 		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch_data->texture);
