@@ -3,8 +3,8 @@
 
 void ECTexture_Setup(void *_this, Entity *_entity){
 	ECTexture *ec_texture=_this;
-	ec_texture->entity=_entity;
-	ec_texture->id=EC_TEXTURE;
+	ec_texture->header.entity=_entity;
+	ec_texture->header.id=EC_TEXTURE;
 	_entity->components[EC_TEXTURE]=_this;
 
 

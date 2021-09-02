@@ -178,7 +178,7 @@ int main(int argc, char * argv[]){
 	memset(&setup,0,sizeof(setup));
 	setup.width=640;
 	setup.height=480;
-	//setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
+	setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
 
 
 	ZetGame_Init(&setup);

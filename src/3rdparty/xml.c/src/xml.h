@@ -27,6 +27,15 @@
 /**
  * Includes
  */
+#ifdef XML_PARSER_VERBOSE
+#include <alloca.h>
+#endif
+
+#include <ctype.h>
+#include <malloc.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>

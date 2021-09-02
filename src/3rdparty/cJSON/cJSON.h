@@ -23,6 +23,18 @@
 #ifndef cJSON__h
 #define cJSON__h
 
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <ctype.h>
+#include <float.h>
+
+#ifdef ENABLE_LOCALES
+#include <locale.h>
+#endif
+
 #ifdef __cplusplus
 extern "C"
 {

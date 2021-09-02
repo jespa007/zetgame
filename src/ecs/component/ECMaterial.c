@@ -3,8 +3,8 @@
 
 void ECMaterial_Setup(void *_this, Entity *_entity){
 	ECMaterial *ec_material=_this;
-	ec_material->entity=_entity;
-	ec_material->id=EC_MATERIAL;
+	ec_material->header.entity=_entity;
+	ec_material->header.id=EC_MATERIAL;
 	_entity->components[EC_MATERIAL]=_this;
 
 

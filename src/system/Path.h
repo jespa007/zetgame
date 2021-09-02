@@ -1,6 +1,10 @@
 #ifndef __PATH_H__
 #define __PATH_H__
 
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
+
 /**
  * It returns the temp path
  */

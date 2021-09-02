@@ -70,6 +70,11 @@
 // xmp is build as static so we have to define BUILDING_STATIC
 #include 	<xmp.h>
 
+#include "3rdparty/gifdec/gifdec.h"
+#include "3rdparty/cJSON/cJSON.h"
+#include "3rdparty/xml.c/src/xml.h"
+#include "3rdparty/lodepng/lodepng.h"
+
 //----------------------------------------
 // system
 
@@ -77,10 +82,6 @@
 #include "memmgr.h"
 #endif
 
-#include "3rdparty/gifdec/gifdec.h"
-#include "3rdparty/cJSON/cJSON.h"
-#include "3rdparty/xml.c/src/xml.h"
-#include "3rdparty/lodepng/lodepng.h"
 #include "jpeg/jpeg.h"
 #include "sdl/zg_sdl.h"
 

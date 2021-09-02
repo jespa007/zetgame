@@ -18,8 +18,8 @@ EComponentList ECTransformAnimation_RequiredComponents(void){
 
 void	ECTransformAnimation_Setup(void *_this, Entity *_entity){
 	ECTransformAnimation *ec_transform_animation=_this;
-	ec_transform_animation->entity=_entity;
-	ec_transform_animation->id=EC_TRANSFORM_ANIMATION;
+	ec_transform_animation->header.entity=_entity;
+	ec_transform_animation->header.id=EC_TRANSFORM_ANIMATION;
 	_entity->components[EC_TRANSFORM_ANIMATION]=_this;
 
 
@@ -62,7 +62,7 @@ void 	ECTransformAnimation_Update(void *_this){
 	ECTransformAnimationData *data=ec_transform_animation->data;
 
 	if(Animation_Update(data->ani_transform,SDL_GetTicks())){ // let animation do the move...
-		ECTransform *ec_transform=ec_transform_animation->entity->components[EC_TRANSFORM];
+		ECTransform *ec_transform=ec_transform_animation->header.entity->components[EC_TRANSFORM];
 		if(ec_transform != NULL){
 			Transform *local=ECTransform_GetTransform(ec_transform,EC_TRANSFORM_TYPE_LOCAL);
 			Animation_CopyChannelValues(data->ani_transform,&local->translate.x);

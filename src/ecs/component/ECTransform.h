@@ -16,9 +16,9 @@ typedef enum{
 }ECTransformType;
 
 struct ECTransform{
-	EComponentHeader;
-	Transform 		transform; // world coordinates
-	void 			*data;
+	EComponentHeader 	header;
+	Transform			transform; // world coordinates
+	void 				*data;
 };
 
 void			ECTransform_Setup(void *_this, Entity *_entity);

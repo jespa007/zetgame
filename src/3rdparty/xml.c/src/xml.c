@@ -20,16 +20,7 @@
  *
  *  3. This notice may not be removed or altered from any source distribution.
  */
-#ifdef XML_PARSER_VERBOSE
-#include <alloca.h>
-#endif
 
-#include <ctype.h>
-#include <malloc.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "xml.h"
 
 
@@ -89,8 +80,8 @@ struct xml_document {
  */
 struct xml_parser {
 	uint8_t* buffer;
-	size_t position;
-	size_t length;
+	long position;
+	long length;
 };
 
 /**
@@ -259,7 +250,7 @@ static void xml_parser_error(struct xml_parser* parser, enum xml_parser_offset o
  * exist
  */
 static uint8_t xml_parser_peek(struct xml_parser* parser, size_t n) {
-	size_t position = parser->position;
+	long position = parser->position;
 
 	while (position < parser->length) {
 		if (!isspace(parser->buffer[position])) {
@@ -348,8 +339,8 @@ static void xml_skip_whitespace(struct xml_parser* parser) {
  */
 static struct xml_string* xml_parse_tag_end(struct xml_parser* parser) {
 	xml_parser_info(parser, "tag_end");
-	size_t start = parser->position;
-	size_t length = 0;
+	long start = parser->position;
+	long length = 0;
 
 	/* Parse until `>' or a whitespace is reached
 	 */
@@ -466,8 +457,8 @@ static struct xml_string* xml_parse_content(struct xml_parser* parser) {
 	 */
 	xml_skip_whitespace(parser);
 
-	size_t start = parser->position;
-	size_t length = 0;
+	long start = parser->position;
+	long length = 0;
 
 	/* Consume until `<' is reached
 	 */

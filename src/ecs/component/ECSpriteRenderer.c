@@ -25,8 +25,8 @@ EComponentList ECSpriteRenderer_RequiredComponents(void){
 
 void ECSpriteRenderer_Setup(void *_this,Entity *_entity){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
-	ec_sprite_renderer->entity=_entity;
-	ec_sprite_renderer->id=EC_SPRITE_RENDERER;
+	ec_sprite_renderer->header.entity=_entity;
+	ec_sprite_renderer->header.id=EC_SPRITE_RENDERER;
 	_entity->components[EC_SPRITE_RENDERER]=_this;
 
 	ECSpriteRendererData *data=NEW(ECSpriteRendererData);
@@ -90,8 +90,8 @@ void ECSpriteRenderer_Update(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 	ECSpriteRendererData * data= ec_sprite_renderer->data;
 	Transform *transform = NULL;
-	ECTransform *ec_transform=ec_sprite_renderer->entity->components[EC_TRANSFORM];
-	ECTexture *ec_texture=ec_sprite_renderer->entity->components[EC_TEXTURE];
+	ECTransform *ec_transform=ec_sprite_renderer->header.entity->components[EC_TRANSFORM];
+	ECTexture *ec_texture=ec_sprite_renderer->header.entity->components[EC_TEXTURE];
 	if(ec_transform){
 		transform=&ec_transform->transform;
 	}

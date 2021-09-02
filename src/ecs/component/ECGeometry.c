@@ -3,8 +3,8 @@
 
 void ECGeometry_Setup(void *_this, Entity *_entity){
 	ECGeometry *ec_geometry = _this;
-	ec_geometry->entity=_entity;
-	ec_geometry->id=EC_GEOMETRY;
+	ec_geometry->header.entity=_entity;
+	ec_geometry->header.id=EC_GEOMETRY;
 	_entity->components[EC_GEOMETRY]=_this;
 
 	ec_geometry->geometry=NULL;//Geometry_New();

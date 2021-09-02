@@ -19,8 +19,8 @@ EComponentList ECMaterialAnimation_RequiredComponents(void){
 
 void	ECMaterialAnimation_Setup(void *_this, Entity *_entity){
 	ECMaterialAnimation *ec_material_animation =_this;
-	ec_material_animation->entity=_entity;
-	ec_material_animation->id=EC_MATERIAL_ANIMATION;
+	ec_material_animation->header.entity=_entity;
+	ec_material_animation->header.id=EC_MATERIAL_ANIMATION;
 	_entity->components[EC_MATERIAL_ANIMATION]=_this;
 
 	ECMaterialAnimationData *data=NEW(ECMaterialAnimationData);
@@ -31,7 +31,7 @@ void	ECMaterialAnimation_Setup(void *_this, Entity *_entity){
 
 void	ECMaterialAnimation_Init(void *_this,Entity *_entity){
 	ECMaterialAnimation *ec_material_animation=_this;
-	ec_material_animation->entity=_entity;
+	ec_material_animation->header.entity=_entity;
 }
 
 void			ECMaterialAnimation_StartAction(void *_this, Action *action, int repeat){
@@ -49,7 +49,7 @@ void 	ECMaterialAnimation_Update(void *_this){
 	ECMaterialAnimationData *data=ec_material_animation->data;
 
 	if(Animation_Update(data->ani_material,SDL_GetTicks())){ // let animation do the move...
-		ECMaterial *ec_material=ec_material_animation->entity->components[EC_MATERIAL];
+		ECMaterial *ec_material=ec_material_animation->header.entity->components[EC_MATERIAL];
 		if(ec_material != NULL){
 			Animation_CopyChannelValues(data->ani_material,&ec_material->material->color.r);
 		}

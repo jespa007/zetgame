@@ -37,17 +37,7 @@
 #pragma warning (disable : 4001)
 #endif
 
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <ctype.h>
-#include <float.h>
 
-#ifdef ENABLE_LOCALES
-#include <locale.h>
-#endif
 
 #if defined(_MSC_VER)
 #pragma warning (pop)

@@ -104,7 +104,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 				${PROJECT_SOURCE_DIR}/../../memmgr
 			)
 		
-	   		set(ZETSCRIPT_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.cpp)
+	   		set(ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
 	   	else()
 	   		message("-- Memmanager: OFF (../../memmgr not exist)")
 	   	endif()
@@ -306,14 +306,14 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- Gui --
 	gui/zg_gui.c
 	
-	#-- ECS --
-	ecs/zg_ecs.c
-
 	#-- Sprite --
 	sprite/zg_sprite.c
 
 	#-- Tilemap --
 	tilemap/zg_tilemap.c
+	
+	#-- ECS --
+	ecs/zg_ecs.c
 	
 	#-- Core --
 	ZetGame.c		
