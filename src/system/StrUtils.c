@@ -267,7 +267,7 @@ bool StrUtils_EndsWith(const char * str, const char * end_str){
 	size_t len_str=strlen(str);
 	size_t len_end_str=strlen(end_str);
 	if(len_end_str<=len_str){
-		return strcmp(str-len_end_str,end_str)==0;
+		return strcmp(str+len_str-len_end_str,end_str)==0;
 	}
 
 	return false;
