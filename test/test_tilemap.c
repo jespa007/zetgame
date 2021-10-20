@@ -12,10 +12,10 @@ int main(int argc, char *argv[]){
 
 	if(TilemapManager_Load(
 			tilemap_manager
-			,"../../../test/data/tilemap/mario.json"
+			,"../../../test/data/tilemap/mario3_world1.json"
 		)){
 
-		tilemap=TilemapManager_GetTilemap(tilemap_manager,"world_1_1");
+		tilemap=TilemapManager_GetTilemap(tilemap_manager,"mario3_world1");
 	}
 
 	do{
