@@ -151,6 +151,10 @@ bool Graphics_Init(
 		break;
 	}
 
+	// select 2d model view as default...
+	Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
+
+
 	// init gl vars
 	g_graphics_vars->geometry_quad_default=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
 

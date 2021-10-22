@@ -167,6 +167,7 @@ bool TilemapManager_LoadFromMemory(
 		int idx_tile=0;
 
 
+		// load the array of tile array
 		cJSON_ArrayForEach(tile, tilemap_data) {
 			short idx_tile_block=tile->valueint;
 			// check tile and
@@ -184,9 +185,6 @@ bool TilemapManager_LoadFromMemory(
 			idx_tile++;
 		}
 
-		//
-
-		//if(texture == NULL){
 		sprintf(filename,"%s/%s",_path,image->valuestring);
 		if((texture=TextureManager_Get(data->texture_manager,filename)) == NULL){
 			goto tmm_load_error;

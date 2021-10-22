@@ -136,14 +136,14 @@ bool Texture_GL_ReBuildTexture(Texture * text,GLvoid *_pixels, uint16_t _width, 
 	return true;
 }
 
-int	Texture_GL_GetHandle(Texture * text){
-	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
+int	Texture_GL_GetHandle(Texture * _this){
+	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
 	return texture_data->texture;
 }
 
-void	Texture_GL_SetRepeatUV(Texture * text, bool _repeat_uv){
+void	Texture_GL_SetRepeatUV(Texture * _this, bool _repeat_uv){
 
-	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
+	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
 	glBindTexture( GL_TEXTURE_2D,  texture_data->texture);
 
 	GLuint clamp_method=GL_CLAMP_TO_BORDER;
@@ -154,6 +154,25 @@ void	Texture_GL_SetRepeatUV(Texture * text, bool _repeat_uv){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp_method);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp_method);
 
+}
+
+void		Texture_GL_SetFilter(Texture *_this, TextureFilter _filter){
+	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
+	glBindTexture( GL_TEXTURE_2D,  texture_data->texture);
+
+
+	switch(_filter){
+	default:
+		break;
+	case TEXTURE_FILTER_LINEAR:
+		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		break;
+	case TEXTURE_FILTER_NEAREST:
+		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+		break;
+	}
 }
 
 

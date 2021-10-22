@@ -77,9 +77,6 @@ bool Graphics_GL_Init(void){
 	glDisable(GL_POINT_SMOOTH);
 	//---- END POINT SPRITES SETUP FOR SYSTEM PARTICLE
 
-	// select 2d model view as default...
-	Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
-
 	return true;
 
 }

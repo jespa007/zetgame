@@ -97,6 +97,16 @@ void 	Texture_SetRepeatUV(Texture *_this, bool repeat_uv){
 
 }
 
+void		Texture_SetFilter(Texture *_this, TextureFilter _filter){
+	switch(Graphics_GetGraphicsApi()){
+	default:
+		break;
+	case GRAPHICS_API_GL:
+		Texture_GL_SetFilter(_this,_filter);
+		break;
+	}
+}
+
 bool 	  Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel){
 
 	if(_this == NULL) return false;

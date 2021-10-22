@@ -9,6 +9,12 @@ typedef enum{
 }TextureType;
 
 
+typedef enum{
+	TEXTURE_FILTER_LINEAR=0,
+	TEXTURE_FILTER_NEAREST
+}TextureFilter;
+
+
 
 typedef struct Texture Texture;
 
@@ -35,7 +41,10 @@ Texture * 	Texture_NewRectangle(uint16_t radius, uint32_t fill_color, uint16_t b
 Texture * 	Texture_NewCross(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 Texture * 	Texture_NewArrow(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 
+
+void		Texture_SetFilter(Texture *_this, TextureFilter _filter);
 void 		Texture_Bind(Texture *_this);
+void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);
 void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);
 int		 	Texture_GetHandle(Texture *_this);
 bool 	  	Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel);
