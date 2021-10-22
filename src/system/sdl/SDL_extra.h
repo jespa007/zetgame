@@ -54,8 +54,10 @@ SDL_Surface * 	SDL_NewArrow(uint16_t dimension, uint32_t fill_color, uint16_t bo
 
 SDL_Surface	* 	SDL_CreateSurfaceFrom(uint16_t w, uint16_t h, uint8_t bytes_per_pixel,uint8_t *pixels);
 SDL_Surface	* 	SDL_ConvertSurfaceExt(SDL_Surface *surface_to_convert, uint32_t properties_format, uint8_t convert_to_bytes_per_pixel);
-SDL_Surface	* 	SDL_LoadFromFile(const char * filename	, uint32_t properties, uint8_t convert_to_bytes_per_pixel);
+SDL_Surface	* 	SDL_LoadImageFromFile(const char * filename	, uint32_t properties, uint8_t convert_to_bytes_per_pixel);
 SDL_Surface	*	SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, uint32_t properties_format, uint8_t convert_to_bytes_per_pixel);
+
+SDL_Surface *	SDL_Crop(SDL_Surface *_src,SDL_Rect _rect);
 
 bool 		 	SDL_SavePNG(const char * filename , SDL_Surface * srf);
 bool			SDL_SaveJPG(const char * filename , SDL_Surface * srf);

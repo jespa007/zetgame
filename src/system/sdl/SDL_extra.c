@@ -56,7 +56,6 @@ SDL_Surface * SDL_LoadJPGFromMemory(const uint8_t *buffer_src, size_t buffer_src
 		free(buffer_dst);
 	}
 
-
 	return srf;
 }
 
@@ -173,7 +172,7 @@ SDL_Surface *SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, u
 	return aux_surf;
 }
 //--------------------------------------------------------------------------------------------------------------------------------
-SDL_Surface	*	SDL_LoadFromFile(const char * filename, uint32_t properties, uint8_t convert_to_bpp) {
+SDL_Surface	*	SDL_LoadImageFromFile(const char * filename, uint32_t properties, uint8_t convert_to_bpp) {
 	BufferByte *buf=FileSystem_ReadFile(filename);
 	SDL_Surface *new_image_surface = NULL;
 	if(!buf){return NULL;}
@@ -604,6 +603,21 @@ void SDL_SetBytesPerPixel(SDL_Surface **srf, uint8_t new_bytes_per_pixel){
 			}
 		}
 	}
+}
+
+SDL_Surface *	SDL_Crop(SDL_Surface *_src_surface,SDL_Rect _src_rect){
+	SDL_Rect dst_rect={0,0,_src_rect.w,_src_rect.h};
+	SDL_Surface *dst_surface=SDL_CreateSurfaceFrom(
+				 _src_rect.w
+				, _src_rect.h
+				,_src_surface->format->BytesPerPixel
+				,NULL // we don't want to copy pixels
+            );
+
+	SDL_BlitSurface(dst_surface, &_src_rect, _src_surface, & dst_rect);
+
+	return dst_surface;
+
 }
 
 
