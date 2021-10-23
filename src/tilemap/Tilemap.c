@@ -13,12 +13,14 @@ typedef struct{
 }TilemapData;
 
 
-Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_width, size_t _tile_height, Texture *_texture){
+Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_width, size_t _tile_height, Texture *_texture,List *_tile_animations){
 	Tilemap *tm=NEW(Tilemap);
 	Geometry *geometry=NULL;
 	//short *tiles=NULL;
 	TilemapData *data=NEW(TilemapData);
 	tm->data=data;
+	tm->tile_animations=_tile_animations;
+
 
 	//tiles=data->tiles=_tiles;
 	//size_t width = _width;
@@ -140,15 +142,60 @@ Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_
 	return tm;
 }
 
+void Tilemap_Update(Tilemap *_this){
+
+	TilemapData *data=_this->data;
+	if(_this->tile_animations != NULL){
+		for(int j=0; j < _this->tile_animations->count; j++){
+
+			TileAnimation *tile_animation=_this->tile_animations->items[j];
+
+			if(tile_animation->time_change_frame < SDL_GetTicks()){ // change frame
+				//data->
+				/*if(animation->frames != NULL){
+					for(int k=0; k < animation->frames->count; k++){
+						TilesetTileAnimatonFrame *frame=animation->frames->items[k];
+					}
+
+				}*/
+
+				// update texture
+				tile_animation->time_change_frame=SDL_GetTicks()+500;
+				tile_animation->current_frame=(tile_animation->current_frame+1)%tile_animation->frames->count;
+
+				TileAnimationFrame *frame=tile_animation->frames->items[tile_animation->current_frame];
+
+				Texture_UpdateFromSurface(data->texture,0,0,frame->image);
+
+			}
+		}
+	}
+}
+
 void Tilemap_Draw(Tilemap *_this){
 	TilemapData *data=_this->data;
 	Texture_Bind(data->texture);
 	Geometry_Draw(data->geometry);
 }
 
-
 void Tilemap_Delete(Tilemap *_this){
 	TilemapData *data=_this->data;
+
+	if(_this->tile_animations != NULL){
+		for(int j=0; j < _this->tile_animations->count; j++){
+			TileAnimation *tile_animation=_this->tile_animations->items[j];
+
+			for(int k=0; k < tile_animation->frames->count; k++){
+				TileAnimationFrame *frame=tile_animation->frames->items[k];
+				SDL_FreeSurface(frame->image);
+				FREE(frame);
+			}
+			List_Delete(tile_animation->frames);
+			FREE(tile_animation);
+
+		}
+		List_Delete(_this->tile_animations);
+	}
 
 	Geometry_Delete(data->geometry);
 

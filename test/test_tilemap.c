@@ -23,6 +23,7 @@ int main(int argc, char *argv[]){
 
 
 		if(tilemap != NULL){
+			Tilemap_Update(tilemap);
 			Tilemap_Draw(tilemap);
 		}
 

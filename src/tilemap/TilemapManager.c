@@ -4,18 +4,11 @@
 typedef struct{
 	MapString 			* 	tilemaps;	// it saves its layers
 	TextureManager   	*   texture_manager;
-	List				* 	tileset_tiles; // array animated_tiles
+
 }TilemapManagerData;
 
-typedef struct{
-	SDL_Surface *image;
-	int			tile_id;
-	int 		duration;
-}TilesetTileAnimaton;
 
-typedef struct{
-	List *animation;
-}TilesetTile;
+
 
 
 void TilemapManager_OnDeleteTilemap(MapStringNode *node){
@@ -71,7 +64,7 @@ bool TilemapManager_LoadFromMemory(
 	cJSON *layers,*layer,*width,*height,*tilesets,*tileset;
 	cJSON *tile,*tilemap_data,*layer_name,*tilemap_width,*tilemap_height,*x,*y;
 	cJSON *firstgid,*image,*margin,*tilecount,*tilewidth,*tileheight,*tilesets_tiles;
-
+	List *tile_animations=NULL;
 
 	cJSONAttribute tilemap_attr[]={
 			 {"layers",&layers}
@@ -217,16 +210,21 @@ bool TilemapManager_LoadFromMemory(
 				goto tmm_load_error;
 			}
 
-			data->tileset_tiles=List_New();
-
 
 			cJSON_ArrayForEach(tilesets_tile, tilesets_tiles) {
 
-				TilesetTile *tileset_tile=NEW(TilesetTile);
-
 				if((tilesets_tile_animations = cJSON_GetObjectItem(tilesets_tile,"animation")) != NULL){
-					size_t tilesets_tiles_animation_len=cJSON_GetArraySize(tilesets_tile_animations);
 
+					if(tile_animations == NULL){
+						tile_animations=List_New();
+					}
+
+					TileAnimation *tile_animation=NEW(TileAnimation);
+					tile_animation->frames=List_New();
+
+					List_Add(tile_animations,tile_animation);
+
+					size_t tilesets_tiles_animation_len=cJSON_GetArraySize(tilesets_tile_animations);
 					// resrve
 					if(tilesets_tiles_animation_len > 0){
 
@@ -241,32 +239,25 @@ bool TilemapManager_LoadFromMemory(
 								continue;
 							}
 
-							TilesetTileAnimaton *tileset_animation=NEW(TilesetTileAnimaton);
+							TileAnimationFrame *tileset_animation_frame=NEW(TileAnimationFrame);
 
-							tileset_animation->duration=tilesets_tile_animation_duration->valueint;
-							tileset_animation->tile_id=tilesets_tile_animation_tileid->valueint;
+							tileset_animation_frame->duration=tilesets_tile_animation_duration->valueint;
+							tileset_animation_frame->tile_id=tilesets_tile_animation_tileid->valueint;
 
 							// get offset uv
-							int tile_y=tileset_animation->tile_id/tilemap_width->valueint;
-							int tile_x=tileset_animation->tile_id%tilemap_width->valueint;
+							int tile_y=tileset_animation_frame->tile_id/tilemap_width->valueint;
+							int tile_x=tileset_animation_frame->tile_id%tilemap_width->valueint;
 
-							tileset_animation->image=SDL_Crop(image,(SDL_Rect){tile_x,tile_y,tilemap_width->valueint,tilemap_height->valueint});
+							tileset_animation_frame->image=SDL_Crop(image,(SDL_Rect){tile_x,tile_y,tilemap_width->valueint,tilemap_height->valueint});
 
-							Log_Info("Loaded tile: %i duration: %i OK",tileset_animation->tile_id,tileset_animation->duration);
+							Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
 
-							if(tileset_tile->animation==NULL){
-								tileset_tile->animation=List_New();
-							}
+							List_Add(tile_animation->frames,tileset_animation_frame);
 
-							List_Add(tileset_tile->animation,tileset_animation);
 
 						}
 					}
-
-					List_Add(data->tileset_tiles,tileset_tile);
-
 				}
-
 			}
 
 			SDL_FreeSurface(image);
@@ -279,7 +270,8 @@ bool TilemapManager_LoadFromMemory(
 				, tilemap_height->valueint
 				, tilewidth->valueint
 				, tileheight->valueint
-				, texture);
+				, texture
+				,tile_animations);
 
 		if(tm != NULL){
 			MapString_SetValue(data->tilemaps,layer_name->valuestring,tm);
@@ -332,27 +324,10 @@ Tilemap *TilemapManager_GetTilemap(TilemapManager *_this, const char *key){
 	return MapString_GetValue(data->tilemaps,key,NULL);
 }
 
+
+
 void  TilemapManager_Delete(TilemapManager *_this){
 	TilemapManagerData 	*data=_this->data;
-
-	// delete tileset items
-	for(int i=0; i < data->tileset_tiles->count; i++){
-		TilesetTile *tileset_tile=data->tileset_tiles->items[i];
-
-		if(tileset_tile->animation != NULL){
-			for(int j=0; j < tileset_tile->animation->count; j++){
-				TilesetTileAnimaton *animation=tileset_tile->animation->items[j];
-				SDL_FreeSurface(animation->image);
-				FREE(animation);
-			}
-			 List_Delete(tileset_tile->animation);
-
-		}
-
-		FREE(tileset_tile);
-	}
-
-	List_Delete(data->tileset_tiles);
 
 	MapString_Delete(data->tilemaps);
 	//MapString_Delete(data->textures);

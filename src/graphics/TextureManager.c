@@ -14,7 +14,7 @@ static Texture		* 	g_default_texture=NULL;
 Texture * 	TextureManager_GetDefaultTexture(void){
 	if(g_default_texture==NULL){
 		g_default_texture=Texture_New();
-		Texture_UpdateFromSurface(g_default_texture,SDL_GetDefaultImage());
+		Texture_UpdateFromSurface(g_default_texture,0,0,SDL_GetDefaultImage());
 	}
 	return g_default_texture;
 }

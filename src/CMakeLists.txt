@@ -333,6 +333,8 @@ target_link_libraries(zetgame${POST_NAME}
 # EXECUTABLES
 #
 
+IF ( FALSE )
+
 add_executable(test_mixer${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
 )
@@ -344,8 +346,6 @@ add_executable(test_2d${POST_NAME}
 )
 
 target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
-
-
 
 #Graphics
 add_executable(test_primitives${POST_NAME} 
@@ -361,11 +361,6 @@ add_executable(test_textbox${POST_NAME}
 
 target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
-add_executable(test_scenegraph${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
-)
-
-target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
@@ -385,14 +380,27 @@ add_executable(test_animation${POST_NAME}
 
 target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
+endif()
+
+
+#--- SCENEGRAPH
+add_executable(test_scenegraph${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
+)
+
+target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
+#--- SPRITE
 add_executable(test_sprite${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_sprite.c
 )
 
 target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
+#--- TILEMAP
 add_executable(test_tilemap${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
 )
+
 
 target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )

@@ -47,8 +47,8 @@ void 		Texture_Bind(Texture *_this);
 void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);
 void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);
 int		 	Texture_GetHandle(Texture *_this);
-bool 	  	Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel);
-bool	  	Texture_UpdateFromSurface(Texture *_this,SDL_Surface * srf);
+bool 	  	Texture_Update(Texture * _this, uint16_t _x, uint16_t _y, uint16_t _width, uint16_t _height,void *_pixels, uint8_t _bytes_per_pixel);
+bool	  	Texture_UpdateFromSurface(Texture *_this, uint16_t _x, uint16_t _y,SDL_Surface * _srf);
 void	  	Texture_Delete(Texture * _this);
 
 

@@ -19,7 +19,7 @@ Texture * Texture_New(){
 Texture * 	Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color){
 	Texture *texture=Texture_New();
 	SDL_Surface *srf=SDL_NewCircle(radius, fill_color, border_width, border_color);
-	Texture_UpdateFromSurface(texture,srf);
+	Texture_UpdateFromSurface(texture,0,0,srf);
 	SDL_FreeSurface(srf);
 	return texture;
 }
@@ -62,7 +62,7 @@ Texture * 	Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len){
 	if((srf=SDL_LoadImageFromMemory(ptr,ptr_len,0,0))!=NULL){
 
 		text=Texture_New();
-		Texture_UpdateFromSurface(text,srf);
+		Texture_UpdateFromSurface(text,0,0,srf);
 		SDL_FreeSurface(srf);
 	}
 
@@ -107,7 +107,7 @@ void		Texture_SetFilter(Texture *_this, TextureFilter _filter){
 	}
 }
 
-bool 	  Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel){
+bool 	  Texture_Update(Texture * _this,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
 
 	if(_this == NULL) return false;
 
@@ -116,7 +116,7 @@ bool 	  Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t 
 
 		break;
 	case GRAPHICS_API_GL:
-		return Texture_GL_Update(_this,_pixels, _width, _height, _bytes_per_pixel);
+		return Texture_GL_Update(_this,_x,_y, _width, _height,_pixels, _bytes_per_pixel);
 		break;
 	}
 
@@ -124,7 +124,7 @@ bool 	  Texture_Update(Texture * _this,void *_pixels, uint16_t _width, uint16_t 
 }
 
 
-bool Texture_UpdateFromSurface(Texture *_this, SDL_Surface *srf){
+bool Texture_UpdateFromSurface(Texture *_this, uint16_t _x, uint16_t _y,SDL_Surface *srf){
 
 	if(_this == NULL) return false;
 
@@ -132,7 +132,7 @@ bool Texture_UpdateFromSurface(Texture *_this, SDL_Surface *srf){
 		Log_Warning("Surface null");
 		return false;
 	}
-	return Texture_Update(_this,srf->pixels,srf->w,srf->h,srf->format->BytesPerPixel);
+	return Texture_Update(_this,_x,_y,srf->w,srf->h,srf->pixels,srf->format->BytesPerPixel);
 }
 
 void Texture_Delete(Texture *_this){

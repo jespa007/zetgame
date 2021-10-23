@@ -176,28 +176,36 @@ void		Texture_GL_SetFilter(Texture *_this, TextureFilter _filter){
 }
 
 
-bool Texture_GL_Update(Texture * text,GLvoid *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel){
+bool Texture_GL_Update(Texture * text,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
 	if(text==NULL){
 		return false;
 	}
 
 	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
 
-	bool must_rebuild=false;
+	// TODO: Create a texture with width/height
+	if(texture_data->texture==GL_INVALID_VALUE){ // first build?
+		return Texture_GL_ReBuildTexture(text,_pixels,_width, _height, _bytes_per_pixel);
+	}
 
+	// update
+
+	if((_x+_width)< 0 || ((_y+_height)< 0)) return false;
+	if(_x>text->width || _y > text->height) return false;
+	if(text->bytes_per_pixel!=_bytes_per_pixel) return false;
 
 	// if textura data dimensions changed or first load, must to rebuild texture
-	if(texture_data->texture == GL_INVALID_VALUE
-	  || text->width!=_width
-	  || text->height!=_height
+	/*if(texture_data->texture == GL_INVALID_VALUE
+	  || text->width<_width
+	  || text->height<_height
 	  || text->bytes_per_pixel!=_bytes_per_pixel){
 		must_rebuild=true;
 	}
 
 	if(must_rebuild){ // rebuild and set pixels...
-		return Texture_GL_ReBuildTexture(text,_pixels,_width, _height, _bytes_per_pixel);
+		return Texture_GL_ReBuildTexture(text,_pixels,0,0,_width, _height, _bytes_per_pixel);
 	}
-	else{ // update texture only ...
+	else{*/ // update texture only ...
 
 		glBindTexture(GL_TEXTURE_2D, texture_data->texture);
 
@@ -214,16 +222,16 @@ bool Texture_GL_Update(Texture * text,GLvoid *_pixels, uint16_t _width, uint16_t
 
 		glTexSubImage2D( GL_TEXTURE_2D,
 					  0,
-					  0,//pos.x, // offsetX
-					  0,//pos.y, // offsetY
-					  text->width,//dim.x,
-					  text->height,//dim.y,
+					  _x,//pos.x, // offsetX
+					  _y,//pos.y, // offsetY
+					  _width,//dim.x,
+					  _height,//dim.y,
 					  texture_data->internal_format,
 					  pack_pixel,
 					  _pixels );
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	//}
 
 	return true;
 
