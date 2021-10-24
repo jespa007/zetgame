@@ -4,12 +4,7 @@
 typedef struct{
 	MapString 			* 	tilemaps;	// it saves its layers
 	TextureManager   	*   texture_manager;
-
 }TilemapManagerData;
-
-
-
-
 
 void TilemapManager_OnDeleteTilemap(MapStringNode *node){
 	Tilemap *tm=(Tilemap *)node->val;
@@ -17,9 +12,8 @@ void TilemapManager_OnDeleteTilemap(MapStringNode *node){
 	if(tm != NULL){
 		Tilemap_Delete(tm);
 	}
-
-
 }
+
 void TilemapManager_OnDeleteTexture(MapStringNode *node){
 	Texture *texture=(Texture *)node->val;
 
@@ -64,7 +58,7 @@ bool TilemapManager_LoadFromMemory(
 	cJSON *layers,*layer,*width,*height,*tilesets,*tileset;
 	cJSON *tile,*tilemap_data,*layer_name,*tilemap_width,*tilemap_height,*x,*y;
 	cJSON *firstgid,*image,*margin,*tilecount,*tilewidth,*tileheight,*tilesets_tiles;
-	List *tile_animations=NULL;
+	Tilesets *tm_tilesets=NULL;
 
 	cJSONAttribute tilemap_attr[]={
 			 {"layers",&layers}
@@ -197,8 +191,8 @@ bool TilemapManager_LoadFromMemory(
 		// check for animations...
 		size_t tilesets_tiles_len=cJSON_GetArraySize(tilesets_tiles);
 		if(tilesets_tiles_len > 0){ // setup frames...
+
 			cJSON *tilesets_tile=NULL;
-			cJSON *tilesets_tile_animations=NULL;
 			cJSON *tilesets_tile_animation=NULL;
 			cJSON *tilesets_tile_animation_tileid=NULL;
 			cJSON *tilesets_tile_animation_duration=NULL;
@@ -210,53 +204,82 @@ bool TilemapManager_LoadFromMemory(
 				goto tmm_load_error;
 			}
 
+			tm_tilesets=NEW(Tilesets);
+			tm_tilesets->tile_count=tilecount->valueint;
+			tm_tilesets->tile_width=tilewidth->valueint;
+			tm_tilesets->tile_height=tileheight->valueint;
+			tm_tilesets->tilemap_width=tilemap_width->valueint;
+			tm_tilesets->tilemap_height=tilemap_width->valueint;
+
+			int picth=tm_tilesets->tile_height*tm_tilesets->tile_width;
+
+			tm_tilesets->tile_images=malloc( tilecount->valueint*sizeof(SDL_Surface *));
+			tm_tilesets->animations=List_New();
 
 			cJSON_ArrayForEach(tilesets_tile, tilesets_tiles) {
 
-				if((tilesets_tile_animations = cJSON_GetObjectItem(tilesets_tile,"animation")) != NULL){
+				cJSON *tileid=NULL;
+				cJSON *tilesets_tile_animations=NULL;
 
-					if(tile_animations == NULL){
-						tile_animations=List_New();
-					}
+				if(((tileid = cJSON_GetObjectItem(tilesets_tile,"id")) == NULL) || ((tilesets_tile_animations = cJSON_GetObjectItem(tilesets_tile,"animation")) == NULL)){
+					continue;
+				}
 
-					TileAnimation *tile_animation=NEW(TileAnimation);
-					tile_animation->frames=List_New();
 
-					List_Add(tile_animations,tile_animation);
+				TileAnimation *tile_animation=NEW(TileAnimation);
+				List_Add(tm_tilesets->animations,tile_animation);
 
-					size_t tilesets_tiles_animation_len=cJSON_GetArraySize(tilesets_tile_animations);
-					// resrve
-					if(tilesets_tiles_animation_len > 0){
 
-						cJSON_ArrayForEach(tilesets_tile_animation, tilesets_tile_animations) {
-							if((tilesets_tile_animation_duration = cJSON_GetObjectItem(tilesets_tile_animation,"duration")) == NULL){
-								Log_Error("JsonParse data tilesets->animation->duration not found");
-								continue;
-							}
 
-							if((tilesets_tile_animation_tileid = cJSON_GetObjectItem(tilesets_tile_animation,"tileid")) == NULL){
-								Log_Error("JsonParse data tilesets->animation->tileid not found");
-								continue;
-							}
+				int v1=(tileid->valueint/tilemap_width->valueint)*picth;
+				int u1=(tileid->valueint%tilemap_width->valueint)*tm_tilesets->tile_width;
 
-							TileAnimationFrame *tileset_animation_frame=NEW(TileAnimationFrame);
 
-							tileset_animation_frame->duration=tilesets_tile_animation_duration->valueint;
-							tileset_animation_frame->tile_id=tilesets_tile_animation_tileid->valueint;
+				tile_animation->u1=u1;
+				tile_animation->v1=v1;
+				tile_animation->frames=List_New();
+
+				size_t tilesets_tiles_animation_len=cJSON_GetArraySize(tilesets_tile_animations);
+				// resrve
+				if(tilesets_tiles_animation_len > 0){
+
+					cJSON_ArrayForEach(tilesets_tile_animation, tilesets_tile_animations) {
+						if((tilesets_tile_animation_duration = cJSON_GetObjectItem(tilesets_tile_animation,"duration")) == NULL){
+							Log_Error("JsonParse data tilesets->animation->duration not found");
+							continue;
+						}
+
+						if((tilesets_tile_animation_tileid = cJSON_GetObjectItem(tilesets_tile_animation,"tileid")) == NULL){
+							Log_Error("JsonParse data tilesets->animation->tileid not found");
+							continue;
+						}
+
+						TileAnimationFrame *tileset_animation_frame=NEW(TileAnimationFrame);
+
+						tileset_animation_frame->duration=tilesets_tile_animation_duration->valueint;
+						tileset_animation_frame->tile_id=tilesets_tile_animation_tileid->valueint;
+
+
+						if(tm_tilesets->tile_images[tileset_animation_frame->tile_id] == NULL){
 
 							// get offset uv
-							int tile_y=tileset_animation_frame->tile_id/tilemap_width->valueint;
-							int tile_x=tileset_animation_frame->tile_id%tilemap_width->valueint;
+							v1=(tileset_animation_frame->tile_id/tilemap_width->valueint)*picth;
+							u1=(tileset_animation_frame->tile_id%tilemap_width->valueint)*tm_tilesets->tile_width;
 
-							tileset_animation_frame->image=SDL_Crop(image,(SDL_Rect){tile_x,tile_y,tilemap_width->valueint,tilemap_height->valueint});
+							TileImage *tile_image=NEW(TileImage);
+							tile_image->image=SDL_Crop(image,(SDL_Rect){u1,v1,tm_tilesets->tile_width,tm_tilesets->tile_height});
 
-							Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
-
-							List_Add(tile_animation->frames,tileset_animation_frame);
-
+							tm_tilesets->tile_images[tileset_animation_frame->tile_id]=tile_image;
 
 						}
+
+						Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
+
+						List_Add(tile_animation->frames,tileset_animation_frame);
+
+
 					}
+
 				}
 			}
 
@@ -271,7 +294,7 @@ bool TilemapManager_LoadFromMemory(
 				, tilewidth->valueint
 				, tileheight->valueint
 				, texture
-				,tile_animations);
+				,tm_tilesets);
 
 		if(tm != NULL){
 			MapString_SetValue(data->tilemaps,layer_name->valuestring,tm);

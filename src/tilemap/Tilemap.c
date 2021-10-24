@@ -1,5 +1,8 @@
 #include "zg_tilemap.h"
 
+
+
+
 typedef struct{
 	//size_t 		width, height; 	// in tiles...
 	//size_t 		tile_height, tile_width; // in pixels ...
@@ -10,16 +13,17 @@ typedef struct{
 	//float	 	*mesh_vertexs;
 	//float 		*mesh_texture;
 	Texture 	*texture;
+	Tilesets	*tilesets;
 }TilemapData;
 
 
-Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_width, size_t _tile_height, Texture *_texture,List *_tile_animations){
+Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_width, size_t _tile_height, Texture *_texture,Tilesets *_tilesets){
 	Tilemap *tm=NEW(Tilemap);
 	Geometry *geometry=NULL;
 	//short *tiles=NULL;
 	TilemapData *data=NEW(TilemapData);
 	tm->data=data;
-	tm->tile_animations=_tile_animations;
+	data->tilesets=_tilesets;
 
 
 	//tiles=data->tiles=_tiles;
@@ -145,28 +149,22 @@ Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_
 void Tilemap_Update(Tilemap *_this){
 
 	TilemapData *data=_this->data;
-	if(_this->tile_animations != NULL){
-		for(int j=0; j < _this->tile_animations->count; j++){
 
-			TileAnimation *tile_animation=_this->tile_animations->items[j];
+	if(data->tilesets != NULL){
+		if(data->tilesets->animations){
+			for(int j=0; j < data->tilesets->animations->count; j++){
 
-			if(tile_animation->time_change_frame < SDL_GetTicks()){ // change frame
-				//data->
-				/*if(animation->frames != NULL){
-					for(int k=0; k < animation->frames->count; k++){
-						TilesetTileAnimatonFrame *frame=animation->frames->items[k];
-					}
+				TileAnimation *tile_animation=data->tilesets->animations->items[j];
 
-				}*/
+				if(tile_animation->time_change_frame < SDL_GetTicks()){ // change frame
+					tile_animation->current_frame=(tile_animation->current_frame+1)%tile_animation->frames->count;
+					TileAnimationFrame *frame=tile_animation->frames->items[tile_animation->current_frame];
 
-				// update texture
-				tile_animation->time_change_frame=SDL_GetTicks()+500;
-				tile_animation->current_frame=(tile_animation->current_frame+1)%tile_animation->frames->count;
+					tile_animation->time_change_frame=SDL_GetTicks()+frame->duration;
+					TileImage *tile_image=data->tilesets->tile_images[frame->tile_id];
+					Texture_UpdateFromSurface(data->texture,tile_animation->u1,tile_animation->v1,tile_image->image);
 
-				TileAnimationFrame *frame=tile_animation->frames->items[tile_animation->current_frame];
-
-				Texture_UpdateFromSurface(data->texture,0,0,frame->image);
-
+				}
 			}
 		}
 	}
@@ -181,20 +179,36 @@ void Tilemap_Draw(Tilemap *_this){
 void Tilemap_Delete(Tilemap *_this){
 	TilemapData *data=_this->data;
 
-	if(_this->tile_animations != NULL){
-		for(int j=0; j < _this->tile_animations->count; j++){
-			TileAnimation *tile_animation=_this->tile_animations->items[j];
+	if(data->tilesets != NULL){
+		if(data->tilesets->animations != NULL){
+			for(int j=0; j < data->tilesets->animations->count; j++){
+				TileAnimation *tile_animation=data->tilesets->animations->items[j];
 
-			for(int k=0; k < tile_animation->frames->count; k++){
-				TileAnimationFrame *frame=tile_animation->frames->items[k];
-				SDL_FreeSurface(frame->image);
-				FREE(frame);
+				for(int k=0; k < tile_animation->frames->count; k++){
+					TileAnimationFrame *frame=tile_animation->frames->items[k];
+					FREE(frame);
+				}
+				List_Delete(tile_animation->frames);
+				FREE(tile_animation);
+
 			}
-			List_Delete(tile_animation->frames);
-			FREE(tile_animation);
+			List_Delete(data->tilesets->animations);
+		}
+
+
+		for(int j=0; j < data->tilesets->tile_count; j++){
+			TileImage *tile_image=data->tilesets->tile_images[j];
+			if(tile_image != NULL){
+				SDL_FreeSurface(tile_image->image);
+				FREE(tile_image);
+			}
+
 
 		}
-		List_Delete(_this->tile_animations);
+
+		FREE(data->tilesets->tile_images);
+
+		FREE(data->tilesets);
 	}
 
 	Geometry_Delete(data->geometry);

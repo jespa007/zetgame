@@ -65,10 +65,11 @@ IconManager * IconManager_LoadFromMemory(
 	IconManager *icon_manager=NEW(IconManager);
 
 
-	icon_manager->texture = Texture_New();
+
 	SDL_Surface *img=SDL_LoadImageFromMemory(ptr,ptr_len,SDL_LOAD_IMAGE_POWER_OF_2_ORIGINAL_RESOLUTION,0);
 
-	if(Texture_UpdateFromSurface(icon_manager->texture,0,0,img)){
+	if(img != NULL){
+		icon_manager->texture = Texture_NewFromSurface(img);
 
 		icon_manager->icon_width = icon_width;
 		icon_manager->icon_height = icon_height;

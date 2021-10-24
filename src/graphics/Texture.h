@@ -33,7 +33,8 @@ void	  	Texture_DeInit(void);
 void 		Texture_SetTextureResourcePath(const char *resource_path);
 
 
-Texture * 	Texture_New(void);
+Texture * 	Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel);
+Texture *	Texture_NewFromSurface(SDL_Surface *_img);
 Texture * 	Texture_NewFromFile(const char *file);
 Texture * 	Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len);
 Texture * 	Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);

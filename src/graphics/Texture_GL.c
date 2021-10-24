@@ -5,11 +5,59 @@ typedef struct{
 	GLuint internal_format;
 }TextureDataGL;
 
-void Texture_GL_New(Texture *text){
+GLuint Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel);
+
+void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel ){
+
 	TextureDataGL* texture_data=NEW(TextureDataGL);
 	texture_data->internal_format=GL_INVALID_VALUE;
 	texture_data->texture=GL_INVALID_VALUE;
 	text->texture_data=texture_data;
+	texture_data->texture = GL_INVALID_VALUE;
+	texture_data->internal_format = GL_INVALID_VALUE;
+
+
+	if(_width == 0 || _height == 0){
+		Log_Error("height=0 width=0 texture cannot be rebuilt");
+		return;
+	}
+
+
+	glPushAttrib( GL_TEXTURE_BIT);
+
+	//glActiveTexture(_GL_TEXTURE0);
+	glEnable(GL_TEXTURE_2D);
+	// Have OpenGL generate a texture object handle for us
+	glGenTextures( 1, &texture_data->texture );
+
+
+	// Bind the texture object
+	glBindTexture( GL_TEXTURE_2D, texture_data->texture );
+
+	// Set the texture's stretching properties
+	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+	 texture_data->internal_format = Texture_GL_BytesPerPixelToGLInternalFormat(_bytes_per_pixel);
+
+
+	// Edit the texture object's image data using the information SDL_Surface gives us
+	glTexImage2D( GL_TEXTURE_2D,
+				  0,
+				  texture_data->internal_format,
+				  _width,
+				  _height,
+				  0,
+				  texture_data->internal_format,
+				  GL_UNSIGNED_BYTE,
+				  _pixels);
+
+
+	text->height=_height;
+	text->width=_width;
+	text->bytes_per_pixel=_bytes_per_pixel;
+
+	glPopAttrib();
 }
 
 
@@ -82,59 +130,6 @@ void Texture_GL_Unload(Texture * text) {
 	texture_data->texture = GL_INVALID_VALUE;
 }
 
-bool Texture_GL_ReBuildTexture(Texture * text,GLvoid *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel) {
-
-	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
-	if(_width == 0 || _height == 0){
-		Log_Error("height=0 width=0 texture cannot be rebuilt");
-		return false;
-	}
-
-	// if not invalid the texture has to be rebuild...
-	if(texture_data->texture != GL_INVALID_VALUE){
-		Texture_GL_Unload(text);
-	}
-
-	texture_data->texture = GL_INVALID_VALUE;
-	texture_data->internal_format = GL_INVALID_VALUE;
-
-	glPushAttrib( GL_TEXTURE_BIT);
-
-	//glActiveTexture(_GL_TEXTURE0);
-	glEnable(GL_TEXTURE_2D);
-	// Have OpenGL generate a texture object handle for us
-	glGenTextures( 1, &texture_data->texture );
-
-
-	// Bind the texture object
-	glBindTexture( GL_TEXTURE_2D, texture_data->texture );
-
-	// Set the texture's stretching properties
-	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-	 texture_data->internal_format = Texture_GL_BytesPerPixelToGLInternalFormat(_bytes_per_pixel);
-
-
-	// Edit the texture object's image data using the information SDL_Surface gives us
-	glTexImage2D( GL_TEXTURE_2D,
-				  0,
-				  texture_data->internal_format,
-				  _width,
-				  _height,
-				  0,
-				  texture_data->internal_format,
-				  GL_UNSIGNED_BYTE,
-				  _pixels);
-
-
-	text->height=_height;
-	text->width=_width;
-	text->bytes_per_pixel=_bytes_per_pixel;
-
-	glPopAttrib();
-	return true;
-}
 
 int	Texture_GL_GetHandle(Texture * _this){
 	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
@@ -184,54 +179,34 @@ bool Texture_GL_Update(Texture * text,uint16_t _x, uint16_t _y,uint16_t _width, 
 	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
 
 	// TODO: Create a texture with width/height
-	if(texture_data->texture==GL_INVALID_VALUE){ // first build?
-		return Texture_GL_ReBuildTexture(text,_pixels,_width, _height, _bytes_per_pixel);
-	}
-
 	// update
 
 	if((_x+_width)< 0 || ((_y+_height)< 0)) return false;
 	if(_x>text->width || _y > text->height) return false;
 	if(text->bytes_per_pixel!=_bytes_per_pixel) return false;
 
-	// if textura data dimensions changed or first load, must to rebuild texture
-	/*if(texture_data->texture == GL_INVALID_VALUE
-	  || text->width<_width
-	  || text->height<_height
-	  || text->bytes_per_pixel!=_bytes_per_pixel){
-		must_rebuild=true;
+	GLuint pack_pixel = GL_UNSIGNED_BYTE;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	if(text->bytes_per_pixel == 2)
+	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
+		pack_pixel = GL_UNSIGNED_SHORT_5_6_5;
 	}
 
-	if(must_rebuild){ // rebuild and set pixels...
-		return Texture_GL_ReBuildTexture(text,_pixels,0,0,_width, _height, _bytes_per_pixel);
-	}
-	else{*/ // update texture only ...
-
-		glBindTexture(GL_TEXTURE_2D, texture_data->texture);
-
-		GLuint pack_pixel = GL_UNSIGNED_BYTE;
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		if(text->bytes_per_pixel == 2)
-		{
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
-			pack_pixel = GL_UNSIGNED_SHORT_5_6_5;
-		}
 
 
+	glTexSubImage2D( GL_TEXTURE_2D,
+				  0,
+				  _x,//pos.x, // offsetX
+				  _y,//pos.y, // offsetY
+				  _width,//dim.x,
+				  _height,//dim.y,
+				  texture_data->internal_format,
+				  pack_pixel,
+				  _pixels );
 
-		glTexSubImage2D( GL_TEXTURE_2D,
-					  0,
-					  _x,//pos.x, // offsetX
-					  _y,//pos.y, // offsetY
-					  _width,//dim.x,
-					  _height,//dim.y,
-					  texture_data->internal_format,
-					  pack_pixel,
-					  _pixels );
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	//}
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return true;
 

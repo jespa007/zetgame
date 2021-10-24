@@ -2,7 +2,7 @@
 
 //--------------
 // MEMBER PUBLIC
-Texture * Texture_New(){
+Texture * Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel){
 	Texture *text=NEW(Texture);
 	memset(text,0,sizeof(Texture));
 
@@ -10,16 +10,20 @@ Texture * Texture_New(){
 	default:
 		break;
 	case GRAPHICS_API_GL:
-		Texture_GL_New(text);
+		Texture_GL_New(text,_pixels,_width, _height, _bytes_per_pixel);
 		break;
 	}
 
 	return text;
 }
+
+Texture * Texture_NewFromSurface(SDL_Surface *_image){
+	return Texture_New(_image->pixels,_image->w, _image->h, _image->format->BytesPerPixel);
+}
+
 Texture * 	Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color){
-	Texture *texture=Texture_New();
 	SDL_Surface *srf=SDL_NewCircle(radius, fill_color, border_width, border_color);
-	Texture_UpdateFromSurface(texture,0,0,srf);
+	Texture *texture=Texture_NewFromSurface(srf);
 	SDL_FreeSurface(srf);
 	return texture;
 }
@@ -61,8 +65,7 @@ Texture * 	Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len){
 
 	if((srf=SDL_LoadImageFromMemory(ptr,ptr_len,0,0))!=NULL){
 
-		text=Texture_New();
-		Texture_UpdateFromSurface(text,0,0,srf);
+		text=Texture_NewFromSurface(srf);
 		SDL_FreeSurface(srf);
 	}
 

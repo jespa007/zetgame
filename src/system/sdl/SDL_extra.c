@@ -606,7 +606,7 @@ void SDL_SetBytesPerPixel(SDL_Surface **srf, uint8_t new_bytes_per_pixel){
 }
 
 SDL_Surface *	SDL_Crop(SDL_Surface *_src_surface,SDL_Rect _src_rect){
-	SDL_Rect dst_rect={0,0,_src_rect.w,_src_rect.h};
+	//SDL_Rect dst_rect={0,0,_src_rect.w,_src_rect.h};
 	SDL_Surface *dst_surface=SDL_CreateSurfaceFrom(
 				 _src_rect.w
 				, _src_rect.h
@@ -614,7 +614,7 @@ SDL_Surface *	SDL_Crop(SDL_Surface *_src_surface,SDL_Rect _src_rect){
 				,NULL // we don't want to copy pixels
             );
 
-	SDL_BlitSurface(dst_surface, &_src_rect, _src_surface, & dst_rect);
+	SDL_BlitSurface(_src_surface, & _src_rect, dst_surface, NULL);
 
 	return dst_surface;
 
