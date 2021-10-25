@@ -3,7 +3,7 @@
 #include <string.h>
 #include <memory.h>
 
-#include "../../system/gl/glextra.h"
+#include "../gl/glextra.h"
 
 #define GL_DEBUG_MAX_MEM_IDS	4000
 

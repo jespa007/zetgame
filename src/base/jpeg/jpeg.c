@@ -1,4 +1,4 @@
-#include "../zg_system.h"
+#include "../zg_base.h"
 
 
 // This is based on the FILE source manager in libjpeg

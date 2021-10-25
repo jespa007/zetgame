@@ -122,7 +122,7 @@ bool ESSystem_Init(void){
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECTexture_Setup
 		,.EComponent_Update		=NULL
-		,.EComponent_Destroy	=ECTexture_Destroy
+		,.EComponent_Destroy	=NULL
 	});
 
 	// sprite renderer (1)
@@ -482,9 +482,11 @@ void ESSystem_Delete(ESSystem *_this){
 	for(unsigned i=0; i < g_es_system_registered_components->count; i++){
 		void **ptr_data=(*component_data)->ptr_data;
 		void (*EComponent_Destroy)(void *) =(*ptr_registered_component_data)->data.EComponent_Destroy;
-		if(EComponent_Destroy != NULL && ptr_data != NULL){
+		if( ptr_data != NULL){
 			for(unsigned j=0; j < (*component_data)->n_elements; j++){
-				EComponent_Destroy(*ptr_data);
+				if(EComponent_Destroy != NULL){
+					EComponent_Destroy(*ptr_data);
+				}
 				FREE(*ptr_data++);
 			}
 			FREE((*component_data)->ptr_data);

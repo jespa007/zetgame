@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 const char *GUID_EMPTY="00000000-0000-0000-0000-000000000000";
 

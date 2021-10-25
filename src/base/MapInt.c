@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 MapInt *MapInt_New(){
 	MapInt *t = NEW(MapInt);

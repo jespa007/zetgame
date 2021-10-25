@@ -19,6 +19,3 @@ void ECTexture_SetTexture(ECTexture *_this,Texture *_texture){
 	_this->texture=texture;
 }
 
-void ECTexture_Destroy(void *_this){
-	FREE(_this);
-}

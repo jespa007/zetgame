@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 static PackedFileSystem *g_packed_file_system=NULL;
 

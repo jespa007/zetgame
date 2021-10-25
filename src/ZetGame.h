@@ -1,7 +1,7 @@
 #ifndef __ZETGINE_CORE_H__
 #define __ZETGINE_CORE_H__
 
-#include "system/zg_system.h"
+#include "base/zg_base.h"
 #include "mmedia/zg_mmedia.h"
 #include "math/zg_math.h"
 #include "physics/zg_physics.h"

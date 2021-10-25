@@ -174,14 +174,14 @@ int main(int argc, char * argv[]){
 
 	//----------------------------------------------------------------------------------------------------
 
-	ZetGameSetupParams setup;
-	memset(&setup,0,sizeof(setup));
-	setup.width=640;
-	setup.height=480;
-	setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
+	//ZetGameSetupParams setup;
+	//memset(&setup,0,sizeof(setup));
+	//setup.width=640;
+	//setup.height=480;
+	//setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
 
 
-	ZetGame_Init(&setup);
+	ZetGame_Init(NULL);//&setup);
 
 	Scene * scene = Scene_New();
 	TextureManager *tm=TextureManager_New();

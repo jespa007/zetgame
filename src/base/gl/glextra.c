@@ -1,4 +1,4 @@
-#include "../../system/gl/glextra.h"
+#include "../gl/glextra.h"
 #define OGL_MAX_IDS	4000
 
 
@@ -412,4 +412,4 @@ void glDeleteFrameBufferExt(FBOInfo * fboInfo)
 }
 
 
-#include 	"../../system/gl/gldebug.c"
+#include 	"../gl/gldebug.c"

@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 BufferByte *BufferByte_New(size_t len){
 	BufferByte *buffer=NEW(BufferByte);

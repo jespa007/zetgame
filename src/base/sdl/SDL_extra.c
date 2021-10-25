@@ -1,5 +1,5 @@
-#include "../../assets/image/default.png.c"
-#include "../zg_system.h"
+#include "assets/image/default.png.c"
+#include "base/zg_base.h"
 #include "graphics/zg_graphics.h"
 
 /*{

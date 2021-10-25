@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 #define MAX_ELEMENTS_VECTOR	16000
 

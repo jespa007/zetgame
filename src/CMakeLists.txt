@@ -279,8 +279,8 @@ ENDIF()
 
 set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 
-	#-- System --
-	system/zg_system.c
+	#-- Base --
+	base/zg_base.c
 	
 	#-- Animation --
 	animation/zg_animation.c

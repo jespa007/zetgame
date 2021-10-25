@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 void * zg_malloc(size_t size,const char *file, int line){
 	void * p=NULL;

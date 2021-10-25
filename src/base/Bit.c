@@ -1,4 +1,4 @@
-#include "zg_system.h"
+#include "zg_base.h"
 
 unsigned int Bit_NextPow2(unsigned int v){
     v--;

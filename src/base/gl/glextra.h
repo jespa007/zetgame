@@ -13,7 +13,7 @@
 #include 	<GL/glx.h>
 #endif
 
-#include "../../system/gl/gldebug.h"
+#include 	"../gl/gldebug.h"
 
 
 #define		VERTEX_BUFFER_OBJECT_EXT	(0x1<<0)
