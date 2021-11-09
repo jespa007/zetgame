@@ -171,30 +171,32 @@ void		Texture_GL_SetFilter(Texture *_this, TextureFilter _filter){
 }
 
 
-bool Texture_GL_Update(Texture * text,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
-	if(text==NULL){
+bool Texture_GL_Update(Texture * _this,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
+	if(_this==NULL){
 		return false;
 	}
 
-	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
+	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
 
 	// TODO: Create a texture with width/height
 	// update
 
 	if((_x+_width)< 0 || ((_y+_height)< 0)) return false;
-	if(_x>text->width || _y > text->height) return false;
-	if(text->bytes_per_pixel!=_bytes_per_pixel) return false;
+	if(_x>_this->width || _y > _this->height) return false;
+	if(_this->bytes_per_pixel!=_bytes_per_pixel) return false;
+
 
 	GLuint pack_pixel = GL_UNSIGNED_BYTE;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	if(text->bytes_per_pixel == 2)
+	if(_this->bytes_per_pixel == 2)
 	{
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
 		pack_pixel = GL_UNSIGNED_SHORT_5_6_5;
 	}
 
-
+	// Bind the texture object
+	glBindTexture( GL_TEXTURE_2D, texture_data->texture );
 
 	glTexSubImage2D( GL_TEXTURE_2D,
 				  0,
