@@ -5,8 +5,16 @@
 int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argc);
 	UNUSUED_PARAM(argv);
-
-	ZetGame_Init(NULL);
+	ZetGameSetupParams setup=(ZetGameSetupParams){
+		.graphics_api=GRAPHICS_API_GL
+		,.width=224
+		,.height=144
+		,.wcaption_title="Tilemap"
+		,.wposx=SDL_WINDOWPOS_CENTERED
+		,.wposy=SDL_WINDOWPOS_CENTERED
+		,.graphic_properties=0 //MSK_GRAPHIC_PROPERTY_DESKTOP | MSK_GRAPHIC_PROPERTY_NO_SHOW_ICON_TASKBAR
+	};
+	ZetGame_Init(&setup);
 
 	TextureManager * texture_manager= TextureManager_New();
 	TilemapManager *tilemap_manager=TilemapManager_New(texture_manager);
