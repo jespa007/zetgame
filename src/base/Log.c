@@ -8,7 +8,7 @@ void  Log_SetAnsiEscape(bool _use){
 	ansi_escape=_use;
 }
 
-void  Log_Print(const  char  *file,  int  line, LogLevel level, bool with_cr, const  char  *text_in,...) {
+void  Log_Print(const  char  *file,  int  line, LogLevel level, const  char  *text_in,...) {
 
 	char  text_out[MAX_PATH]={0};
 	ZG_VARGS(text_out, text_in);
@@ -79,9 +79,8 @@ void  Log_Print(const  char  *file,  int  line, LogLevel level, bool with_cr, co
 	  Term_SetColor(std_type,TERM_EFFECT_BRIGHT, TERM_COLOR_WHITE, TERM_COLOR_BLACK);
 	 }
 
-	  if(with_cr){
-		  fprintf(std_type,"\n");
-	  }
+    fprintf(std_type,"\n");
+
 
 	  // to ensure all data has been write...
 	  fflush(std_type);

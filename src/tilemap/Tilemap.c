@@ -17,7 +17,15 @@ typedef struct{
 }TilemapData;
 
 
-Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_width, size_t _tile_height, Texture *_texture,Tilesets *_tilesets){
+Tilemap *Tilemap_New(
+		short *_tiles
+		, size_t _width
+		, size_t _height
+		, size_t _tile_width
+		, size_t _tile_height
+		, Texture *_texture
+		,Tilesets *_tilesets
+){
 	Tilemap *tm=NEW(Tilemap);
 	Geometry *geometry=NULL;
 	//short *tiles=NULL;
@@ -25,12 +33,6 @@ Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_
 	tm->data=data;
 	data->tilesets=_tilesets;
 
-
-	//tiles=data->tiles=_tiles;
-	//size_t width = _width;
-	//size_t height =  _height;
-	//size_t tile_width = _tile_width;
-	//size_t tile_height = _tile_height;
 	data->texture=_texture;
 
 	int offset_mesh=0;
@@ -49,7 +51,7 @@ Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_
 	float one_texel_over_width = 1.0f/(float)_texture->width;
 	float one_texel_over_height = 1.0f/(float)_texture->height;
 
-	int n_tiles_x_texture = _texture->width/_tile_width;
+	int tile_count_x = _tilesets->tile_count_x;
 
 	int n_vertexs = _width*_height*3*2; // *3*2 because each tile is done by 2 triangles (each one by 3 vertexes)
 	int n_indices = GEOMETRY_INDICES_FROM_N_VERTEXS(n_vertexs);
@@ -109,27 +111,30 @@ Tilemap *Tilemap_New(short *_tiles, size_t _width, size_t _height, size_t _tile_
 
 	// mesh texture
 	offset_mesh=0;
+	short *tile_it=_tiles;
 	for(int y = 0; y < (int)_height; y++)
 	{
-		for(int x = 0; x < (int)_width; x++) // new quad...
+		for(int x = 0; x < (int)_width; x++,tile_it++) // new quad...
 		{
 			// +- pixel is to avoid render next pixel tile...
-			int tile_uv = *(_tiles+y*_width+x)-1;
+			short tile_xy = (*tile_it)-1;//*(_tiles+y*_width+x)-1;
+			short tile_x=(tile_xy % tile_count_x);
+			short tile_y=(tile_xy / tile_count_x);
 
-			float startx_tile = (tile_uv % n_tiles_x_texture)*_tile_width*one_texel_over_width;
-			float starty_tile = (tile_uv / n_tiles_x_texture)*_tile_height*one_texel_over_height;
+			float u = (_tilesets->tile_margin+tile_x*(_tile_width+_tilesets->tile_spacing))*one_texel_over_width;
+			float v = (_tilesets->tile_margin+tile_y*(_tile_height+_tilesets->tile_spacing))*one_texel_over_height;
 
-			*(mesh_texture+offset_mesh+0 )=startx_tile;
-			*(mesh_texture+offset_mesh+1 )=starty_tile+inc_tile_dydv;
+			*(mesh_texture+offset_mesh+0 )=u;
+			*(mesh_texture+offset_mesh+1 )=v+inc_tile_dydv;
 
-			*(mesh_texture+offset_mesh+2 )=startx_tile;
-			*(mesh_texture+offset_mesh+3 )=starty_tile;
+			*(mesh_texture+offset_mesh+2 )=u;
+			*(mesh_texture+offset_mesh+3 )=v;
 
-			*(mesh_texture+offset_mesh+4 )=startx_tile+inc_tile_dxdu;
-			*(mesh_texture+offset_mesh+5 )=starty_tile;
+			*(mesh_texture+offset_mesh+4 )=u+inc_tile_dxdu;
+			*(mesh_texture+offset_mesh+5 )=v;
 
-			*(mesh_texture+offset_mesh+6 )=startx_tile+inc_tile_dxdu;
-			*(mesh_texture+offset_mesh+7 )=starty_tile+inc_tile_dydv;
+			*(mesh_texture+offset_mesh+6 )=u+inc_tile_dxdu;
+			*(mesh_texture+offset_mesh+7 )=v+inc_tile_dydv;
 
 			offset_mesh+=4*2;
 		}

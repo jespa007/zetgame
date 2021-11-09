@@ -11,11 +11,11 @@ typedef enum{
 } LogLevel;
 
 
-#define Log_Error(s, ...) 			Log_Print(__FILE__,__LINE__,LOG_LEVEL_ERROR	, true,s, ##__VA_ARGS__)
-#define Log_Warning(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_WARNING	, true,s, ##__VA_ARGS__)
-#define Log_Info(s, ...)   			Log_Print(__FILE__,__LINE__,LOG_LEVEL_INFO	, true,s, ##__VA_ARGS__)
+#define Log_Error(s, ...) 			Log_Print(__FILE__,__LINE__,LOG_LEVEL_ERROR		, s, ##__VA_ARGS__)
+#define Log_Warning(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_WARNING	, s, ##__VA_ARGS__)
+#define Log_Info(s, ...)   			Log_Print(__FILE__,__LINE__,LOG_LEVEL_INFO		, s, ##__VA_ARGS__)
 #ifdef __DEBUG__
-#define Log_Debug(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_DEBUG, true,s, ##__VA_ARGS__)
+#define Log_Debug(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_DEBUG		, s, ##__VA_ARGS__)
 #else
 #define Log_Debug(s, ...)
 #endif
@@ -24,7 +24,7 @@ typedef enum{
 
 
 void  Log_SetAnsiEscape(bool _use);
-void  Log_Print(const  char  *file,  int  line, LogLevel level, bool with_cr, const  char  *string_text,...);
+void  Log_Print(const  char  *file,  int  line, LogLevel level, const  char  *string_text,...);
 
 
 

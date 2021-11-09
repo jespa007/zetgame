@@ -1,5 +1,7 @@
 #include "ZetGame.h"
 
+#define TILEMAP_LAYER_NAME "mario3_world1"
+
 int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argc);
 	UNUSUED_PARAM(argv);
@@ -15,7 +17,9 @@ int main(int argc, char *argv[]){
 			,"../../../test/data/tilemap/mario3_world1.json"
 		)){
 
-		tilemap=TilemapManager_GetTilemap(tilemap_manager,"mario3_world1");
+		if((tilemap=TilemapManager_GetTilemap(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
+			Log_Error("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
+		}
 	}
 
 	do{

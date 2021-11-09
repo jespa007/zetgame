@@ -20,9 +20,7 @@ void TilemapManager_OnDeleteTexture(MapStringNode *node){
 	if(texture != NULL){
 		Texture_Delete(texture);
 	}
-
 }
-
 
 // MEMBERS
 TilemapManager *TilemapManager_New(TextureManager	* _texture_manager){
@@ -57,7 +55,7 @@ bool TilemapManager_LoadFromMemory(
 	cJSON * root = cJSON_ParseWithLength((char *)_json_buf,_json_buf_len);
 	cJSON *layers,*layer,*width,*height,*tilesets,*tileset;
 	cJSON *tile,*tilemap_data,*layer_name,*tilemap_width,*tilemap_height,*x,*y;
-	cJSON *firstgid,*image,*margin,*tilecount,*tilewidth,*tileheight,*tilesets_tiles;
+	cJSON *firstgid,*image,*margin,*spacing,*tilecount,*tilewidth,*tileheight,*tilesets_tiles,*columns;
 	Tilesets *tm_tilesets=NULL;
 
 	cJSONAttribute tilemap_attr[]={
@@ -83,6 +81,8 @@ bool TilemapManager_LoadFromMemory(
 			{"firstgid",&firstgid}
 			,{"image",&image}
 			,{"margin",&margin}
+			,{"spacing",&spacing}
+			,{"columns",&columns}
 			,{"tilecount",&tilecount}
 			,{"tilewidth",&tilewidth}
 			,{"tileheight",&tileheight}
@@ -109,7 +109,7 @@ bool TilemapManager_LoadFromMemory(
 
 		for(unsigned i=0; i < ARRAY_SIZE(tilemap_attr); i++){
 			if((*layer_attr[i].value = cJSON_GetObjectItem(layer,layer_attr[i].name)) == NULL){
-				Log_Error("JsonParse: Cannot get '%s' in 'layer'",layer_attr[i].name);
+				Log_Error("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
 				return false;
 			}
 		}
@@ -210,8 +210,11 @@ bool TilemapManager_LoadFromMemory(
 			tm_tilesets->tile_height=tileheight->valueint;
 			tm_tilesets->tilemap_width=tilemap_width->valueint;
 			tm_tilesets->tilemap_height=tilemap_width->valueint;
+			tm_tilesets->tile_margin=margin->valueint;
+			tm_tilesets->tile_spacing=spacing->valueint;
+			tm_tilesets->tile_count_x=columns->valueint;
 
-			int picth=tm_tilesets->tile_height*tm_tilesets->tile_width;
+			//int pitch=image->w; // texture scanline //(tm_tilesets->tile_height+tm_tilesets->tile_spacing)*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 			tm_tilesets->tile_images=malloc( tilecount->valueint*sizeof(SDL_Surface *));
 			tm_tilesets->animations=List_New();
@@ -225,15 +228,11 @@ bool TilemapManager_LoadFromMemory(
 					continue;
 				}
 
-
 				TileAnimation *tile_animation=NEW(TileAnimation);
 				List_Add(tm_tilesets->animations,tile_animation);
 
-
-
-				int v1=(tileid->valueint/tilemap_width->valueint)*picth;
-				int u1=(tileid->valueint%tilemap_width->valueint)*tm_tilesets->tile_width;
-
+				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*image->w;
+				int u1=tm_tilesets->tile_margin+(tileid->valueint%(tilemap_width->valueint))*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 				tile_animation->u1=u1;
 				tile_animation->v1=v1;
@@ -259,12 +258,12 @@ bool TilemapManager_LoadFromMemory(
 						tileset_animation_frame->duration=tilesets_tile_animation_duration->valueint;
 						tileset_animation_frame->tile_id=tilesets_tile_animation_tileid->valueint;
 
-
 						if(tm_tilesets->tile_images[tileset_animation_frame->tile_id] == NULL){
 
 							// get offset uv
-							v1=(tileset_animation_frame->tile_id/tilemap_width->valueint)*picth;
-							u1=(tileset_animation_frame->tile_id%tilemap_width->valueint)*tm_tilesets->tile_width;
+							u1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id%(tilemap_width->valueint))*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
+							v1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id/(tilemap_width->valueint))*image->w;
+
 
 							TileImage *tile_image=NEW(TileImage);
 							tile_image->image=SDL_Crop(image,(SDL_Rect){u1,v1,tm_tilesets->tile_width,tm_tilesets->tile_height});
@@ -276,10 +275,7 @@ bool TilemapManager_LoadFromMemory(
 						Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
 
 						List_Add(tile_animation->frames,tileset_animation_frame);
-
-
 					}
-
 				}
 			}
 

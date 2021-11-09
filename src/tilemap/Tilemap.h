@@ -28,7 +28,10 @@ typedef struct{
 	TileImage	 **tile_images;
 	int			tile_width;
 	int			tile_height;
+	int			tile_margin;
+	int			tile_spacing;
 	int			tile_count;
+	int			tile_count_x;
 	int			tilemap_width;
 	int			tilemap_height;
 
@@ -41,7 +44,7 @@ Tilemap *Tilemap_New(short *_tiles
 		, size_t _tile_width
 		, size_t _tile_height
 		, Texture *_texture
-		,Tilesets *_tilesets
+		, Tilesets *_tilesets
 );
 void Tilemap_Update(Tilemap *_this);
 void Tilemap_Draw(Tilemap *_this);
