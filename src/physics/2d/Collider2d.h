@@ -27,9 +27,9 @@ bool Collider2d_CheckCollisionRectangleCircle(
 							, float _r2);
 
 bool Collider2d_CheckCollisionCircleCircle( Vector3f _p1
-								, float _r
+								, float _r1
 								, Vector3f _p2
-								, float _r);
+								, float _r2);
 
 
 

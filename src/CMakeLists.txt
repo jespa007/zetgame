@@ -402,5 +402,13 @@ add_executable(test_tilemap${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
 )
 
-
 target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
+#--- COLLIDER2D
+add_executable(test_collider2d${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_collider2d.c
+)
+
+target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
+
