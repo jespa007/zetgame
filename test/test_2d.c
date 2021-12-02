@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	TTFont * font1 = TTFont_NewFromFile("data/fonts/g5lis1b.ttf",36);
 	TTFont * font2 = TTFont_NewFromFile("data/fonts/Trebuchet MS.ttf",36);
 	//Shape2d * shape2d = Shape2d_New();
-	Geometry *geometry=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
+	Geometry *geometry=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
 	Appearance *appearance=Appearance_New();
 	Transform transform=Transform_New();
 

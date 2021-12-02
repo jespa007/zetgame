@@ -2,7 +2,7 @@
 
 
 
-
+/*
 
 void createcircle (float k, float r, float h) {
 
@@ -19,7 +19,7 @@ void createcircle (float k, float r, float h) {
     glVertex3f(x + k,y - h,0);
     }
     glEnd();
-}
+}*/
 
 int main(int argc, char *argv[]){
 
@@ -31,8 +31,9 @@ int main(int argc, char *argv[]){
 	do{
 		Graphics_BeginRender();
 
-		createcircle(0.5,0.5,0.5);
-		Graphics_DrawRectangle(10,10,1,COLOR4F_WHITE);
+		Geometry_Draw(Geometry_DefaultCircle());
+		Geometry_Draw(Geometry_DefaultRectangle());
+
 
 		Graphics_EndRender();
 

@@ -54,16 +54,18 @@ Tilemap *Tilemap_New(
 	int tile_count_x = _tilesets->tile_count_x;
 
 	int n_vertexs = _width*_height*3*2; // *3*2 because each tile is done by 2 triangles (each one by 3 vertexes)
-	int n_indices = GEOMETRY_INDICES_FROM_N_VERTEXS(n_vertexs);
+	int n_indexs = N_INDICES_TRIANGLES_FROM_N_VERTEXS(n_vertexs);
 	int mesh_vertexs_len=n_vertexs*3; // *3 because it has 3d coords (xyz)
 	int mesh_texture_len=n_vertexs*2; // *2 because it has 2d coords (uv)
 
-	short *indexs = malloc(sizeof(short)*n_indices);
+	short *indexs = malloc(sizeof(short)*n_indexs);
 	float *mesh_vertexs=malloc(sizeof(float)*mesh_vertexs_len);
 	float *mesh_texture=malloc(sizeof(float)*mesh_texture_len);
 
 	geometry=data->geometry = 	Geometry_New(
-			n_vertexs,
+			GEOMETRY_TYPE_TRIANGLES
+			,n_indexs
+			,n_vertexs,
 			  GEOMETRY_PROPERTY_TEXTURE
 	);
 
@@ -140,7 +142,7 @@ Tilemap *Tilemap_New(
 		}
 	}
 
-	Geometry_SetIndices(geometry,indexs,n_indices);
+	Geometry_SetIndices(geometry,indexs,n_indexs);
 	Geometry_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
 	Geometry_SetMeshTexture(geometry,mesh_texture,mesh_texture_len);
 

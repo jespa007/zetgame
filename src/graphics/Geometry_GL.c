@@ -49,8 +49,8 @@ void Geometry_GL_SetIndices(Geometry * geometry, short *indices,size_t indices_l
 	GeometryDataGL * data = (GeometryDataGL *)geometry->data;
 
 
-	if(indices_len != GEOMETRY_INDICES_FROM_N_VERTEXS(geometry->n_vertexs)){
-		Log_Error("Index count doesn't matches (indices:%i vertexs:%i)",indices_len,GEOMETRY_INDICES_FROM_N_VERTEXS(geometry->n_vertexs));
+	if(indices_len != geometry->index_length){
+		Log_Error("Index count doesn't matches (indices:%i vertexs:%i)",indices_len,geometry->index_length);
 		return;
 	}
 
@@ -198,7 +198,17 @@ void Geometry_GL_Draw(Geometry * geometry) {
 
 	if(data->index != GL_INVALID_VALUE) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data->index);
-		glDrawElements(GL_TRIANGLES,GEOMETRY_INDICES_FROM_N_VERTEXS(geometry->n_vertexs),  GL_UNSIGNED_SHORT, (void *)(NULL));// indicesVertexBuffer->data_buffer);
+		GLenum mode=GL_TRIANGLES;
+		switch(geometry->geometry_type){
+		default:
+			break;
+		case GEOMETRY_TYPE_LINES_LOOP:
+			mode=GL_LINE_LOOP;
+			break;
+
+		}
+
+		glDrawElements(mode,geometry->index_length,  GL_UNSIGNED_SHORT, (void *)(NULL));// indicesVertexBuffer->data_buffer);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

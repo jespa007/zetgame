@@ -2,34 +2,49 @@
 
 #include "Geometry_GL.c"
 
-static Geometry * g_geometry_default=NULL;
+#define DEFAULT_CIRCLE_DIVISIONS_PER_QUADRANT 128
 
-Geometry	* Geometry_Default(void){
-	if(g_geometry_default == NULL){
-		g_geometry_default=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
+static Geometry * g_geometry_default_rectangle=NULL;
+static Geometry * g_geometry_default_circle=NULL;
+
+Geometry	* Geometry_DefaultRectangle(void){
+	if(g_geometry_default_rectangle == NULL){
+		g_geometry_default_rectangle=Geometry_NewRectangle(0);
 	}
 
-	return g_geometry_default;
+	return g_geometry_default_rectangle;
 }
 
-Geometry	* Geometry_New(size_t n_vertexs,uint32_t properties){
+Geometry	* 	Geometry_DefaultCircle(void){
+	if(g_geometry_default_circle == NULL){
+		g_geometry_default_circle=Geometry_NewCircle(0,0);
+	}
 
-	if(n_vertexs < 2){
+	return g_geometry_default_circle;
+}
+
+
+
+Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t _n_vertexs,uint32_t _properties){
+
+	if(_n_vertexs < 2){
 		Log_Error("Number of vertex should be greather than 2");
 		return NULL;
 	}
 
 	Geometry *geometry=NEW(Geometry);
 	memset(geometry, 0,sizeof(Geometry));
-	geometry->n_vertexs=n_vertexs;
-	geometry->properties=properties;
+	geometry->geometry_type=_geometry_type;
+	geometry->n_vertexs=_n_vertexs;
+	geometry->index_length=_index_length;
+	geometry->properties=_properties;
 
 	switch(Graphics_GetGraphicsApi()){
 	default:
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_New(geometry,properties);
+		Geometry_GL_New(geometry,_properties);
 		break;
 	}
 
@@ -37,23 +52,54 @@ Geometry	* Geometry_New(size_t n_vertexs,uint32_t properties){
 	return geometry;
 }
 
-Geometry	* Geometry_NewQuad(uint32_t properties){
+Geometry	* Geometry_NewRectangle(uint32_t _properties){
 
 	Geometry *geometry=NULL;
 
-	short indices[GEOMETRY_INDICES_FROM_N_VERTEXS(N_VERTEX_QUAD)]={
+	short indexs[]={
+			 0,1
+			 ,2,3
+	};
+
+	// A quarter of screen as size...
+	float mesh_vertex[]={
+		   -0.5f,-0.5f,0.0f,   // bottom left
+		   -0.5f,+0.5f,0.0f,   // top left
+		   +0.5f,+0.5f,0.0f,   // top right
+		   +0.5f,-0.5f,0.0f    // bottom right
+	};
+
+
+	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,ARRAY_SIZE(indexs),N_VERTEX_QUAD,_properties);
+
+	if(geometry){ // setup indexes...
+
+		Geometry_SetIndices(geometry,indexs,ARRAY_SIZE(indexs));
+
+		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
+
+	}
+
+	return geometry;
+}
+
+Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
+
+	Geometry *geometry=NULL;
+
+	short indexs[]={
 			0,1,2,
 			0,2,3
 	};
 
 	// A quarter of screen as size...
-	float mesh_vertex[N_VERTEX_QUAD*VERTEX_COORDS_LEN]={
-		   -0.25f,-0.25f,0.0f,   // bottom left
-		   -0.25f,+0.25f,0.0f,   // top left
-		   +0.25f,+0.25f,0.0f,   // top right
-		   +0.25f,-0.25f,0.0f    // bottom right
+	float mesh_vertex[]={
+		   -0.5f,-0.5f,0.0f,   // bottom left
+		   -0.5f,+0.5f,0.0f,   // top left
+		   +0.5f,+0.5f,0.0f,   // top right
+		   +0.5f,-0.5f,0.0f    // bottom right
 	};
-	float mesh_texture_coords[N_VERTEX_QUAD*TEXTURE_COORDS_LEN]={
+	float mesh_texture_coords[]={
 		   0.0f,  1.0f,   // bottom left
 		   0.0f,  0.0f,   // top left
 		   1.0f,  0.0f,   // top right
@@ -61,23 +107,74 @@ Geometry	* Geometry_NewQuad(uint32_t properties){
 	};
 
 
-	geometry=Geometry_New(N_VERTEX_QUAD,properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLES,ARRAY_SIZE(indexs),N_VERTEX_QUAD,_properties);
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indices,GEOMETRY_INDICES_FROM_N_VERTEXS(N_VERTEX_QUAD));
+		Geometry_SetIndices(geometry,indexs,ARRAY_SIZE(indexs));
 
-		Geometry_SetMeshVertex(geometry,mesh_vertex,N_VERTEX_QUAD*VERTEX_COORDS_LEN);
+		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 
-		if(properties & GEOMETRY_PROPERTY_TEXTURE){
-			Geometry_SetMeshTexture(geometry,mesh_texture_coords,N_VERTEX_QUAD*TEXTURE_COORDS_LEN);
+		if(_properties & GEOMETRY_PROPERTY_TEXTURE){
+			Geometry_SetMeshTexture(geometry,mesh_texture_coords,ARRAY_SIZE(mesh_texture_coords));
 		}
 	}
 
 	return geometry;
 }
 
-void 			Geometry_SetIndices(Geometry *geometry,short *indices,size_t indices_len){
+Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _properties){
+
+	if(_divisions_per_quadrant < 1){
+		_divisions_per_quadrant=DEFAULT_CIRCLE_DIVISIONS_PER_QUADRANT;
+	}
+
+	Geometry *geometry=NULL;
+	uint16_t n_vertexs = 4*_divisions_per_quadrant;
+	size_t index_length=n_vertexs;
+
+	short *indexs=malloc(index_length*sizeof(short));
+
+	// A quarter of screen as size...
+	float *mesh_vertex=malloc(n_vertexs*sizeof(float)*VERTEX_COORDS_LEN);
+	float *it_vertexs=mesh_vertex;
+	short *it_indexs=indexs;
+
+	float inc_r=2*PI/(float)n_vertexs;
+	int index=0;
+
+    for (float r = 0; r < 2*PI; r+=inc_r,it_vertexs+=3,it_indexs++)
+    {
+    	*(it_vertexs+0)=cos(r);
+    	*(it_vertexs+1)=sin(r);
+    	*(it_vertexs+2)=0;
+
+    	*(it_indexs+0)=index+0;
+    	//*(it_indexs+1)=index+1;
+
+    	index++;
+
+    }
+
+
+	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,index_length,n_vertexs,_properties);
+
+	if(geometry){ // setup indexes...
+
+		Geometry_SetIndices(geometry,indexs,index_length);
+
+		Geometry_SetMeshVertex(geometry,mesh_vertex,n_vertexs*VERTEX_COORDS_LEN);
+
+	}
+
+	// we don't need anymore
+	free(indexs);
+	free(mesh_vertex);
+
+	return geometry;
+}
+
+void 			Geometry_SetIndices(Geometry *geometry,short *indexs,size_t indices_len){
 
 	if(geometry == NULL) return;
 
@@ -86,7 +183,7 @@ void 			Geometry_SetIndices(Geometry *geometry,short *indices,size_t indices_len
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetIndices(geometry,indices,indices_len);
+		Geometry_GL_SetIndices(geometry,indexs,indices_len);
 		break;
 	}
 }
@@ -176,9 +273,16 @@ void	Geometry_Delete(Geometry *_this){
 }
 
 void			Geometry_DeInit(void){
-	if(g_geometry_default != NULL){
-		Geometry_Delete(g_geometry_default);
+	if(g_geometry_default_rectangle != NULL){
+		Geometry_Delete(g_geometry_default_rectangle);
 	}
 
-	g_geometry_default=NULL;
+	g_geometry_default_rectangle=NULL;
+
+	if(g_geometry_default_circle != NULL){
+		Geometry_Delete(g_geometry_default_circle);
+	}
+
+	g_geometry_default_circle=NULL;
+
 }

@@ -7,8 +7,8 @@
 #define COLOR_COORDS_LEN 	3	// RGB
 #define NORMAL_COORDS_LEN 	3	// XYZ
 
-#define N_TRIANGLES(v)	((v)-2)
-#define GEOMETRY_INDICES_FROM_N_VERTEXS(v)	(N_TRIANGLES(v)*3)
+#define N_TRIANGLES_FROM_N_VERTEXS(v)	((v)-2)
+#define N_INDICES_TRIANGLES_FROM_N_VERTEXS(v)	(N_TRIANGLES_FROM_N_VERTEXS(v)*3)
 
 
 #define N_VERTEX_QUAD	4
@@ -21,17 +21,32 @@
 
 typedef struct Geometry Geometry;
 
+
+typedef enum{
+	GEOMETRY_TYPE_TRIANGLES=0,
+	GEOMETRY_TYPE_LINES_LOOP
+}GeometryType;
+
 struct Geometry{
 	//vars
+	GeometryType geometry_type;
 	size_t n_vertexs;
+	size_t index_length;
 	uint32_t properties;
 	void * data;
 };
 
-Geometry	* 	Geometry_Default(void); // it returns a quad
 
-Geometry	* 	Geometry_New(size_t index_count, uint32_t properties);
-Geometry	* 	Geometry_NewQuad(uint32_t properties);
+
+Geometry	* 	Geometry_DefaultCircle(void); // it returns a circle of 1 radius
+Geometry	* 	Geometry_DefaultRectangle(void); // it returns a quad of 1 by 1
+Geometry	* 	Geometry_New(GeometryType _geometry_type,size_t _n_indexs, size_t _n_vertexs, uint32_t _properties);
+Geometry	* 	Geometry_NewRectangleTextured(uint32_t properties);
+Geometry	* 	Geometry_NewRectangle(uint32_t properties);
+/**
+ * _smooth: 1-N
+ */
+Geometry	* 	Geometry_NewCircle(uint16_t _divisions_per_quadrant,uint32_t properties);
 
 void 			Geometry_SetIndices(Geometry *geometry,short *indices,size_t indices_len);
 void 			Geometry_SetMeshVertex(Geometry *geometry,float *mesh_vertexs,size_t mesh_vertexs_len);

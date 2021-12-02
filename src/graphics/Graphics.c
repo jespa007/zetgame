@@ -156,7 +156,7 @@ bool Graphics_Init(
 
 
 	// init gl vars
-	g_graphics_vars->geometry_quad_default=Geometry_NewQuad(GEOMETRY_PROPERTY_TEXTURE);
+	g_graphics_vars->geometry_quad_default=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
 
 	// adapter list
 	g_graphics_vars->adapters=NULL;
