@@ -10,10 +10,10 @@ Zetgame 1.0.0
 > #2 Implement SpriteKeyFrame
 > #3 Get rid of deprecated fixed opengl pipeline
 > #5 Compile and Run shader+fragment shader
-> #6 organize component update by system, physics and render
+#6 organize component update by system, physics and render
 > #7 Adapt zetgame for Rasperry-PI 
 > #8 Adapt zetgame for RetroFW RS-97 
-> #9 Texture manager 
+#9 Texture manager 
 > #10 Port to Emmscripten 
 > #11 Implement Physics Entity-Tilemap colliding 
 #12 Implement Tilemap rendering
