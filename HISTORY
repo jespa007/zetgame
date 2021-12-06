@@ -16,12 +16,12 @@ Zetgame 1.0.0
 > #9 Texture manager 
 > #10 Port to Emmscripten 
 > #11 Implement Physics Entity-Tilemap colliding 
-> #12 Implement Tilemap rendering
+#12 Implement Tilemap rendering
 > #13 Implement particle system  
 > #14 Adapt zetgame for Android (NDK) 
 #15 Integrate cJson 
-> #16 Support load from Tiled 
-> #17 Support load from Aseprite 
+#16 Support load from Tiled 
+#17 Support load from Aseprite 
 #18 Different resolutions from game design resolution
 > #19 Implement Managing Scene
 #20 Integrate ezxml 
