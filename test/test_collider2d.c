@@ -28,11 +28,24 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
+	Transform transform=Transform_New();
+
 	do{
 		Graphics_BeginRender();
 
 		Geometry_Draw(Geometry_DefaultCircle());
 		Geometry_Draw(Geometry_DefaultRectangle());
+
+		Vector2i m=Input_GetMousePosition();
+		float x=ViewPort_ScreenToWorldPositionX(m.x);
+		float y=ViewPort_ScreenToWorldPositionY(m.y);
+
+		transform.translate.x=x;
+		transform.translate.y=y;
+
+		Transform_Apply(&transform);
+		Geometry_Draw(Geometry_DefaultCircle());
+		Transform_Restore(&transform);
 
 
 		Graphics_EndRender();

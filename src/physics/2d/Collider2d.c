@@ -6,10 +6,10 @@ typedef struct{
 }Collider2dData;
 
 bool Collider2d_CheckCollisionRectangleRectangle(
-		  Vector3f _p1
-			, float _w1, float _h1
-			, Vector3f _p2
-			, float _w2, float _h2
+	  Vector3f _p1
+		, float _w1, float _h1
+		, Vector3f _p2
+		, float _w2, float _h2
 ){
 
 	if (_p1.x + _w1 < _p2.x - _w2) {
@@ -28,17 +28,21 @@ bool Collider2d_CheckCollisionRectangleRectangle(
 }
 
 bool Collider2d_CheckCollisionRectangleCircle(
-		  	  	  	  	  	 Vector3f _p1
-							, float _w1, float _h1
-							, Vector3f _p2
-							, float _r2){
+	 Vector3f _p1
+	, float _w1, float _h1
+	, Vector3f _p2
+	, float _r2){
+
+
+
 	return false;
 }
 
-bool Collider2d_CheckCollisionCircleCircle( Vector3f _p1
-								, float _r1
-								, Vector3f _p2
-								, float _r2){
+bool Collider2d_CheckCollisionCircleCircle(
+	Vector3f _p1
+	, float _r1
+	, Vector3f _p2
+	, float _r2){
 	return false;
 }
 

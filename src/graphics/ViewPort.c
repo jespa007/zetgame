@@ -188,18 +188,18 @@ Vector2i ViewPort_WorldToScreen(float x3d, float y3d){
 
 }
 
-float ViewPort_ScreenToWorldPosX(int x2d){
+float ViewPort_ScreenToWorldPositionX(int x2d){
 	return ViewPort_ScreenToWorldPosX_BuiltIn(&g_viewport_vars->current_viewport, x2d);
 }
 
-float ViewPort_ScreenToWorldPosY(int y2d){
+float ViewPort_ScreenToWorldPositionY(int y2d){
 	return ViewPort_ScreenToWorldPosY_BuiltIn(&g_viewport_vars->current_viewport, y2d);
 }
 
 Vector3f ViewPort_ScreenToWorld(int x, int y){
 	Vector3f v3d=(Vector3f){
-		.x=ViewPort_ScreenToWorldPosX(x)
-		,.y=ViewPort_ScreenToWorldPosY(y)
+		.x=ViewPort_ScreenToWorldPositionX(x)
+		,.y=ViewPort_ScreenToWorldPositionY(y)
 		,.z=0
 	};
 
