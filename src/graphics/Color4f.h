@@ -6,9 +6,9 @@
 #define 	ALPHA_VALUE_TRANSPARENT	0
 #define 	ALPHA_VALUE_SOLID		1
 
-#define 	COLOR_BLACK_4F 			(Color4f){0,0,0,1}
+#define 	COLOR4F_BLACK 			(Color4f){0,0,0,1}
 #define 	COLOR4F_WHITE 			(Color4f){1,1,1,1}
-#define 	COLOR_RED_4F 			(Color4f){1,0,0,1}
+#define 	COLOR4F_RED 			(Color4f){1,0,0,1}
 
 
 typedef struct Color4f Color4f;

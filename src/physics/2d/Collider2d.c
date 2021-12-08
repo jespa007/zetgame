@@ -5,7 +5,7 @@ typedef struct{
 	Collider2dType type;
 }Collider2dData;
 
-bool Collider2d_CheckCollisionRectangleRectangle(
+bool Collider2d_TestIntersectionRectangleRectangle(
 	  Vector3f _p1
 		, float _w1, float _h1
 		, Vector3f _p2
@@ -27,7 +27,7 @@ bool Collider2d_CheckCollisionRectangleRectangle(
 	return true;
 }
 
-bool Collider2d_CheckCollisionRectangleCircle(
+bool Collider2d_TestIntersectionRectangleCircle(
 	 Vector3f _p1
 	, float _w1, float _h1
 	, Vector3f _p2
@@ -38,7 +38,7 @@ bool Collider2d_CheckCollisionRectangleCircle(
 	return false;
 }
 
-bool Collider2d_CheckCollisionCircleCircle(
+bool Collider2d_TestIntersectionCircleCircle(
 	Vector3f _p1
 	, float _r1
 	, Vector3f _p2
