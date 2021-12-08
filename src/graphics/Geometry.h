@@ -38,8 +38,10 @@ struct Geometry{
 
 
 
-Geometry	* 	Geometry_DefaultCircle(void); // it returns a circle of 1 radius
-Geometry	* 	Geometry_DefaultRectangle(void); // it returns a quad of 1 by 1
+Geometry	* 	Geometry_GetDefaultCircle(void); // it returns a circle of 1 radius
+Geometry	* 	Geometry_GetDefaultRectangle(void); // it returns a quad of 1 by 1
+Geometry	* 	Geometry_GetDefaultRectangleFilled(void); // it returns a quad of 1 by 1
+Geometry	* 	Geometry_GetDefaultRectangleTextured(void); // it returns a quad of 1 by 1
 Geometry	* 	Geometry_New(GeometryType _geometry_type,size_t _n_indexs, size_t _n_vertexs, uint32_t _properties);
 Geometry	* 	Geometry_NewRectangleTextured(uint32_t properties);
 Geometry	* 	Geometry_NewRectangle(uint32_t properties);
@@ -48,11 +50,11 @@ Geometry	* 	Geometry_NewRectangle(uint32_t properties);
  */
 Geometry	* 	Geometry_NewCircle(uint16_t _divisions_per_quadrant,uint32_t properties);
 
-void 			Geometry_SetIndices(Geometry *geometry,short *indices,size_t indices_len);
-void 			Geometry_SetMeshVertex(Geometry *geometry,float *mesh_vertexs,size_t mesh_vertexs_len);
-void 			Geometry_SetMeshTexture(Geometry *geometry,float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len);
-void 			Geometry_SetMeshColor(Geometry *geometry,float *mesh_color_vertexs,size_t mesh_color_vertexs_len);
-void 			Geometry_SetMeshNormal(Geometry *geometry,float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len);
+void 			Geometry_SetIndices(Geometry *geometry,const short *indices,size_t indices_len);
+void 			Geometry_SetMeshVertex(Geometry *geometry,const float *mesh_vertexs,size_t mesh_vertexs_len);
+void 			Geometry_SetMeshTexture(Geometry *geometry,const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len);
+void 			Geometry_SetMeshColor(Geometry *geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len);
+void 			Geometry_SetMeshNormal(Geometry *geometry,const float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len);
 void 			Geometry_Draw(Geometry *geometry);
 
 void			Geometry_Delete(Geometry *geometry);

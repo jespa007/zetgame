@@ -117,9 +117,12 @@ int main(int argc, char *argv[]){
 			);
 		}
 
-		//Shape2d_Draw(shape2d,transform);
+		// width and height
+		transform.scale.x=0.5;
+		transform.scale.y=0.5;
 		Transform_Apply(&transform);
-		Shape_DrawRectangle(0.5f,0.5f,true);
+		//Shape_DrawRectangle(0.5f,0.5f,true);
+		Graphics_Draw(Geometry_GetDefaultRectangleTextured());
 		Transform_Restore(&transform);
 
 

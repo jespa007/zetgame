@@ -1,26 +1,6 @@
 #include "ZetGame.h"
 
 
-
-/*
-
-void createcircle (float k, float r, float h) {
-
-  glBegin(GL_LINES);
-    for (int i = 0; i < 180; i++)
-    {
-    	float x,y,rot;
-    x = r * cos(i) - h;
-    y = r * sin(i) + k;
-    glVertex3f(x + k,y - h,0);
-
-    x = r * cos(i + 0.1) - h;
-    y = r * sin(i + 0.1) + k;
-    glVertex3f(x + k,y - h,0);
-    }
-    glEnd();
-}*/
-
 int main(int argc, char *argv[]){
 
 	UNUSUED_PARAM(argc);
@@ -33,8 +13,8 @@ int main(int argc, char *argv[]){
 	do{
 		Graphics_BeginRender();
 
-		Geometry_Draw(Geometry_DefaultCircle());
-		Geometry_Draw(Geometry_DefaultRectangle());
+		Geometry_Draw(Geometry_GetDefaultCircle());
+		Geometry_Draw(Geometry_GetDefaultRectangle());
 
 		Vector2i m=Input_GetMousePosition();
 		float x=ViewPort_ScreenToWorldPositionX(m.x);
@@ -44,7 +24,8 @@ int main(int argc, char *argv[]){
 		transform.translate.y=y;
 
 		Transform_Apply(&transform);
-		Geometry_Draw(Geometry_DefaultCircle());
+		Graphics_SetLineThickness(2);
+		Geometry_Draw(Geometry_GetDefaultCircle());
 		Transform_Restore(&transform);
 
 

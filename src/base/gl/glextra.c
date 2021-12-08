@@ -116,16 +116,18 @@ uintptr_t glGetProcAddress(const char *name){
 // aspect   - Aspect ratio of the viewport
 // zNear    - The near clipping distance
 // zFar     - The far clipping distance
-void glPerspective(GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar ) {
+void glPerspective(GLdouble fovY, GLdouble aspect, GLdouble z_near, GLdouble z_far ) {
 	const GLdouble pi = 3.1415926535897932384626433832795;
 
-	GLdouble fW, fH;
+	GLdouble xmin, xmax, ymin,ymax;
 
-	fH = tan( fovY / 360 * pi ) * zNear;
+	ymax = tan( fovY* pi / 360  ) * z_near;
+	ymin = -ymax;
 
-	fW = fH * aspect;
+	xmin = ymin*aspect;
+	xmax = ymax*aspect;
 
-	glFrustum(-fW, fW, -fH, fH, zNear, zFar );
+	glFrustum(xmin, xmax, ymin, ymax, z_near, z_far );
 }
 
 

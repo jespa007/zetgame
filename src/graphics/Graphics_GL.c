@@ -133,93 +133,13 @@ void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){
 }
 
 
-/*****
- * 2D Drawing functions
- */
-
-void Graphics_GL_DrawRectangle4f(float x1, float y1, float x2, float y2, uint8_t thickness, Color4f color){
-
-	glPushAttrib( GL_CURRENT_BIT | GL_LIGHTING_BIT);
-		glDisable(GL_LIGHTING);
-		glColor4f(color.r, color.g,color.b, color.a);
-		glLineWidth(thickness); // set line width
-		glBegin(GL_LINES); // draw something with the texture on
-				glVertex2f(x1, y1);
-				glVertex2f(x2, y1);
-
-				glVertex2f(x2, y1);
-				glVertex2f(x2, y2);
-
-				glVertex2f(x2, y2);
-				glVertex2f(x1, y2);
-
-				glVertex2f(x1, y2);
-				glVertex2f(x1, y1);
-		glEnd();
-	glPopAttrib();
+void Graphics_GL_SetColor4f(float _r, float _g, float _b, float _a){
+	glColor4f(_r, _g, _b, _a);
 }
 
-
-void Graphics_GL_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color){
-
-	glPushAttrib( GL_CURRENT_BIT | GL_LIGHTING_BIT);
-
-	glDisable(GL_LIGHTING);
-
-	glColor4f(color.r, color.g,color.b,color.a);
-	glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
-			glVertex2f(x1, y1);
-			glVertex2f(x2, y1);
-			glVertex2f(x1, y2);
-			glVertex2f(x2, y2);
-	glEnd();
-
-	glPopAttrib();
+void Graphics_GL_SetLineThickness( uint8_t _thickness){
+	glLineWidth(_thickness); // set line width
 }
-
-
-void Graphics_GL_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, TextureRect *text_crop ){
-
-	glPushAttrib( GL_CURRENT_BIT | GL_TEXTURE_BIT | GL_LIGHTING_BIT | GL_COLOR_BUFFER_BIT);
-
-	TextureRect default_text_crop= {.u1=0,.v1=0,.u2=1,.v2=1};
-
-	if(text_crop == NULL){
-		text_crop=&default_text_crop;
-	}
-
-	glDisable(GL_LIGHTING);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glEnable(GL_ALPHA_TEST);
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // normal
-  	glAlphaFunc(GL_NOTEQUAL, 0);
-
-	Texture_Bind(0);
-	if(text != NULL){
-		Texture_Bind(text);
-	}
-
-	glColor4f(color.r,color.g,color.b,color.a);
-
-	glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
-			glTexCoord2f(text_crop->u1, text_crop->v1);
-			glVertex2f(x1, y1);
-
-			glTexCoord2f(text_crop->u2, text_crop->v1);
-			glVertex2f(x2, y1);
-
-			glTexCoord2f(text_crop->u1, text_crop->v2);
-			glVertex2f(x1,y2);
-
-			glTexCoord2f(text_crop->u2, text_crop->v2);
-			glVertex2f(x2,y2);
-	glEnd();
-
-	glPopAttrib();
-}
-
 
 void Graphics_GL_ClearScreen(Color4f color) { // start render and clear background...
 	glClearColor(color.r,color.g,color.b,color.a);

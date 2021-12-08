@@ -11,16 +11,16 @@ typedef struct TTFont 			TTFont;
 
 struct TTFont
 {
-	void *font_data;
 	const char *font_filename;
-	MapInt *characters;
-    uint8_t font_size;
-    uint16_t space_width; // in pixels
-    uint32_t font_properties;
-    FT_Face ft_face;
+	MapInt *	characters;
+    uint8_t 	font_size;
+    uint16_t 	space_width; // in pixels
+    uint32_t 	font_properties;
 	uint32_t	ascender;
-	float weight,shear;
+	float 		weight,shear;
 	uint8_t 	style;
+
+    void 		*data;
 };
 
 

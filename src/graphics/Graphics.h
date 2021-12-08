@@ -34,6 +34,9 @@ unsigned Graphics_GetNumMonitors(void);
 bool Graphics_GetScreenBounds(int num_display, SDL_Rect * rect );
 void Graphics_ToggleFullscreen(void);
 
+void Graphics_SetLineThickness(uint8_t _thickness);
+void Graphics_SetColor4f(float _r, float _g, float _b, float _a);
+
 uint16_t Graphics_GetWidth(void);
 uint16_t Graphics_GetHeight(void);
 float Graphics_GetOneOverWidth(void);

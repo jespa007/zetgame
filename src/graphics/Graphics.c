@@ -35,13 +35,20 @@ typedef struct{
 	 List   *capture_screen_callbacks;
 	 int 	n_screenshoot;
 
-	Geometry *geometry_quad_default;
+	Geometry *geometry_rectangle_default;
+	Appearance *appearance_rectangle_default;
 
 }GraphicsVars;
 
 
 GraphicsVars *g_graphics_vars=NULL;
 
+const float g_default_rectangle_crop[]={
+	0, 0,
+	1, 0,
+	0, 1,
+	1, 1
+};
 
 
 #include "Graphics_GL.c"
@@ -156,7 +163,9 @@ bool Graphics_Init(
 
 
 	// init gl vars
-	g_graphics_vars->geometry_quad_default=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
+	g_graphics_vars->geometry_rectangle_default=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
+	g_graphics_vars->appearance_rectangle_default=Appearance_New();
+
 
 	// adapter list
 	g_graphics_vars->adapters=NULL;
@@ -194,6 +203,26 @@ void Graphics_SetCameraTransform(Transform *transform){
 			break;
 		case GRAPHICS_API_GL:
 			Graphics_GL_SetCameraTransform(transform);
+			break;
+	}
+}
+
+void Graphics_SetLineThickness(uint8_t _thickness){
+	switch(Graphics_GetGraphicsApi()){
+		default:
+			break;
+		case GRAPHICS_API_GL:
+			Graphics_GL_SetLineThickness(_thickness);
+			break;
+	}
+}
+
+void Graphics_SetColor4f(float _r, float _g, float _b, float _a){
+		switch(Graphics_GetGraphicsApi()){
+		default:
+			break;
+		case GRAPHICS_API_GL:
+			Graphics_GL_SetColor4f(_r,_g,_b,_a);
 			break;
 	}
 }
@@ -478,16 +507,13 @@ void Graphics_EndRender(void)
 void Graphics_DrawRectangle(uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
 	Vector3f dim_3d=ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
 
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangle4f(
-				-dim_3d.x
-				,dim_3d.y
-				,dim_3d.x
-				,-dim_3d.y
-				,thickness
-				,color);
-	}
+	Graphics_DrawRectangle4f(
+			-dim_3d.x
+			,dim_3d.y
+			,dim_3d.x
+			,-dim_3d.y
+			,thickness
+			,color);
 }
 
 void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
@@ -498,18 +524,23 @@ void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t he
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
-
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangle4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,thickness,color);
-	}
+	Graphics_DrawRectangle4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,thickness,color);
 }
 
-void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, uint8_t thickness, Color4f color){
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangle4f(x1,y1,x2,y2,thickness,color);
-	}
+void Graphics_DrawRectangle4f(float _x1, float _y1, float _x2, float _y2, uint8_t _thickness, Color4f _color){
+	Transform t=Transform_New();
+	float w=_x2-_x1;
+	float h=_y2-_y1;
+	t.translate.x=_x1+w*0.5;
+	t.translate.y=_y1+h*0.5;
+	t.scale.x=w;
+	t.scale.y=h;
+
+	Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
+	Graphics_SetLineThickness(_thickness);
+	Transform_Apply(&t);
+	Geometry_Draw(Geometry_GetDefaultRectangle());
+	Transform_Restore(&t);
 }
 
 void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color){
@@ -521,17 +552,22 @@ void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint1
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangleFilled4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color);
-	}
+	Graphics_DrawRectangleFilled4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color);
 }
 
-void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color){
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangleFilled4f(x1,y1,x2,y2,color);
-	}
+void Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, Color4f _color){
+	Transform t=Transform_New();
+	float w=_x2-_x1;
+	float h=_y2-_y1;
+	t.translate.x=_x1+w*0.5;
+	t.translate.y=_y1+h*0.5;
+	t.scale.x=w;
+	t.scale.y=h;
+
+	Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
+	Transform_Apply(&t);
+	Geometry_Draw(Geometry_GetDefaultRectangleFilled());
+	Transform_Restore(&t);
 }
 
 void Graphics_DrawRectangleTexturedTranslate2i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
@@ -543,17 +579,46 @@ void Graphics_DrawRectangleTexturedTranslate2i(int _x, int _y, uint16_t _width, 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangleTextured4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,_color,text,text_crop);
-	}
+	Graphics_DrawRectangleTextured4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,_color,text,text_crop);
 }
 
-void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2,  Color4f color,Texture *text, TextureRect * text_crop){
-	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
-		Graphics_GL_DrawRectangleTextured4f(x1,y1,x2,y2,color,text, text_crop);
+void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2,  Color4f _color,Texture *_texture, TextureRect * _text_crop){
+	Transform t=Transform_New();
+
+
+	// setup transform
+	float w=_x2-_x1;
+	float h=_y2-_y1;
+	t.translate.x=_x1+w*0.5;
+	t.translate.y=_y1+h*0.5;
+	t.scale.x=w;
+	t.scale.y=h;
+
+	// setup appearance
+	g_graphics_vars->appearance_rectangle_default->material->color=_color;
+	g_graphics_vars->appearance_rectangle_default->texture=_texture;
+
+	Transform_Apply(&t);
+	Appearance_Apply(g_graphics_vars->appearance_rectangle_default);
+
+	// setup crop
+	if(_text_crop == NULL){
+		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,g_default_rectangle_crop,ARRAY_SIZE(g_default_rectangle_crop));
+	}else{
+		float uv_coords[]={
+				_text_crop->u1, _text_crop->v1,
+				_text_crop->u2, _text_crop->v1,
+				_text_crop->u1, _text_crop->v2,
+				_text_crop->u2, _text_crop->v2
+		};
+
+		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,uv_coords,ARRAY_SIZE(uv_coords));
 	}
+
+	Geometry_Draw(g_graphics_vars->geometry_rectangle_default);
+
+	Appearance_Restore(g_graphics_vars->appearance_rectangle_default);
+	Transform_Restore(&t);
 }
 
 void Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance){
@@ -578,8 +643,6 @@ void Graphics_Print(int x, int y, Color4f color, const char *in, ...){
 	TTFont_RenderTextBegin(NULL);
 	TTFont_Print(TTFontManager_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
 	TTFont_RenderTextEnd();
-
-
 
 }
 
@@ -611,7 +674,8 @@ void Graphics_DeInit(void) {
 
 
 	// deinit gl vars first
-	Geometry_Delete(g_graphics_vars->geometry_quad_default);
+	Geometry_Delete(g_graphics_vars->geometry_rectangle_default);
+	Appearance_Delete(g_graphics_vars->appearance_rectangle_default);
 
 	// ...then deini gl context
 	switch(g_graphics_vars->graphics_api){

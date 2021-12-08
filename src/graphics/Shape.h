@@ -16,10 +16,7 @@ struct Shape{
 };
 
 Shape * Shape_New(void);
-void 	Shape_SetAppearance(Shape *shape,Appearance *appearance);
-//void 	Shape_SetTranslate3f(Shape *shape,float x, float y, float z);
-//void 	Shape_SetRotate3f(Shape *shape,float x, float y, float z);
-void 	Shape_Draw(Shape *shape, Transform *transform);
-void	Shape_DrawRectangle(float width, float height, bool text_coords);
+void 	Shape_SetAppearance(Shape *_this,Appearance *appearance);
+void 	Shape_Draw(Shape *_this, Transform *transform);
 void 	Shape_Delete(Shape *shape);
 #endif

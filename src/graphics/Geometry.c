@@ -5,9 +5,11 @@
 #define DEFAULT_CIRCLE_DIVISIONS_PER_QUADRANT 128
 
 static Geometry * g_geometry_default_rectangle=NULL;
+static Geometry * g_geometry_default_rectangle_filled=NULL;
+static Geometry * g_geometry_default_rectangle_textured=NULL;
 static Geometry * g_geometry_default_circle=NULL;
 
-Geometry	* Geometry_DefaultRectangle(void){
+Geometry	* Geometry_GetDefaultRectangle(void){
 	if(g_geometry_default_rectangle == NULL){
 		g_geometry_default_rectangle=Geometry_NewRectangle(0);
 	}
@@ -15,12 +17,28 @@ Geometry	* Geometry_DefaultRectangle(void){
 	return g_geometry_default_rectangle;
 }
 
-Geometry	* 	Geometry_DefaultCircle(void){
+Geometry	* 	Geometry_GetDefaultCircle(void){
 	if(g_geometry_default_circle == NULL){
 		g_geometry_default_circle=Geometry_NewCircle(0,0);
 	}
 
 	return g_geometry_default_circle;
+}
+
+Geometry	* 	Geometry_GetDefaultRectangleFilled(void){
+	if(g_geometry_default_rectangle_filled == NULL){
+		g_geometry_default_rectangle_filled=Geometry_NewRectangle(GEOMETRY_PROPERTY_COLOR);
+	}
+
+	return g_geometry_default_rectangle_filled;
+}
+
+Geometry	* 	Geometry_GetDefaultRectangleTextured(void){
+	if(g_geometry_default_rectangle_textured == NULL){
+		g_geometry_default_rectangle_textured=Geometry_NewRectangle(GEOMETRY_PROPERTY_TEXTURE);
+	}
+
+	return g_geometry_default_rectangle_textured;
 }
 
 
@@ -153,9 +171,7 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
     	//*(it_indexs+1)=index+1;
 
     	index++;
-
     }
-
 
 	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,index_length,n_vertexs,_properties);
 
@@ -174,7 +190,7 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
 	return geometry;
 }
 
-void 			Geometry_SetIndices(Geometry *geometry,short *indexs,size_t indices_len){
+void 			Geometry_SetIndices(Geometry *geometry,const short *indexs,size_t indices_len){
 
 	if(geometry == NULL) return;
 
@@ -188,7 +204,7 @@ void 			Geometry_SetIndices(Geometry *geometry,short *indexs,size_t indices_len)
 	}
 }
 
-void 			Geometry_SetMeshVertex(Geometry *geometry,float *mesh_vertexs,size_t mesh_vertexs_len){
+void 			Geometry_SetMeshVertex(Geometry *geometry,const float *mesh_vertexs,size_t mesh_vertexs_len){
 
 	if(geometry == NULL) return;
 
@@ -202,7 +218,7 @@ void 			Geometry_SetMeshVertex(Geometry *geometry,float *mesh_vertexs,size_t mes
 	}
 }
 
-void 			Geometry_SetMeshTexture(Geometry *geometry,float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len){
+void 			Geometry_SetMeshTexture(Geometry *geometry,const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len){
 
 	if(geometry == NULL) return;
 
@@ -216,7 +232,7 @@ void 			Geometry_SetMeshTexture(Geometry *geometry,float *mesh_texure_vertexs,si
 	}
 }
 
-void 			Geometry_SetMeshColor(Geometry *geometry,float *mesh_color_vertexs,size_t mesh_color_vertexs_len){
+void 			Geometry_SetMeshColor(Geometry *geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len){
 
 	if(geometry == NULL) return;
 
@@ -230,7 +246,7 @@ void 			Geometry_SetMeshColor(Geometry *geometry,float *mesh_color_vertexs,size_
 	}
 }
 
-void 			Geometry_SetMeshNormal(Geometry *geometry,float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len){
+void 			Geometry_SetMeshNormal(Geometry *geometry,const float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len){
 	if(geometry == NULL) return;
 
 	switch(Graphics_GetGraphicsApi()){
@@ -273,16 +289,24 @@ void	Geometry_Delete(Geometry *_this){
 }
 
 void			Geometry_DeInit(void){
-	if(g_geometry_default_rectangle != NULL){
-		Geometry_Delete(g_geometry_default_rectangle);
+
+	Geometry **default_geometries[]={
+			&g_geometry_default_rectangle
+			,&g_geometry_default_rectangle_filled
+			,&g_geometry_default_rectangle_textured
+			,&g_geometry_default_circle
+			,NULL
+	};
+
+	Geometry ***it=default_geometries;
+
+	while(*it!=NULL){
+		if(**it != NULL){
+			Geometry_Delete(**it);
+		}
+		**it=NULL;
+
+		it++;
 	}
-
-	g_geometry_default_rectangle=NULL;
-
-	if(g_geometry_default_circle != NULL){
-		Geometry_Delete(g_geometry_default_circle);
-	}
-
-	g_geometry_default_circle=NULL;
 
 }

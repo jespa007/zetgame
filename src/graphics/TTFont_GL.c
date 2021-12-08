@@ -20,19 +20,21 @@ void TTFont_GL_Init(void){
 	// PRE: OpenGL context is already initialized!
 }
 
-TTFontCharacter * TTFont_GL_BuildChar(TTFont *font,unsigned long c){
+TTFontCharacter * TTFont_GL_BuildChar(TTFont *_this,unsigned long c){
 	//GLuint VAO, VBO;
 	MapInt *characters= NULL;
 	TTFontCharacter *new_character=NULL;
 	CharacterDataGL *character_data=NULL;
 	FT_Face face;
 
-	if(font==NULL) {
+	if(_this==NULL) {
 		return NULL;
 	}
 
-	characters=font->characters;
-	face=font->ft_face;
+	TTFontData *data=_this->data;
+
+	characters=_this->characters;
+	face=data->ft_face;
 
 
     // Disable byte-alignment restriction
@@ -113,76 +115,11 @@ void TTFont_GL_RenderTextBegin(Color4f *color){
 
 }
 
-void TTFont_GL_RenderText(TTFont *font,float x3d, float y3d, Color4f color, const void *text, CharType fftont_text){
-	void *ptr=(void *)text;
-	unsigned long c=0;
-	//int x_ini=x;
-
-	if(font == NULL) return;
-	//TTFontDataGL * font_data=(TTFontDataGL *)font->font_data;
-	glColor3f(color.r,color.g, color.b);
-
-	//Vector3f start_pos3d=ViewPort_ScreenToWorld(x,y);
-
-
-	while((c=StrUtils_GetCharAndAdvance(&ptr,fftont_text))!=0)
-	{
-		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(font->characters,c);
-		if(ch==NULL){ // build
-			ch=TTFont_GL_BuildChar(font,c);
-
-			if(ch==NULL){
-				continue;
-			}
-		}
-
-		CharacterDataGL *ch_data=ch->character_data;
-		//int offset_origin=(ch->size.y - ch->bearing.y);
-		//Vector2i p1_2d=Vector2i_New(ch->bearing.x	,font->ascender - ch->size.y);
-		//Vector2i p2_2d=Vector2i_New(ch->size.x	,font->ascender);
-
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,font->ascender - ch->size.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,font->ascender);
-
-		// Render glyph texture over quad
-		glBindTexture(GL_TEXTURE_2D, ch_data->texture);
-
-		// Render quad
-		//Geometry_Draw(font_data->char_geometry);
-		glBegin(GL_TRIANGLE_STRIP); // draw something with the texture on
-				glTexCoord2f(0, 0);
-				glVertex2f(x3d+p1_3d.x, y3d-p1_3d.y);
-
-				glTexCoord2f(1, 0);
-				glVertex2f(x3d+p2_3d.x, y3d-p1_3d.y);
-
-				glTexCoord2f(0, 1);
-				glVertex2f(x3d+p1_3d.x,y3d-p2_3d.y);
-
-				glTexCoord2f(1, 1);
-				glVertex2f(x3d+p2_3d.x,y3d-p2_3d.y);
-		glEnd();
-
-		x3d += ViewPort_ScreenToWorldWidth(ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-	}
-
-
-
-}
-
 
 void TTFont_GL_RenderTextEnd(void){
 	glPopAttrib();
 }
 
-
-void TTFont_GL_Print(TTFont *font,float x, float y,Color4f color,const char *str){
-	TTFont_GL_RenderText(font,x,y,color,str,CHAR_TYPE_CHAR);
-}
-
-void TTFont_GL_WPrint(TTFont *font,float x, float y,Color4f color,const wchar_t *str){
-	TTFont_GL_RenderText(font,x,y,color,str,CHAR_TYPE_WCHAR);
-}
 
 
 void TTFont_GL_Delete(TTFont *font){

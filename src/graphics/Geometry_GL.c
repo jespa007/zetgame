@@ -42,7 +42,7 @@ void  Geometry_GL_New(Geometry *geometry, uint32_t properties){
 }
 
 
-void Geometry_GL_SetIndices(Geometry * geometry, short *indices,size_t indices_len) {
+void Geometry_GL_SetIndices(Geometry * geometry, const short *indices,size_t indices_len) {
 
 	if(geometry==NULL) return;
 
@@ -66,7 +66,7 @@ void Geometry_GL_SetIndices(Geometry * geometry, short *indices,size_t indices_l
 }
 
 
-void Geometry_GL_SetMeshVertex(Geometry *geometry, float *mesh_vertexs,size_t mesh_vertexs_len) {
+void Geometry_GL_SetMeshVertex(Geometry *geometry, const float *mesh_vertexs,size_t mesh_vertexs_len) {
 
 	GeometryDataGL * data = NULL;
 
@@ -89,7 +89,7 @@ void Geometry_GL_SetMeshVertex(Geometry *geometry, float *mesh_vertexs,size_t me
 }
 
 
-void Geometry_GL_SetMeshTexture(Geometry * geometry, float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len) {
+void Geometry_GL_SetMeshTexture(Geometry * geometry, const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len) {
 	GeometryDataGL * data = NULL;
 
 	if(geometry==NULL) return;
@@ -113,7 +113,7 @@ void Geometry_GL_SetMeshTexture(Geometry * geometry, float *mesh_texure_vertexs,
 
 
 
-void Geometry_GL_SetMeshColor(Geometry * geometry,float *mesh_color_vertexs,size_t mesh_color_vertexs_len) {
+void Geometry_GL_SetMeshColor(Geometry * geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len) {
 
 	GeometryDataGL * data = NULL;
 
@@ -135,7 +135,7 @@ void Geometry_GL_SetMeshColor(Geometry * geometry,float *mesh_color_vertexs,size
 }
 
 
-void Geometry_GL_SetMeshNormal(Geometry * geometry,float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len) {
+void Geometry_GL_SetMeshNormal(Geometry * geometry,const float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len) {
 
 	GeometryDataGL * data = NULL;
 

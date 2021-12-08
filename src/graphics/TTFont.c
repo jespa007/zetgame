@@ -10,6 +10,11 @@
 
 
 typedef struct{
+    Geometry 	*geometry;
+    FT_Face 	ft_face;
+}TTFontData;
+
+typedef struct{
     void 	* character_data;   // ID handle of the glyph texture
     Vector2i size;    			// Size of glyph
     Vector2i bearing;  			// Offset from baseline to left/top of glyph
@@ -27,6 +32,7 @@ typedef struct{
 TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
     TTFont *font=NEW(TTFont);
+    TTFontData *font_data=NEW(TTFontData);
     memset(font,0,sizeof(TTFont));
     FT_Set_Pixel_Sizes(face, 0, font_size);
 	// Load space character
@@ -37,12 +43,16 @@ TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 		Log_Error("FREETYTPE: Failed to load Glyph");
 	}
 
+	// main
     font->font_size=font_size;
-    font->ft_face=face;
     font->ascender=face->ascender>>6;
     font->characters=MapInt_New();
 
+    // data
+    font_data->geometry=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
+    font_data->ft_face=face;
 
+    font->data=font_data;
 
     return font;
 }
@@ -50,13 +60,17 @@ TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 // transform bold/italic
 void TTFont_SetTransformation(TTFont * _this, float _weight, float _shear)
 {
+	if(_this==NULL) return;
+
+	TTFontData *data=_this->data;
+
 	FT_Matrix transform;
 	transform.xx = (FT_Fixed)(_weight * 65536.0f);
 	transform.xy = (FT_Fixed)(_shear * 65536.0f);
 	transform.yx = (FT_Fixed)(0);
 	transform.yy = (FT_Fixed)(65536.0f);
 
-	FT_Set_Transform(_this->ft_face, &transform, NULL);
+	FT_Set_Transform(data->ft_face, &transform, NULL);
 
 	_this->weight = _weight;
 	_this->shear = _shear;
@@ -168,36 +182,75 @@ void TTFont_RenderTextEnd(void){
 //---------------------------------------------------------------------------------
 //
 //
-void TTFont_Print(TTFont *_this,float x, float y, Color4f color, const char *in,...){
+
+void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
+	if(_this == NULL) return;
+
+	void *ptr=(void *)_text;
+	unsigned long c=0;
+	TTFontData *data=_this->data;
+
+
+	Graphics_SetColor4f(_color.r,_color.g, _color.b,1);
+
+	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0)
+	{
+		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(_this->characters,c);
+		if(ch==NULL){ // build
+			ch=TTFont_GL_BuildChar(_this,c);
+
+			if(ch==NULL){
+				continue;
+			}
+		}
+
+		CharacterDataGL *ch_data=ch->character_data;
+
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,_this->ascender - ch->size.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,_this->ascender);
+
+		const float crop []={
+				_x3d+p1_3d.x, _y3d-p1_3d.y,
+				_x3d+p2_3d.x, _y3d-p1_3d.y,
+				_x3d+p1_3d.x,_y3d-p2_3d.y,
+				_x3d+p2_3d.x,_y3d-p2_3d.y
+		};
+
+		glBindTexture(GL_TEXTURE_2D, ch_data->texture);
+		Geometry_SetMeshTexture(data->geometry,crop,ARRAY_SIZE(crop));
+		Geometry_Draw(data->geometry);
+
+		_x3d += ViewPort_ScreenToWorldWidth(ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+	}
+}
+/*
+void TTFont_GL_Print(TTFont *_this,float x, float y,Color4f color,const char *str){
+	TTFont_RenderText(_this,x,y,color,str,CHAR_TYPE_CHAR);
+}
+
+void TTFont_GL_WPrint(TTFont *_this,float x, float y,Color4f color,const wchar_t *str){
+	TTFont_RenderText(_this,x,y,color,str,CHAR_TYPE_WCHAR);
+}*/
+
+void TTFont_Print(TTFont *_this,float _x, float _y, Color4f _color, const char *in,...){
 
 	if(_this==NULL) return;
 
 	char out[1024]={0};
 	ZG_VARGS(out,in);
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_Print(_this,x,y,color,out);
-		break;
-	default:
-		break;
-	}
+	TTFont_RenderText(_this,_x,_y,_color,out,CHAR_TYPE_CHAR);
+
 }
 
-void TTFont_WPrint(TTFont *_this,float x, float y, Color4f color,const wchar_t *in,...){
+void TTFont_WPrint(TTFont *_this,float _x, float _y, Color4f _color,const wchar_t *in,...){
 
 	if(_this==NULL) return;
 
 	wchar_t out[1024]={0};
 	ZG_WVARGS(out,in);
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_WPrint(_this,x,y,color,out);
-		break;
-	default:
-		break;
-	}
+	TTFont_RenderText(_this,_x,_y,_color,out,CHAR_TYPE_WCHAR);
 }
 //
 //
@@ -248,9 +301,14 @@ uint16_t 		TTFont_WGetWidthN(TTFont *_this, const wchar_t *str, size_t len){
 
 
 void	TTFont_Delete(TTFont *_this){
+
 	if(_this ==NULL){
 		return;
 	}
+
+	TTFontData *data=_this->data;
+
+	Geometry_Delete(data->geometry);
 
 	switch(Graphics_GetGraphicsApi()){
 	case GRAPHICS_API_GL:
@@ -261,13 +319,10 @@ void	TTFont_Delete(TTFont *_this){
 	// delete all element list using free (no destructors involved) ...
 	MapInt_Delete(_this->characters);
 
-	if(_this->font_data!=NULL){
-		FREE(_this->font_data);
-	}
-
-	 FT_Done_Face(_this->ft_face);
+	 FT_Done_Face(data->ft_face);
 
 	 FREE(_this);
+	 FREE(data);
 
 }
 

@@ -48,11 +48,8 @@ int main(int argc, char *argv[]){
 			Transform_SetPosition2i(&transform,rand()%Graphics_GetWidth(),rand()%Graphics_GetHeight());
 			Transform_Apply(&transform);
 			Graphics_Draw(&transform,geometry,NULL);
-			//Shape_DrawRectangle(0.1f,0.1f,false);
 			Transform_Restore(&transform);
 		}
-
-		//Appearance_Restore(appearance);
 
 		Graphics_EndRender();
 
