@@ -12,10 +12,10 @@ void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type
 	Transform_Apply(&transform);
 	switch(_collider_type){
 	case COLLIDER2D_TYPE_RECTANGLE:
-		Geometry_Draw(Geometry_DefaultRectangle());
+		Geometry_Draw(Geometry_GetDefaultRectangle());
 		break;
 	case COLLIDER2D_TYPE_CIRCLE:
-		Geometry_Draw(Geometry_DefaultCircle());
+		Geometry_Draw(Geometry_GetDefaultCircle());
 		break;
 	}
 	Transform_Restore(&transform);
@@ -37,18 +37,18 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
-	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
+	/*Collider2dType mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
 	Transform mouse_transform=Transform_New();
 
 	int mouse_collider_w=10;
 	int mouse_collider_h=10;
 	mouse_transform.scale.x=ViewPort_ScreenToWorldWidth(mouse_collider_w);
-	mouse_transform.scale.y=ViewPort_ScreenToWorldWidth(mouse_collider_h);
+	mouse_transform.scale.y=ViewPort_ScreenToWorldWidth(mouse_collider_h);*/
 
 	do{
 		Graphics_BeginRender();
 
-		Vector2i m=Input_GetMousePosition();
+		/*Vector2i m=Input_GetMousePosition();
 		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x);
 		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y);
 
@@ -58,19 +58,39 @@ int main(int argc, char *argv[]){
 			// check collision and set line red if collides
 			switch(mouse_collider_type){
 			case COLLIDER2D_TYPE_RECTANGLE:
-				if(Collider2d_TestIntersectionRectangleRectangle(
-						mouse_transform.translate
-						,mouse_transform.scale.x
-						,mouse_transform.scale.y
-						,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-						,ViewPort_ScreenToWorldWidth(colliders[i].w)
-						,ViewPort_ScreenToWorldHeight(colliders[i].h)
-				)){
-					color=COLOR4F_RED;
+				switch(colliders[i].collider_type){
+				case COLLIDER2D_TYPE_RECTANGLE:
+					if(Collider2d_TestIntersectionRectangleRectangle(
+							mouse_transform.translate
+							,mouse_transform.scale.x
+							,mouse_transform.scale.y
+							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
+							,ViewPort_ScreenToWorldWidth(colliders[i].w)
+							,ViewPort_ScreenToWorldHeight(colliders[i].h)
+					)){
+						color=COLOR4F_RED;
+					}
+					break;
+				case COLLIDER2D_TYPE_CIRCLE:
+					if(Collider2d_TestIntersectionRectangleCircle(
+							mouse_transform.translate
+							,mouse_transform.scale.x
+							,mouse_transform.scale.y
+							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
+							,ViewPort_ScreenToWorldWidth(colliders[i].w)
+					)){
+						color=COLOR4F_RED;
+					}
+					break;
+				default:
+					break;
 				}
 				break;
 			case COLLIDER2D_TYPE_CIRCLE:
 				break;
+			default:
+				break;
+
 
 			}
 
@@ -93,7 +113,7 @@ int main(int argc, char *argv[]){
 			,mouse_collider_h
 			,mouse_collider_type
 			,COLOR4F_WHITE
-		);
+		);*/
 
 		Graphics_EndRender();
 
