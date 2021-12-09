@@ -5,6 +5,30 @@ typedef struct{
 	Collider2dType type;
 }Collider2dData;
 
+bool Collider2d_TestIntersectionRectanglePoint(
+							  Vector3f _p1
+							, float _w1, float _h1
+							, Vector3f _p2
+							){
+	float w1_med=_w1*0.5;
+	float h1_med=_h1*0.5;
+
+	if (_p1.x + w1_med < _p2.x) {
+		return false;
+	}
+	if (_p1.y + h1_med < _p2.y) {
+		return false;
+	}
+	if (_p1.x - w1_med > _p2.x) {
+		return false;
+	}
+	if (_p1.y - h1_med > _p2.y) {
+		return false;
+	}
+	return true;
+
+}
+
 bool Collider2d_TestIntersectionRectangleRectangle(
 	  Vector3f _p1
 		, float _w1, float _h1
@@ -37,15 +61,25 @@ bool Collider2d_TestIntersectionRectangleCircle(
 	, float _w1, float _h1
 	, Vector3f _p2
 	, float _r2){
+	float w1_med=_w1*0.5;
+	float h1_med=_h1*0.5;
 
-	// check whether in its BB
-	if(Collider2d_TestIntersectionRectangleRectangle(
-			_p1,_w1,_h1,_p2,_r2*2, _r2*2
-	)){ // collides -> check distance distance vertexs
-		return true;
-	}
+    float circle_distance_x = fabs(_p2.x - _p1.x);
+    float circle_distance_y = fabs(_p2.y - _p1.y);
 
-	return false;
+   	if (circle_distance_x > (w1_med + _r2)) { return false; }
+   	if (circle_distance_y > (h1_med + _r2)) { return false; }
+
+   	if (circle_distance_x <= (w1_med)) { return true; }
+   	if (circle_distance_y <= (h1_med)) { return true; };
+
+   	float xdiff=circle_distance_x-w1_med;
+   	float ydiff=circle_distance_x-w1_med;
+
+	float corner_distance=(xdiff)*(xdiff)+
+						  (ydiff)*(ydiff);
+
+	return corner_distance<=_r2*_r2;
 }
 
 bool Collider2d_TestIntersectionCircleCircle(

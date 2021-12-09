@@ -59,7 +59,7 @@ bool Graphics_GL_Init(void){
 
 
 	//---- BEGIN POINT SPRITES SETUP FOR SYSTEM PARTICLE (Don't touch these values, everything works fine now!)
-    GLfloat psr[2];
+    /*GLfloat psr[2];
 	GLfloat pda[3] = { 1.0f, 0.0f, 0.01f }; // defaults are (1.0, 0.0, 0.0)
 
 	glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, psr);
@@ -74,7 +74,7 @@ bool Graphics_GL_Init(void){
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
-	glDisable(GL_POINT_SMOOTH);
+	glDisable(GL_POINT_SMOOTH);*/
 	//---- END POINT SPRITES SETUP FOR SYSTEM PARTICLE
 
 	return true;

@@ -202,6 +202,12 @@ void Geometry_GL_Draw(Geometry * geometry) {
 		switch(geometry->geometry_type){
 		default:
 			break;
+		case GEOMETRY_TYPE_POINTS:
+			mode=GL_POINTS;
+			break;
+		case GEOMETRY_TYPE_TRIANGLE_STRIP:
+			mode=GL_TRIANGLE_STRIP;
+			break;
 		case GEOMETRY_TYPE_LINES_LOOP:
 			mode=GL_LINE_LOOP;
 			break;

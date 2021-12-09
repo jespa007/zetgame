@@ -355,13 +355,6 @@ add_executable(test_primitives${POST_NAME}
 target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 
-add_executable(test_textbox${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_textbox.c
-)
-
-target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
-
-
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
 )
@@ -410,5 +403,13 @@ add_executable(test_collider2d${POST_NAME}
 )
 
 target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
+
+#--- TEXTBOX
+add_executable(test_textbox${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_textbox.c
+)
+
+target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
 

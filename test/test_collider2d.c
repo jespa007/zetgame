@@ -11,6 +11,9 @@ void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type
 
 	Transform_Apply(&transform);
 	switch(_collider_type){
+	case COLLIDER2D_TYPE_POINT:
+		Geometry_Draw(Geometry_GetDefaultPoint());
+		break;
 	case COLLIDER2D_TYPE_RECTANGLE:
 		Geometry_Draw(Geometry_GetDefaultRectangle());
 		break;
@@ -28,8 +31,8 @@ int main(int argc, char *argv[]){
 		int w,h;
 		Collider2dType collider_type;
 	}colliders[]={
-		{10,10,10,10,COLLIDER2D_TYPE_RECTANGLE}
-		,{40,40,5,5,COLLIDER2D_TYPE_CIRCLE}
+		{100,100,100,100,COLLIDER2D_TYPE_RECTANGLE}
+		,{400,400,50,50,COLLIDER2D_TYPE_CIRCLE}
 	};
 
 	UNUSUED_PARAM(argc);
@@ -37,20 +40,20 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
-	/*Collider2dType mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
+	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_POINT;
 	Transform mouse_transform=Transform_New();
 
-	int mouse_collider_w=10;
-	int mouse_collider_h=10;
+	int mouse_collider_w=100;
+	int mouse_collider_h=200;
 	mouse_transform.scale.x=ViewPort_ScreenToWorldWidth(mouse_collider_w);
-	mouse_transform.scale.y=ViewPort_ScreenToWorldWidth(mouse_collider_h);*/
+	mouse_transform.scale.y=ViewPort_ScreenToWorldWidth(mouse_collider_h);
 
 	do{
 		Graphics_BeginRender();
 
-		/*Vector2i m=Input_GetMousePosition();
-		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x);
-		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y);
+		Vector2i m=Input_GetMousePosition();
+		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x-10);
+		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y-10);
 
 		for(unsigned i=0; i < ARRAY_SIZE(colliders); i++){
 			Color4f color=COLOR4F_WHITE;
@@ -113,7 +116,7 @@ int main(int argc, char *argv[]){
 			,mouse_collider_h
 			,mouse_collider_type
 			,COLOR4F_WHITE
-		);*/
+		);
 
 		Graphics_EndRender();
 

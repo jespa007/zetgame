@@ -23,8 +23,10 @@ typedef struct Geometry Geometry;
 
 
 typedef enum{
-	GEOMETRY_TYPE_TRIANGLES=0,
-	GEOMETRY_TYPE_LINES_LOOP
+	GEOMETRY_TYPE_POINTS=0,
+	GEOMETRY_TYPE_TRIANGLES,
+	GEOMETRY_TYPE_LINES_LOOP,
+	GEOMETRY_TYPE_TRIANGLE_STRIP
 }GeometryType;
 
 struct Geometry{
@@ -38,19 +40,21 @@ struct Geometry{
 
 
 
+Geometry	* 	Geometry_GetDefaultPoint(void);
 Geometry	* 	Geometry_GetDefaultCircle(void); // it returns a circle of 1 radius
 Geometry	* 	Geometry_GetDefaultRectangle(void); // it returns a quad of 1 by 1
 Geometry	* 	Geometry_GetDefaultRectangleFilled(void); // it returns a quad of 1 by 1
 Geometry	* 	Geometry_GetDefaultRectangleTextured(void); // it returns a quad of 1 by 1
 Geometry	* 	Geometry_New(GeometryType _geometry_type,size_t _n_indexs, size_t _n_vertexs, uint32_t _properties);
-Geometry	* 	Geometry_NewRectangleTextured(uint32_t properties);
 Geometry	* 	Geometry_NewRectangle(uint32_t properties);
+Geometry	* 	Geometry_NewRectangleTextured(uint32_t _properties);
+Geometry	* 	Geometry_NewPoints(size_t _n_point, uint32_t _properties);
 /**
  * _smooth: 1-N
  */
 Geometry	* 	Geometry_NewCircle(uint16_t _divisions_per_quadrant,uint32_t properties);
 
-void 			Geometry_SetIndices(Geometry *geometry,const short *indices,size_t indices_len);
+void 			Geometry_SetIndices(Geometry *_geometry,const short *_indices,size_t _indices_len);
 void 			Geometry_SetMeshVertex(Geometry *geometry,const float *mesh_vertexs,size_t mesh_vertexs_len);
 void 			Geometry_SetMeshTexture(Geometry *geometry,const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len);
 void 			Geometry_SetMeshColor(Geometry *geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len);

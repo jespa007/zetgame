@@ -362,9 +362,6 @@ void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 			inc_x=-1;
 		}
 
-		//x_draw=ViewPort_ScreenToWorldWidth(x);
-
-
 		for(unsigned w=0; w < token_line->tbrt_tokens->count; w++){
 
 			TBRT_Token *token=NULL;

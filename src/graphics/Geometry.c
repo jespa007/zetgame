@@ -4,10 +4,25 @@
 
 #define DEFAULT_CIRCLE_DIVISIONS_PER_QUADRANT 128
 
+static Geometry * g_geometry_default_point=NULL;
 static Geometry * g_geometry_default_rectangle=NULL;
 static Geometry * g_geometry_default_rectangle_filled=NULL;
 static Geometry * g_geometry_default_rectangle_textured=NULL;
 static Geometry * g_geometry_default_circle=NULL;
+
+
+Geometry	* Geometry_GetDefaultPoint(void){
+	if(g_geometry_default_point == NULL){
+		short index=0;
+		float pos[]={0,0,0};
+		g_geometry_default_point=Geometry_NewPoints(1,0);
+		Geometry_SetIndices(g_geometry_default_point,&index,1);
+		Geometry_SetMeshVertex(g_geometry_default_point,pos,3);
+	}
+
+	return g_geometry_default_point;
+}
+
 
 Geometry	* Geometry_GetDefaultRectangle(void){
 	if(g_geometry_default_rectangle == NULL){
@@ -45,7 +60,7 @@ Geometry	* 	Geometry_GetDefaultRectangleTextured(void){
 
 Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t _n_vertexs,uint32_t _properties){
 
-	if(_n_vertexs < 2){
+	if(_n_vertexs < 2 && _geometry_type != GEOMETRY_TYPE_POINTS){
 		Log_Error("Number of vertex should be greather than 2");
 		return NULL;
 	}
@@ -66,6 +81,16 @@ Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t 
 		break;
 	}
 
+
+	return geometry;
+}
+
+
+Geometry	* Geometry_NewPoints(size_t _n_points, uint32_t _properties){
+
+	Geometry *geometry=NULL;
+
+	geometry=Geometry_New(GEOMETRY_TYPE_POINTS,_n_points,_n_points,_properties);
 
 	return geometry;
 }
@@ -106,8 +131,7 @@ Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
 	Geometry *geometry=NULL;
 
 	short indexs[]={
-			0,1,2,
-			0,2,3
+			0,1,2,3
 	};
 
 	// A quarter of screen as size...
@@ -125,7 +149,7 @@ Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
 	};
 
 
-	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLES,ARRAY_SIZE(indexs),N_VERTEX_QUAD,_properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLE_STRIP,ARRAY_SIZE(indexs),N_VERTEX_QUAD,_properties);
 
 	if(geometry){ // setup indexes...
 
@@ -291,7 +315,8 @@ void	Geometry_Delete(Geometry *_this){
 void			Geometry_DeInit(void){
 
 	Geometry **default_geometries[]={
-			&g_geometry_default_rectangle
+			&g_geometry_default_point
+			,&g_geometry_default_rectangle
 			,&g_geometry_default_rectangle_filled
 			,&g_geometry_default_rectangle_textured
 			,&g_geometry_default_circle

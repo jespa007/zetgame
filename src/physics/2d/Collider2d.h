@@ -5,7 +5,8 @@ typedef struct Collider2d Collider2d;
 typedef struct Transform Transform;
 
 typedef enum{
-	COLLIDER2D_TYPE_RECTANGLE=0
+	COLLIDER2D_TYPE_POINT=0
+	,COLLIDER2D_TYPE_RECTANGLE
 	,COLLIDER2D_TYPE_CIRCLE
 
 }Collider2dType;
