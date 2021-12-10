@@ -1,5 +1,43 @@
 #include "ZetGame.h"
 
+#define SIZE_BUTTON 100
+#define OFFSET_INI
+
+void draw_options(int  _selected_collider){
+	Graphics_Print(10,10,COLOR4F_WHITE,"Select collider type:");
+	// draw background rectangles as deactivated
+	for(int i=0; i < 4; i++){
+		Color4f color=COLOR4F_GRAY;
+		int thickness=1;
+		if(i==_selected_collider){
+			color=COLOR4F_WHITE;
+			thickness=2;
+		}
+
+		// border selection
+		Graphics_DrawRectangle4i(200+i*SIZE_BUTTON,20,SIZE_BUTTON,SIZE_BUTTON,color,thickness);
+		switch(i){
+		case 0: // point
+			Graphics_DrawPoint2i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),color,thickness*2);
+			break;
+		case 1: // rectangle portrait
+			Graphics_DrawRectangle4i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),10,40,color,thickness);
+			break;
+		case 2: // rectangle landscape
+			Graphics_DrawRectangle4i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),40,10,color,thickness);
+			break;
+		case 3: // circle
+			Graphics_DrawCircle3i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),50,color,thickness);
+			break;
+
+		}
+	}
+
+
+
+	Graphics_Print(10,50,COLOR4F_WHITE,"Colliding:");
+}
+
 void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type, Color4f _color){
 	Transform transform=Transform_New();
 	transform.translate.x=ViewPort_ScreenToWorldPositionX(_x);
@@ -108,6 +146,8 @@ int main(int argc, char *argv[]){
 
 		}
 
+		draw_options(-1);
+
 
 		draw_collider(
 			m.x
@@ -117,6 +157,8 @@ int main(int argc, char *argv[]){
 			,mouse_collider_type
 			,COLOR4F_WHITE
 		);
+
+
 
 		Graphics_EndRender();
 

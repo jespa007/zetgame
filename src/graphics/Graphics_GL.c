@@ -141,6 +141,10 @@ void Graphics_GL_SetLineThickness( uint8_t _thickness){
 	glLineWidth(_thickness); // set line width
 }
 
+void Graphics_GL_SetPointSize( uint8_t _point_size){
+	glPointSize(_point_size); // set line width
+}
+
 void Graphics_GL_ClearScreen(Color4f color) { // start render and clear background...
 	glClearColor(color.r,color.g,color.b,color.a);
 	glClear(GL_COLOR_BUFFER_BIT);

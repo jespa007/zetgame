@@ -217,6 +217,16 @@ void Graphics_SetLineThickness(uint8_t _thickness){
 	}
 }
 
+void Graphics_SetPointSize(uint8_t _point_size){
+	switch(Graphics_GetGraphicsApi()){
+		default:
+			break;
+		case GRAPHICS_API_GL:
+			Graphics_GL_SetPointSize(_point_size);
+			break;
+	}
+}
+
 void Graphics_SetColor4f(float _r, float _g, float _b, float _a){
 		switch(Graphics_GetGraphicsApi()){
 		default:
@@ -504,19 +514,40 @@ void Graphics_EndRender(void)
 //
 // Drawing functions
 //
-void Graphics_DrawRectangle(uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
-	Vector3f dim_3d=ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
 
-	Graphics_DrawRectangle4f(
-			-dim_3d.x
-			,dim_3d.y
-			,dim_3d.x
-			,-dim_3d.y
-			,thickness
-			,color);
+void Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance){
+	if(transform)	Transform_Apply(transform);
+	if(appearance)  Appearance_Apply(appearance);
+
+	if(geometry) 	Geometry_Draw(geometry);
+
+	if(appearance) 	Appearance_Restore(appearance);
+	if(transform) 	Transform_Restore(transform);
 }
 
-void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t height, uint8_t thickness, Color4f color){
+void Graphics_DrawPoint2f(float _x, float _y, Color4f _color, uint8_t _point_size){
+	Transform t=Transform_New();
+	t.translate.x=_x;
+	t.translate.y=_y;
+
+	Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
+	Graphics_SetPointSize(_point_size);
+	Transform_Apply(&t);
+	Geometry_Draw(Geometry_GetDefaultPoint());
+	Transform_Restore(&t);
+}
+
+void Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size){
+	Graphics_DrawPoint2f(
+			ViewPort_ScreenToWorldPositionX(_x)
+			,ViewPort_ScreenToWorldPositionY(_y)
+			,_color
+			,_point_size
+	);
+}
+
+
+void Graphics_DrawRectangle4i(int x, int y, uint16_t width, uint16_t height, Color4f color, uint8_t thickness){
 
 	Vector2i p1_2d=Vector2i_New(x,y);
 	Vector2i p2_2d=Vector2i_New(x+width,y+height);
@@ -524,10 +555,10 @@ void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t he
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
-	Graphics_DrawRectangle4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,thickness,color);
+	Graphics_DrawRectangle4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color,thickness);
 }
 
-void Graphics_DrawRectangle4f(float _x1, float _y1, float _x2, float _y2, uint8_t _thickness, Color4f _color){
+void Graphics_DrawRectangle4f(float _x1, float _y1, float _x2, float _y2, Color4f _color, uint8_t _thickness){
 	Transform t=Transform_New();
 	float w=_x2-_x1;
 	float h=_y2-_y1;
@@ -543,7 +574,7 @@ void Graphics_DrawRectangle4f(float _x1, float _y1, float _x2, float _y2, uint8_
 	Transform_Restore(&t);
 }
 
-void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color){
+void Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, Color4f color){
 
 	Vector2i p1_2d=Vector2i_New(x,y);
 	Vector2i p2_2d=Vector2i_New(x+width,y+height);
@@ -570,7 +601,7 @@ void Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, 
 	Transform_Restore(&t);
 }
 
-void Graphics_DrawRectangleTexturedTranslate2i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
+void Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
 
 
 	Vector2i p1_2d=Vector2i_New(_x,_y);
@@ -621,15 +652,35 @@ void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2
 	Transform_Restore(&t);
 }
 
-void Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance){
-	if(transform)	Transform_Apply(transform);
-	if(appearance)  Appearance_Apply(appearance);
 
-	if(geometry) 	Geometry_Draw(geometry);
+void Graphics_DrawCircle3f(float _x, float _y, float _r, Color4f _color, uint8_t _thickness){
 
-	if(appearance) 	Appearance_Restore(appearance);
-	if(transform) 	Transform_Restore(transform);
+	Transform t=Transform_New();
+	t.translate.x=_x;
+	t.translate.y=_y;
+	t.scale.x=_r;
+	t.scale.y=_r;
+
+	Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
+	Graphics_SetLineThickness(_thickness);
+	Transform_Apply(&t);
+	Geometry_Draw(Geometry_GetDefaultCircle());
+	Transform_Restore(&t);
 }
+
+
+void Graphics_DrawCircle3i(int _x, int _y, int _r, Color4f _color, uint8_t _thickness){
+
+
+	Graphics_DrawCircle3f(
+			ViewPort_ScreenToWorldPositionX(_x)
+			,ViewPort_ScreenToWorldPositionY(_y)
+			,ViewPort_ScreenToWorldWidth(_r)
+			,_color
+			,_thickness
+	);
+}
+
 
 
 

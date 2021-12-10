@@ -6,9 +6,11 @@
 #define 	ALPHA_VALUE_TRANSPARENT	0
 #define 	ALPHA_VALUE_SOLID		1
 
-#define 	COLOR4F_BLACK 			(Color4f){0,0,0,1}
-#define 	COLOR4F_WHITE 			(Color4f){1,1,1,1}
-#define 	COLOR4F_RED 			(Color4f){1,0,0,1}
+#define 	COLOR4F_BLACK 			(Color4f){0.00,0.00,0.00,1.00}
+#define 	COLOR4F_WHITE 			(Color4f){1.00,1.00,1.00,1.00}
+#define 	COLOR4F_RED 			(Color4f){1.00,0.00,0.00,1.00}
+#define 	COLOR4F_GRAY 			(Color4f){0.50,0.50,0.50,1.00}
+#define 	COLOR4F_SILVER 			(Color4f){0.75,0.75,0.75,1.00}
 
 
 typedef struct Color4f Color4f;

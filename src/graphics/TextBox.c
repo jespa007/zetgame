@@ -345,8 +345,9 @@ void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 				,dim3d_mid.y
 				,+dim3d_mid.x
 				,-dim3d_mid.y
+				,COLOR4F_WHITE
 				,2
-				,COLOR4F_WHITE);
+				);
 	}
 
 	TTFont_RenderTextBegin(color);

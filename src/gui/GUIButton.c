@@ -165,7 +165,7 @@ static void  GUIButton_Draw(void *gui_button){
 	result_font_color.a=alpha;
 	background_result.a=alpha;
 
-	Graphics_DrawRectangleTexturedTranslate2i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE,g_default_texture_button,NULL);
+	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE,g_default_texture_button,NULL);
 
 
 	if(data->mouse_collide){
@@ -174,14 +174,14 @@ static void  GUIButton_Draw(void *gui_button){
 			if(v < 0) v=0;
 			if(v > 1) v=1;
 
-			Graphics_DrawRectangleTranslate2i(position.x+dimensions.x+5, position.y, 10, dimensions.y, 1,data->auto_click_on_over.color);
-			Graphics_DrawRectangleFilledTranslate2i(position.x+dimensions.x+5, position.y+dimensions.y-(dimensions.y-1)*v, 9, (dimensions.y-1)*v, data->auto_click_on_over.color);
+			Graphics_DrawRectangle4i(position.x+dimensions.x+5, position.y, 10, dimensions.y,data->auto_click_on_over.color, 1);
+			Graphics_DrawRectangleFilled4i(position.x+dimensions.x+5, position.y+dimensions.y-(dimensions.y-1)*v, 9, (dimensions.y-1)*v, data->auto_click_on_over.color);
 
 		}
 	}
 
 	if(data->icon.texture!=NULL){ // draw icon
-		Graphics_DrawRectangleTexturedTranslate2i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
+		Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
 	}
 
 	Transform_SetPosition2i(&transform,position.x,position.y);

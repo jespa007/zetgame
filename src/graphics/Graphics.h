@@ -35,6 +35,7 @@ bool Graphics_GetScreenBounds(int num_display, SDL_Rect * rect );
 void Graphics_ToggleFullscreen(void);
 
 void Graphics_SetLineThickness(uint8_t _thickness);
+void Graphics_SetPointSize(uint8_t _point_size);
 void Graphics_SetColor4f(float _r, float _g, float _b, float _a);
 
 uint16_t Graphics_GetWidth(void);
@@ -65,15 +66,21 @@ void Graphics_EndRender(void);
  */
 void Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance);
 
-void Graphics_DrawRectangle(uint16_t width, uint16_t height, uint8_t thickness, Color4f color);
-void Graphics_DrawRectangleTranslate2i(int x, int y, uint16_t width, uint16_t height,  uint8_t thickness, Color4f color);
-void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, uint8_t thickness, Color4f color);
+void Graphics_DrawPoint2f(float _x, float _y, Color4f _color, uint8_t _point_size);
+void Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size);
 
-void Graphics_DrawRectangleFilledTranslate2i(int x, int y, uint16_t width, uint16_t height, Color4f color);
+void Graphics_DrawRectangle2i(uint16_t width, uint16_t height, Color4f color, uint8_t thickness);
+void Graphics_DrawRectangle4i(int x, int y, uint16_t width, uint16_t height, Color4f color,  uint8_t thickness);
+void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, Color4f color, uint8_t thickness);
+
+void Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, Color4f color);
 void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color);
 
-void Graphics_DrawRectangleTexturedTranslate2i(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, TextureRect * text_crop);
+void Graphics_DrawRectangleTextured4i(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, TextureRect * text_crop);
 void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, TextureRect * text_crop);
+
+void Graphics_DrawCircle3f(float _x, float _y, float _r, Color4f _color, uint8_t _thickness);
+void Graphics_DrawCircle3i(int _x, int _y, int _r, Color4f _color, uint8_t _thickness);
 
 
 //void Graphics_DrawShape(Shape *shape, Transform *transform);

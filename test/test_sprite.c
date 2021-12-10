@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
 
 
 		if(skf_current != NULL){
-			Graphics_DrawRectangleTexturedTranslate2i(
+			Graphics_DrawRectangleTextured4i(
 			0
 			,0
 			,64
