@@ -1,12 +1,71 @@
 #include "ZetGame.h"
 
-#define SIZE_BUTTON 100
-#define OFFSET_INI
+#define BUTTON_GROUP_SIZE	 	50
+#define BUTTON_GROUP_OFFSET_X	200
+#define BUTTON_GROUP_OFFSET_Y	40
 
-void draw_options(int  _selected_collider){
-	Graphics_Print(10,10,COLOR4F_WHITE,"Select collider type:");
+typedef enum{
+	SELECT_COLLIDER_POINT=0,
+	SELECT_COLLIDER_RECTANGLE_PORTRAIT,
+	SELECT_COLLIDER_RECTANGLE_LANDSCAPE,
+	SELECT_COLLIDER_CIRCLE,
+	MAX_SELECT_COLLIDERS
+}SelectCollider;
+
+void update_options(
+		SelectCollider *_selected_collider
+		, Collider2dType *_mouse_collider
+		, int *_mouse_w
+		, int *_mouse_h
+	){
+	Vector2i m=Input_GetMousePosition();
+	bool is_pressed=Input_IsLeftButtonPressed();
+	int x=BUTTON_GROUP_OFFSET_X-(BUTTON_GROUP_SIZE>>1); // because draws are centered we have to start at -middle
+	int y=BUTTON_GROUP_OFFSET_Y-(BUTTON_GROUP_SIZE>>1); // because draws are centered we have to start at -middle
+
+
+	if(is_pressed && (y <= m.y && m.y <= (y+BUTTON_GROUP_SIZE))){
+		for(unsigned i=0; i < MAX_SELECT_COLLIDERS; i++){
+			if(x <= m.x && m.x <= (x+BUTTON_GROUP_SIZE)){
+				printf("selected collider '%i'\n",i);
+				*_selected_collider=i;
+
+				switch(i){
+				case SELECT_COLLIDER_POINT:
+					*_mouse_collider=COLLIDER2D_TYPE_POINT;
+					break;
+				case SELECT_COLLIDER_RECTANGLE_PORTRAIT:
+					*_mouse_w=80;
+					*_mouse_h=280;
+					*_mouse_collider=COLLIDER2D_TYPE_RECTANGLE;
+					break;
+				case SELECT_COLLIDER_RECTANGLE_LANDSCAPE:
+					*_mouse_w=280;
+					*_mouse_h=80;
+					*_mouse_collider=COLLIDER2D_TYPE_RECTANGLE;
+					break;
+				case SELECT_COLLIDER_CIRCLE:
+					*_mouse_w=80;
+					*_mouse_h=80;
+					*_mouse_collider=COLLIDER2D_TYPE_CIRCLE;
+					break;
+				}
+				return;
+			}
+			x+=BUTTON_GROUP_SIZE;
+
+		}
+
+
+	}
+}
+
+
+void draw_options(SelectCollider  _selected_collider, const char *_colliding){
+
+	Graphics_Print(10,30,COLOR4F_WHITE,"Selected collider:");
 	// draw background rectangles as deactivated
-	for(int i=0; i < 4; i++){
+	for(unsigned i=0; i < MAX_SELECT_COLLIDERS; i++){
 		Color4f color=COLOR4F_GRAY;
 		int thickness=1;
 		if(i==_selected_collider){
@@ -15,27 +74,26 @@ void draw_options(int  _selected_collider){
 		}
 
 		// border selection
-		Graphics_DrawRectangle4i(200+i*SIZE_BUTTON,20,SIZE_BUTTON,SIZE_BUTTON,color,thickness);
+		Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE,BUTTON_GROUP_SIZE,color,thickness);
 		switch(i){
-		case 0: // point
-			Graphics_DrawPoint2i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),color,thickness*2);
+		case SELECT_COLLIDER_POINT: // point
+			Graphics_DrawPoint2i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,color,thickness*2);
 			break;
-		case 1: // rectangle portrait
-			Graphics_DrawRectangle4i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),10,40,color,thickness);
+		case SELECT_COLLIDER_RECTANGLE_PORTRAIT: // rectangle portrait
+			Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,10,40,color,thickness);
 			break;
-		case 2: // rectangle landscape
-			Graphics_DrawRectangle4i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),40,10,color,thickness);
+		case SELECT_COLLIDER_RECTANGLE_LANDSCAPE: // rectangle landscape
+			Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,10,color,thickness);
 			break;
-		case 3: // circle
-			Graphics_DrawCircle3i(200+i*SIZE_BUTTON+(SIZE_BUTTON>>1),20+(SIZE_BUTTON>>1),50,color,thickness);
+		case SELECT_COLLIDER_CIRCLE: // circle
+			Graphics_DrawCircle3i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE>>2,color,thickness);
 			break;
 
 		}
 	}
 
+	Graphics_Print(10,70,COLOR4F_WHITE,"Colliding: %s",_colliding);
 
-
-	Graphics_Print(10,50,COLOR4F_WHITE,"Colliding:");
 }
 
 void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type, Color4f _color){
@@ -64,6 +122,7 @@ void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type
 
 int main(int argc, char *argv[]){
 
+	const char *colliding="none";
 	struct{
 		int x,y;
 		int w,h;
@@ -79,10 +138,12 @@ int main(int argc, char *argv[]){
 	ZetGame_Init(NULL);
 
 	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_POINT;
+	SelectCollider select_collider=SELECT_COLLIDER_POINT;
+
 	Transform mouse_transform=Transform_New();
 
 	int mouse_collider_w=100;
-	int mouse_collider_h=200;
+	int mouse_collider_h=100;
 	mouse_transform.scale.x=ViewPort_ScreenToWorldWidth(mouse_collider_w);
 	mouse_transform.scale.y=ViewPort_ScreenToWorldWidth(mouse_collider_h);
 
@@ -127,6 +188,8 @@ int main(int argc, char *argv[]){
 					break;
 				}
 				break;
+			case COLLIDER2D_TYPE_POINT:
+				break;
 			case COLLIDER2D_TYPE_CIRCLE:
 				break;
 			default:
@@ -146,9 +209,6 @@ int main(int argc, char *argv[]){
 
 		}
 
-		draw_options(-1);
-
-
 		draw_collider(
 			m.x
 			,m.y
@@ -159,6 +219,13 @@ int main(int argc, char *argv[]){
 		);
 
 
+		draw_options(select_collider,colliding);
+		update_options(
+			&select_collider,
+			&mouse_collider_type,
+			&mouse_collider_w,
+			&mouse_collider_h
+		);
 
 		Graphics_EndRender();
 

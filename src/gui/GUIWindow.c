@@ -189,7 +189,7 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 
 	if(GUIWidget_IsPointCollision(data->frame_caption->widget,mouse_event->position))
 	{
-		if(Input_IsMouseButtonPressed()) {
+		if(Input_IsLeftButtonPressed()) {
 			Log_Info("start dragging");
 			data->start_dragging = true;
 			data->start_mouse_position=Input_GetMousePosition();

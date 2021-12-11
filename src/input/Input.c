@@ -125,7 +125,7 @@ bool Input_IsKeyPressed(int id_key) {
 	return false;
 }
 
-bool		Input_IsMouseButtonPressed(void){
+bool		Input_IsLeftButtonPressed(void){
 	return g_input_vars->mouse_info.left_press;
 }
 

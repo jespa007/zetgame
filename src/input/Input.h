@@ -91,6 +91,6 @@ void		Input_RemoveEventOnDropFile(uint32_t idx_handle);
 
 void 		Input_Update(void);
 bool		Input_IsKeyPressed(int id_key);
-bool		Input_IsMouseButtonPressed(void);
+bool		Input_IsLeftButtonPressed(void);
 void 		Input_DeInit(void);
 #endif

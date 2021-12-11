@@ -37,18 +37,14 @@ typedef struct{
 
 	Geometry *geometry_rectangle_default;
 	Appearance *appearance_rectangle_default;
+	Material *material_rectangle_default;
 
 }GraphicsVars;
 
 
 GraphicsVars *g_graphics_vars=NULL;
 
-const float g_default_rectangle_crop[]={
-	0, 0,
-	1, 0,
-	0, 1,
-	1, 1
-};
+
 
 
 #include "Graphics_GL.c"
@@ -165,6 +161,9 @@ bool Graphics_Init(
 	// init gl vars
 	g_graphics_vars->geometry_rectangle_default=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
 	g_graphics_vars->appearance_rectangle_default=Appearance_New();
+	g_graphics_vars->material_rectangle_default=Material_New(0);
+	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
+
 
 
 	// adapter list
@@ -549,8 +548,10 @@ void Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size){
 
 void Graphics_DrawRectangle4i(int x, int y, uint16_t width, uint16_t height, Color4f color, uint8_t thickness){
 
-	Vector2i p1_2d=Vector2i_New(x,y);
-	Vector2i p2_2d=Vector2i_New(x+width,y+height);
+	int width_med=width>>1;
+	int height_med=height>>1;
+	Vector2i p1_2d=Vector2i_New(x-width_med,y-height_med);
+	Vector2i p2_2d=Vector2i_New(x+width_med,y+height_med);
 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
@@ -634,13 +635,15 @@ void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2
 
 	// setup crop
 	if(_text_crop == NULL){
-		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,g_default_rectangle_crop,ARRAY_SIZE(g_default_rectangle_crop));
+		size_t n_vertexs=0;
+		float *mesh_uv=Geometry_GetDefaultMeshRectangleTextureCoords(&n_vertexs);
+		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_uv,n_vertexs);
 	}else{
 		float uv_coords[]={
-				_text_crop->u1, _text_crop->v1,
-				_text_crop->u2, _text_crop->v1,
-				_text_crop->u1, _text_crop->v2,
-				_text_crop->u2, _text_crop->v2
+				_text_crop->u1, _text_crop->v1, // bottom left
+				_text_crop->u2, _text_crop->v1, // top left
+				_text_crop->u1, _text_crop->v2, // top right
+				_text_crop->u2, _text_crop->v2  // bottom right
 		};
 
 		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,uv_coords,ARRAY_SIZE(uv_coords));
@@ -727,6 +730,7 @@ void Graphics_DeInit(void) {
 	// deinit gl vars first
 	Geometry_Delete(g_graphics_vars->geometry_rectangle_default);
 	Appearance_Delete(g_graphics_vars->appearance_rectangle_default);
+	Material_Delete(g_graphics_vars->material_rectangle_default);
 
 	// ...then deini gl context
 	switch(g_graphics_vars->graphics_api){

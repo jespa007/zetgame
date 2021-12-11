@@ -11,6 +11,18 @@ static Geometry * g_geometry_default_rectangle_textured=NULL;
 static Geometry * g_geometry_default_circle=NULL;
 
 
+static float g_default_mesh_rectangle_texture_coords[]={
+	   0.0f,  0.0f,   // bottom left
+	   0.0f,  1.0f,   // top left
+	   1.0f,  1.0f,   // top right
+	   1.0f,  0.0f    // bottom right
+};
+
+float *Geometry_GetDefaultMeshRectangleTextureCoords(size_t *_size){
+	*_size=ARRAY_SIZE(g_default_mesh_rectangle_texture_coords);
+	return g_default_mesh_rectangle_texture_coords;
+}
+
 Geometry	* Geometry_GetDefaultPoint(void){
 	if(g_geometry_default_point == NULL){
 		short index=0;
@@ -99,7 +111,7 @@ Geometry	* Geometry_NewRectangle(uint32_t _properties){
 
 	Geometry *geometry=NULL;
 
-	short indexs[]={
+	short indices[]={
 			 0,1
 			 ,2,3
 	};
@@ -113,11 +125,11 @@ Geometry	* Geometry_NewRectangle(uint32_t _properties){
 	};
 
 
-	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,ARRAY_SIZE(indexs),N_VERTEX_QUAD,_properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indexs,ARRAY_SIZE(indexs));
+		Geometry_SetIndices(geometry,indices,ARRAY_SIZE(indices));
 
 		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 
@@ -130,8 +142,9 @@ Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
 
 	Geometry *geometry=NULL;
 
-	short indexs[]={
-			0,1,2,3
+	short indices[]={
+			0,1,2 // first triangle (bottom left - top left - top right)
+			,0,2,3 // second triangle (bottom left - top right - bottom right)
 	};
 
 	// A quarter of screen as size...
@@ -141,24 +154,17 @@ Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
 		   +0.5f,+0.5f,0.0f,   // top right
 		   +0.5f,-0.5f,0.0f    // bottom right
 	};
-	float mesh_texture_coords[]={
-		   0.0f,  1.0f,   // bottom left
-		   0.0f,  0.0f,   // top left
-		   1.0f,  0.0f,   // top right
-		   1.0f,  1.0f    // bottom right
-	};
 
-
-	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLE_STRIP,ARRAY_SIZE(indexs),N_VERTEX_QUAD,_properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLES,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indexs,ARRAY_SIZE(indexs));
+		Geometry_SetIndices(geometry,indices,ARRAY_SIZE(indices));
 
 		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 
 		if(_properties & GEOMETRY_PROPERTY_TEXTURE){
-			Geometry_SetMeshTexture(geometry,mesh_texture_coords,ARRAY_SIZE(mesh_texture_coords));
+			Geometry_SetMeshTexture(geometry,g_default_mesh_rectangle_texture_coords,ARRAY_SIZE(g_default_mesh_rectangle_texture_coords));
 		}
 	}
 
@@ -175,12 +181,12 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
 	uint16_t n_vertexs = 4*_divisions_per_quadrant;
 	size_t index_length=n_vertexs;
 
-	short *indexs=malloc(index_length*sizeof(short));
+	short *indices=malloc(index_length*sizeof(short));
 
 	// A quarter of screen as size...
 	float *mesh_vertex=malloc(n_vertexs*sizeof(float)*VERTEX_COORDS_LEN);
 	float *it_vertexs=mesh_vertex;
-	short *it_indexs=indexs;
+	short *it_indexs=indices;
 
 	float inc_r=2*PI/(float)n_vertexs;
 	int index=0;
@@ -201,20 +207,20 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indexs,index_length);
+		Geometry_SetIndices(geometry,indices,index_length);
 
 		Geometry_SetMeshVertex(geometry,mesh_vertex,n_vertexs*VERTEX_COORDS_LEN);
 
 	}
 
 	// we don't need anymore
-	free(indexs);
+	free(indices);
 	free(mesh_vertex);
 
 	return geometry;
 }
 
-void 			Geometry_SetIndices(Geometry *geometry,const short *indexs,size_t indices_len){
+void 			Geometry_SetIndices(Geometry *geometry,const short *indices,size_t indices_len){
 
 	if(geometry == NULL) return;
 
@@ -223,7 +229,7 @@ void 			Geometry_SetIndices(Geometry *geometry,const short *indexs,size_t indice
 
 		break;
 	case GRAPHICS_API_GL:
-		Geometry_GL_SetIndices(geometry,indexs,indices_len);
+		Geometry_GL_SetIndices(geometry,indices,indices_len);
 		break;
 	}
 }

@@ -40,6 +40,7 @@ struct Geometry{
 
 
 
+float 		*	Geometry_GetDefaultMeshRectangleTextureCoords(size_t *_n_vertexs);
 Geometry	* 	Geometry_GetDefaultPoint(void);
 Geometry	* 	Geometry_GetDefaultCircle(void); // it returns a circle of 1 radius
 Geometry	* 	Geometry_GetDefaultRectangle(void); // it returns a quad of 1 by 1

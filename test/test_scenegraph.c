@@ -339,7 +339,7 @@ int main(int argc, char * argv[]){
 
 		Scene_Update(scene);
 
-		if(Input_IsMouseButtonPressed()){
+		if(Input_IsLeftButtonPressed()){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
 		}
 

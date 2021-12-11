@@ -77,7 +77,7 @@ static void  GUIButton_PostUpdateWidget(void *unused, void *gui_button){
 			);
 	Vector2i mouse_pos=Input_GetMousePosition();
 
-	if(Input_IsMouseButtonPressed() && Vector2i_PointRectCollision(mouse_pos,ini_pos,end_pos)){
+	if(Input_IsLeftButtonPressed() && Vector2i_PointRectCollision(mouse_pos,ini_pos,end_pos)){
 		Log_Info("clicked");
 		// handle on even click
 		for(unsigned i=0; i < data->on_click_events->count; i++){
@@ -129,7 +129,7 @@ void GUIButton_PostUpdate(void *gui_button){
 		}
 	}
 
-	if((Input_IsMouseButtonPressed() && data->mouse_collide) || auto_click_on_over){
+	if((Input_IsLeftButtonPressed() && data->mouse_collide) || auto_click_on_over){
 		Log_Info("clicked");
 		// handle on even click
 		MouseEvent mouse_event={0};
