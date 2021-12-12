@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
 			,64
 			,COLOR4F_WHITE
 			,TextureManager_GetDefaultTexture()
-			,&tr);
+			,NULL);//&tr);
 
 		}
 
