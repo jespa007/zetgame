@@ -635,15 +635,22 @@ void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2
 
 	// setup crop
 	if(_text_crop == NULL){
-		size_t n_vertexs=0;
-		float *mesh_uv=Geometry_GetDefaultMeshRectangleTextureCoords(&n_vertexs);
-		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_uv,n_vertexs);
+
+		float texture_coords[]={
+			   0.0f,  1.0f,   // bottom left
+			   1.0f,  1.0f,   // bottom right
+			   0.0f,  0.0f,   // top left
+			   1.0f,  0.0f    // top right
+		};
+
+		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,texture_coords,ARRAY_SIZE(texture_coords));
 	}else{
 		float uv_coords[]={
 				_text_crop->u1, _text_crop->v1, // bottom left
-				_text_crop->u2, _text_crop->v1, // top left
-				_text_crop->u1, _text_crop->v2, // top right
-				_text_crop->u2, _text_crop->v2  // bottom right
+				_text_crop->u2, _text_crop->v1, // bottom right
+				_text_crop->u1, _text_crop->v2, // top left
+				_text_crop->u2, _text_crop->v2  // top right
+
 		};
 
 		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,uv_coords,ARRAY_SIZE(uv_coords));

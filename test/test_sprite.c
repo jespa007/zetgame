@@ -25,6 +25,33 @@ int main(int argc, char *argv[]){
 		Graphics_BeginRender();
 
 
+			/*	float uv_coords[]={
+								0, 0, // bottom left
+								1, 1, // bottom right
+								0, 1, // top left
+								1, 1  // top right
+
+						};*/
+		TextureRect tr=(TextureRect){
+						.u1=0
+						,.v1=0
+						,.u2=1
+						,.v2=1
+					};
+
+		if(skf_current != NULL){
+			Graphics_DrawRectangleTextured4i(
+			100
+			,100
+			,64
+			,64
+			,COLOR4F_WHITE
+			,TextureManager_GetDefaultTexture()
+			,&tr);
+
+		}
+
+
 		if(skf_current != NULL){
 			Graphics_DrawRectangleTextured4i(
 			0

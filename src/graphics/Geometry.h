@@ -25,7 +25,7 @@ typedef struct Geometry Geometry;
 typedef enum{
 	GEOMETRY_TYPE_POINTS=0,
 	GEOMETRY_TYPE_TRIANGLES,
-	GEOMETRY_TYPE_LINES_LOOP,
+	GEOMETRY_TYPE_LINE_LOOP,
 	GEOMETRY_TYPE_TRIANGLE_STRIP
 }GeometryType;
 
@@ -40,7 +40,6 @@ struct Geometry{
 
 
 
-float 		*	Geometry_GetDefaultMeshRectangleTextureCoords(size_t *_n_vertexs);
 Geometry	* 	Geometry_GetDefaultPoint(void);
 Geometry	* 	Geometry_GetDefaultCircle(void); // it returns a circle of 1 radius
 Geometry	* 	Geometry_GetDefaultRectangle(void); // it returns a quad of 1 by 1

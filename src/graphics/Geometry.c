@@ -11,17 +11,6 @@ static Geometry * g_geometry_default_rectangle_textured=NULL;
 static Geometry * g_geometry_default_circle=NULL;
 
 
-static float g_default_mesh_rectangle_texture_coords[]={
-	   0.0f,  0.0f,   // bottom left
-	   0.0f,  1.0f,   // top left
-	   1.0f,  1.0f,   // top right
-	   1.0f,  0.0f    // bottom right
-};
-
-float *Geometry_GetDefaultMeshRectangleTextureCoords(size_t *_size){
-	*_size=ARRAY_SIZE(g_default_mesh_rectangle_texture_coords);
-	return g_default_mesh_rectangle_texture_coords;
-}
 
 Geometry	* Geometry_GetDefaultPoint(void){
 	if(g_geometry_default_point == NULL){
@@ -125,7 +114,7 @@ Geometry	* Geometry_NewRectangle(uint32_t _properties){
 	};
 
 
-	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_LINE_LOOP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
 
 	if(geometry){ // setup indexes...
 
@@ -143,21 +132,27 @@ Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
 	Geometry *geometry=NULL;
 
 	short indices[]={
-			0,1,2 // first triangle (bottom left - top left - top right)
-			,0,2,3 // second triangle (bottom left - top right - bottom right)
+			0,1,2,3 // first triangle (bottom left - top left - top right)
+		//	,0,2,3 // second triangle (bottom left - top right - bottom right)
 	};
 
 	// A quarter of screen as size...
 	float mesh_vertex[]={
-		   -0.5f,-0.5f,0.0f,   // bottom left
-		   -0.5f,+0.5f,0.0f,   // top left
-		   +0.5f,+0.5f,0.0f,   // top right
-		   +0.5f,-0.5f,0.0f    // bottom right
+		   -0.5f,-0.5f,0.0f,  // bottom left
+		   +0.5f,-0.5f,0.0f,  // bottom right
+		   -0.5f,+0.5f,0.0f,  // top left
+		   +0.5f,+0.5f,0.0f   // top right
 	};
 
-	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLES,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLE_STRIP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
 
-	if(geometry){ // setup indexes...
+	if(geometry){ // setup indices...
+		float g_default_mesh_rectangle_texture_coords[]={
+			   0.0f,  1.0f,   // bottom left
+			   1.0f,  1.0f,   // bottom right
+			   0.0f,  0.0f,   // top left
+			   1.0f,  0.0f    // top right
+		};
 
 		Geometry_SetIndices(geometry,indices,ARRAY_SIZE(indices));
 
@@ -203,7 +198,7 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
     	index++;
     }
 
-	geometry=Geometry_New(GEOMETRY_TYPE_LINES_LOOP,index_length,n_vertexs,_properties);
+	geometry=Geometry_New(GEOMETRY_TYPE_LINE_LOOP,index_length,n_vertexs,_properties);
 
 	if(geometry){ // setup indexes...
 

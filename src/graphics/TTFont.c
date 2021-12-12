@@ -31,12 +31,13 @@ typedef struct{
 //-----
 TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
-    float mesh_texture_coords[]={
-	   0.0f,  0.0f,   // bottom left
-	   1.0f,  0.0f,   // top left
-	   0.0f,  1.0f,   // top right
-	   1.0f,  1.0f    // bottom right
-    };
+	float texture_coords[]={
+		   0.0f,  0.0f,   // bottom left
+		   1.0f,  0.0f,   // bottom right
+		   0.0f,  1.0f,   // top left
+		   1.0f,  1.0f    // top right
+	};
+
 
     TTFont *font=NEW(TTFont);
     TTFontData *font_data=NEW(TTFontData);
@@ -57,7 +58,7 @@ TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
     // data
     font_data->geometry=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
-    Geometry_SetMeshTexture(font_data->geometry,mesh_texture_coords,ARRAY_SIZE(mesh_texture_coords));
+    Geometry_SetMeshTexture(font_data->geometry,texture_coords,ARRAY_SIZE(texture_coords));
 
     font_data->ft_face=face;
 
@@ -177,8 +178,6 @@ void TTFont_RenderTextBegin(Color4f *color){
 	}
 }
 
-
-
 void TTFont_RenderTextEnd(void){
 	switch(Graphics_GetGraphicsApi()){
 	case GRAPHICS_API_GL:
@@ -218,12 +217,11 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,_this->ascender - ch->size.y);
 		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,_this->ascender);
 
-
 		const float quad_char_3d []={
-				_x3d+p1_3d.x, _y3d-p1_3d.y,0,
-				_x3d+p2_3d.x, _y3d-p1_3d.y,0,
-				_x3d+p1_3d.x,_y3d-p2_3d.y,0,
-				_x3d+p2_3d.x,_y3d-p2_3d.y,0
+				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
+				_x3d+p2_3d.x, _y3d-p1_3d.y,0,  // bottom right
+				_x3d+p1_3d.x, _y3d-p2_3d.y,0,   // top left
+				_x3d+p2_3d.x, _y3d-p2_3d.y,0    // top right
 		};
 
 		glBindTexture(GL_TEXTURE_2D, ch_data->texture);

@@ -54,10 +54,11 @@ void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint
 
 		// setup vertexs...
 		float vertexs[N_VERTEX_QUAD*VERTEX_COORDS_LEN]={
-				   -p.x,-p.y,0.0f,   // bottom left
-				   -p.x,+p.y,0.0f,   // top left
-				   +p.x,+p.y,0.0f,   // top right
-				   +p.x,-p.y,0.0f    // bottom right
+				   -p.x,-p.y,0.0f,  // bottom left
+				   +p.x,-p.y,0.0f,  // bottom right
+				   -p.x,+p.y,0.0f,  // top left
+				   +p.x,+p.y,0.0f   // top right
+
 		};
 
 

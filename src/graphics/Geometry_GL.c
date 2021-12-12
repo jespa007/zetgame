@@ -208,7 +208,7 @@ void Geometry_GL_Draw(Geometry * geometry) {
 		case GEOMETRY_TYPE_TRIANGLE_STRIP:
 			mode=GL_TRIANGLE_STRIP;
 			break;
-		case GEOMETRY_TYPE_LINES_LOOP:
+		case GEOMETRY_TYPE_LINE_LOOP:
 			mode=GL_LINE_LOOP;
 			break;
 
