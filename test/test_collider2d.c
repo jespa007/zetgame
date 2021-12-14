@@ -36,11 +36,11 @@ void update_options(
 					break;
 				case SELECT_COLLIDER_RECTANGLE_PORTRAIT:
 					*_mouse_w=80;
-					*_mouse_h=280;
+					*_mouse_h=160;
 					*_mouse_collider=COLLIDER2D_TYPE_RECTANGLE;
 					break;
 				case SELECT_COLLIDER_RECTANGLE_LANDSCAPE:
-					*_mouse_w=280;
+					*_mouse_w=160;
 					*_mouse_h=80;
 					*_mouse_collider=COLLIDER2D_TYPE_RECTANGLE;
 					break;
@@ -97,27 +97,18 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 }
 
 void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type, Color4f _color){
-	Transform transform=Transform_New();
-	transform.translate.x=ViewPort_ScreenToWorldPositionX(_x);
-	transform.translate.y=ViewPort_ScreenToWorldPositionY(_y);
-	transform.scale.x=ViewPort_ScreenToWorldWidth(_w);
-	transform.scale.y=ViewPort_ScreenToWorldHeight(_h);
-
 	Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
-
-	Transform_Apply(&transform);
 	switch(_collider_type){
 	case COLLIDER2D_TYPE_POINT:
-		Geometry_Draw(Geometry_GetDefaultPoint());
+		Graphics_DrawPoint2i(_x,_y,_color,1);
 		break;
 	case COLLIDER2D_TYPE_RECTANGLE:
-		Geometry_Draw(Geometry_GetDefaultRectangle());
+		Graphics_DrawRectangle4i(_x,_y,_w,_h,_color,1);
 		break;
 	case COLLIDER2D_TYPE_CIRCLE:
-		Geometry_Draw(Geometry_GetDefaultCircle());
+		Graphics_DrawCircle3i(_x,_y,_w,_color,1);
 		break;
 	}
-	Transform_Restore(&transform);
 }
 
 int main(int argc, char *argv[]){
@@ -128,8 +119,9 @@ int main(int argc, char *argv[]){
 		int w,h;
 		Collider2dType collider_type;
 	}colliders[]={
-		{100,100,100,100,COLLIDER2D_TYPE_RECTANGLE}
-		,{400,400,50,50,COLLIDER2D_TYPE_CIRCLE}
+		{100,300,0,0,COLLIDER2D_TYPE_POINT}
+		,{150,300,100,100,COLLIDER2D_TYPE_RECTANGLE}
+		,{400,300,100,100,COLLIDER2D_TYPE_CIRCLE}
 	};
 
 	UNUSUED_PARAM(argc);
@@ -151,8 +143,10 @@ int main(int argc, char *argv[]){
 		Graphics_BeginRender();
 
 		Vector2i m=Input_GetMousePosition();
-		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x-10);
-		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y-10);
+		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x);
+		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y);
+		mouse_transform.scale.x=ViewPort_ScreenToWorldWidth(mouse_collider_w);
+		mouse_transform.scale.y=ViewPort_ScreenToWorldHeight(mouse_collider_h);
 
 		for(unsigned i=0; i < ARRAY_SIZE(colliders); i++){
 			Color4f color=COLOR4F_WHITE;
@@ -171,9 +165,11 @@ int main(int argc, char *argv[]){
 							,ViewPort_ScreenToWorldHeight(colliders[i].h)
 					)){
 						color=COLOR4F_RED;
+						colliding="Rectangle";
 					}
 					break;
 				case COLLIDER2D_TYPE_CIRCLE:
+
 					if(Collider2d_TestIntersectionRectangleCircle(
 							mouse_transform.translate
 							,mouse_transform.scale.x
@@ -182,6 +178,7 @@ int main(int argc, char *argv[]){
 							,ViewPort_ScreenToWorldWidth(colliders[i].w)
 					)){
 						color=COLOR4F_RED;
+						colliding="Circle";
 					}
 					break;
 				default:

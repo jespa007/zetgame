@@ -158,14 +158,6 @@ bool Graphics_Init(
 	Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
 
 
-	// init gl vars
-	g_graphics_vars->geometry_rectangle_default=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
-	g_graphics_vars->appearance_rectangle_default=Appearance_New();
-	g_graphics_vars->material_rectangle_default=Material_New(0);
-	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
-
-
-
 	// adapter list
 	g_graphics_vars->adapters=NULL;
 
@@ -178,6 +170,12 @@ bool Graphics_Init(
 	TTFontManager_Init();
 	IconManager_Init();
 	ViewPort_Init(_width,_height);
+
+	// created default rectangle/s for drawing
+	g_graphics_vars->geometry_rectangle_default=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
+	g_graphics_vars->appearance_rectangle_default=Appearance_New();
+	g_graphics_vars->material_rectangle_default=Material_New(0);
+	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
 
 	return ok;
 }
@@ -605,8 +603,8 @@ void Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, 
 void Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
 
 
-	Vector2i p1_2d=Vector2i_New(_x,_y);
-	Vector2i p2_2d=Vector2i_New(_x+_width,_y+_height);
+	Vector2i p1_2d=Vector2i_New(_x-(_width>>1),_y+(_height>>1));
+	Vector2i p2_2d=Vector2i_New(_x+(_width>>1),_y-(_height>>1));
 
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
@@ -619,8 +617,8 @@ void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2
 
 
 	// setup transform
-	float w=_x2-_x1;
-	float h=_y2-_y1;
+	float w=fabs(_x2-_x1);
+	float h=fabs(_y2-_y1); // y1 > y2, that's way y1-y2
 	t.translate.x=_x1+w*0.5;
 	t.translate.y=_y1+h*0.5;
 	t.scale.x=w;
@@ -634,26 +632,25 @@ void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2
 	Appearance_Apply(g_graphics_vars->appearance_rectangle_default);
 
 	// setup crop
-	if(_text_crop == NULL){
+   if(_text_crop == NULL){
 
-		float texture_coords[]={
+		float mesh_texture[]={
 			   0.0f,  1.0f,   // bottom left
 			   1.0f,  1.0f,   // bottom right
 			   0.0f,  0.0f,   // top left
 			   1.0f,  0.0f    // top right
 		};
 
-		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,texture_coords,ARRAY_SIZE(texture_coords));
+		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ARRAY_SIZE(mesh_texture));
 	}else{
-		float uv_coords[]={
-				_text_crop->u1, _text_crop->v1, // bottom left
-				_text_crop->u2, _text_crop->v1, // bottom right
-				_text_crop->u1, _text_crop->v2, // top left
-				_text_crop->u2, _text_crop->v2  // top right
-
+		float mesh_texture[]={
+				_text_crop->u1, _text_crop->v2, // bottom left
+				_text_crop->u2, _text_crop->v2, // bottom right
+				_text_crop->u1, _text_crop->v1, // top left
+				_text_crop->u2, _text_crop->v1  // top right
 		};
 
-		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,uv_coords,ARRAY_SIZE(uv_coords));
+		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ARRAY_SIZE(mesh_texture));
 	}
 
 	Geometry_Draw(g_graphics_vars->geometry_rectangle_default);

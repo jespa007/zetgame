@@ -39,7 +39,6 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 	}else{
 		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
 	}
-
 	return entity;
 }
 

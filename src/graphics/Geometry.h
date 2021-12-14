@@ -47,7 +47,7 @@ Geometry	* 	Geometry_GetDefaultRectangleFilled(void); // it returns a quad of 1 
 Geometry	* 	Geometry_GetDefaultRectangleTextured(void); // it returns a quad of 1 by 1
 Geometry	* 	Geometry_New(GeometryType _geometry_type,size_t _n_indexs, size_t _n_vertexs, uint32_t _properties);
 Geometry	* 	Geometry_NewRectangle(uint32_t properties);
-Geometry	* 	Geometry_NewRectangleTextured(uint32_t _properties);
+Geometry	* 	Geometry_NewRectangleFilled(uint32_t _properties);
 Geometry	* 	Geometry_NewPoints(size_t _n_point, uint32_t _properties);
 /**
  * _smooth: 1-N

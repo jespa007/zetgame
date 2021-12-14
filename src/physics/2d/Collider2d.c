@@ -74,7 +74,7 @@ bool Collider2d_TestIntersectionRectangleCircle(
    	if (circle_distance_y <= (h1_med)) { return true; };
 
    	float xdiff=circle_distance_x-w1_med;
-   	float ydiff=circle_distance_x-w1_med;
+   	float ydiff=circle_distance_y-h1_med;
 
 	float corner_distance=(xdiff)*(xdiff)+
 						  (ydiff)*(ydiff);

@@ -35,7 +35,7 @@ void ECSpriteRenderer_Setup(void *_this,Entity *_entity){
 	ECMaterial *ec_material=_entity->components[EC_MATERIAL];
 
 	data->appearance=Appearance_New();
-	ec_geometry->geometry=data->geometry=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
+	ec_geometry->geometry=data->geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
 	ec_material->material=data->appearance->material=Material_New(0); // Mat by default ?
 
 	ec_sprite_renderer->data=data;

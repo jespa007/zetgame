@@ -19,7 +19,7 @@ SGViewer2d * SGViewer2d_New(void){
 	sg_image->data=data;
 	data->texture=NULL;
 
-	sg_image->node->geometry=data->geometry = Geometry_NewRectangleTextured(GEOMETRY_TEXTURE);
+	sg_image->node->geometry=data->geometry = Geometry_NewRectangleFilled(GEOMETRY_TEXTURE);
 	//viewer_2d->node->draw=SGViewer2d_Draw();
 	//viewer_2d->node->shape=data->shape2d->shape;
 

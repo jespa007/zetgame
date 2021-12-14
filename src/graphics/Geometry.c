@@ -10,8 +10,6 @@ static Geometry * g_geometry_default_rectangle_filled=NULL;
 static Geometry * g_geometry_default_rectangle_textured=NULL;
 static Geometry * g_geometry_default_circle=NULL;
 
-
-
 Geometry	* Geometry_GetDefaultPoint(void){
 	if(g_geometry_default_point == NULL){
 		short index=0;
@@ -23,7 +21,6 @@ Geometry	* Geometry_GetDefaultPoint(void){
 
 	return g_geometry_default_point;
 }
-
 
 Geometry	* Geometry_GetDefaultRectangle(void){
 	if(g_geometry_default_rectangle == NULL){
@@ -43,7 +40,7 @@ Geometry	* 	Geometry_GetDefaultCircle(void){
 
 Geometry	* 	Geometry_GetDefaultRectangleFilled(void){
 	if(g_geometry_default_rectangle_filled == NULL){
-		g_geometry_default_rectangle_filled=Geometry_NewRectangle(GEOMETRY_PROPERTY_COLOR);
+		g_geometry_default_rectangle_filled=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_COLOR);
 	}
 
 	return g_geometry_default_rectangle_filled;
@@ -51,13 +48,11 @@ Geometry	* 	Geometry_GetDefaultRectangleFilled(void){
 
 Geometry	* 	Geometry_GetDefaultRectangleTextured(void){
 	if(g_geometry_default_rectangle_textured == NULL){
-		g_geometry_default_rectangle_textured=Geometry_NewRectangle(GEOMETRY_PROPERTY_TEXTURE);
+		g_geometry_default_rectangle_textured=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
 	}
 
 	return g_geometry_default_rectangle_textured;
 }
-
-
 
 Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t _n_vertexs,uint32_t _properties){
 
@@ -81,7 +76,6 @@ Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t 
 		Geometry_GL_New(geometry,_properties);
 		break;
 	}
-
 
 	return geometry;
 }
@@ -127,13 +121,13 @@ Geometry	* Geometry_NewRectangle(uint32_t _properties){
 	return geometry;
 }
 
-Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
+Geometry	* Geometry_NewRectangleFilled(uint32_t _properties){
 
 	Geometry *geometry=NULL;
 
 	short indices[]={
-			0,1,2,3 // first triangle (bottom left - top left - top right)
-		//	,0,2,3 // second triangle (bottom left - top right - bottom right)
+		0,1
+		,2,3
 	};
 
 	// A quarter of screen as size...
@@ -147,19 +141,22 @@ Geometry	* Geometry_NewRectangleTextured(uint32_t _properties){
 	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLE_STRIP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
 
 	if(geometry){ // setup indices...
-		float g_default_mesh_rectangle_texture_coords[]={
-			   0.0f,  1.0f,   // bottom left
-			   1.0f,  1.0f,   // bottom right
-			   0.0f,  0.0f,   // top left
-			   1.0f,  0.0f    // top right
-		};
+
 
 		Geometry_SetIndices(geometry,indices,ARRAY_SIZE(indices));
 
 		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 
 		if(_properties & GEOMETRY_PROPERTY_TEXTURE){
-			Geometry_SetMeshTexture(geometry,g_default_mesh_rectangle_texture_coords,ARRAY_SIZE(g_default_mesh_rectangle_texture_coords));
+
+			float mesh_texture[]={
+				   0.0f,  1.0f,   // bottom left
+				   1.0f,  1.0f,   // bottom right
+				   0.0f,  0.0f,   // top left
+				   1.0f,  0.0f    // top right
+			};
+
+			Geometry_SetMeshTexture(geometry,mesh_texture,ARRAY_SIZE(mesh_texture));
 		}
 	}
 

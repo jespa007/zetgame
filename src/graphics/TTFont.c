@@ -31,14 +31,6 @@ typedef struct{
 //-----
 TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
-	float texture_coords[]={
-		   0.0f,  0.0f,   // bottom left
-		   1.0f,  0.0f,   // bottom right
-		   0.0f,  1.0f,   // top left
-		   1.0f,  1.0f    // top right
-	};
-
-
     TTFont *font=NEW(TTFont);
     TTFontData *font_data=NEW(TTFontData);
     memset(font,0,sizeof(TTFont));
@@ -57,8 +49,16 @@ TTFont * TTFont_New(FT_Face face,uint8_t font_size){
     font->characters=MapInt_New();
 
     // data
-    font_data->geometry=Geometry_NewRectangleTextured(GEOMETRY_PROPERTY_TEXTURE);
-    Geometry_SetMeshTexture(font_data->geometry,texture_coords,ARRAY_SIZE(texture_coords));
+    font_data->geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
+
+    // TTF load each char flipped vertically, we define inverse uv transform as usually
+	float mesh_texture[]={
+		   0.0f,  0.0f,   // bottom left
+		   1.0f,  0.0f,   // bottom right
+		   0.0f,  1.0f,   // top left
+		   1.0f,  1.0f    // top right
+	};
+	Geometry_SetMeshTexture(font_data->geometry,mesh_texture,ARRAY_SIZE(mesh_texture));
 
     font_data->ft_face=face;
 
@@ -217,7 +217,7 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,_this->ascender - ch->size.y);
 		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,_this->ascender);
 
-		const float quad_char_3d []={
+		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
 				_x3d+p2_3d.x, _y3d-p1_3d.y,0,  // bottom right
 				_x3d+p1_3d.x, _y3d-p2_3d.y,0,   // top left
@@ -225,7 +225,7 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		};
 
 		glBindTexture(GL_TEXTURE_2D, ch_data->texture);
-		Geometry_SetMeshVertex(data->geometry,quad_char_3d,ARRAY_SIZE(quad_char_3d));
+		Geometry_SetMeshVertex(data->geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 		Geometry_Draw(data->geometry);
 
 		_x3d += ViewPort_ScreenToWorldWidth(ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))

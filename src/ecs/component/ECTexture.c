@@ -8,7 +8,7 @@ void ECTexture_Setup(void *_this, Entity *_entity){
 	_entity->components[EC_TEXTURE]=_this;
 
 
-	ec_texture->texture=NULL;//Texture_New();
+	ec_texture->texture=TextureManager_GetDefaultTexture();//Texture_New();
 }
 
 void ECTexture_SetTexture(ECTexture *_this,Texture *_texture){
