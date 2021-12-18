@@ -15,10 +15,21 @@ struct Collider2d{
 	void *data;
 };
 
-bool Collider2d_TestIntersectionRectanglePoint(
+bool Collider2d_TestIntersectionPointPoint(
 							  Vector3f _p1
-							, float _w1, float _h1
 							, Vector3f _p2
+							);
+
+bool Collider2d_TestIntersectionPointRectangle(
+							  Vector3f _p1
+							, Vector3f _p2
+							, float _w2, float _h2
+							);
+
+bool Collider2d_TestIntersectionPointCircle(
+							  Vector3f _p1
+							, Vector3f _p2
+							, float _r2
 							);
 
 bool Collider2d_TestIntersectionRectangleRectangle(
