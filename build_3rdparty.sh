@@ -113,7 +113,7 @@ fi
 
 if ! [ -d "$THIRD_PARTY_BUILD_DIR" ] 
 then
-	mkdir $THIRD_PARTY_BUILD_DIR --parents
+	mkdir -p $THIRD_PARTY_BUILD_DIR
 fi
 
 cd $THIRD_PARTY_BUILD_DIR
@@ -335,7 +335,7 @@ then
 	fi
 
 	make clean -C $BUILD_DIR
-	make -j2  install --trace -C $BUILD_DIR
+	make -j2  install -C $BUILD_DIR
 
 	if ! [ $? -eq 0 ] 
 	then
