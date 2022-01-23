@@ -7,8 +7,6 @@ project(zetgame)
 # COMMON MACROS
 #
 
-
-
 macro(configure_files srcDir destDir)
     message(STATUS "Configuring directory ${destDir}")
     make_directory(${destDir})
@@ -361,12 +359,6 @@ add_executable(test_viewport${POST_NAME}
 
 target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
-add_executable(test_gui${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_gui.c
-)
-
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
-
 add_executable(test_animation${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_animation.c
 )
@@ -412,4 +404,16 @@ add_executable(test_textbox${POST_NAME}
 
 target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
+#--- GUI
+add_executable(test_gui${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_gui.c
+)
 
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
+#--- PARTICLE SYSTEM
+#add_executable(test_particle${POST_NAME} 
+#	${PROJECT_SOURCE_DIR}/../test/test_particle_system.c
+#)
+
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
