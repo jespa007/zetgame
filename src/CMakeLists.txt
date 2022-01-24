@@ -411,6 +411,13 @@ add_executable(test_gui${POST_NAME}
 
 target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
 
+#--- SHADER
+add_executable(test_shader${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_shader.c
+)
+
+target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+
 #--- PARTICLE SYSTEM
 #add_executable(test_particle${POST_NAME} 
 #	${PROJECT_SOURCE_DIR}/../test/test_particle_system.c

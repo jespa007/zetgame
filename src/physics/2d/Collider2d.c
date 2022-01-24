@@ -119,7 +119,138 @@ bool Collider2d_TestIntersectionCircleCircle(
 
 	return distance < _r1*_r1 || distance < _r2*_r2;
 
+}
 
+void Collider2d_Draw(Transform _t3d, Collider2dType _collider_type, Color4f _color){
+	Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
+	switch(_collider_type){
+	case COLLIDER2D_TYPE_POINT:
+		Graphics_DrawPoint2f(_t3d.translate.x,_t3d.translate.y,_color,1);
+		break;
+	case COLLIDER2D_TYPE_RECTANGLE:
+		Graphics_DrawRectangle4f(
+				_t3d.translate.x-_t3d.scale.x*0.5f
+				,_t3d.translate.y-_t3d.scale.y*0.5f
+				,_t3d.scale.x
+				,_t3d.scale.y
+				,_color,1);
+		break;
+	case COLLIDER2D_TYPE_CIRCLE:
+		Graphics_DrawCircle3f(
+				_t3d.translate.x
+				,_t3d.translate.y
+				,_t3d.scale.x
+				,_color,1);
+		break;
+	}
+}
+
+bool Collider2d_Test(Transform _t1, Collider2dType _c1, Transform _t2, Collider2dType _c2){
+	bool test=false;
+	// check collision and set line red if collides
+	switch(_c1){
+	case COLLIDER2D_TYPE_POINT:
+		switch(_c2){
+		case COLLIDER2D_TYPE_POINT:
+			test=Collider2d_TestIntersectionPointPoint(
+					_t1.translate
+					,_t2.translate
+			);
+			break;
+		case COLLIDER2D_TYPE_RECTANGLE:
+			test=Collider2d_TestIntersectionPointRectangle(
+					_t1.translate
+					,_t2.translate
+					,_t2.scale.x
+					,_t2.scale.y
+			);
+			break;
+		case COLLIDER2D_TYPE_CIRCLE:
+
+			test=Collider2d_TestIntersectionPointCircle(
+					_t1.translate
+					,_t2.translate
+					,_t2.scale.x
+			);
+			break;
+		default:
+			break;
+		}
+		break;
+
+	case COLLIDER2D_TYPE_RECTANGLE:
+		switch(_c2){
+		case COLLIDER2D_TYPE_POINT:
+			test=Collider2d_TestIntersectionPointRectangle(
+					_t2.translate
+					,_t1.translate
+					,_t1.scale.x
+					,_t1.scale.y
+			);
+			break;
+		case COLLIDER2D_TYPE_RECTANGLE:
+			test=Collider2d_TestIntersectionRectangleRectangle(
+					_t1.translate
+					,_t1.scale.x
+					,_t1.scale.y
+					,_t2.translate
+					,_t2.scale.x
+					,_t2.scale.y
+			);
+			break;
+		case COLLIDER2D_TYPE_CIRCLE:
+
+			test=Collider2d_TestIntersectionRectangleCircle(
+					_t1.translate
+					,_t1.scale.x
+					,_t1.scale.y
+					,_t2.translate
+					,_t2.scale.x
+			);
+			break;
+		default:
+			break;
+		}
+		break;
+	case COLLIDER2D_TYPE_CIRCLE:
+		switch(_c2){
+		case COLLIDER2D_TYPE_POINT:
+			test=Collider2d_TestIntersectionPointCircle(
+					_t2.translate
+					,_t1.translate
+					,_t1.scale.x
+			);
+			break;
+		case COLLIDER2D_TYPE_RECTANGLE:
+			test=Collider2d_TestIntersectionRectangleCircle(
+					_t2.translate
+					,_t2.scale.x
+					,_t2.scale.y
+					,_t1.translate
+					,_t1.scale.x
+
+			);
+			break;
+		case COLLIDER2D_TYPE_CIRCLE:
+
+			test=Collider2d_TestIntersectionCircleCircle(
+					_t1.translate
+					,_t1.scale.x
+					,_t2.translate
+					,_t2.scale.x
+			);
+			break;
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
+
+
+	}
+
+	return test;
 }
 
 

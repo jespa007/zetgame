@@ -155,6 +155,10 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 				skp->sprite_keyframes[i].frames_len=nframes;
 				skp->sprite_keyframes[i].frames=malloc(sizeof(SpriteKeyFrameInfo)*nframes);
 
+				float one_over_texture_width=1.0f/texture->width;
+				float one_over_texture_height=1.0f/texture->height;
+
+
 				for(unsigned nframe=0; nframe < nframes; nframe++){ // get total frames
 					cJSON *frame_property = NULL;
 					cJSON *duration_property=NULL;
@@ -167,18 +171,19 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 					frame_property = cJSON_GetObjectItem(frame_element,"frame");
 					duration_property = cJSON_GetObjectItem(frame_element,"duration");
 
+
 					if(frame_property && duration_property){
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"x"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.u1=frame_element_property->valuedouble/texture->width;
+							skp->sprite_keyframes[i].frames[nframe].frame.u1=frame_element_property->valuedouble*one_over_texture_width;
 						}
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"y"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.v1=frame_element_property->valuedouble/texture->height;
+							skp->sprite_keyframes[i].frames[nframe].frame.v1=frame_element_property->valuedouble*one_over_texture_height;
 						}
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"w"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.u2=skp->sprite_keyframes[i].frames->frame.u1+frame_element_property->valuedouble/texture->width;
+							skp->sprite_keyframes[i].frames[nframe].frame.u2=skp->sprite_keyframes[i].frames[nframe].frame.u1+frame_element_property->valuedouble*one_over_texture_width;
 						}
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"h"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.v2=skp->sprite_keyframes[i].frames->frame.v1+frame_element_property->valuedouble/texture->height;
+							skp->sprite_keyframes[i].frames[nframe].frame.v2=skp->sprite_keyframes[i].frames[nframe].frame.v1+frame_element_property->valuedouble*one_over_texture_height;
 						}
 
 						skp->sprite_keyframes[i].frames[nframe].duration=duration_property->valueint;

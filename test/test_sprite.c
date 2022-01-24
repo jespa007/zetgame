@@ -9,6 +9,8 @@ int main(int argc, char *argv[]){
 	TextureManager *texture_manager = TextureManager_New();
 	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New(texture_manager);
 	SpriteKeyFrame *skf_current=NULL;
+	Uint32 next_time=0;
+	Uint32 idx_frame=0;
 
 	if(SpriteKeyFrameManager_Load(
 			skfm
@@ -16,7 +18,7 @@ int main(int argc, char *argv[]){
 			,"../../../test/data/sprites/mario_small.json"
 	)){
 
-		skf_current=SpriteKeyFrameManager_GetSpriteKeyFrame(skfm,"mario_small_idle");
+		skf_current=SpriteKeyFrameManager_GetSpriteKeyFrame(skfm,"mario_small_walk");
 	}
 
 
@@ -25,6 +27,15 @@ int main(int argc, char *argv[]){
 		Graphics_BeginRender();
 
 		if(skf_current != NULL){
+
+			if(SDL_GetTicks()>next_time){
+
+				idx_frame=(idx_frame+1)%skf_current->frames_len;
+
+				next_time=SDL_GetTicks()+skf_current->frames[idx_frame].duration;
+
+			}
+
 			Graphics_DrawRectangleTextured4i(
 				32
 				,32
@@ -32,7 +43,7 @@ int main(int argc, char *argv[]){
 				,64
 				,COLOR4F_WHITE
 				,skf_current->texture
-				,&skf_current->frames[0].frame
+				,&skf_current->frames[idx_frame].frame
 			);
 		}
 

@@ -96,6 +96,7 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 
 }
 
+/*
 void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type, Color4f _color){
 	Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
 	switch(_collider_type){
@@ -110,6 +111,7 @@ void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type
 		break;
 	}
 }
+*/
 
 int main(int argc, char *argv[]){
 
@@ -152,7 +154,7 @@ int main(int argc, char *argv[]){
 			Color4f color=COLOR4F_WHITE;
 
 			// check collision and set line red if collides
-			switch(mouse_collider_type){
+			/*switch(mouse_collider_type){
 			case COLLIDER2D_TYPE_POINT:
 				switch(colliders[i].collider_type){
 				case COLLIDER2D_TYPE_POINT:
@@ -279,7 +281,7 @@ int main(int argc, char *argv[]){
 				break;
 
 
-			}
+			}*/
 
 			draw_collider(
 					colliders[i].x
