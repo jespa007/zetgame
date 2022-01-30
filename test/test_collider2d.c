@@ -96,40 +96,51 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 
 }
 
-/*
-void draw_collider(int _x, int _y, int _w, int _h, Collider2dType _collider_type, Color4f _color){
-	Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
-	switch(_collider_type){
-	case COLLIDER2D_TYPE_POINT:
-		Graphics_DrawPoint2i(_x,_y,_color,1);
-		break;
-	case COLLIDER2D_TYPE_RECTANGLE:
-		Graphics_DrawRectangle4i(_x,_y,_w,_h,_color,1);
-		break;
-	case COLLIDER2D_TYPE_CIRCLE:
-		Graphics_DrawCircle3i(_x,_y,_w,_color,1);
-		break;
-	}
-}
-*/
-
 int main(int argc, char *argv[]){
-
-	const char *colliding="none";
-	struct{
-		int x,y;
-		int w,h;
-		Collider2dType collider_type;
-	}colliders[]={
-		{100,300,0,0,COLLIDER2D_TYPE_POINT}
-		,{250,300,100,100,COLLIDER2D_TYPE_RECTANGLE}
-		,{500,300,100,50,COLLIDER2D_TYPE_CIRCLE}
-	};
 
 	UNUSUED_PARAM(argc);
 	UNUSUED_PARAM(argv);
 
 	ZetGame_Init(NULL);
+
+	const char *colliding="none";
+	struct{
+		Transform transform;
+		Collider2dType collider_type;
+	}colliders[]={
+		{
+				Transform_New()
+				,COLLIDER2D_TYPE_POINT
+		}
+		,{
+				Transform_New()
+				,COLLIDER2D_TYPE_RECTANGLE
+		}
+		,{
+				Transform_New()
+				,COLLIDER2D_TYPE_CIRCLE
+		}
+	};
+
+	// init colliders
+	// Point
+	colliders[0].transform.translate.x=ViewPort_ScreenToWorldPositionX(100);
+	colliders[0].transform.translate.y=ViewPort_ScreenToWorldPositionY(300);
+
+	// Quad
+	colliders[1].transform.translate.x=ViewPort_ScreenToWorldPositionX(250);
+	colliders[1].transform.translate.y=ViewPort_ScreenToWorldPositionY(300);
+	colliders[1].transform.scale.x=ViewPort_ScreenToWorldWidth(100);
+	colliders[1].transform.scale.y=ViewPort_ScreenToWorldHeight(100);
+
+
+	// Circle
+	colliders[2].transform.translate.x=ViewPort_ScreenToWorldPositionX(500);
+	colliders[2].transform.translate.y=ViewPort_ScreenToWorldPositionY(300);
+	colliders[2].transform.scale.x=ViewPort_ScreenToWorldWidth(100);
+
+
+
 
 	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_POINT;
 	SelectCollider select_collider=SELECT_COLLIDER_POINT;
@@ -147,158 +158,43 @@ int main(int argc, char *argv[]){
 		Vector2i m=Input_GetMousePosition();
 		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x);
 		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y);
-		mouse_transform.scale.x=ViewPort_ScreenToWorldWidth(mouse_collider_w);
-		mouse_transform.scale.y=ViewPort_ScreenToWorldHeight(mouse_collider_h);
 
 		for(unsigned i=0; i < ARRAY_SIZE(colliders); i++){
 			Color4f color=COLOR4F_WHITE;
 
-			// check collision and set line red if collides
-			/*switch(mouse_collider_type){
-			case COLLIDER2D_TYPE_POINT:
+			if(Collider2d_Test(mouse_transform
+					,mouse_collider_type
+					,colliders[i].transform
+					,colliders[i].collider_type
+					)){
 				switch(colliders[i].collider_type){
 				case COLLIDER2D_TYPE_POINT:
-					if(Collider2d_TestIntersectionPointPoint(
-							mouse_transform.translate
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-					)){
-						color=COLOR4F_RED;
-						colliding="Point";
-					}
+					color=COLOR4F_RED;
+					colliding="Point";
 					break;
 				case COLLIDER2D_TYPE_RECTANGLE:
-					if(Collider2d_TestIntersectionPointRectangle(
-							mouse_transform.translate
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,ViewPort_ScreenToWorldWidth(colliders[i].w)
-							,ViewPort_ScreenToWorldHeight(colliders[i].h)
-					)){
-						color=COLOR4F_RED;
-						colliding="Rectangle";
-					}
+					color=COLOR4F_RED;
+					colliding="Rectangle";
 					break;
 				case COLLIDER2D_TYPE_CIRCLE:
+					color=COLOR4F_RED;
+					colliding="Circle";
+					break;
 
-					if(Collider2d_TestIntersectionPointCircle(
-							mouse_transform.translate
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,ViewPort_ScreenToWorldWidth(colliders[i].w)
-					)){
-						color=COLOR4F_RED;
-						colliding="Circle";
-					}
-					break;
-				default:
-					break;
 				}
-				break;
 
-			case COLLIDER2D_TYPE_RECTANGLE:
-				switch(colliders[i].collider_type){
-				case COLLIDER2D_TYPE_POINT:
-					if(Collider2d_TestIntersectionPointRectangle(
-							Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,mouse_transform.translate
-							,mouse_transform.scale.x
-							,mouse_transform.scale.y
-					)){
-						color=COLOR4F_RED;
-						colliding="Point";
-					}
-					break;
-				case COLLIDER2D_TYPE_RECTANGLE:
-					if(Collider2d_TestIntersectionRectangleRectangle(
-							mouse_transform.translate
-							,mouse_transform.scale.x
-							,mouse_transform.scale.y
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,ViewPort_ScreenToWorldWidth(colliders[i].w)
-							,ViewPort_ScreenToWorldHeight(colliders[i].h)
-					)){
-						color=COLOR4F_RED;
-						colliding="Rectangle";
-					}
-					break;
-				case COLLIDER2D_TYPE_CIRCLE:
+			}
 
-					if(Collider2d_TestIntersectionRectangleCircle(
-							mouse_transform.translate
-							,mouse_transform.scale.x
-							,mouse_transform.scale.y
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,ViewPort_ScreenToWorldWidth(colliders[i].w)
-					)){
-						color=COLOR4F_RED;
-						colliding="Circle";
-					}
-					break;
-				default:
-					break;
-				}
-				break;
-			case COLLIDER2D_TYPE_CIRCLE:
-				switch(colliders[i].collider_type){
-				case COLLIDER2D_TYPE_POINT:
-					if(Collider2d_TestIntersectionPointCircle(
-							mouse_transform.translate
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,mouse_transform.scale.x
-					)){
-						color=COLOR4F_RED;
-						colliding="Point";
-					}
-					break;
-				case COLLIDER2D_TYPE_RECTANGLE:
-					if(Collider2d_TestIntersectionRectangleCircle(
-							 Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,ViewPort_ScreenToWorldWidth(colliders[i].w)
-							,ViewPort_ScreenToWorldHeight(colliders[i].h)
-							,mouse_transform.translate
-							,mouse_transform.scale.x
-
-					)){
-						color=COLOR4F_RED;
-						colliding="Rectangle";
-					}
-					break;
-				case COLLIDER2D_TYPE_CIRCLE:
-
-					if(Collider2d_TestIntersectionCircleCircle(
-							mouse_transform.translate
-							,mouse_transform.scale.x
-							,Vector3f_New3f(ViewPort_ScreenToWorldPositionX(colliders[i].x),ViewPort_ScreenToWorldPositionY(colliders[i].y),0)
-							,ViewPort_ScreenToWorldWidth(colliders[i].w)
-					)){
-						color=COLOR4F_RED;
-						colliding="Circle";
-					}
-					break;
-				default:
-					break;
-				}
-				break;
-			default:
-				break;
-
-
-			}*/
-
-			draw_collider(
-					colliders[i].x
-					,colliders[i].y
-					,colliders[i].w
-					,colliders[i].h
+			Collider2d_Draw(
+					 colliders[i].transform
 					,colliders[i].collider_type
 					,color
 			);
 
 		}
 
-		draw_collider(
-			m.x
-			,m.y
-			,mouse_collider_w
-			,mouse_collider_h
+		Collider2d_Draw(
+			mouse_transform
 			,mouse_collider_type
 			,COLOR4F_WHITE
 		);

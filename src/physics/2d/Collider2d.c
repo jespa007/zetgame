@@ -129,8 +129,8 @@ void Collider2d_Draw(Transform _t3d, Collider2dType _collider_type, Color4f _col
 		break;
 	case COLLIDER2D_TYPE_RECTANGLE:
 		Graphics_DrawRectangle4f(
-				_t3d.translate.x-_t3d.scale.x*0.5f
-				,_t3d.translate.y-_t3d.scale.y*0.5f
+				_t3d.translate.x
+				,_t3d.translate.y
 				,_t3d.scale.x
 				,_t3d.scale.y
 				,_color,1);

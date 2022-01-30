@@ -54,8 +54,9 @@ bool Collider2d_TestIntersectionCirclePoint( Vector3f _p1
 								, Vector3f _p2);
 
 
+bool Collider2d_Test(Transform _t1, Collider2dType _c1, Transform _t2, Collider2dType _c2);
 
-
+void Collider2d_Draw(Transform _t3d, Collider2dType _collider_type, Color4f _color);
 
 
 
