@@ -1,0 +1,99 @@
+<window background-color="#0F0F0F" window-style="none">
+
+<!--	<label top=200 left=20 text="Have we had the right choice ?" font_name="ArmWrestler.ttf" font_color=#23b9d8 font_size=60></label>-->
+
+	<label id="lbl_score" 
+		left="10" top="10" height="25" 
+	    text="general.score" 
+	    font-size="20" font-color="#FFFFFF"
+	></label>	
+	
+	<label id="lbl_exp" 
+		left="10" top="35" height="25" 
+	   font-size="20" font-color="#FFFFFF"
+	></label>
+
+	<img id="img_time_left" 
+		left="10" top="55" height="25"
+		 src="clock.png" 
+	></img>		
+	    
+	<label id="lbl_time_left" 
+		left="38" top="60" height="25"
+		text="general.time_left"  
+	    font-size="20" font-color="#FFFFFF"
+	></label>		
+
+	<label id="lbl_level" top="165" left="450" height="45"
+		text="general.level" 
+		font-size="45" font-color="#FFFFFF" text-align="right"
+	 ></label>
+	<img  id="star1" src="star_off1.png" 
+		left="480" top="155" width="50" height="50"
+		font-size="25"
+	></img>
+	<img  id="star2" top="155" left="540" src="star_off1.png" 
+		width="50" height="50"
+		font-size="25"
+	></img>
+	<img  id="star3" top="155" left="600" src="star_off1.png" 
+		width="50" height="50"
+		font-size="25"
+	></img>
+	<img  id="star4" top="155" left="660" src="star_off1.png" 
+		width="50" height="50"
+		font-size="25"
+	></img>
+	<img  	id="star5" top="155" left="720" src="star_off1.png" 
+		width="50" height="50"
+		font-size="25"
+	></img>
+
+	<label id="lbl_title" 
+		top="50" left="0"   width="1024" 
+	    text="Bird"
+	    font-size="120" font-color="#FFFFFF" text-align="center"
+	></label>
+	    
+	<label id="lbl_description" 
+		top="250" left="50" width="900" height="10"
+	    text="bgazetherapyplayer.welcome_to_game_description"
+	    font-size="25" font-color="#FFFFFF" text-align="justify" line-height="0" font-name="Trebuchet MS.ttf">
+	</label>	    
+	
+	<label id="lbl_start"  
+		left="312" top="400" height="60" width="420"
+	    text="bgazeplayer.shortkey.start" 
+	     font-size="25" font-color="#FFFFFF"  text-align="center" vertical-align="center" border-width="2" border-color="#FFFFFF"
+	 ></label>
+
+	<label id="lbl_tutorial"  
+		left="312" top="470" height="60" width="420"
+	    text="bgazeplayer.shortkey.tutorial" 
+	     font-size="25" font-color="#FFFFFF"  text-align="center" vertical-align="center" border-width="2" border-color="#FFFFFF"
+	 ></label>	 
+
+	<label id="lbl_level_selection"  
+		left="312" top="540" height="60" width="420"
+	    text="bgazeplayer.shortkey.change_level" 
+	     font-size="25" font-color="#FFFFFF"  text-align="center" vertical-align="center" border-width="2" border-color="#FFFFFF"
+	 ></label>
+
+	<label id="lbl_exit"  
+		left="312" top="610" height="60" width="420"
+	    text="bgazeplayer.shortkey.exit"
+	     font-size="25" font-color="#FFFFFF" text-align="center" vertical-align="center" border-width="2" border-color="#FFFFFF"
+	 ></label>		 
+	 
+	 <!--<label 
+	 	left="50" top="600" width="500"
+	    text="tb_2_game.menu.key_options_menu" 
+	    font-size="30" font-color="#FFFFFF"  text-align="left" line-height="12"
+	 ></label>-->
+	 
+	<!--<label 
+	 	left="550" top="600" width="450"
+	    text="tb_2_game.menu.key_options_game" 
+	    font-size="30" font-color="#FFFFFF"  text-align="left" line-height="12"
+	 ></label>-->
+</window>
