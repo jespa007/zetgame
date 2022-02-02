@@ -238,7 +238,7 @@ bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this,const char *_key_id
 	return ok;
 }
 
-SpriteKeyFrame *SpriteKeyFrameManager_GetSpriteKeyFrame(SpriteKeyFrameManager *_this, const char *key){
+SpriteKeyFrame *SpriteKeyFrameManager_Get(SpriteKeyFrameManager *_this, const char *key){
 	SpriteKeyFrameManagerData *data=_this->data;
 
 	return MapString_GetValue(data->sprite_keyframes,key,NULL);

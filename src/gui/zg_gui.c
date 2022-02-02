@@ -5,6 +5,7 @@
 #include "GUITextbox.c"
 #include "GUIViewer.c"
 #include "GUIWindow.c"
+#include "GUIWindowManager.c"
 
 
 GUIWindow *g_active_window=NULL;

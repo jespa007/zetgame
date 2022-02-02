@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 			,"../../../test/data/tilemap/mario3_world1.json"
 		)){
 
-		if((tilemap=TilemapManager_GetTilemap(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
+		if((tilemap=TilemapManager_Get(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
 			Log_Error("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
 		}
 	}

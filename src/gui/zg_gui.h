@@ -11,6 +11,7 @@
 #include "GUITextbox.h"
 #include "GUIViewer.h"
 #include "GUIWindow.h"
+#include "GUIWindowManager.h"
 
 
 void GUI_Init(void);

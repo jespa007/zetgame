@@ -1,12 +1,30 @@
 #include "ZetGame.h"
 
+#define WINDOW_NAME "window"
+
 int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argc);
 	UNUSUED_PARAM(argv);
 
 	ZetGame_Init(NULL);
 
-	GUIWindow * window=GUIWindow_New(10,10,200,100);
+
+	TextureManager * texture_manager= TextureManager_New();
+	GUIWindowManager *window_manager=GUIWindowManager_New(texture_manager);
+	GUIWindow * window=NULL;
+
+	if(GUIWindowManager_Load(
+			window_manager
+			,"../../../test/data/windows/"WINDOW_NAME".xml"
+		)){
+
+		if((window=GUIWindowManager_Get(window_manager,WINDOW_NAME))==NULL) {
+			Log_Error("Cannot get window '%s'",WINDOW_NAME);
+		}
+	}
+
+
+	window=GUIWindow_New(10,10,200,100);
 	GUIViewer * texture=GUIViewer_New(10,10,42,42);
 
 	Textbox_SetText(texture->widget->textbox,"1");

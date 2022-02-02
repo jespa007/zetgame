@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['sx_5ffclose_462',['sx_fclose',['../sxmlc_8h.html#a4bf2e6728360a09f9872f30301bc3d7c',1,'sxmlc.h']]],
+  ['sx_5ffeof_463',['sx_feof',['../sxmlc_8h.html#aacc977e59f1691f59611ed945110b2e9',1,'sxmlc.h']]],
+  ['sx_5ffgetc_464',['sx_fgetc',['../sxmlc_8h.html#a143fec04e69df3a1bf50303d0cadf205',1,'sxmlc.h']]],
+  ['sx_5ffopen_465',['sx_fopen',['../sxmlc_8h.html#a238daab9bd0a8e10f48bc7854a735a90',1,'sxmlc.h']]],
+  ['sx_5ffprintf_466',['sx_fprintf',['../sxmlc_8h.html#af8ce65b70a7cf2d595b0977eda7de06d',1,'sxmlc.h']]],
+  ['sx_5ffputc_467',['sx_fputc',['../sxmlc_8h.html#a5613458444457f9560b72690e5e19871',1,'sxmlc.h']]],
+  ['sx_5ffputs_468',['sx_fputs',['../sxmlc_8h.html#a75e010b1fe6b08c9cb41d11301d2d833',1,'sxmlc.h']]],
+  ['sx_5fisspace_469',['sx_isspace',['../sxmlc_8h.html#a5f227045d21425807b8c2eb99d55b818',1,'sxmlc.h']]],
+  ['sx_5fisunicode_470',['sx_isunicode',['../sxmlc_8c.html#a2d1c0fce47efc47f8467afb2011fa428',1,'sxmlc.c']]],
+  ['sx_5fprintf_471',['sx_printf',['../sxmlc_8h.html#a850e2a5663ee86294e4484d5f7445dcd',1,'sxmlc.h']]],
+  ['sx_5fputs_472',['sx_puts',['../sxmlc_8h.html#a5d1d3411ad50224e4bff3f5f04a567ae',1,'sxmlc.h']]],
+  ['sx_5fsprintf_473',['sx_sprintf',['../sxmlc_8h.html#ad378637349cb063e0f9e9ce227499d9b',1,'sxmlc.h']]],
+  ['sx_5fstrcat_474',['sx_strcat',['../sxmlc_8h.html#af9cab8f341494cb7eb8cad15171d8b9e',1,'sxmlc.h']]],
+  ['sx_5fstrchr_475',['sx_strchr',['../sxmlc_8h.html#ade86f8bd6fff58d4e49392837416b0b3',1,'sxmlc.h']]],
+  ['sx_5fstrcmp_476',['sx_strcmp',['../sxmlc_8h.html#a00087c77debb9a7e57b9fd4c8045b520',1,'sxmlc.h']]],
+  ['sx_5fstrcpy_477',['sx_strcpy',['../sxmlc_8h.html#acbaaf2ffccbde2cbd7a53c75b651bea3',1,'sxmlc.h']]],
+  ['sx_5fstrdup_478',['sx_strdup',['../sxmlc_8h.html#aa2d8134ebe8524e0b4533069b4ffbdb2',1,'sxmlc.h']]],
+  ['sx_5fstrlen_479',['sx_strlen',['../sxmlc_8h.html#a923c8a3731167611a5e59983b4398ced',1,'sxmlc.h']]],
+  ['sx_5fstrncmp_480',['sx_strncmp',['../sxmlc_8h.html#a3efc63b7d82bfda411c6f91ad75c6ff7',1,'sxmlc.h']]],
+  ['sx_5fstrncpy_481',['sx_strncpy',['../sxmlc_8h.html#ad60fbeea6723f282b41b681940cb370c',1,'sxmlc.h']]],
+  ['sx_5fstrrchr_482',['sx_strrchr',['../sxmlc_8h.html#a7fdef8e5cd83a81f45c5c6f62b25c9fb',1,'sxmlc.h']]],
+  ['sxmlc_5fmax_5fpath_483',['SXMLC_MAX_PATH',['../sxmlc_8h.html#a21b455ae2142fd52a39d98b0951ff52b',1,'sxmlc.h']]],
+  ['sxmlc_5fversion_484',['SXMLC_VERSION',['../sxmlc_8h.html#a05d208045969f47d02dd51853a32bbdd',1,'sxmlc.h']]]
+];

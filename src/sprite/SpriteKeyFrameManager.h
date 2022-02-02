@@ -21,7 +21,7 @@ bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this
 		,const char *_key_id_prefix
 		,const char *_ase_json_filename
 );
-SpriteKeyFrame *SpriteKeyFrameManager_GetSpriteKeyFrame(SpriteKeyFrameManager *_this,const char *_skf_id);
+SpriteKeyFrame *SpriteKeyFrameManager_Get(SpriteKeyFrameManager *_this,const char *_skf_id);
 
 void SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this);
 

@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 			,"../../../test/data/sprites/mario_small.json"
 	)){
 
-		skf_current=SpriteKeyFrameManager_GetSpriteKeyFrame(skfm,"mario_small_walk");
+		skf_current=SpriteKeyFrameManager_Get(skfm,"mario_small_walk");
 	}
 
 

@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['_5f_5fcalloc_0',['__calloc',['../sxmlc_8h.html#aba929696995652b536ed500a067486e3',1,'sxmlc.h']]],
+  ['_5f_5ffree_1',['__free',['../sxmlc_8h.html#a30251993ecc07192a1ca7019c2396b26',1,'sxmlc.h']]],
+  ['_5f_5fmalloc_2',['__malloc',['../sxmlc_8h.html#a2af11cdadae8fef7c77866b7355e66f7',1,'sxmlc.h']]],
+  ['_5f_5frealloc_3',['__realloc',['../sxmlc_8h.html#a6999db31d6ff95c71737d03000c74987',1,'sxmlc.h']]],
+  ['_5f_5fsx_5fstrdup_4',['__sx_strdup',['../sxmlc_8h.html#a002a83ede592f1e18a7f53d6244ee76a',1,'sxmlc.h']]],
+  ['_5fbeob_5',['_beob',['../sxmlc_8c.html#adc0b0fcfdb63a246b8ab9ca9abcdafaa',1,'_beob(DataSourceBuffer *ds):&#160;sxmlc.c'],['../sxmlc_8h.html#adc0b0fcfdb63a246b8ab9ca9abcdafaa',1,'_beob(DataSourceBuffer *ds):&#160;sxmlc.c']]],
+  ['_5fbgetc_6',['_bgetc',['../sxmlc_8c.html#a62833d15805746163daffad66ce52c2f',1,'_bgetc(DataSourceBuffer *ds):&#160;sxmlc.c'],['../sxmlc_8h.html#a62833d15805746163daffad66ce52c2f',1,'_bgetc(DataSourceBuffer *ds):&#160;sxmlc.c']]],
+  ['_5fbom_5ftype_7',['_BOM_TYPE',['../sxmlc_8h.html#a0e854908af7096cc4ed0cca98c3d15c6',1,'sxmlc.h']]],
+  ['_5fdatasourcebuffer_8',['_DataSourceBuffer',['../struct___data_source_buffer.html',1,'']]],
+  ['_5fdatasourcetype_9',['_DataSourceType',['../sxmlc_8h.html#a5001fab0dec54395cc8fd012c29605fe',1,'sxmlc.h']]],
+  ['_5fdom_5fthrough_5fsax_10',['_DOM_through_SAX',['../struct___d_o_m__through___s_a_x.html',1,'']]],
+  ['_5fgnu_5fsource_11',['_GNU_SOURCE',['../sxmlc_8c.html#a369266c24eacffb87046522897a570d5',1,'sxmlc.c']]],
+  ['_5fparseerror_12',['_ParseError',['../sxmlc_8h.html#aa1150f6a879566ceb4c4c7bdc387a498',1,'sxmlc.h']]],
+  ['_5fsax_5fcallbacks_13',['_SAX_Callbacks',['../struct___s_a_x___callbacks.html',1,'']]],
+  ['_5fsax_5fdata_14',['_SAX_Data',['../struct___s_a_x___data.html',1,'']]],
+  ['_5ftag_15',['_Tag',['../struct___tag.html',1,'_Tag'],['../sxmlc_8c.html#aa9ddab5df24a985eae6e66aedb6b1fb6',1,'_TAG():&#160;sxmlc.c']]],
+  ['_5ftagtype_16',['_TagType',['../sxmlc_8h.html#a9318877ff551c916fb8f9236342a52e6',1,'sxmlc.h']]],
+  ['_5fxmlattribute_17',['_XMLAttribute',['../struct___x_m_l_attribute.html',1,'']]],
+  ['_5fxmldoc_18',['_XMLDoc',['../struct___x_m_l_doc.html',1,'']]],
+  ['_5fxmlevent_19',['_XMLEvent',['../sxmlc_8h.html#ad1db1eedfd1cdb4d02b360e4ccba934b',1,'sxmlc.h']]],
+  ['_5fxmlnode_20',['_XMLNode',['../struct___x_m_l_node.html',1,'']]],
+  ['_5fxmlsearch_21',['_XMLSearch',['../struct___x_m_l_search.html',1,'']]]
+];

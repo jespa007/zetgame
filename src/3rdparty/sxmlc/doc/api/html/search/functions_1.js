@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['domxmldoc_5fdoc_5fend_268',['DOMXMLDoc_doc_end',['../sxmlc_8c.html#a9484f4dce531a04eaa114f175872b173',1,'DOMXMLDoc_doc_end(SAX_Data *sd):&#160;sxmlc.c'],['../sxmlc_8h.html#a88e87ed57ae7dda897c46bf0ef79738a',1,'DOMXMLDoc_doc_end(SAX_Data *dom):&#160;sxmlc.c']]],
+  ['domxmldoc_5fdoc_5fstart_269',['DOMXMLDoc_doc_start',['../sxmlc_8c.html#af27428a88931b4e019aae88c59f4e707',1,'DOMXMLDoc_doc_start(SAX_Data *sd):&#160;sxmlc.c'],['../sxmlc_8h.html#a06e762a9947c0e3358265eb4d8536c98',1,'DOMXMLDoc_doc_start(SAX_Data *dom):&#160;sxmlc.c']]],
+  ['domxmldoc_5fnode_5fend_270',['DOMXMLDoc_node_end',['../sxmlc_8c.html#ab01efda124cc18ad9f4933fb60d878b9',1,'DOMXMLDoc_node_end(const XMLNode *node, SAX_Data *sd):&#160;sxmlc.c'],['../sxmlc_8h.html#a54d8cfbdb508aab17cd612f4e81bd0da',1,'DOMXMLDoc_node_end(const XMLNode *node, SAX_Data *dom):&#160;sxmlc.c']]],
+  ['domxmldoc_5fnode_5fstart_271',['DOMXMLDoc_node_start',['../sxmlc_8c.html#a2cb71e4da6968fd3c8e667f83ff49999',1,'DOMXMLDoc_node_start(const XMLNode *node, SAX_Data *sd):&#160;sxmlc.c'],['../sxmlc_8h.html#a586556568b1db506900881daeea5a1b4',1,'DOMXMLDoc_node_start(const XMLNode *node, SAX_Data *dom):&#160;sxmlc.c']]],
+  ['domxmldoc_5fnode_5ftext_272',['DOMXMLDoc_node_text',['../sxmlc_8c.html#a1189ca84e3c97166cc9ba093b1f441fe',1,'DOMXMLDoc_node_text(SXML_CHAR *text, SAX_Data *sd):&#160;sxmlc.c'],['../sxmlc_8h.html#ab986b7e598dfb112cf955378b31db33b',1,'DOMXMLDoc_node_text(SXML_CHAR *text, SAX_Data *dom):&#160;sxmlc.c']]],
+  ['domxmldoc_5fparse_5ferror_273',['DOMXMLDoc_parse_error',['../sxmlc_8c.html#a35513e464f4cea22b77a02daa358e080',1,'DOMXMLDoc_parse_error(ParseError error_num, int line_number, SAX_Data *sd):&#160;sxmlc.c'],['../sxmlc_8h.html#a35513e464f4cea22b77a02daa358e080',1,'DOMXMLDoc_parse_error(ParseError error_num, int line_number, SAX_Data *sd):&#160;sxmlc.c']]]
+];

@@ -20,7 +20,6 @@ SDL2_NET_FILE=$SDL2_NET_VERSION".tar.gz"
 FREETYPE2_FILE=$FREETYPE2_VERSION".tar.gz"
 LIBXMP_FILE=$LIBXMP_VERSION".tar.gz"
 
-
 RESULT_FILE_Z="libz.a"
 
 if [ $machine = "mingw" ]; then

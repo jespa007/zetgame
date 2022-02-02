@@ -337,7 +337,7 @@ bool TilemapManager_Load(TilemapManager *_this,const char *_json_tmx_file){
 	return ok;
 }
 
-Tilemap *TilemapManager_GetTilemap(TilemapManager *_this, const char *key){
+Tilemap *TilemapManager_Get(TilemapManager *_this, const char *key){
 	TilemapManagerData *data=_this->data;
 
 	return MapString_GetValue(data->tilemaps,key,NULL);
