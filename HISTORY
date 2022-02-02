@@ -6,7 +6,7 @@ Zetgame
 //-------------------------------------------
 Zetgame 1.0.0
 
-> #1 Implement Collider2d 
+> #1 Implement Collider2d
 > #2 Implement SpriteKeyFrame
 #3 Get rid of deprecated fixed opengl pipeline
 > #5 Compile and Run shader+fragment shader
