@@ -40,6 +40,8 @@ static void GUILabel_Draw(void *gui_label){
 void GUILabel_Delete(GUILabel *_this){
 	if(_this == NULL) return;
 
+	Textbox_Delete(_this->widget->textbox);
+
 	GUIWidget_Delete(_this->widget);
 
 

@@ -48,6 +48,7 @@ void GUIViewer_Delete(GUIViewer *_this){
 	if(_this == NULL) return;
 	GUIViewerData *data=_this->data;
 
+	Textbox_Delete(_this->widget->textbox);
 	GUIWidget_Delete(_this->widget);
 
 	FREE(data);

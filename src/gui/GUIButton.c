@@ -208,6 +208,8 @@ void GUIButton_Delete(GUIButton *_this){
 
 	List_DeleteAndFreeAllItems(data->on_click_events);
 
+	Textbox_Delete(_this->widget->textbox);
+
 	GUIWidget_Delete(_this->widget);
 
 	FREE(data);

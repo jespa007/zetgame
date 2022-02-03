@@ -46,18 +46,32 @@ bool GUIWindowManager_LoadFromMemory(
 
 	char filename[MAX_PATH]={0};
 	bool ok=false;
-	XMLDoc doc;
-	XMLDoc_init(&doc);
-
+	char *xml=NULL;
 	Texture *texture;
 	GUIWindowManagerData *data=_this->data;
 
 	// first read tilesets...
-	XMLDoc_parse_buffer_DOM(_xml_buf, C2SX(_path),&doc);
 
-	XMLDoc_print(&doc, stdout, C2SX("\n"), C2SX("\t"), false, 0, 4);
+	XmlDoc *doc = parseDoc(_xml_buf);
 
-	XMLDoc_free(&doc);
+	 if (xmlDocError(doc) != XML_SUCCESS)
+	 {
+		/* unparsable XML was read from stdin */
+		xmlDocPerror(doc, stderr, "Error parsing standard input");
+		ok=false;
+		goto exit;
+	}
+
+	/* this is a no-op unless compiled with -DBADXML_DEBUG */
+	dumpDoc(doc, stderr);
+
+	xml = xmlText(doc);
+	puts(xml);
+	free(xml);
+
+exit:
+
+	freeDoc(doc);
 
 
 	return ok;

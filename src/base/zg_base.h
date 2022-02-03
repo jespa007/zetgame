@@ -73,7 +73,7 @@
 
 #include "3rdparty/gifdec/gifdec.h"
 #include "3rdparty/cJSON/cJSON.h"
-#include "3rdparty/sxmlc/src/sxmlc.h"
+#include "3rdparty/cXML/cXML.h"
 #include "3rdparty/lodepng/lodepng.h"
 
 //----------------------------------------
