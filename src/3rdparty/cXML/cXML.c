@@ -248,12 +248,12 @@ freeDoc(XmlDoc *doc)
 {
     if (doc)
     {
-	freeElementList(doc->root);
-	if (doc->err == XML_UNMATCHEDCLOSE || doc->err == XML_CLOSEWOOPEN)
-	{
-	    free(doc->errInfo.s);
-	}
-	free(doc);
+		freeElementList(doc->root);
+		if (doc->err == XML_UNMATCHEDCLOSE || doc->err == XML_CLOSEWOOPEN)
+		{
+			free(doc->errInfo.s);
+		}
+		free(doc);
     }
 }
 

@@ -242,7 +242,7 @@ void GUIWidget_Delete(GUIWidget *_this){
 		Textbox_Delete(_this->textbox);
 	}
 
-	List_DeleteAndFreeAllItems(_data->widgets);
+	List_Delete(_data->widgets);
 	FREE(_data);
 	FREE(_this);
 }
