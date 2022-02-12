@@ -77,6 +77,43 @@ typedef struct XmlAttribute XmlAttribute;
 typedef struct XmlElement XmlElement;
 
 
+struct XmlDoc
+{
+    XmlElement *root;
+    const char *currLine;
+    union {
+		char c;
+		char *s;
+    } errInfo;
+    XmlError err;
+    long line;
+    long col;
+};
+
+struct XmlAttribute
+{
+    char *name;
+    char *value;
+    XmlElement *parent;
+    XmlAttribute *prev;
+    XmlAttribute *next;
+};
+
+/* represents an XML element (tag) */
+struct XmlElement
+{
+    char *name;
+    char *value;
+    XmlElement *parent;
+    XmlElement *prev;
+    XmlElement *next;
+    XmlAttribute *attributes;
+    XmlElement *children;
+    unsigned int depth;
+};
+
+
+
 /* parse xmlText as XML, return as XML document */
 XmlDoc *parseDoc(const char *xmlText);
 
@@ -137,7 +174,7 @@ const char *attributeValue(const XmlAttribute *attribute);
 
 char *xmlText(const XmlDoc *doc);
 
-#ifdef BADXML_DEBUG
+#ifdef CXML_DEBUG
 /* for debugging: dump document structure to file (typically stderr) */
 void dumpDoc(const XmlDoc *doc, FILE *file);
 #else

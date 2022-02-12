@@ -37,10 +37,38 @@ GUIWindowManager *GUIWindowManager_New(TextureManager	* _texture_manager){
 	return tmm;
 }
 
+bool GUIWindowManager_ProcessTag(GUIWindowManager *_this, const XmlElement *e){
+
+
+	XmlAttribute *attribute=e->attributes;
+	 XmlElement *children=e->children;
+
+	 Log_Debug("[tag]: %s", e->name);
+
+	 if(attribute != NULL){
+		 do{
+			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 attribute=attribute->next;
+		 }while(attribute != attribute->parent->attributes);
+		// process attributes
+	 }
+
+	// process childs
+	 if(children != NULL){
+		 do{
+			 GUIWindowManager_ProcessTag(_this,children);
+			 children=children->next;
+		 }while(children != children->parent->children);
+	 }
+
+
+	return true;
+}
+
 bool GUIWindowManager_LoadFromMemory(
 		GUIWindowManager *_this
 		,const char *_path
-		,uint8_t *_xml_buf
+		,char *_xml_buf
 		,size_t _xml_len
 	){
 
@@ -62,12 +90,8 @@ bool GUIWindowManager_LoadFromMemory(
 		goto exit;
 	}
 
-	/* this is a no-op unless compiled with -DBADXML_DEBUG */
-	dumpDoc(doc, stderr);
 
-	xml = xmlText(doc);
-	puts(xml);
-	free(xml);
+	 GUIWindowManager_ProcessTag(_this,doc->root);
 
 exit:
 

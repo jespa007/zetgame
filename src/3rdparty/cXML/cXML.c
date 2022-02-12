@@ -2,40 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdarg.h>
-
-struct XmlDoc
-{
-    XmlElement *root;
-    const char *currLine;
-    union {
-	char c;
-	char *s;
-    } errInfo;
-    XmlError err;
-    long line;
-    long col;
-};
-
-struct XmlAttribute
-{
-    char *name;
-    char *value;
-    XmlElement *parent;
-    XmlAttribute *prev;
-    XmlAttribute *next;
-};
-
-struct XmlElement
-{
-    char *name;
-    char *value;
-    XmlElement *parent;
-    XmlElement *prev;
-    XmlElement *next;
-    XmlAttribute *attributes;
-    XmlElement *children;
-    unsigned int depth;
-};
+#include "cXML.h"
 
 struct stringBuilder
 {
@@ -816,7 +783,7 @@ xmlText(const XmlDoc *doc)
     return sb.buf;
 }
 
-#ifdef BADXML_DEBUG
+#ifdef CXML_DEBUG
 static void
 dumpXmlAttribute(const XmlAttribute *a, FILE *file, int shift)
 {
