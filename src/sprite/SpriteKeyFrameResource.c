@@ -5,7 +5,7 @@ typedef struct{
 }SpriteKeyFrameResource;
 
 SpriteKeyFrameResource *SpriteKeyFrameResource_New(size_t _sprite_keyframes_len,Texture *_texture){
-	SpriteKeyFrameResource *skfp=NEW(SpriteKeyFrameResource);
+	SpriteKeyFrameResource *skfp=ZG_NEW(SpriteKeyFrameResource);
 	skfp->texture=_texture;
 	skfp->sprite_keyframes=malloc(sizeof(SpriteKeyFrame)*_sprite_keyframes_len);
 	skfp->sprite_keyframes_len=_sprite_keyframes_len;

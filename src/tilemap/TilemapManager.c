@@ -24,8 +24,8 @@ void TilemapManager_OnDeleteTexture(MapStringNode *node){
 
 // MEMBERS
 TilemapManager *TilemapManager_New(TextureManager	* _texture_manager){
-	TilemapManager *tmm=NEW(TilemapManager);
-	TilemapManagerData *data=NEW(TilemapManagerData);
+	TilemapManager *tmm=ZG_NEW(TilemapManager);
+	TilemapManagerData *data=ZG_NEW(TilemapManagerData);
 
 	data->tilemaps = MapString_New();//new std::map<std::string,TTFont *>();
 	data->texture_manager = _texture_manager;
@@ -204,7 +204,7 @@ bool TilemapManager_LoadFromMemory(
 				goto tmm_load_error;
 			}
 
-			tm_tilesets=NEW(Tilesets);
+			tm_tilesets=ZG_NEW(Tilesets);
 			tm_tilesets->tile_count=tilecount->valueint;
 			tm_tilesets->tile_width=tilewidth->valueint;
 			tm_tilesets->tile_height=tileheight->valueint;
@@ -228,7 +228,7 @@ bool TilemapManager_LoadFromMemory(
 					continue;
 				}
 
-				TileAnimation *tile_animation=NEW(TileAnimation);
+				TileAnimation *tile_animation=ZG_NEW(TileAnimation);
 				List_Add(tm_tilesets->animations,tile_animation);
 
 				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*image->w;
@@ -253,7 +253,7 @@ bool TilemapManager_LoadFromMemory(
 							continue;
 						}
 
-						TileAnimationFrame *tileset_animation_frame=NEW(TileAnimationFrame);
+						TileAnimationFrame *tileset_animation_frame=ZG_NEW(TileAnimationFrame);
 
 						tileset_animation_frame->duration=tilesets_tile_animation_duration->valueint;
 						tileset_animation_frame->tile_id=tilesets_tile_animation_tileid->valueint;
@@ -265,7 +265,7 @@ bool TilemapManager_LoadFromMemory(
 							v1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id/(tilemap_width->valueint))*image->w;
 
 
-							TileImage *tile_image=NEW(TileImage);
+							TileImage *tile_image=ZG_NEW(TileImage);
 							tile_image->image=SDL_Crop(image,(SDL_Rect){u1,v1,tm_tilesets->tile_width,tm_tilesets->tile_height});
 
 							tm_tilesets->tile_images[tileset_animation_frame->tile_id]=tile_image;

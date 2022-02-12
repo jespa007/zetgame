@@ -36,8 +36,8 @@ void	 	TextureManager_DeInit(){
 // PUBLIC MEMBERS
 
 TextureManager *TextureManager_New(void){
-	TextureManager 		*tm=NEW(TextureManager);
-	TextureManagerData 	*data=NEW(TextureManagerData);
+	TextureManager 		*tm=ZG_NEW(TextureManager);
+	TextureManagerData 	*data=ZG_NEW(TextureManagerData);
 
 	data->texture_resource_path=".";
 	data->textures = MapString_New();//new std::map<std::string,TTFont *>();

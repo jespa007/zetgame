@@ -7,7 +7,7 @@
 // PUBLIC
 KeyframeTrack * KeyframeTrack_New(void)
 {
-	KeyframeTrack *int1d = NEW(KeyframeTrack);
+	KeyframeTrack *int1d = ZG_NEW(KeyframeTrack);
 	int1d->ease = EASE_LINEAR;
 	int1d->minx_interval = FLT_MAX,
 	int1d->maxx_interval = FLT_MIN,

@@ -28,8 +28,8 @@ typedef struct{
 
 // MEMBERS
 SpriteKeyFrameManager *SpriteKeyFrameManager_New(TextureManager	* _texture_manager){
-	SpriteKeyFrameManager *skfm=NEW(SpriteKeyFrameManager);
-	SpriteKeyFrameManagerData *data=NEW(SpriteKeyFrameManagerData);
+	SpriteKeyFrameManager *skfm=ZG_NEW(SpriteKeyFrameManager);
+	SpriteKeyFrameManagerData *data=ZG_NEW(SpriteKeyFrameManagerData);
 
 	data->sprite_keyframes = MapString_New();//new std::map<std::string,TTFont *>();
 

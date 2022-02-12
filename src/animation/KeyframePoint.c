@@ -1,7 +1,7 @@
 #include "zg_animation.h"
 
 KeyframePoint * KeyframePoint_New(void){
-	KeyframePoint * bp = NEW(KeyframePoint);
+	KeyframePoint * bp = ZG_NEW(KeyframePoint);
 	memset(bp, 0, sizeof(KeyframePoint));
 	return bp;
 }

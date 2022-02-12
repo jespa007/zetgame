@@ -32,8 +32,8 @@ void GUIWindow_AttachChild(void *gui_window, GUIWidget * widget_to_attach);
 
 GUIWindow * GUIWindow_New(int x, int y, uint16_t width, uint16_t height){
 
-	GUIWindow *window = NEW(GUIWindow);
-	GUIWindowData *data = NEW(GUIWindowData);
+	GUIWindow *window = ZG_NEW(GUIWindow);
+	GUIWindowData *data = ZG_NEW(GUIWindowData);
 	window->data=data;
 
 	data->visible_caption=true;
@@ -45,7 +45,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t width, uint16_t height){
 	data->frame_caption->widget->background_color=Color4f_FromRGB(0,128,255);
 
 	data->label_caption=GUILabel_New(0,0,width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	Textbox_SetText(data->label_caption->widget->textbox,"Window");
+	Textbox_SetText(data->label_caption->textbox,"Window");
 
 
 	data->button_close=GUIButton_New(
@@ -55,7 +55,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t width, uint16_t height){
 			,DEFAULT_WINDOW_CAPTION_HEIGHT*0.75
 			);
 
-	Textbox_SetText(data->button_close->widget->textbox,"");
+	Textbox_SetText(data->button_close->textbox,"");
 	GUIButton_SetIcon(data->button_close,IconManager_GetIconDefault(DEFAULT_ICON_CLOSE_BIG));
 
 

@@ -1,7 +1,7 @@
 #include "zg_base.h"
 
 BufferShort *BufferShort_New(size_t len){
-	BufferShort *buffer=NEW(BufferShort);
+	BufferShort *buffer=ZG_NEW(BufferShort);
 	buffer->data=(uint16_t *)malloc(sizeof(uint16_t)*len);
 	buffer->len=len;
 	memset(buffer->data,0,len);

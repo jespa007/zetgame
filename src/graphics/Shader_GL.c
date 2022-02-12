@@ -76,10 +76,10 @@ Shader *  Shader_GL_LoadFromString(char *vertex_shader_ptr,char *fragment_shader
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 
-	shader_data=NEW(ShaderDataGL);
+	shader_data=ZG_NEW(ShaderDataGL);
 	shader_data->program=program;
 
-	shader=NEW(Shader);
+	shader=ZG_NEW(Shader);
 	shader->shader_data=shader_data;
 	return shader;
 }

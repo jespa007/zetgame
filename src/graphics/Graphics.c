@@ -69,7 +69,7 @@ bool Graphics_Init(
 		return false;
 	}
 
-	g_graphics_vars = NEW(GraphicsVars);
+	g_graphics_vars = ZG_NEW(GraphicsVars);
 	g_graphics_vars->capture_screen_callbacks=List_New();
 
 	uint32_t video_flags = 0;

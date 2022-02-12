@@ -5,8 +5,8 @@ typedef struct{
 }EntityData;*/
 
 Entity *Entity_New(void){
-	Entity *entity=NEW(Entity);
-	//EntityData *data=NEW(EntityData);
+	Entity *entity=ZG_NEW(Entity);
+	//EntityData *data=ZG_NEW(EntityData);
 	//memset(data,0,sizeof(EntityData));
 	entity->components=malloc(sizeof(void *)*ESSystem_NumComponents());
 	entity->active=false;

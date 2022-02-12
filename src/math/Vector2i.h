@@ -2,7 +2,7 @@
 #define __VECTOR2I_H__
 
 
-typedef struct Vector2f Vector2f;
+//typedef struct Vector2f Vector2f;
 typedef struct Vector2i Vector2i;
 struct Vector2i{
 	int x,y;

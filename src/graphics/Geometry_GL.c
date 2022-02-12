@@ -10,7 +10,7 @@ typedef struct{
 
 void  Geometry_GL_New(Geometry *geometry, uint32_t properties){
 
-	GeometryDataGL * data= NEW(GeometryDataGL);
+	GeometryDataGL * data= ZG_NEW(GeometryDataGL);
 	*data=(GeometryDataGL){
 		.index = GL_INVALID_VALUE, 	// index object id
 		.vertex = GL_INVALID_VALUE,	// vertex object id
@@ -141,14 +141,14 @@ void Geometry_GL_SetMeshNormal(Geometry * geometry,const float *mesh_normal_vert
 
 	if(geometry==NULL) return;
 	if(mesh_normal_vertexs_len != (geometry->n_vertexs*NORMAL_COORDS_LEN)){
-		Log_Error("Vertex count doesn't matches");
+		Log_ErrorF("Vertex count doesn't matches");
 		return;
 	}
 
 	data = (GeometryDataGL *)geometry->data;
 
 	if(data->normal == GL_INVALID_VALUE) {
-		Log_Error("Normal VBO not build or not set in constructor (New_Geometry)");
+		Log_ErrorF("Normal VBO not build or not set in constructor (New_Geometry)");
 		return;
 	}
 

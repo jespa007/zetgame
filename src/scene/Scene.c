@@ -27,8 +27,8 @@ typedef struct{
 
 
 Scene * Scene_New(void){
-	Scene *scene=NEW(Scene);
-	SceneData *data=NEW(SceneData);
+	Scene *scene=ZG_NEW(Scene);
+	SceneData *data=ZG_NEW(SceneData);
 	scene->data=data;
 
 	data->es_system=ESSystem_New();

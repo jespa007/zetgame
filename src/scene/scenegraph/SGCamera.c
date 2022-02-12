@@ -1,7 +1,7 @@
 #include "../zg_scene.h"
 
 SGCamera * SGCamera_New(void){
-	SGCamera * sg_camera = NEW(SGCamera);
+	SGCamera * sg_camera = ZG_NEW(SGCamera);
 	// Shape3d it stores transform3d and it can render for debbuging.
 	sg_camera->node = SGNode_New();
 

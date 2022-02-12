@@ -57,11 +57,11 @@ Geometry	* 	Geometry_GetDefaultRectangleTextured(void){
 Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t _n_vertexs,uint32_t _properties){
 
 	if(_n_vertexs < 2 && _geometry_type != GEOMETRY_TYPE_POINTS){
-		Log_Error("Number of vertex should be greather than 2");
+		Log_ErrorF("Number of vertex should be greather than 2");
 		return NULL;
 	}
 
-	Geometry *geometry=NEW(Geometry);
+	Geometry *geometry=ZG_NEW(Geometry);
 	memset(geometry, 0,sizeof(Geometry));
 	geometry->geometry_type=_geometry_type;
 	geometry->n_vertexs=_n_vertexs;

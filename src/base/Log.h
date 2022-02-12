@@ -12,13 +12,21 @@ typedef enum{
 
 
 #define Log_Error(s, ...) 			Log_Print(__FILE__,__LINE__,LOG_LEVEL_ERROR		, s, ##__VA_ARGS__)
+#define Log_ErrorF(s) 				Log_Error(s, NULL)
+
 #define Log_Warning(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_WARNING	, s, ##__VA_ARGS__)
+#define Log_WarningF(s)   			Log_Warning(s,NULL)
+
 #define Log_Info(s, ...)   			Log_Print(__FILE__,__LINE__,LOG_LEVEL_INFO		, s, ##__VA_ARGS__)
+#define Log_InfoF(s)   				Log_Print(s, NULL)
+
 #ifdef __DEBUG__
 #define Log_Debug(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_DEBUG		, s, ##__VA_ARGS__)
 #else
 #define Log_Debug(s, ...)
 #endif
+
+#define Log_DebugF(s)   			Log_Debug(s,NULL)
 
 
 

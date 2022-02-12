@@ -3,7 +3,7 @@
 
 
 /*SpriteKeyFrame *	SpriteKeyFrame_New(Texture *_texture, SpriteKeyFrameInfo *_frames, size_t _frames_len){
-	SpriteKeyFrame *skf=NEW(SpriteKeyFrame);
+	SpriteKeyFrame *skf=ZG_NEW(SpriteKeyFrame);
 
 
 	skf->frames=_frames;

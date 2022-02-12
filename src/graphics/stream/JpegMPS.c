@@ -89,8 +89,8 @@ bool JpegMPS_GfxSetup(JpegMPSData *data){
 JpegMPS * JpegMPS_New(void){
 
 
-	JpegMPS * jpg_mps=NEW(JpegMPS);
-	JpegMPSData * data=NEW(JpegMPSData);
+	JpegMPS * jpg_mps=ZG_NEW(JpegMPS);
+	JpegMPSData * data=ZG_NEW(JpegMPSData);
 	data->nextIndex = 0;
 	data->index = 0;
 	data->init = false;

@@ -82,13 +82,13 @@ PFNGLACTIVETEXTUREPROC 					glActiveTexture = NULL;
 
 void *WIN32_glGetProcAddress(const char *name)
 {
-  void *p = (void *)wglGetProcAddress(name);
+  uintptr_t *p = (uintptr_t)wglGetProcAddress(name);
   if(p == 0 ||
     (p == (void*)0x1) || (p == (void*)0x2) || (p == (void*)0x3) ||
     (p == (void*)-1) )
   {
     HMODULE module = LoadLibraryA("opengl32.dll");
-    p = (void *)GetProcAddress(module, name);
+    p = (uintptr_t)GetProcAddress(module, name);
   }
   return p;
 }

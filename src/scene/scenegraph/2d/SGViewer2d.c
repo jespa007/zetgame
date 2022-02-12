@@ -10,12 +10,12 @@ typedef struct{
 
 
 SGViewer2d * SGViewer2d_New(void){
-	SGViewer2d *sg_image = NEW(SGViewer2d);
+	SGViewer2d *sg_image = ZG_NEW(SGViewer2d);
 
 	sg_image->node=SGNode_New();
 	//sg_image->node->sgnode_type=SGNODE_TYPE_IMAGE;
 
-	SGViewer2dData *data = NEW(SGViewer2dData);
+	SGViewer2dData *data = ZG_NEW(SGViewer2dData);
 	sg_image->data=data;
 	data->texture=NULL;
 

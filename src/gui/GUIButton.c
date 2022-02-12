@@ -38,10 +38,10 @@ void GUIButton_DeInit(void){
 }
 
 GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
-	GUIButton * button = NEW(GUIButton);
+	GUIButton * button = ZG_NEW(GUIButton);
 	// SETUP WIDGET
 	button->widget = GUIWidget_New( x,  y,  width,  height);
-	button->widget->textbox=Textbox_New();
+	button->textbox=Textbox_New();
 	GUIWidget_SetDrawFunction(button->widget,(CallbackWidgetUpdate){
 		.ptr_function=GUIButton_Draw
 		,.calling_widget=button
@@ -54,7 +54,7 @@ GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
 
 
 	//SETUP BUTTON
-	GUIButtonData *data = NEW(GUIButtonData);
+	GUIButtonData *data = ZG_NEW(GUIButtonData);
 	data->on_click_events=List_New();
 	button->data=data;
 
@@ -185,7 +185,7 @@ static void  GUIButton_Draw(void *gui_button){
 	}
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	Textbox_Draw(_this->widget->textbox,&transform,&result_font_color);
+	Textbox_Draw(_this->textbox,&transform,&result_font_color);
 
 }
 
@@ -197,7 +197,7 @@ void GUIButton_SetIcon(GUIButton *_this, Icon icon){
 
 void GUIButton_AddEventOnClick(GUIButton *_this,CallbackMouseEvent on_click){
 	GUIButtonData *data=_this->data;
-	CallbackMouseEvent *_cf=NEW(CallbackMouseEvent);
+	CallbackMouseEvent *_cf=ZG_NEW(CallbackMouseEvent);
 	*_cf=on_click;
 	List_Add(data->on_click_events,_cf);
 }
@@ -208,7 +208,9 @@ void GUIButton_Delete(GUIButton *_this){
 
 	List_DeleteAndFreeAllItems(data->on_click_events);
 
-	Textbox_Delete(_this->widget->textbox);
+	Textbox_Delete(_this->textbox);
+	Texture_Delete(_this->texture);
+
 
 	GUIWidget_Delete(_this->widget);
 

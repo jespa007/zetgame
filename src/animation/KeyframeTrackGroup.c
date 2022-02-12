@@ -218,7 +218,7 @@ void KeyframeTrackGroup_FreeXYZW(KeyframeTrackGroup ** vx
 
 //----
 KeyframeTrackGroup *KeyframeTrackGroup_New(){
-	KeyframeTrackGroup *cli=NEW(KeyframeTrackGroup);
+	KeyframeTrackGroup *cli=ZG_NEW(KeyframeTrackGroup);
 	memset(cli,0,sizeof(KeyframeTrackGroup));
 	return cli;
 }

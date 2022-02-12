@@ -60,8 +60,8 @@ void	TTFontManager_DeInit(void){
 
 // MEMBERS
 TTFontManager *	TTFontManager_New(void){
-	TTFontManager *tfm=NEW(TTFontManager);
-	TTFontManagerData *data=NEW(TTFontManagerData);
+	TTFontManager *tfm=ZG_NEW(TTFontManager);
+	TTFontManagerData *data=ZG_NEW(TTFontManagerData);
 
 	data->fonts=NULL;
 	data->default_font=NULL;

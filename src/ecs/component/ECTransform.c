@@ -32,7 +32,7 @@ void ECTransform_Setup(void *_this, Entity *_entity){
 
 
 
-	ECTransformData *data= NEW(ECTransformData);
+	ECTransformData *data= ZG_NEW(ECTransformData);
 	ec_transform->data=data;
 
 	ec_transform->transform=Transform_DefaultValues();

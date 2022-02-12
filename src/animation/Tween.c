@@ -1,7 +1,7 @@
 #include "zg_animation.h"
 
 Tween *Tween_New(Uint8 n_channels){
-	Tween *tween=NEW(Tween);
+	Tween *tween=ZG_NEW(Tween);
 	tween->channels_info=ChannelsInfo_New(n_channels);
 	tween->tween_channels=(TweenChannel *)malloc(sizeof(TweenChannel)*n_channels);
 	memset(tween->tween_channels,0,sizeof(TweenChannel)*n_channels);

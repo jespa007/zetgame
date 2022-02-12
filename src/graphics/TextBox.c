@@ -56,8 +56,8 @@ typedef struct{
 
 
 TextBox *Textbox_New(void){
-	TextBox *textbox = NEW(TextBox);
-	TextboxData *data=NEW(TextboxData);
+	TextBox *textbox = ZG_NEW(TextBox);
+	TextboxData *data=ZG_NEW(TextboxData);
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
 	data->font=TTFontManager_GetEmbeddedFont();
@@ -70,8 +70,8 @@ TBRT_Token *Textbox_RT_NewTokenWord(
 		char *word
 		,uint16_t word_width
 		){
-	TBRT_Token *token=NEW(TBRT_Token);
-	TBRT_TokenWord *token_word=NEW(TBRT_TokenWord);
+	TBRT_Token *token=ZG_NEW(TBRT_Token);
+	TBRT_TokenWord *token_word=ZG_NEW(TBRT_TokenWord);
 	token_word->word_width=word_width;
 	token_word->word=word;
 
@@ -82,7 +82,7 @@ TBRT_Token *Textbox_RT_NewTokenWord(
 
 TBRT_TokenLine *Textbox_RT_NewLine(TextboxData *data){
 
-	TBRT_TokenLine *tbrt_token_line=NEW(TBRT_TokenLine);
+	TBRT_TokenLine *tbrt_token_line=ZG_NEW(TBRT_TokenLine);
 	tbrt_token_line->tbrt_tokens=List_New();
 
 	List_Add(data->render_text.token_lines,tbrt_token_line);

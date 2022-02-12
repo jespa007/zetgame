@@ -1,7 +1,7 @@
 #include "Material_GL.c"
 
 Material * Material_New(uint32_t properties){
-	Material *material=NEW(Material);
+	Material *material=ZG_NEW(Material);
 	material->properties=properties;
 	material->material_data=NULL;
 

@@ -1,7 +1,7 @@
 #include "zg_animation.h"
 
 Action * 			Action_New(uint8_t n_channels){
-	Action *action=NEW(Action);
+	Action *action=ZG_NEW(Action);
 	memset(action,0,sizeof(Action));
 
 	action->channels_info=ChannelsInfo_New(n_channels);

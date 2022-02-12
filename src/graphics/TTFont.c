@@ -31,8 +31,8 @@ typedef struct{
 //-----
 TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
-    TTFont *font=NEW(TTFont);
-    TTFontData *font_data=NEW(TTFontData);
+    TTFont *font=ZG_NEW(TTFont);
+    TTFontData *font_data=ZG_NEW(TTFontData);
     memset(font,0,sizeof(TTFont));
     FT_Set_Pixel_Sizes(face, 0, font_size);
 	// Load space character

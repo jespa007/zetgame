@@ -25,7 +25,7 @@ bool 		List_AddSlot(List *v){
 }
 
 List * List_New(){
-	List *v=NEW(List);
+	List *v=ZG_NEW(List);
 	memset(v,0,sizeof(List));
 	return v;
 }

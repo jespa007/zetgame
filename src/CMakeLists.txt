@@ -76,7 +76,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 	set( POST_NAME "")
 	SET(COMPILER "gcc")
 
-	SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
+	SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
 	  
 	if (MINGW)
 		MESSAGE("-- Plataform: MINGW" )

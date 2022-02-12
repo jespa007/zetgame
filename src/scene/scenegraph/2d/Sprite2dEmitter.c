@@ -1,7 +1,7 @@
 #include "scene/zg_scene.h"
 
 Sprite2dEmitter * SpriteEmitter2d_New(void){
-	Sprite2dEmitter *sprite_emitter=NEW(Sprite2dEmitter);
+	Sprite2dEmitter *sprite_emitter=ZG_NEW(Sprite2dEmitter);
 	return sprite_emitter;
 }
 

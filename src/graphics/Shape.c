@@ -4,7 +4,7 @@ typedef struct ShapeData ShapeData;
 
 
 Shape * Shape_New(void){
-	Shape *shape=NEW(Shape);
+	Shape *shape=ZG_NEW(Shape);
 	return shape;
 }
 

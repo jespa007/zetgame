@@ -19,7 +19,7 @@ typedef enum{
 
 
 Movie * Movie_New(Sint16 width, uint16_t height, uint8_t bytes_per_pixel){
-	Movie * movie = NEW(Movie);
+	Movie * movie = ZG_NEW(Movie);
 	memset(movie,0,sizeof(Movie));
 
 	movie->width =  width;

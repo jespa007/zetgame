@@ -172,7 +172,7 @@ List * Graphics_Win32_GetListAdapters(void){
         strncpy(device_name, dd.DeviceName,sizeof(dd.DeviceName));
         while(EnumDisplayDevices(device_name, idx_monitor, &dd, 1))
         {
-        	AdapterInfo *mei=NEW(AdapterInfo);
+        	AdapterInfo *mei=ZG_NEW(AdapterInfo);
         	DWORD width, height;
         	//CHAR monitor_model[1024];
 

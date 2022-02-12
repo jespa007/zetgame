@@ -21,7 +21,7 @@ uint8_t MapString_HashCode(const char * key){
 }
 
 MapString *MapString_New(){
-	MapString *t = NEW(MapString);// (struct table*)malloc(sizeof(struct table));
+	MapString *t = ZG_NEW(MapString);// (struct table*)malloc(sizeof(struct table));
 	memset(t,0,sizeof(MapString));
 	t->count=HASH_MAP_SIZE;
     t->list = (MapStringNode **)malloc(sizeof(MapStringNode*)*t->count);

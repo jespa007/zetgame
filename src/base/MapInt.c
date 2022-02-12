@@ -1,7 +1,7 @@
 #include "zg_base.h"
 
 MapInt *MapInt_New(){
-	MapInt *t = NEW(MapInt);
+	MapInt *t = ZG_NEW(MapInt);
 	memset(t,0,sizeof(MapInt));
 	t->list=List_New();
     return t;

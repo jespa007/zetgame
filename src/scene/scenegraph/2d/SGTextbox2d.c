@@ -6,8 +6,8 @@ typedef struct{
 
 
 SGTextbox2d * 	SGTextbox2d_New(void){
-	SGTextbox2d *sg_textbox = NEW(SGTextbox2d);
-	SGTextbox2dData * data=sg_textbox->data=NEW(SGTextbox2dData);
+	SGTextbox2d *sg_textbox = ZG_NEW(SGTextbox2d);
+	SGTextbox2dData * data=sg_textbox->data=ZG_NEW(SGTextbox2dData);
 	sg_textbox->node=SGNode_New();
 	data->textbox=Textbox_New();
 

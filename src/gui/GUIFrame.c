@@ -6,7 +6,7 @@ void GUIWidget_UpdateChilds(GUIWidget *_this);
 static void GUIFrame_Update(void *gui_frame);
 
 GUIFrame * GUIFrame_New(int x, int y, uint16_t width, uint16_t height){
-	GUIFrame * gui_frame=NEW(GUIFrame);
+	GUIFrame * gui_frame=ZG_NEW(GUIFrame);
 	gui_frame->widget=GUIWidget_New( x,  y,  width,  height);
 
 	GUIWidget_UpdateFunctionOverride(gui_frame->widget

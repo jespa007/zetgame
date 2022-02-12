@@ -15,8 +15,8 @@ SceneState *SceneState_New(
 		,Callback on_start
 		,Callback on_update){
 
-	SceneState *state_state=NEW(SceneState);
-	SceneStateData *data = NEW(SceneStateData);
+	SceneState *state_state=ZG_NEW(SceneState);
+	SceneStateData *data = ZG_NEW(SceneStateData);
 
 	data->name=StrUtils_StrClone(name);
 	data->on_start=on_start;

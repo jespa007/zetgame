@@ -2,7 +2,6 @@
 #define __TWEEN_H__
 
 typedef struct Tween Tween;
-typedef struct TweenChannel TweenChannel;
 
 struct Tween{
 	ChannelsInfo	*channels_info;

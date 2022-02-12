@@ -1,4 +1,4 @@
-<!--  dads  -->
+<!--  comment  -->
 <window background-color="#0F0F0F" window-style="none">
 
 <!--	<label top=200 left=20 text="Have we had the right choice ?" font_name="ArmWrestler.ttf" font_color=#23b9d8 font_size=60></label>-->
@@ -84,7 +84,11 @@
 		left="312" top="610" height="60" width="420"
 	    text="bgazeplayer.shortkey.exit"
 	     font-size="25" font-color="#FFFFFF" text-align="center" vertical-align="center" border-width="2" border-color="#FFFFFF"
-	 ></label>		 
+	 ></label>		
+	 
+	 <button>
+	 	
+	 </button> 
 	 
 	 <!--<label 
 	 	left="50" top="600" width="500"

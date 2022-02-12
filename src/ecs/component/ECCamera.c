@@ -1,7 +1,7 @@
 #include "ecs/zg_ecs.h"
 
 ECCamera * ECCamera_New(void){
-	ECCamera * ec_camera = NEW(ECCamera);
+	ECCamera * ec_camera = ZG_NEW(ECCamera);
 	// Shape3d it stores transform3d and it can render for debbuging.
 	//ec_camera->node = ECTransform_New();
 

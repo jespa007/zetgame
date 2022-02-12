@@ -33,8 +33,8 @@ void SGNode_ClearChilds(SGNode * node){
 
 SGNode * SGNode_New(void){
 
-	SGNode * sg_node = NEW(SGNode);
-	SGNodeData *data= NEW(SGNodeData);
+	SGNode * sg_node = ZG_NEW(SGNode);
+	SGNodeData *data= ZG_NEW(SGNodeData);
 	sg_node->data=data;
 
 	sg_node->transform=data->transform_default=Transform_New();

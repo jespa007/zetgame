@@ -4,7 +4,7 @@ const char *GUID_EMPTY="00000000-0000-0000-0000-000000000000";
 
 Guid * Guid_New(void)
 {
-	Guid *guid=NEW(Guid);
+	Guid *guid=ZG_NEW(Guid);
 #ifdef _WIN32
     UUID uuid;
     UuidCreate ( &uuid );

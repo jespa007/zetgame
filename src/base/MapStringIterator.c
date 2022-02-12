@@ -13,8 +13,8 @@ void MapStringIterator_FindNextListNotEmpty(MapStringIterator *_this);
 
 
 MapStringIterator *MapStringIterator_New(MapString *_map){
-	MapStringIterator *_this=NEW(MapStringIterator);
-	MapStringIteratorData *data=NEW(MapStringIteratorData);
+	MapStringIterator *_this=ZG_NEW(MapStringIterator);
+	MapStringIteratorData *data=ZG_NEW(MapStringIteratorData);
 	data->map=_map;
 	data->current_node=NULL;
 	data->current_list=NULL;

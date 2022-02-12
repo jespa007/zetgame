@@ -5,6 +5,9 @@ typedef struct GUIButton GUIButton;
 
 struct GUIButton{
 	GUIWidget	*widget;
+	Texture 	*texture;
+	TextBox 	*textbox;
+
 	void 		*data;
 };
 

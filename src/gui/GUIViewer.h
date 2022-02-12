@@ -4,8 +4,10 @@
 typedef struct GUIViewer GUIViewer;
 
 struct GUIViewer{
-	GUIWidget *widget;
-	void *data;
+	GUIWidget 	*widget;
+	Texture 	*texture;
+	TextBox 	*textbox;
+	void 		*data;
 };
 
 GUIViewer *	GUIViewer_New(int x, int y, uint16_t width, uint16_t height);

@@ -46,11 +46,7 @@ struct GUIWidget{
 	Color4f				color,background_color;
 	float 				opacity;
 	bool 				is_enabled;
-
-	Texture 			*texture;
-	TextBox 			*textbox;
-
-	void *data;
+	void 				*data;
 };
 
 GUIWidget * GUIWidget_New(int x, int y, uint16_t width, uint16_t height);

@@ -5,8 +5,8 @@
 #include "KeyframeTrack.h"
 #include "KeyframeTrackGroup.h"
 #include "Action.h"
-#include "Tween.h"
 #include "TweenChannel.h"
+#include "Tween.h"
 #include "Animation.h"
 
 

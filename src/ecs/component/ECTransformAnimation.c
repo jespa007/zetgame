@@ -23,7 +23,7 @@ void	ECTransformAnimation_Setup(void *_this, Entity *_entity){
 	_entity->components[EC_TRANSFORM_ANIMATION]=_this;
 
 
-	ECTransformAnimationData *data=NEW(ECTransformAnimationData);
+	ECTransformAnimationData *data=ZG_NEW(ECTransformAnimationData);
 	data->ani_transform=Animation_New(TRANSFORM_CHANNEL_MAX);
 
 	ec_transform_animation->data=data;

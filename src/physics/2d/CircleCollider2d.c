@@ -2,7 +2,7 @@
 
 
 CircleCollider2d * CircleCollider2d_New(uint16_t _radius){
-	CircleCollider2d *collider=NEW(CircleCollider2d);
+	CircleCollider2d *collider=ZG_NEW(CircleCollider2d);
 	collider->radius=ViewPort_ScreenToWorldWidth(_radius);
 	return collider;
 }

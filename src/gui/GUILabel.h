@@ -5,6 +5,8 @@ typedef struct GUILabel GUILabel;
 
 struct GUILabel{
 	GUIWidget *widget;
+	TextBox 			*textbox;
+
 	void *data;
 };
 

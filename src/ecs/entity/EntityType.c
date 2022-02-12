@@ -9,8 +9,8 @@ typedef struct{
 
 
 EntityType *EntityType_New(int max, MskEcTypes msk_ec_types){
-	EntityType *es_entity_type=NEW(EntityType);
-	EntityTypeData *data=es_entity_type->data=NEW(EntityTypeData);
+	EntityType *es_entity_type=ZG_NEW(EntityType);
+	EntityTypeData *data=es_entity_type->data=ZG_NEW(EntityTypeData);
 	es_entity_type->data=data;
 
 	data->entities=malloc(sizeof(Entity)*max);
@@ -45,8 +45,8 @@ typedef struct{
 
 
 void  EntityType_New(ESSystem *es_system, EntityTypeId entity_id, const char *name,int max,EntityComponent msk_ec_types){
-	EntityType * entity_type=NEW(EntityType);
-	EntityTypeData *data=NEW(EntityTypeData);
+	EntityType * entity_type=ZG_NEW(EntityType);
+	EntityTypeData *data=ZG_NEW(EntityTypeData);
 	entity_type->data=data;
 
 	data->es_system=es_system;

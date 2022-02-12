@@ -53,8 +53,8 @@ static void SGRender_SetSGCamera(SGCamera *_camera){
 //--------
 // PUBLIC
 SGRender * SGRender_New(void){
-	SGRender *render=NEW(SGRender);
-	SGRenderData *data=NEW(SGRenderData);
+	SGRender *render=ZG_NEW(SGRender);
+	SGRenderData *data=ZG_NEW(SGRenderData);
 
 	// init data...
 	for(unsigned z=0; z < MAX_Z; z++){

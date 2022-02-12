@@ -26,10 +26,10 @@ Tilemap *Tilemap_New(
 		, Texture *_texture
 		,Tilesets *_tilesets
 ){
-	Tilemap *tm=NEW(Tilemap);
+	Tilemap *tm=ZG_NEW(Tilemap);
 	Geometry *geometry=NULL;
 	//short *tiles=NULL;
-	TilemapData *data=NEW(TilemapData);
+	TilemapData *data=ZG_NEW(TilemapData);
 	tm->data=data;
 	data->tilesets=_tilesets;
 

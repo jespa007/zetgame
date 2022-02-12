@@ -43,7 +43,7 @@ ChannelsInfo * ChannelsInfo_New(uint8_t n_channels){
 		return NULL;
 	}
 
-	c = NEW(ChannelsInfo);
+	c = ZG_NEW(ChannelsInfo);
 	memset(c,0,sizeof(ChannelsInfo));
 	c->channels=malloc(n_channels*sizeof(float));
 	c->n_channels=n_channels;

@@ -12,16 +12,13 @@ typedef struct{
 	CallbackWidgetOnSetDimension on_set_width;
 	CallbackWidgetOnSetDimension on_set_height;
 	CallbackWidgetAttachWidget attach_widget;
-	TextBox				*	textbox; // only for label/button/textarea
-	Texture				*texture; // label/textarea
-
 
 
 }GUIWidgetData;
 
 GUIWidget  * GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
-	GUIWidget *widget=NEW(GUIWidget);
-	GUIWidgetData *data=NEW(GUIWidgetData);
+	GUIWidget *widget=ZG_NEW(GUIWidget);
+	GUIWidgetData *data=ZG_NEW(GUIWidgetData);
 	data->widgets = List_New();
 	widget->data=data;
 
@@ -237,10 +234,6 @@ void GUIWidget_Delete(GUIWidget *_this){
 	if(_this == NULL) return;
 
 	GUIWidgetData *_data= _this->data;
-
-	if(_data->textbox != NULL){
-		Textbox_Delete(_this->textbox);
-	}
 
 	List_Delete(_data->widgets);
 	FREE(_data);

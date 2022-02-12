@@ -72,8 +72,8 @@ TTFontCharacter * TTFont_GL_BuildChar(TTFont *_this,unsigned long c){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// Now store character for later use
-	new_character = NEW(TTFontCharacter);
-	character_data=NEW(CharacterDataGL);
+	new_character = ZG_NEW(TTFontCharacter);
+	character_data=ZG_NEW(CharacterDataGL);
 	*new_character=(TTFontCharacter){
 		.character_data=character_data
 		,.size=Vector2i_New(face->glyph->bitmap.width, face->glyph->bitmap.rows)

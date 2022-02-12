@@ -51,7 +51,7 @@ void Input_Init(void) {
 		return;
 	}
 
-	g_input_vars=NEW(InputVars);
+	g_input_vars=ZG_NEW(InputVars);
 
 	g_input_vars->mouse_info=(MouseInfo){
 			.left_press = false
@@ -137,7 +137,7 @@ uint32_t Input_NewHandleId(void){
 
 uint32_t 	Input_AddEventOnKeyUp(CallbackKeyEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
-	CallbackKeyEvent *cf=NEW(CallbackKeyEvent);
+	CallbackKeyEvent *cf=ZG_NEW(CallbackKeyEvent);
 	*cf=_callback;
 	MapInt_Set(g_input_vars->on_key_up,idx_handle,cf);
 	return idx_handle;
@@ -145,7 +145,7 @@ uint32_t 	Input_AddEventOnKeyUp(CallbackKeyEvent _callback){
 
 uint32_t 	Input_AddEventOnKeyDown(CallbackKeyEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
-	CallbackKeyEvent *cf=NEW(CallbackKeyEvent);
+	CallbackKeyEvent *cf=ZG_NEW(CallbackKeyEvent);
 	*cf=_callback;
 	MapInt_Set(g_input_vars->on_key_down,idx_handle,cf);
 	return idx_handle;
@@ -153,7 +153,7 @@ uint32_t 	Input_AddEventOnKeyDown(CallbackKeyEvent _callback){
 
 uint32_t 	Input_AddEventOnMouseButtonUp(CallbackMouseEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
-	CallbackMouseEvent *cf=NEW(CallbackMouseEvent);
+	CallbackMouseEvent *cf=ZG_NEW(CallbackMouseEvent);
 	*cf=_callback;
 	MapInt_Set(g_input_vars->on_mouse_button_up,idx_handle,cf);
 	return idx_handle;
@@ -161,7 +161,7 @@ uint32_t 	Input_AddEventOnMouseButtonUp(CallbackMouseEvent _callback){
 
 uint32_t 	Input_AddEventOnMouseMotion(CallbackMouseEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
-	CallbackMouseEvent *cf=NEW(CallbackMouseEvent);
+	CallbackMouseEvent *cf=ZG_NEW(CallbackMouseEvent);
 	*cf=_callback;
 	MapInt_Set(g_input_vars->on_mouse_motion,idx_handle,cf);
 	return idx_handle;
@@ -169,7 +169,7 @@ uint32_t 	Input_AddEventOnMouseMotion(CallbackMouseEvent _callback){
 
 uint32_t 	Input_AddEventOnMouseButtonDown(CallbackMouseEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
-	CallbackMouseEvent *cf=NEW(CallbackMouseEvent);
+	CallbackMouseEvent *cf=ZG_NEW(CallbackMouseEvent);
 	*cf=_callback;
 	MapInt_Set(g_input_vars->on_mouse_button_down,idx_handle,cf);
 	return idx_handle;
@@ -177,7 +177,7 @@ uint32_t 	Input_AddEventOnMouseButtonDown(CallbackMouseEvent _callback){
 
 uint32_t	Input_AddEventOnDropFile(CallbackDropEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
-	CallbackDropEvent *cf=NEW(CallbackDropEvent);
+	CallbackDropEvent *cf=ZG_NEW(CallbackDropEvent);
 	*cf=_callback;
 	MapInt_Set(g_input_vars->on_drop_file,idx_handle,cf);
 	return idx_handle;

@@ -5,7 +5,7 @@
 
 
 typedef struct Action Action;
-typedef struct KeyframeTrack KeyframeTrack;
+//typedef struct KeyframeTrack KeyframeTrack;
 
 struct Action{
 	ChannelsInfo		*channels_info;

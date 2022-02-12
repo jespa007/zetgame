@@ -9,7 +9,7 @@ GLuint Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel);
 
 void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel ){
 
-	TextureDataGL* texture_data=NEW(TextureDataGL);
+	TextureDataGL* texture_data=ZG_NEW(TextureDataGL);
 	texture_data->internal_format=GL_INVALID_VALUE;
 	texture_data->texture=GL_INVALID_VALUE;
 	text->texture_data=texture_data;

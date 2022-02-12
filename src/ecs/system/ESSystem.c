@@ -47,7 +47,7 @@ bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegiste
 	}
 
 	EComponent idx_component=_idx_component;//g_es_system_registered_components->count;
-	ESSystemRegisteredEComponentData *new_component_register=NEW(ESSystemRegisteredEComponentData);
+	ESSystemRegisteredEComponentData *new_component_register=ZG_NEW(ESSystemRegisteredEComponentData);
 	new_component_register->data=es_component_register;
 	new_component_register->id=idx_component;
 	List_Add(g_es_system_registered_components,new_component_register);
@@ -177,8 +177,8 @@ void ESSystem_DeInit(void){
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
 ESSystem *ESSystem_New(void){
-	ESSystem *system=NEW(ESSystem);
-	ESSystemData *data=NEW(ESSystemData);
+	ESSystem *system=ZG_NEW(ESSystem);
+	ESSystemData *data=ZG_NEW(ESSystemData);
 	data->lst_entity_types=List_New();
 	data->map_entity_types=MapString_New();
 
@@ -186,7 +186,7 @@ ESSystem *ESSystem_New(void){
 	memset(data->components,0,sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
 
 	for(unsigned i=0; i < g_es_system_registered_components->count;i++){
-		data->components[i]=NEW(ESSystemEComponentData);
+		data->components[i]=ZG_NEW(ESSystemEComponentData);
 	}
 
 	system->data=data;
@@ -390,7 +390,7 @@ void * ESSystem_NewEntityType(ESSystem *_this
 		, size_t entity_components_len
 	){
 	ESSystemData *data=_this->data;
-	EntityTypeData *entity_type_data=NEW(EntityTypeData);
+	EntityTypeData *entity_type_data=ZG_NEW(EntityTypeData);
 
 	if(entity_components_len == 0){
 		return NULL;

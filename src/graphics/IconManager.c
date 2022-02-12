@@ -62,7 +62,7 @@ IconManager * IconManager_LoadFromMemory(
 		uint16_t icons_per_row
 	) {
 
-	IconManager *icon_manager=NEW(IconManager);
+	IconManager *icon_manager=ZG_NEW(IconManager);
 
 
 

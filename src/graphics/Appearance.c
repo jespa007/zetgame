@@ -1,7 +1,7 @@
 #include "Appearance_GL.c"
 
 Appearance * Appearance_New(void){
-	Appearance * appearance=NEW(Appearance);
+	Appearance * appearance=ZG_NEW(Appearance);
 	appearance->material=NULL;//appearance->material_default=Material_New(0);
 	appearance->transform_texture=NULL;
 	appearance->texture=NULL;//Texture_GetDefault();

@@ -29,7 +29,7 @@ void ECSpriteRenderer_Setup(void *_this,Entity *_entity){
 	ec_sprite_renderer->header.id=EC_SPRITE_RENDERER;
 	_entity->components[EC_SPRITE_RENDERER]=_this;
 
-	ECSpriteRendererData *data=NEW(ECSpriteRendererData);
+	ECSpriteRendererData *data=ZG_NEW(ECSpriteRendererData);
 
 	ECGeometry *ec_geometry=_entity->components[EC_GEOMETRY];
 	ECMaterial *ec_material=_entity->components[EC_MATERIAL];

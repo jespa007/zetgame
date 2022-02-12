@@ -3,7 +3,7 @@
 //--------------
 // MEMBER PUBLIC
 Texture * Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel){
-	Texture *text=NEW(Texture);
+	Texture *text=ZG_NEW(Texture);
 	memset(text,0,sizeof(Texture));
 
 	switch(Graphics_GetGraphicsApi()){

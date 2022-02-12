@@ -24,8 +24,8 @@ void ClearChilds(TransformNode * node){
 
 TransformNode * New(void){
 
-	TransformNode * sg_node = NEW(TransformNode);
-	ECTransformData *data= NEW(ECTransformData);
+	TransformNode * sg_node = ZG_NEW(TransformNode);
+	ECTransformData *data= ZG_NEW(ECTransformData);
 	sg_node->data=data;
 
 	data->transform_local=&data->transform_default;

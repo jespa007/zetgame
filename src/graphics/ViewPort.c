@@ -25,7 +25,7 @@ void 		ViewPort_Init(uint16_t _width, uint16_t _height){
 		Log_Warning("ViewPort status already initialized");
 	}
 
-	g_viewport_vars=NEW(ViewPortVars);
+	g_viewport_vars=ZG_NEW(ViewPortVars);
 	g_viewport_vars->first_viewport=g_viewport_vars->current_viewport=ViewPort_New(0,0,_width,_height,PROJECTION_MODE_ORTHO);
 
 }

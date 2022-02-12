@@ -17,7 +17,7 @@ typedef struct{
 
 
 InfoAction * InfoAniAction_New(Action *_action,uint32_t _start_time, int  _repeat){
-	InfoAction * action_info = NEW(InfoAction);
+	InfoAction * action_info = ZG_NEW(InfoAction);
 	action_info->start_time=_start_time; // only for triggered info_actions...
 	action_info->repeat=_repeat;
 	action_info->action = _action;
@@ -54,10 +54,10 @@ uint32_t Animation_GetDefaultStartTimeTriggerAction(void *user_data){
 
 
 Animation *Animation_New(uint8_t n_channels){
-	Animation *ani=NEW(Animation);
-	AnimationData *data=NEW(AnimationData);
+	Animation *ani=ZG_NEW(Animation);
+	AnimationData *data=ZG_NEW(AnimationData);
 	//memset(ani,0,sizeof(Animation));
-	//AnimationData *data = NEW(AnimationData);
+	//AnimationData *data = ZG_NEW(AnimationData);
 	//memset(data,0,sizeof(AnimationData));
 
 	data->channels_info=ChannelsInfo_New(n_channels);
