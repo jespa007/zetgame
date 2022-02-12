@@ -20,7 +20,7 @@ IconManager *g_icon_manager_default=NULL;
 
 void IconManager_Init(void){
 	if(g_icon_manager_default != NULL){
-		Log_Error("Icon manager already init");
+		Log_ErrorF("Icon manager already init");
 	}
 
 	g_icon_manager_default=IconManager_LoadFromMemory(
@@ -36,7 +36,7 @@ void IconManager_Init(void){
 
 void IconManager_DeInit(void){
 	if(	g_icon_manager_default == NULL){
-		Log_Error("Icon manager not init");
+		Log_ErrorF("Icon manager not init");
 	}
 
 	IconManager_Delete(g_icon_manager_default);

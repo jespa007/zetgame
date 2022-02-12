@@ -26,7 +26,7 @@ void  MEMSDL_Init()
 	if(g_sdl_mem_init) return;
 
 	memset(&g_allocated_surfaces,0,sizeof(g_allocated_surfaces));
-    Log_Info("SDLMEM init OK");
+    Log_InfoF("SDLMEM init OK");
     atexit(MEMSDL_PrintStatus);
 
     g_sdl_mem_init=true;
@@ -46,7 +46,7 @@ void  MEMSDL_PrintStatus()
 	}
 
 	if(n_unllocated==0){
-		Log_Info("SDLMem: ok");
+		Log_InfoF("SDLMem: ok");
 	}
 
 }
@@ -139,7 +139,7 @@ bool SDLMEM_dicotomic_insert(const char * file, int line, uintptr_t key)
 bool SDLMEM_dicotomic_delete(uintptr_t key)
 {
 	if(g_n_allocated_surfaces==0){
-		Log_Error("DS Error empty table");
+		Log_ErrorF("DS Error empty table");
 		return false;
 	}
 

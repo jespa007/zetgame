@@ -72,7 +72,7 @@ Matrix4f Matrix4f_Inverse(const Matrix4f *_this){
 		inverse[M4_E33] =  (mvp[M4_E11]*mvp[M4_E22]-mvp[M4_E21]*mvp[M4_E12])*invdet;
 
 	}else{
-		Log_Error("Determinant zero");
+		Log_ErrorF("Determinant zero");
 	}
 
 	return m;

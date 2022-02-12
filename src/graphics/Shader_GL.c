@@ -15,7 +15,7 @@ Shader *  Shader_GL_LoadFromString(char *vertex_shader_ptr,char *fragment_shader
 
 
 	// Compile Vertex Shader
-	Log_Info("Compiling vertex shader");
+	Log_InfoF("Compiling vertex shader");
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1,(const GLchar **) &vertex_shader_ptr , NULL);
 	glCompileShader(vertex_shader);
@@ -27,14 +27,14 @@ Shader *  Shader_GL_LoadFromString(char *vertex_shader_ptr,char *fragment_shader
 		char *msg=(char *)malloc(info_log_length+1);
 		memset(msg,0,info_log_length+1);
 		glGetShaderInfoLog(vertex_shader, info_log_length, NULL, msg);
-		Log_Error(msg);
+		Log_ErrorF(msg);
 		free(msg);
 		return NULL;
 	}
 
 
 	// Compile Fragment Shader
-	Log_Info("Compiling fragment shader");
+	Log_InfoF("Compiling fragment shader");
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment_shader, 1,(const GLchar **) &fragment_shader_ptr , NULL);
 	glCompileShader(fragment_shader);
@@ -52,7 +52,7 @@ Shader *  Shader_GL_LoadFromString(char *vertex_shader_ptr,char *fragment_shader
 	}
 
 	// Link the program
-	Log_Info("Linking program");
+	Log_InfoF("Linking program");
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, vertex_shader);
 	glAttachShader(ProgramID, fragment_shader);

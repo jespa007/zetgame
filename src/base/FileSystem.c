@@ -45,7 +45,7 @@ static int  FileSystem_FileLengthPFS(const char * filename){
 	PackedFile fp;
 
 	if(g_packed_file_system==NULL){
-		Log_Error("Error no packed file loaded!");
+		Log_ErrorF("Error no packed file loaded!");
 		return -1;
 	}
 

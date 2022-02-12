@@ -53,7 +53,7 @@ static List * StrUtils_StrSplitByAnyCharInDelim(const char *str_in, const char *
 char *StrUtils_New(const char *in_str){
 
 	if(in_str==NULL){
-		Log_Warning("input string as NULL");
+		Log_WarningF("input string as NULL");
 		return NULL;
 	}
 
@@ -64,7 +64,7 @@ char *StrUtils_New(const char *in_str){
 		memset(out_str,0,size+1);
 		strcpy(out_str,in_str);
 	}else{
-		Log_Warning("input lenght string 0");
+		Log_WarningF("input lenght string 0");
 	}
 
 	return out_str;
@@ -83,7 +83,7 @@ char *			StrUtils_StrCloneN(const char *in_str, size_t len){
 		memset(out_str,0,size+1);
 		strncpy(out_str,in_str,MIN(size,len));
 	}else{
-		Log_Warning("input lenght string 0");
+		Log_WarningF("input lenght string 0");
 	}
 
 	return out_str;

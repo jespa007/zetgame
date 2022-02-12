@@ -6,14 +6,14 @@ bool 		List_AddSlot(List *v){
 	if (v->size == 0) {
 		v->size = 10;
 		v->items = malloc(sizeof(void*) * v->size);
-		memset(v->items, '\0', sizeof(void) * v->size);
+		memset(v->items, '\0', sizeof(void *) * v->size);
 	}
 
 	// condition to increase v->items:
 	// last slot exhausted
 	if (v->size == v->count) {
 		if((v->size+10) >= MAX_ELEMENTS_VECTOR){
-			Log_Error("Max elements vector");
+			Log_ErrorF("Max elements vector");
 			return false;
 		}
 		v->size += 10;
@@ -34,7 +34,7 @@ List * List_New(){
 
 void List_Set(List *v, uint16_t idx, void *e){
 	if (idx >= v->count) {
-		Log_Error("idx out of bounds");
+		Log_ErrorF("idx out of bounds");
 		return;
 	}
 	v->items[idx] = e;
@@ -46,7 +46,7 @@ size_t List_Count(List *v){
 
 void *List_Get(List *v, uint16_t idx){
 	if (idx >= v->count) {
-		Log_Error("idx out of bounds");
+		Log_ErrorF("idx out of bounds");
 		return NULL;
 	}
 
@@ -55,7 +55,7 @@ void *List_Get(List *v, uint16_t idx){
 
 void List_Erase(List *_this, uint16_t idx){
 	if (idx >= _this->count) {
-		Log_Error("idx out of bounds");
+		Log_ErrorF("idx out of bounds");
 		return;
 	}
 
@@ -123,7 +123,7 @@ void 		List_Insert(List *v, uint16_t idx, void *e){
 void * 		List_Pop(List *_this){
 
 	if(_this->count == 0){
-		Log_Error("list empty");
+		Log_ErrorF("list empty");
 		return NULL;
 	}
 

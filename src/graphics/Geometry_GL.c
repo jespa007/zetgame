@@ -55,7 +55,7 @@ void Geometry_GL_SetIndices(Geometry * geometry, const short *indices,size_t ind
 	}
 
 	if(data->index == GL_INVALID_VALUE) {
-		Log_Error("Index VBO not build");
+		Log_ErrorF("Index VBO not build");
 		return;
 	}
 
@@ -72,14 +72,14 @@ void Geometry_GL_SetMeshVertex(Geometry *geometry, const float *mesh_vertexs,siz
 
 	if(geometry==NULL ) return;
 	if(mesh_vertexs_len != (geometry->n_vertexs*VERTEX_COORDS_LEN)){
-		Log_Error("Vertex count doesn't matches");
+		Log_ErrorF("Vertex count doesn't matches");
 		return;
 	}
 
 	data = (GeometryDataGL *)geometry->data;
 
 	if(data->vertex == GL_INVALID_VALUE) {
-		Log_Error("Vertex VBO not build");
+		Log_ErrorF("Vertex VBO not build");
 		return;
 	}
 
@@ -94,7 +94,7 @@ void Geometry_GL_SetMeshTexture(Geometry * geometry, const float *mesh_texure_ve
 
 	if(geometry==NULL) return;
 	if(mesh_texture_vertexs_len != (geometry->n_vertexs*TEXTURE_COORDS_LEN)){
-		Log_Error("Vertex count doesn't matches");
+		Log_ErrorF("Vertex count doesn't matches");
 		return;
 	}
 
@@ -102,7 +102,7 @@ void Geometry_GL_SetMeshTexture(Geometry * geometry, const float *mesh_texure_ve
 	data = (GeometryDataGL *)geometry->data;
 
 	if(data->texture == GL_INVALID_VALUE) {
-		Log_Error("Texture VBO not build or not set in constructor (New_Geometry)");
+		Log_ErrorF("Texture VBO not build or not set in constructor (New_Geometry)");
 		return;
 	}
 
@@ -119,14 +119,14 @@ void Geometry_GL_SetMeshColor(Geometry * geometry,const float *mesh_color_vertex
 
 	if(geometry==NULL) return;
 	if(mesh_color_vertexs_len != (geometry->n_vertexs*(COLOR_COORDS_LEN))){
-		Log_Error("Vertex count doesn't matches");
+		Log_ErrorF("Vertex count doesn't matches");
 		return;
 	}
 
 	data = (GeometryDataGL *)geometry->data;
 
 	if(data->color == GL_INVALID_VALUE) {
-		Log_Error("Color VBO not build or not set in constructor (New_Geometry)");
+		Log_ErrorF("Color VBO not build or not set in constructor (New_Geometry)");
 		return;
 	}
 	// reserve GPU memory ...

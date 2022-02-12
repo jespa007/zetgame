@@ -128,7 +128,7 @@ bool Directory_Create(const char * dir){
 	}
 
 	if(StrUtils_StrIsNullOrEmpty(dir)){
-		Log_Error("empty entry");
+		Log_ErrorF("empty entry");
 		return false;
 	}
 
@@ -143,31 +143,31 @@ bool Directory_Create(const char * dir){
 		perror("stat");
 		switch(status){
 		case EACCES:
-			Log_Error("Search permission is denied on a component of the path prefix, or write permission is denied on the parent directory of the directory to be created.");
+			Log_ErrorF("Search permission is denied on a component of the path prefix, or write permission is denied on the parent directory of the directory to be created.");
 			break;
 		case EEXIST:
-			Log_Error("The named file exists.");
+			Log_ErrorF("The named file exists.");
 			break;
 		case ELOOP:
-			Log_Error("A loop exists in symbolic links encountered during resolution of the path argument.");
+			Log_ErrorF("A loop exists in symbolic links encountered during resolution of the path argument.");
 			break;
 		case EMLINK:
-			Log_Error("The link count of the parent directory would exceed {LINK_MAX}.");
+			Log_ErrorF("The link count of the parent directory would exceed {LINK_MAX}.");
 			break;
 		case ENAMETOOLONG:
-			Log_Error("The length of the path argument exceeds {PATH_MAX} or a pathname component is longer than {NAME_MAX}.");
+			Log_ErrorF("The length of the path argument exceeds {PATH_MAX} or a pathname component is longer than {NAME_MAX}.");
 			break;
 		case ENOENT:
-			Log_Error("A component of the path prefix specified by path does not name an existing directory or path is an empty std::string.");
+			Log_ErrorF("A component of the path prefix specified by path does not name an existing directory or path is an empty std::string.");
 			break;
 		case ENOSPC:
-			Log_Error("The file system does not contain enough space to hold the contents of the new directory or to extend the parent directory of the new directory.");
+			Log_ErrorF("The file system does not contain enough space to hold the contents of the new directory or to extend the parent directory of the new directory.");
 			break;
 		case ENOTDIR:
-			Log_Error("A component of the path prefix is not a directory.");
+			Log_ErrorF("A component of the path prefix is not a directory.");
 			break;
 		case EROFS:
-			Log_Error("The parent directory resides on a read-only file system.");
+			Log_ErrorF("The parent directory resides on a read-only file system.");
 			break;
 		}
 

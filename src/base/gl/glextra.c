@@ -80,15 +80,15 @@ PFNGLDELETERENDERBUFFERSPROC 			glDeleteRenderbuffers = NULL;
 PFNGLACTIVETEXTUREPROC 					glActiveTexture = NULL;
 
 
-void *WIN32_glGetProcAddress(const char *name)
+intptr_t WIN32_glGetProcAddress(const char *name)
 {
-  uintptr_t *p = (uintptr_t)wglGetProcAddress(name);
+  intptr_t p = (intptr_t)wglGetProcAddress(name);
   if(p == 0 ||
-    (p == (void*)0x1) || (p == (void*)0x2) || (p == (void*)0x3) ||
-    (p == (void*)-1) )
+    (p == 0x1) || (p == 0x2) || (p == 0x3) ||
+    (p == -1) )
   {
     HMODULE module = LoadLibraryA("opengl32.dll");
-    p = (uintptr_t)GetProcAddress(module, name);
+    p = (intptr_t)GetProcAddress(module, name);
   }
   return p;
 }
@@ -97,11 +97,11 @@ void *WIN32_glGetProcAddress(const char *name)
 
 
 
-uintptr_t glGetProcAddress(const char *name){
+intptr_t glGetProcAddress(const char *name){
 
-	uintptr_t result=0;
+	intptr_t result=0;
 	#if defined(__MINGW32__)
-		result=(uintptr_t)WIN32_glGetProcAddress(name);
+		result=(intptr_t)WIN32_glGetProcAddress(name);
 	#elif defined(__unix__)
 	 	result=(uintptr_t)glXGetProcAddressARB((const GLubyte *)name);
 	#else

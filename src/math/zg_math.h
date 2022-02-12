@@ -4,8 +4,8 @@
 #include "base/zg_base.h"
 
 #include "Luts.h"
-#include "Vector2i.h"
 #include "Vector2f.h"
+#include "Vector2i.h"
 #include "Vector3i.h"
 #include "Vector3f.h"
 #include "Vector4i.h"
