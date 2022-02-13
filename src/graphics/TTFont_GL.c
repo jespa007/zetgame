@@ -48,7 +48,7 @@ TTFontCharacter * TTFont_GL_BuildChar(TTFont *_this,unsigned long c){
 	// Load character glyph
 	if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 	{
-		Log_Error("FREETYTPE: Failed to load Glyph");
+		Log_ErrorF("FREETYTPE: Failed to load Glyph");
 		return NULL;
 	}
 

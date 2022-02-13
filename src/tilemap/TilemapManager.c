@@ -99,7 +99,7 @@ bool TilemapManager_LoadFromMemory(
 	size_t tileset_data_len=cJSON_GetArraySize(tilesets);
 
 	if(tileset_data_len == 0){
-		Log_Error("JsonParse: there's no tilesets");
+		Log_ErrorF("JsonParse: there's no tilesets");
 		return false;
 	}
 
@@ -123,7 +123,7 @@ bool TilemapManager_LoadFromMemory(
 		size_t tilemap_dim= tilemap_width->valueint*tilemap_height->valueint;
 
 		if(tilemap_data_len == 0){
-			Log_Warning("JsonParse: empty tilemap");
+			Log_WarningF("JsonParse: empty tilemap");
 			continue;
 		}
 
@@ -244,12 +244,12 @@ bool TilemapManager_LoadFromMemory(
 
 					cJSON_ArrayForEach(tilesets_tile_animation, tilesets_tile_animations) {
 						if((tilesets_tile_animation_duration = cJSON_GetObjectItem(tilesets_tile_animation,"duration")) == NULL){
-							Log_Error("JsonParse data tilesets->animation->duration not found");
+							Log_ErrorF("JsonParse data tilesets->animation->duration not found");
 							continue;
 						}
 
 						if((tilesets_tile_animation_tileid = cJSON_GetObjectItem(tilesets_tile_animation,"tileid")) == NULL){
-							Log_Error("JsonParse data tilesets->animation->tileid not found");
+							Log_ErrorF("JsonParse data tilesets->animation->tileid not found");
 							continue;
 						}
 

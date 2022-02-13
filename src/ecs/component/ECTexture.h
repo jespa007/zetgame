@@ -4,7 +4,7 @@
 typedef struct ECTexture ECTexture;
 
 struct ECTexture{
-	EComponentHeader header;;
+	EComponentHeader header;
 	Texture 		*texture;
 };
 

@@ -95,14 +95,14 @@ void GUIWidget_AttachWidgetBase(GUIWidget *_this, GUIWidget *widget_to_attach){
 	GUIWidgetData *data_widget=NULL;
 
 	if(widget_to_attach==NULL){
-		Log_Error("widget null");
+		Log_ErrorF("widget null");
 		return;
 	}
 
 	data_widget=widget_to_attach->data;
 
 	if(data_widget->parent!=NULL){
-		Log_Error("Widget is already added. Please detach first");
+		Log_ErrorF("Widget is already added. Please detach first");
 		return;
 	}
 

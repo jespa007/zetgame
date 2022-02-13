@@ -130,10 +130,16 @@ void GUIWindow_SetVisibleCaption(GUIWindow *_this, bool _v){
 	}
 }
 
-void GUIWindow_SetColorBackground3i(GUIWindow * _this, uint8_t r, uint8_t g, uint8_t b){
+void GUIWindow_SetBackgroundColor3i(GUIWindow * _this, uint8_t r, uint8_t g, uint8_t b){
 	GUIWindowData *data=_this->data;
 	data->frame_content->widget->background_color=Color4f_FromRGB(r,g,b);
 }
+
+void 		GUIWindow_SetBackgroundColorHexStr(GUIWindow * _this, const char * color){
+	GUIWindowData *data=_this->data;
+	data->frame_content->widget->background_color=Color4f_FromHexStr(color);
+}
+
 
 void GUIWindow_OnSetWidth(void *gui_window, uint16_t width){
 
@@ -190,7 +196,7 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 	if(GUIWidget_IsPointCollision(data->frame_caption->widget,mouse_event->position))
 	{
 		if(Input_IsLeftButtonPressed()) {
-			Log_Info("start dragging");
+			Log_InfoF("start dragging");
 			data->start_dragging = true;
 			data->start_mouse_position=Input_GetMousePosition();
 		}

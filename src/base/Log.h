@@ -18,7 +18,7 @@ typedef enum{
 #define Log_WarningF(s)   			Log_Warning(s,NULL)
 
 #define Log_Info(s, ...)   			Log_Print(__FILE__,__LINE__,LOG_LEVEL_INFO		, s, ##__VA_ARGS__)
-#define Log_InfoF(s)   				Log_Print(s, NULL)
+#define Log_InfoF(s)   				Log_Info(s, NULL)
 
 #ifdef __DEBUG__
 #define Log_Debug(s, ...)   		Log_Print(__FILE__,__LINE__,LOG_LEVEL_DEBUG		, s, ##__VA_ARGS__)

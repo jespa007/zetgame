@@ -20,7 +20,7 @@ static void GUIButton_PostUpdate( void *gui_button);
 void GUIButton_Init(void){
 	if(g_default_texture_button != NULL)
 	{
-		Log_Warning("GUIButton already initialized");
+		Log_WarningF("GUIButton already initialized");
 		return;
 	}
 
@@ -30,7 +30,7 @@ void GUIButton_Init(void){
 void GUIButton_DeInit(void){
 	if(g_default_texture_button == NULL)
 	{
-		Log_Warning("GUIButton not initialized");
+		Log_WarningF("GUIButton not initialized");
 		return;
 	}
 
@@ -130,7 +130,7 @@ void GUIButton_PostUpdate(void *gui_button){
 	}
 
 	if((Input_IsLeftButtonPressed() && data->mouse_collide) || auto_click_on_over){
-		Log_Info("clicked");
+		Log_InfoF("clicked");
 		// handle on even click
 		MouseEvent mouse_event={0};
 
@@ -153,7 +153,7 @@ static void  GUIButton_Draw(void *gui_button){
 	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
 
 	Color4f result_font_color = _this->widget->color;
-	Color4f background_result=_this->widget->background_color;
+	//Color4f background_result=_this->widget->background_color;
 
 	float alpha=1*_this->widget->opacity;
 	if(!_this->widget->is_enabled){
@@ -163,7 +163,7 @@ static void  GUIButton_Draw(void *gui_button){
 	}
 
 	result_font_color.a=alpha;
-	background_result.a=alpha;
+	//background_result.a=alpha;
 
 	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE,g_default_texture_button,NULL);
 

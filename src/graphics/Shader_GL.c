@@ -46,7 +46,7 @@ Shader *  Shader_GL_LoadFromString(char *vertex_shader_ptr,char *fragment_shader
 		char *msg=(char *)malloc(info_log_length+1);
 		memset(msg,0,info_log_length+1);
 		glGetShaderInfoLog(fragment_shader, info_log_length, NULL, msg);
-		Log_Error(msg);
+		Log_ErrorF(msg);
 		free(msg);
 		return NULL;
 	}
@@ -65,7 +65,7 @@ Shader *  Shader_GL_LoadFromString(char *vertex_shader_ptr,char *fragment_shader
 		char *msg=(char *)malloc(info_log_length+1);
 		memset(msg,0,info_log_length+1);
 		glGetShaderInfoLog(program, info_log_length, NULL, msg);
-		Log_Error(msg);
+		Log_ErrorF(msg);
 		free(msg);
 		return NULL;
 	}

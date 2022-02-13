@@ -49,7 +49,7 @@ float Graphics_GetAspectRatio(void);
 float Graphics_GetOneOverAspectRatio(void);
 
 void Graphics_PrintGraphicsInfo(void);
-void Graphics_SetColorBackground(Color4f color);
+void Graphics_SetBackgroundColor(Color4f color);
 
 void Graphics_MakeScreenShoot(void);
 

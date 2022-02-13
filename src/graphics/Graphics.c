@@ -65,7 +65,7 @@ bool Graphics_Init(
 	uint16_t _window_height=_height;
 
 	if(g_graphics_vars != NULL){
-		Log_Error("Graphics already initialized");
+		Log_ErrorF("Graphics already initialized");
 		return false;
 	}
 
@@ -299,13 +299,13 @@ static void Graphics_PrintAdapterInformation(void){
 
 
 	if( g_graphics_vars->adapters == NULL || g_graphics_vars->adapters->count==0){
-		Log_Info("No adapters information");
+		Log_InfoF("No adapters information");
 		return;
 	}
 
 	for(unsigned i = 0;i < g_graphics_vars->adapters->count; i++){
 		AdapterInfo *adapter=(void *)g_graphics_vars->adapters->items[i];
-		Log_Info("--------------------------------------");
+		Log_InfoF("--------------------------------------");
 		Log_Info("MonitorModel: %s",adapter->monitor_model);
 		Log_Info("Width: %i",adapter->pixels_width);
 		Log_Info("Height: %i",adapter->pixels_height);
@@ -313,7 +313,7 @@ static void Graphics_PrintAdapterInformation(void){
 		Log_Info("PhysicalHeight: %f",adapter->physical_height);
 
 	}
-	Log_Info("--------------------------------------");
+	Log_InfoF("--------------------------------------");
 }
 
 
@@ -416,7 +416,7 @@ float Graphics_GetOneOverAspectRatio(void){
 	return g_graphics_vars->one_over_aspect_ratio;
 }
 
-void Graphics_SetColorBackground3i(Color4f c){
+void Graphics_SetBackgroundColor3i(Color4f c){
 	g_graphics_vars->background_color = c;
 }
 
@@ -713,7 +713,7 @@ void Graphics_WPrint(int x, int y, Color4f color, const wchar_t *in, ...){
 void Graphics_DeInit(void) {
 
 	if(g_graphics_vars == NULL){
-		Log_Error("Graphics not initialized");
+		Log_ErrorF("Graphics not initialized");
 		return;
 	}
 

@@ -102,17 +102,17 @@ MUSIC Music_Load(const char *file){
 	MixerSound *sp_info;
 
 	if(strlen(file) < 4){
-		Log_Error("Invalid filename");
+		Log_ErrorF("Invalid filename");
 		return INVALID_SOUND_IDX;
 	}
 
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return INVALID_SOUND_IDX;
 	}
 
 	if((sp_n_loaded_music = Music_GetFreeBlock())==INVALID_SOUND_IDX){
-		Log_Error( "Max sounds reached!");
+		Log_ErrorF( "Max sounds reached!");
 		return INVALID_SOUND_IDX;
 	}
 
@@ -149,12 +149,12 @@ MUSIC Music_LoadFromMemory(unsigned char *ptr,size_t size){
 	MixerSound *sp_info;
 
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return INVALID_SOUND_IDX;
 	}
 
 	if((sp_n_loaded_music = Music_GetFreeBlock())==INVALID_SOUND_IDX){
-		Log_Error( "Max sounds reached!");
+		Log_ErrorF( "Max sounds reached!");
 		return INVALID_SOUND_IDX;
 	}
 
@@ -183,7 +183,7 @@ bool Music_Seek(MUSIC id, uint_t t_seek){
 
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -215,7 +215,7 @@ bool Music_Play(MUSIC id){
 	MUSIC idx_play;
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -255,7 +255,7 @@ bool Music_Play(MUSIC id){
 
 	}
 	else{
-		Log_Error( "Max playing musics!");
+		Log_ErrorF( "Max playing musics!");
 		return false;
 	}
 
@@ -266,7 +266,7 @@ bool Music_Play(MUSIC id){
 
 bool Music_SetVolume(MUSIC id, float vol){
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 	MixerSound *sp_info = &g_mixer_vars->musics.loaded[id];
@@ -277,7 +277,7 @@ bool Music_SetVolume(MUSIC id, float vol){
 
 float Music_GetVolume(int id){
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return 1;
 	}
 
@@ -287,7 +287,7 @@ float Music_GetVolume(int id){
 
 uint32_t Music_GetDuration(MUSIC id){
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return 0;
 	}
 	return g_mixer_vars->musics.loaded[id].duration;
@@ -296,7 +296,7 @@ uint32_t Music_GetDuration(MUSIC id){
 bool Music_Pause(MUSIC id){
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -307,7 +307,7 @@ bool Music_Pause(MUSIC id){
 bool Music_Resume(MUSIC id){
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -319,7 +319,7 @@ bool Music_Resume(MUSIC id){
 bool Music_Stop(MUSIC id){
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -340,7 +340,7 @@ bool Music_IsPlaying(MUSIC id){
 	int m_found = 0;
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -353,7 +353,7 @@ bool Music_IsPlaying(MUSIC id){
 
 bool Music_IsPaused(MUSIC id){
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 	return g_mixer_vars->musics.loaded[id].paused==true;
@@ -407,7 +407,7 @@ void Music_Update(void){
 uint32_t Music_GetCurrentTime(int id){
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return 0;
 	}
 #ifdef __WITH_FFMPEG__
@@ -441,7 +441,7 @@ void Music_Unload(MUSIC id){
 	MixerSound *sp_info=NULL;
 
 	if(!Music_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return;
 	}
 

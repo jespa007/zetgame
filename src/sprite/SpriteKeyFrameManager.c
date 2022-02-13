@@ -57,7 +57,7 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 
 	// 1. read & parse json
 	if(key_id_prefix == NULL){
-		Log_Error("key_id_prefix id NULL");
+		Log_ErrorF("key_id_prefix id NULL");
 		return false;
 	}
 

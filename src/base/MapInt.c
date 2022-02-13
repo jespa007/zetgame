@@ -123,7 +123,7 @@ void * 		MapInt_Get(MapInt *t,intptr_t key){
 void MapInt_Erase(MapInt *t,intptr_t key){
 	int pos=MapString_GetIdx(t,key);
 	if(pos == ZG_ERROR){ // value already exist (assign)...
-		Log_Error("key not found");
+		Log_ErrorF("key not found");
 		return;
 	}
 

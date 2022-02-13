@@ -9,7 +9,7 @@ static bool FileSystem_FileExistsPFS(const char * filename) {
 	PackedFile fp;
 
 	if(g_packed_file_system==NULL){
-		Log_Error("Error no packed file loaded!");
+		Log_ErrorF("Error no packed file loaded!");
 		return false;
 	}
 
@@ -25,7 +25,7 @@ static BufferByte * FileSystem_ReadFilePFS(const char * filename){
 	PackedFile fp;
 
 	if(g_packed_file_system==NULL){
-		Log_Error("Error no packed file loaded!");
+		Log_ErrorF("Error no packed file loaded!");
 		return NULL;
 	}
 
@@ -61,7 +61,7 @@ static int  FileSystem_FileLengthPFS(const char * filename){
 // Normal file ops.
 bool FileSystem_InitFromFile(const char * filename) {
 	if(g_packed_file_system != NULL){
-		Log_Error("Filesystem already initialized");
+		Log_ErrorF("Filesystem already initialized");
 	}
 
 	g_packed_file_system=PackedFileSystem_New();
@@ -70,7 +70,7 @@ bool FileSystem_InitFromFile(const char * filename) {
 
 bool FileSystem_InitFromMemory(BufferByte *buffer){
 	if(g_packed_file_system != NULL){
-		Log_Error("Filesystem already initialized");
+		Log_ErrorF("Filesystem already initialized");
 	}
 
 	g_packed_file_system=PackedFileSystem_New();

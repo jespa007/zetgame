@@ -208,8 +208,8 @@ void Textbox_RT_Build(TextBox *_this){
 
 
 			word_len=(word_end-word_ini)*inv_sizeof_char; // div size of char or wchar
-			word=malloc(word_len+sizeof(wchar_t));
-			memset(word,0,word_len*inv_sizeof_char+sizeof(wchar_t));
+			word=malloc(word_len+sizeof_char);
+			memset(word,0,word_len*inv_sizeof_char+sizeof_char);
 			memcpy(word,word_ini,word_len*inv_sizeof_char);
 
 			// get len word...

@@ -152,7 +152,7 @@ bool ECTransform_Detach(ECTransform *_this,ECTransform * obj) {
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
 		ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
-			Log_Error("Cannot add node child because cannot deattach from parent");
+			Log_ErrorF("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
@@ -227,7 +227,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 
 		ECTransform *parent=data->parent;
 		if(parent == NULL){
-			Log_Error("Expected parent not null!!");
+			Log_ErrorF("Expected parent not null!!");
 			return;
 		}
 

@@ -39,7 +39,7 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 	//current_playing_row = last_played_row = -1;
 
 	if ((ctx = xmp_create_context()) == NULL) {
-		Log_Error("I can't create context!");
+		Log_ErrorF("I can't create context!");
 		return false;
 	}
 
@@ -137,7 +137,7 @@ void MusicXmp_Play(MixerSound *sp_info){
 
 	MusicXmp *s_xmp=(MusicXmp *)sp_info->data;
 	if(xmp_start_player(s_xmp->ctx,SPLAYER_FREQUENCY,0) != 0){
-		Log_Error("Error starting module");
+		Log_ErrorF("Error starting module");
 	}
 }
 

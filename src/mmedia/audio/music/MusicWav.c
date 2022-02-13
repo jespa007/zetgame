@@ -17,7 +17,7 @@ bool MusicWav_LoadFromMemory(MixerSound *sp_info,uint8_t *ptr, size_t size){
 	uint8_t *wav_buffer;
 
 	if(strncmp((char *)ptr+0, "RIFF",4) != 0){
-		Log_Error( "No valid wave format!");
+		Log_ErrorF( "No valid wave format!");
 		return false;
 	}
 

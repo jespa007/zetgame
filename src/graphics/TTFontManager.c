@@ -19,7 +19,7 @@ void	TTFontManager_Init(void){
 	if(g_ft_handler == NULL){
 		// All functions return a value different than 0 whenever an error occurred
 		if (FT_Init_FreeType(&g_ft_handler)){
-			Log_Error("FREETYPE: Could not init FreeType Library");
+			Log_ErrorF("FREETYPE: Could not init FreeType Library");
 		}
 	}
 }

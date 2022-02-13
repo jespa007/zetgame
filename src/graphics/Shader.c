@@ -46,7 +46,7 @@ void Shader_UnUse(){
 
 		break;
 	case GRAPHICS_API_GL:
-		return Shader_GL_UnUse();
+		Shader_GL_UnUse();
 		break;
 	}
 }

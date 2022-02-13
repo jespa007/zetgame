@@ -129,7 +129,7 @@ void Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
 bool Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t *wav_length) {
 
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return false;
 	}
 
@@ -225,7 +225,7 @@ bool Mixer_Init(void){
 	//UNUSUED_PARAM(format);
 
 	if(g_mixer_vars != NULL){
-		Log_Error("Mixer already init");
+		Log_ErrorF("Mixer already init");
 		return false;
 	}
 
@@ -298,7 +298,7 @@ bool Mixer_Init(void){
 
 void Mixer_Update(void){
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return;
 	}
 	Music_Update();
@@ -337,7 +337,7 @@ void Mixer_StopThread(){
 }*/
 void Mixer_StopAll(void){
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return;
 	}
 	Sample_StopAll();
@@ -346,7 +346,7 @@ void Mixer_StopAll(void){
 
 void Mixer_UnloadAll(void){
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return;
 	}
 	Music_UnloadAll();
@@ -357,7 +357,7 @@ void Mixer_UnloadAll(void){
 void Mixer_DeInit(void){
 
 	if(g_mixer_vars == NULL){
-		Log_Error("Mixer not init");
+		Log_ErrorF("Mixer not init");
 		return;
 	}
 
@@ -373,7 +373,7 @@ void Mixer_DeInit(void){
 	free(g_mixer_vars);
 	g_mixer_vars=NULL;
 
-	Log_Info("MIXER_deinit");
+	Log_InfoF("MIXER_deinit");
 }
 
 

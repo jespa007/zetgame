@@ -18,7 +18,7 @@ void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _he
 
 
 	if(_width == 0 || _height == 0){
-		Log_Error("height=0 width=0 texture cannot be rebuilt");
+		Log_ErrorF("height=0 width=0 texture cannot be rebuilt");
 		return;
 	}
 

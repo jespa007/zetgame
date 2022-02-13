@@ -27,9 +27,14 @@ KeyframeTrack * KeyframeTrack_New(void)
 Ease 	KeyframeTrack_ParseInterpolatorType(const char * interpolator_type_str){
 	Ease ease=EASE_LINEAR;
 
-	if(STRCMP(interpolator_type_str,==,"LINEAR")) ease=EASE_LINEAR;
-	else if(STRCMP(interpolator_type_str,==,"IN_OUT_SINE")) ease=EASE_IN_OUT_SINE;
-	else Log_Error("Invalid EASE type \"%s\": Valid ones are \"LINEAR\" or \"IN_OUT_SINE\"");
+	if(STRCMP(interpolator_type_str,==,"LINEAR")) {
+		ease=EASE_LINEAR;
+	}else if(STRCMP(interpolator_type_str,==,"IN_OUT_SINE")) {
+		ease=EASE_IN_OUT_SINE;
+	}else {
+		Log_ErrorF("Invalid EASE type \"%s\": Valid ones are \"LINEAR\" or \"IN_OUT_SINE\"");
+	}
+
 
 	return ease;
 }
@@ -88,7 +93,7 @@ void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe
 
 	if(keyframe_points_count % I1D_POINT_SIZE != 0)
 	{
-		Log_Error("Error! Data length is not equal to dimension+1");
+		Log_ErrorF("Error! Data length is not equal to dimension+1");
 		return;
 	}
 

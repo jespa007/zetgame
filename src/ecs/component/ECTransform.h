@@ -2,7 +2,6 @@
 #define _EC_TRANSFORM_H__
 
 typedef struct ECTransform 	ECTransform;
-typedef struct Entity		Entity;
 
 #define EC_TRANSFORM_SCALE					0x0001
 #define EC_TRANSFORM_TRANSLATE			 	0x0002

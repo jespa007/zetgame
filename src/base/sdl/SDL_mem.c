@@ -83,7 +83,7 @@ int SDLMEM_dicotomic_search(uintptr_t key)
 bool SDLMEM_dicotomic_insert(const char * file, int line, uintptr_t key)
 {
 	if(g_n_allocated_surfaces==(MAX_CHECK_SURFACES-2)){ // array full
-		Log_Error("DS Error full table");
+		Log_ErrorF("DS Error full table");
 		return false;
 	}
 
@@ -131,7 +131,7 @@ bool SDLMEM_dicotomic_insert(const char * file, int line, uintptr_t key)
 		g_n_allocated_surfaces++;
 		return true;
 	}else{
-		Log_Error("Cannot insert SDL pointer");
+		Log_ErrorF("Cannot insert SDL pointer");
 	}
 	return false;
 }

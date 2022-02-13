@@ -16,7 +16,7 @@ void ChannelsInfo_Copy(ChannelsInfo * dst, ChannelsInfo * src){
 	}
 
 	dst->msk_active_channels |= msk;
-};
+}
 
 void ChannelsInfo_CopyToFloatArray(ChannelsInfo	*_this,float *_dst){
 	float *src=_this->channels;
@@ -39,7 +39,7 @@ ChannelsInfo * ChannelsInfo_New(uint8_t n_channels){
 	ChannelsInfo * c = NULL;
 
 	if(n_channels==0){
-		Log_Error("Invalid num components");
+		Log_ErrorF("Invalid num components");
 		return NULL;
 	}
 

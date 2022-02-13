@@ -104,7 +104,7 @@ void Animation_ClearAction(Animation *_this,Action *_action){
 			return;
 		}
 	}
-	Log_Warning("action not exist");
+	Log_WarningF("action not exist");
 }
 
 void Animation_StartTween(Animation *_this

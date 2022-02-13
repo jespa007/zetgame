@@ -25,7 +25,7 @@ void 	Action_SetKeyFramesTrack(Action *_this
 	if(keyframe_points == NULL) return;
 
 	if(idx_channel >= _this->channels_info->n_channels){
-		Log_Error("Internal error index reached max channels");
+		Log_ErrorF("Internal error index reached max channels");
 		return;
 	}
 
@@ -75,7 +75,7 @@ void 				Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first 
 		w=KeyframeTrackGroup_New();
 		break;
 	default:
-		Log_Error("Action_SetKeyframes: invalid mask");
+		Log_ErrorF("Action_SetKeyframes: invalid mask");
 		break;
 	}
 

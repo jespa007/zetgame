@@ -72,7 +72,7 @@ char *StrUtils_New(const char *in_str){
 
 char *			StrUtils_StrCloneN(const char *in_str, size_t len){
 	if(in_str==NULL){
-		Log_Warning("input string as NULL");
+		Log_WarningF("input string as NULL");
 		return NULL;
 	}
 

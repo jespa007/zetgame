@@ -132,7 +132,7 @@ bool Texture_UpdateFromSurface(Texture *_this, uint16_t _x, uint16_t _y,SDL_Surf
 	if(_this == NULL) return false;
 
 	if(srf ==NULL) {
-		Log_Warning("Surface null");
+		Log_WarningF("Surface null");
 		return false;
 	}
 	return Texture_Update(_this,_x,_y,srf->w,srf->h,srf->pixels,srf->format->BytesPerPixel);

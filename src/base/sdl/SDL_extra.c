@@ -153,7 +153,7 @@ SDL_Surface *SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, u
 	size_t size_image_load_info=ARRAY_SIZE(image_load_info);
 
 	if(length < 10){
-		Log_Error("Cannot load from memory. Insuficient buffer");
+		Log_ErrorF("Cannot load from memory. Insuficient buffer");
 		return NULL;
 	}
 

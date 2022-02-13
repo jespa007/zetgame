@@ -196,7 +196,7 @@ void Graphics_GL_DeInit(void) {
 	if(e!=GL_NO_ERROR){
 		Log_Warning("OpenGL (%x): There's some OGL problems. Enable debug to check file/line",e);
 	}else{
-		Log_Info("OpenGL: OK");
+		Log_InfoF("OpenGL: OK");
 	}
 
 }

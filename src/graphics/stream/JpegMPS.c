@@ -352,7 +352,7 @@ void JpegMPS_Delete(JpegMPS *_this){
 	//SDL_RWclose(rw);
 	switch(Graphics_GetGraphicsApi()){
 	case GRAPHICS_API_GL:
-		return JpegMPS_Delete_GL(data);
+		JpegMPS_Delete_GL(data);
 		break;
 	}
 

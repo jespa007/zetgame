@@ -16,7 +16,7 @@
 
 void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame){
 	if(idx_frame>= _this->frames_len){
-		Log_Error("idx_frame out of bounds");
+		Log_ErrorF("idx_frame out of bounds");
 		return;
 	}
 

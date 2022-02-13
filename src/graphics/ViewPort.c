@@ -22,7 +22,7 @@ static float ViewPort_ScreenToWorldPosY_BuiltIn(ViewPort *view_port,int y);
 
 void 		ViewPort_Init(uint16_t _width, uint16_t _height){
 	if(g_viewport_vars!=NULL){
-		Log_Warning("ViewPort status already initialized");
+		Log_WarningF("ViewPort status already initialized");
 	}
 
 	g_viewport_vars=ZG_NEW(ViewPortVars);
@@ -135,7 +135,7 @@ ViewPort * 	ViewPort_Pop(void){
 
 
 	}else{
-		Log_Error("Cannot pop view ports stack empty");
+		Log_ErrorF("Cannot pop view ports stack empty");
 	}
 	// restore glview...
 
@@ -233,7 +233,7 @@ Vector3f ViewPort_ScreenToWorldDimension2i(int width, int height){
 
 void 		ViewPort_DeInit(void){
 	if(g_viewport_vars == NULL) {
-		Log_Error("Viewport not init");
+		Log_ErrorF("Viewport not init");
 		return;
 	}
 

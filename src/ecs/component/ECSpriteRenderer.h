@@ -4,7 +4,7 @@
 typedef struct ECSpriteRenderer ECSpriteRenderer;
 
 struct ECSpriteRenderer{
-	EComponentHeader header;;
+	EComponentHeader header;
 	void 			*data;
 };
 

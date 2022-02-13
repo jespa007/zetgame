@@ -1,7 +1,6 @@
 #ifndef _ECOMPONENT_H__
 #define _ECOMPONENT_H__
 
-typedef struct Entity Entity;
 
 // Builtin components
 typedef enum{

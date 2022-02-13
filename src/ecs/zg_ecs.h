@@ -7,6 +7,8 @@
 #include "graphics/zg_graphics.h"
 #include "mmedia/zg_mmedia.h"
 
+#include "entity/Entity.h"
+
 #include "component/EComponent.h"
 #include "component/ECTransform.h"
 #include "component/ECTransformAnimation.h"
@@ -20,7 +22,7 @@
 
 
 
-#include "entity/Entity.h"
+
 
 
 

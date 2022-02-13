@@ -38,7 +38,7 @@ void 	ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, 
 bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegisterEComponent es_component_register){
 
 	if(g_user_can_register_components==false){
-		Log_Error("Components should registered before create any Entity-System");
+		Log_ErrorF("Components should registered before create any Entity-System");
 		return false; //
 	}
 

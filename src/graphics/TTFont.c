@@ -40,7 +40,7 @@ TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 	{
 		font->space_width=face->glyph->advance.x>>6; // 1.0/64
 	}else{
-		Log_Error("FREETYTPE: Failed to load Glyph");
+		Log_ErrorF("FREETYTPE: Failed to load Glyph");
 	}
 
 	// main
@@ -140,7 +140,7 @@ TTFont * TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, size_t f
 
 	// Load font as face
 	if (FT_New_Memory_Face(TTFontManager_GetFreeTypeHandler(), buffer, buffer_len, 0, &face)){
-		Log_Error("FT_New_Memory_Face: Failed to load");
+		Log_ErrorF("FT_New_Memory_Face: Failed to load");
 		return NULL;
 	}
 

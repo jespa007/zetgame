@@ -73,18 +73,18 @@ SAMPLE Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 	int n_loaded_sample;
 
 	if(strncmp((char *)ptr+0, "RIFF",4) != 0){
-		Log_Error( "No valid wave format!");
+		Log_ErrorF( "No valid wave format!");
 		return INVALID_SOUND_IDX;
 	}
 
 	if((n_loaded_sample = Sample_GetFreeBlock())==INVALID_SOUND_IDX){
-		Log_Error( "Max sounds reached!");
+		Log_ErrorF( "Max sounds reached!");
 		return INVALID_SOUND_IDX;
 	}
 
 
 	if(size > 1024L*512L){
-		Log_Error( "Max size reached (Max is 512Kb!");
+		Log_ErrorF( "Max size reached (Max is 512Kb!");
 		return INVALID_SOUND_IDX;
 	}
 
@@ -136,7 +136,7 @@ SAMPLE Sample_Load(const char *_filename){
 bool Sample_Play(int id){
 
 	if(!Sample_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -155,7 +155,7 @@ bool Sample_Play(int id){
 
 bool Sample_Stop(SAMPLE id){
 	if(!Sample_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -174,7 +174,7 @@ bool Sample_Stop(SAMPLE id){
 
 bool Sample_SetVolume(SAMPLE id, float vol){
 	if(!Sample_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return false;
 	}
 
@@ -186,7 +186,7 @@ bool Sample_SetVolume(SAMPLE id, float vol){
 
 float Sample_GetVolume(SAMPLE id){
 	if(!Sample_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return 1;
 	}
 
@@ -196,7 +196,7 @@ float Sample_GetVolume(SAMPLE id){
 
 uint32_t Sample_GetDuration(SAMPLE id){
 	if(!Sample_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return 0;
 	}
 
@@ -207,7 +207,7 @@ uint32_t Sample_GetDuration(SAMPLE id){
 void Sample_Unload(SAMPLE id){
 
 	if(!Sample_IsValid(id)){
-		Log_Error("ID not valid!");
+		Log_ErrorF("ID not valid!");
 		return;
 	}
 	//
@@ -228,7 +228,7 @@ void Sample_Unload(SAMPLE id){
 		free(s_effect);
 	}
 	else{
-		Log_Error("ID not type WAV!");
+		Log_ErrorF("ID not type WAV!");
 	}
 }
 
