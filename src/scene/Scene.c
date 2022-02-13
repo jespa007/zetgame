@@ -121,7 +121,7 @@ void Scene_NewEntityType(Scene *_this, const char *_str_entity_type,uint16_t max
 	ESSystem_NewEntityType(data->es_system,_str_entity_type,max_entities,entity_components,entity_components_len);
 }
 
-Entity * Scene_NewEntity(Scene *_this, unsigned * entity_components, size_t entity_components_len){
+Entity * Scene_NewEntity(Scene *_this, EComponent * entity_components, size_t entity_components_len){
 	SceneData *data=_this->data;
 
 	return ESSystem_NewEntity(data->es_system,entity_components,entity_components_len);

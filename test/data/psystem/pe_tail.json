@@ -1,0 +1,69 @@
+{
+	is_one_particle:true
+	,is_life_unlimited:true
+	,transparency:true
+	,intensity:true
+	,angle_particle:45
+	,point_ref:[0,0,0]
+	,image:"tail.png"
+	,life:0.3
+	,number:0.5
+	,size:0.2
+	,velocity:0
+	,weight:0
+	,spin:0
+	,motion:0
+	,bounce:0
+	,visibility:1
+	
+	,variation_life:0.0
+	,variation_number:0.22
+	,variation_size:0.22
+	,variation_velocity:0.4
+	,variation_weight:0
+	,variation_spin:0
+	,variation_motion:0.7
+	,variation_bounce:0
+	
+	,interpolator_life:[
+		0,1
+		,0,1
+	]
+	,interpolator_velocity:[
+		0,0.8f,
+		1,2.0f
+	]
+	,interpolator_size:[
+		0	 ,1.6f,
+		0.42f,1.4f,
+		0.62f,1.2f,
+		0.8f ,0.8f,
+		1    ,0.0f
+	]
+	,interpolator_motion_random:[
+		0,1
+		,0,1
+	]
+	,interpolator_weight:[
+		0,1
+		,0,1
+	]
+	,interpolator_bounce:[
+		0,1
+		,0,1
+	]
+	,interpolator_color:[
+		0    ,256,128,151, 
+		0.33f,256,140, 39, 
+		0.66f,256,251,164,
+		0.90f,  0,  0,  0,
+		1.0f ,  0,  0,  0
+	]
+	,interpolator_alpha:[
+		0	,0,
+		0.33,1,
+		0.66,1,
+		0.90,0,
+		1.0	,0
+	]
+}

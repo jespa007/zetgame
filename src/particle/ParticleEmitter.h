@@ -1,4 +1,11 @@
-#pragma once
+#ifndef __PARTICLE_EMITTER_H__
+#define __PARTICLE_EMITTER_H__
+
+
+#endif
+
+
+/*#pragma once
 
 
 #include "Particle.h"
@@ -116,51 +123,7 @@ public:
 	//
 	CParticleEmitter();
 
-	/*bool load(
-		Uint32 _attribs,
-		Uint32 _ap_attribs,
-		Uint32 _angle,
-		const CVector3f  & _pointRef,
-		//CVector3f color,
-		const string & texture_name,
-		//-------- MAIN PARAMS
-		float _percentLife, // life inf millis (more life more tail)...
-		float _percentNumParticles, // num_ particles...
-		float _percentSize, // size...
-		float _percentVelocity, // velocity
-		float _percentWeight, // weight (from -1 to 1)
-		float _percentSpin, // spin  (from -1 to 1)
-		float _pecentMotionRandom, // motion rand (from 0 to 1)
-		float _percentBounce, // bounce ?!?!? ... (from 0 to 1)
-		float _percentVisibility, // Visibility  (from 0 to 1)
-		//---------- VARIATIONS  (all from 0 to 1)
-		float _varLife, // life
-		float _varNumParticles, // number particles variation
-		float _varSize, // size variations
-		float _varVelocity, // velocity variations // contant over time.
-		float _varWeight,  // weight var
-		float _varSpin,  // spin var
-		float _varRandomMotion, // motion rand
-		float _varBounce,  // bounce var
-		//---------- INTERPOLATORS
-		// controllers...
-		const FLOAT_VECTOR  & _intLife,
-		const FLOAT_VECTOR  & _intVelocity,
-		const FLOAT_VECTOR  & _intSize,
-		const FLOAT_VECTOR  & _intMotionRandom,
-		const FLOAT_VECTOR  & _intWeight,
-		const FLOAT_VECTOR  & _intBounce,
 
-
-		// appearance ...
-		const FLOAT_VECTOR  & _intColor,
-		const FLOAT_VECTOR  & _intAlpha
-
-	);*/
-
-
-
-	
 
 	//
 	//
@@ -269,10 +232,7 @@ public:
 	void setOpacityOverTime(const FLOAT_VECTOR & _intLife);
 
 
-	/*CParticleEmitter(
-			const string & name_emitter,
-			tEmitterData *_m_data
-	);*/
+
 	CParticleSystem *getSystemParticle(){
 		return m_system_particle;
 	}
@@ -287,3 +247,4 @@ public:
 	virtual ~CParticleEmitter();
 
 };
+*/

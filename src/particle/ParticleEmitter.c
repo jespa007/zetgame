@@ -1,6 +1,3 @@
-#include "screen/zg_screen.h"
-
-#define 	MAX_TOTAL_PARTICLES			7000
 
 const char *particle_vertex_shader=
 "#version 130\n"
@@ -35,7 +32,7 @@ const char *particle_fragment_shader=
 "    gl_FragColor =  gl_Color * rotatedTexture;\n"
 "}\n";
 
-
+/*
 #define  	FPS_PARTICLES				DESIRED_FPS //60 //one_over_fps
 #define 	FACTOR_PARTICLES_PER_FRAME 	100
 
@@ -368,8 +365,7 @@ bool CParticleEmitter::load(
 									&m_intMotionRandom,
 									&m_intColor,
 									&m_intAlpha
-
-								);
+		);
 
 		if((CParticle::UNLIMITED_LIFE & emitter_attribs) == CParticle::UNLIMITED_LIFE) {
 			m_particle[i]->m_life = 1.0f;
@@ -635,3 +631,4 @@ CParticleEmitter::~CParticleEmitter() {
 	glDeleteBuffers(3, &vbo[0]);
 }
 
+*/
