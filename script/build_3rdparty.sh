@@ -44,7 +44,7 @@ cd $ZLIB_VERSION
 
 if ! [ -f $THIRD_PARTY_INSTALL_DIR"/lib/"$RESULT_FILE_Z ] 
 then
-	rm -rf build/gcc
+	rm -rf $BUILD_DIR
 	cmake "${CMAKE_CONFIG[@]}" -DBUILD_SHARED_LIBS:BOOL=OFF
 
 	if ! [ $? -eq 0 ] 
