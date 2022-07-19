@@ -85,9 +85,5 @@ int main(int argc, char * argv[]){
 
 	ZetGame_DeInit();
 
-#ifdef __MEMMANAGER__
-	MEMMGR_print_status();
-#endif
-
 	return 0;
 }

@@ -200,23 +200,34 @@ else()
 endif()
 
 IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
-	MESSAGE ("-- zetnet_dev: ON" )
+	MESSAGE ("-- Zetnet_dev: ON" )
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../../zetnet/src
 	) 	
-	set( LIB_DEPS ${LIB_DEPS} 
-		${PROJECT_SOURCE_DIR}/../../zetnet/build/${COMPILER}/${TARGET}/libzetnet${POST_NAME}.a
-	)
+	
+	file(READ "${PROJECT_SOURCE_DIR}/../../zetnet/src/zetnet.h" zetnet_h)
+	
+	string(REGEX MATCH "ZETNET_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetnet_h})
+	string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_MAJOR)
+	
+	string(REGEX MATCH "ZETNET_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetnet_h})
+	string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_MINOR)
+	
+	string(REGEX MATCH "ZETNET_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetnet_h})
+	string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_PATCH)
+	
+	set(ZETNET_LIB_NAME "zetnet-${ZETNET_VERSION_MAJOR}-${ZETNET_VERSION_MINOR}-${ZETNET_VERSION_PATCH}")
+	
+	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetnet/build/${COMPILER}/${TARGET}/lib${ZETNET_LIB_NAME}_d.a)
 else()
 	IF ( "${TARGET}" STREQUAL "debug" )
-		MESSAGE ("-- zetnet_dev: OFF" )
+		MESSAGE ("-- Zetnet_dev: OFF" )
 	ENDIF()
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet
 	)
- 	set( LIB_DEPS ${LIB_DEPS} 
- 		zetnet 
- 	)
+	
+	set( LIB_DEPS ${LIB_DEPS}   zetnet )
 endif()
 
 set(EXE_DEPS "")

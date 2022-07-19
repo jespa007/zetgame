@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd ..
-
 THIRD_PARTY_SOURCES_DIR=$PWD"/src/3rdparty"
 
 # update path to bind generated executables in 3rd party bin
@@ -73,14 +71,12 @@ fi
 #define basic
 ZLIB_VERSION="zlib-1.2.8"
 SDL2_VERSION="SDL2-2.0.14"
-LIBPNG_VERSION="libpng-1.6.37"
 LIBJPEG_VERSION="jpeg-9b"
 FREETYPE2_VERSION="freetype-2.5.2"
 LIBXMP_VERSION="libxmp-lite-4.5.0"
 
 ZLIB_FILE=$ZLIB_VERSION".tar.gz"
 SDL2_FILE=$SDL2_VERSION".tar.gz"
-LIBPNG_FILE=$LIBPNG_VERSION".tar.gz"
 LIBJPEG_FILE=$LIBJPEG_VERSION".tar.gz"
 FREETYPE2_FILE=$FREETYPE2_VERSION".tar.gz"
 LIBXMP_FILE=$LIBXMP_VERSION".tar.gz"
