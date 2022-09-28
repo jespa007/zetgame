@@ -81,7 +81,8 @@ bool Collider2d_TestIntersectionRectangleRectangle(
 
 bool Collider2d_TestIntersectionRectangleCircle(
 	 Vector3f _p1
-	, float _w1, float _h1
+	, float _w1
+	, float _h1
 	, Vector3f _p2
 	, float _r2){
 	float w1_med=_w1*0.5;
@@ -113,11 +114,12 @@ bool Collider2d_TestIntersectionCircleCircle(
 
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
+	float rad_sum_sq = (_r1 + _r2) * (_r1 + _r2);
 
 	float distance=(xdiff)*(xdiff)+
 					  (ydiff)*(ydiff);
 
-	return distance < _r1*_r1 || distance < _r2*_r2;
+	return distance <= rad_sum_sq;
 
 }
 
@@ -139,7 +141,7 @@ void Collider2d_Draw(Transform _t3d, Collider2dType _collider_type, Color4f _col
 		Graphics_DrawCircle3f(
 				_t3d.translate.x
 				,_t3d.translate.y
-				,_t3d.scale.x
+				,_t3d.scale.x // diameter
 				,_color,1);
 		break;
 	}
@@ -232,7 +234,6 @@ bool Collider2d_Test(Transform _t1, Collider2dType _c1, Transform _t2, Collider2
 			);
 			break;
 		case COLLIDER2D_TYPE_CIRCLE:
-
 			test=Collider2d_TestIntersectionCircleCircle(
 					_t1.translate
 					,_t1.scale.x

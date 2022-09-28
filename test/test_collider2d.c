@@ -14,9 +14,9 @@ typedef enum{
 
 void update_options(
 		SelectCollider *_selected_collider
-		, Collider2dType *_mouse_collider
-		, int *_mouse_w
-		, int *_mouse_h
+		, Collider2dType *_mouse_collider_type
+		, Vector3f		*_mouse_scale
+
 	){
 	Vector2i m=Input_GetMousePosition();
 	bool is_pressed=Input_IsLeftButtonPressed();
@@ -28,28 +28,34 @@ void update_options(
 		for(unsigned i=0; i < MAX_SELECT_COLLIDERS; i++){
 			if(x <= m.x && m.x <= (x+BUTTON_GROUP_SIZE)){
 				printf("selected collider '%i'\n",i);
+				int _mouse_w=0;
+				int _mouse_h=0;
 				*_selected_collider=i;
 
 				switch(i){
 				case SELECT_COLLIDER_POINT:
-					*_mouse_collider=COLLIDER2D_TYPE_POINT;
+					*_mouse_collider_type=COLLIDER2D_TYPE_POINT;
 					break;
 				case SELECT_COLLIDER_RECTANGLE_PORTRAIT:
-					*_mouse_w=80;
-					*_mouse_h=160;
-					*_mouse_collider=COLLIDER2D_TYPE_RECTANGLE;
+					_mouse_w=80;
+					_mouse_h=160;
+					*_mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
 					break;
 				case SELECT_COLLIDER_RECTANGLE_LANDSCAPE:
-					*_mouse_w=160;
-					*_mouse_h=80;
-					*_mouse_collider=COLLIDER2D_TYPE_RECTANGLE;
+					_mouse_w=160;
+					_mouse_h=80;
+					*_mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
 					break;
 				case SELECT_COLLIDER_CIRCLE:
-					*_mouse_w=80;
-					*_mouse_h=80;
-					*_mouse_collider=COLLIDER2D_TYPE_CIRCLE;
+					_mouse_w=50;
+					_mouse_h=50;
+					*_mouse_collider_type=COLLIDER2D_TYPE_CIRCLE;
 					break;
 				}
+
+				_mouse_scale->x=ViewPort_ScreenToWorldWidth(_mouse_w);
+				_mouse_scale->y=ViewPort_ScreenToWorldHeight(_mouse_h);
+
 				return;
 			}
 			x+=BUTTON_GROUP_SIZE;
@@ -147,10 +153,6 @@ int main(int argc, char *argv[]){
 
 	Transform mouse_transform=Transform_New();
 
-	int mouse_collider_w=100;
-	int mouse_collider_h=100;
-	mouse_transform.scale.x=ViewPort_ScreenToWorldWidth(mouse_collider_w);
-	mouse_transform.scale.y=ViewPort_ScreenToWorldWidth(mouse_collider_h);
 
 	do{
 		Graphics_BeginRender();
@@ -158,6 +160,7 @@ int main(int argc, char *argv[]){
 		Vector2i m=Input_GetMousePosition();
 		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x);
 		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y);
+		colliding="None";
 
 		for(unsigned i=0; i < ARRAY_SIZE(colliders); i++){
 			Color4f color=COLOR4F_WHITE;
@@ -182,7 +185,6 @@ int main(int argc, char *argv[]){
 					break;
 
 				}
-
 			}
 
 			Collider2d_Draw(
@@ -204,8 +206,7 @@ int main(int argc, char *argv[]){
 		update_options(
 			&select_collider,
 			&mouse_collider_type,
-			&mouse_collider_w,
-			&mouse_collider_h
+			&mouse_transform.scale
 		);
 
 		Graphics_EndRender();

@@ -207,7 +207,7 @@ void Textbox_RT_Build(TextBox *_this){
 			}
 
 
-			word_len=(word_end-word_ini)*inv_sizeof_char; // div size of char or wchar
+			word_len=((intptr_t)word_end-(intptr_t)word_ini)*inv_sizeof_char; // div size of char or wchar
 			word=malloc(word_len+sizeof_char);
 			memset(word,0,word_len*inv_sizeof_char+sizeof_char);
 			memcpy(word,word_ini,word_len*inv_sizeof_char);
@@ -326,7 +326,7 @@ void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	float x_draw=0;
 	float y_draw=0;
 	float y_draw_inc=0;
-	Vector3f dim3d_mid=ViewPort_ScreenToWorldDimension2i(data->dimensions.x>>1,data->dimensions.y>>1);
+	Vector3f dim3d=ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
 	uint16_t text_total_height=data->render_text.token_lines->count*data->font->ascender;
 
 	if(data->vertical_align == VERTICAL_ALIGN_CENTER){
@@ -341,10 +341,10 @@ void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 	if(ZetGame_IsDebugMode()){
 		Graphics_DrawRectangle4f(
-				-dim3d_mid.x
-				,dim3d_mid.y
-				,+dim3d_mid.x
-				,-dim3d_mid.y
+				0 // x:0 translation keeps current translate
+				,0// y:0 translation keeps current translate
+				,dim3d.x
+				,dim3d.y
 				,COLOR4F_WHITE
 				,2
 				);
