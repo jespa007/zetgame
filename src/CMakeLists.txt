@@ -2,28 +2,22 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)	# To enable MSVC_RUNTIME_LIBRARY. It has effect only when policy CMP0091 is set to NEW prior to the first project() 
 project(zetgame)
 
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#
-# COMMON MACROS
-#
+file(READ "zetgame.h" zetgame_h)
 
-macro(configure_files srcDir destDir)
-    message(STATUS "Configuring directory ${destDir}")
-    make_directory(${destDir})
+string(REGEX MATCH "ZETGAME_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetgame_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETGAME_VERSION_MAJOR)
 
-    file(GLOB templateFiles RELATIVE ${srcDir} ${srcDir}/*)
-    foreach(templateFile ${templateFiles})
-        set(srcTemplatePath ${srcDir}/${templateFile})
-        if(NOT IS_DIRECTORY ${srcTemplatePath})
-            message(STATUS "Configuring file ${srcTemplatePath} to ${destDir}/${templateFile}")
-            configure_file(
-                    ${srcTemplatePath}
-                    ${destDir}/${templateFile}
-                    COPYONLY)
-        endif(NOT IS_DIRECTORY ${srcTemplatePath})
-    endforeach(templateFile)
-endmacro(configure_files)
+string(REGEX MATCH "ZETGAME_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetgame_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETGAME_VERSION_MINOR)
 
+string(REGEX MATCH "ZETGAME_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetgame_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETGAME_VERSION_PATCH)
+
+
+
+MESSAGE("-- ZetGame ${ZETGAME_VERSION_MAJOR}.${ZETGAME_VERSION_MINOR}.${ZETGAME_VERSION_PATCH}" )
+
+set(ZETGAME_LIB_NAME "zetgame-${ZETGAME_VERSION_MAJOR}-${ZETGAME_VERSION_MINOR}-${ZETGAME_VERSION_PATCH}")
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
@@ -328,10 +322,10 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	ZetGame.c		
 )
 
-add_library( zetgame${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
+add_library( ${ZETGAME_LIB_NAME$}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
 
 
-target_link_libraries(zetgame${POST_NAME}
+target_link_libraries(${ZETGAME_LIB_NAME$}${POST_NAME}
 	${LIB_DEPS}
 	${LINK_PARAMS}
 )	
@@ -348,33 +342,33 @@ add_executable(test_mixer${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
 )
 
-target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 	
 add_executable(test_2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_2d.c
 )
 
-target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #Graphics
 add_executable(test_primitives${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_primitives.c
 )
 
-target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
 )
 
-target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_animation${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_animation.c
 )
 
-target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 endif()
 
@@ -384,28 +378,28 @@ add_executable(test_scenegraph${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
 )
 
-target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- SPRITE
 add_executable(test_sprite${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_sprite.c
 )
 
-target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- TILEMAP
 add_executable(test_tilemap${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
 )
 
-target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- COLLIDER2D
 add_executable(test_collider2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_collider2d.c
 )
 
-target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 
 #--- TEXTBOX
@@ -413,25 +407,25 @@ add_executable(test_textbox${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_textbox.c
 )
 
-target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- GUI
 add_executable(test_gui${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_gui.c
 )
 
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- SHADER
 add_executable(test_shader${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_shader.c
 )
 
-target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- PARTICLE SYSTEM
 #add_executable(test_particle${POST_NAME} 
 #	${PROJECT_SOURCE_DIR}/../test/test_particle_system.c
 #)
 
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} zetgame${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
