@@ -45,8 +45,7 @@ set(ZETGAME_LIB_SRCS "")
 
 if(MSVC)
 	SET(COMPILER "msvc")
-	MESSAGE ("-- Plataform: MSVC" )
-	
+
 	
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
@@ -117,6 +116,8 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
 endif()
 
 
+MESSAGE ("-- Compiler: " ${COMPILER} )
+
 include_directories (
 	${PROJECT_SOURCE_DIR}
 	${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include
@@ -173,24 +174,34 @@ endif()
 
 
 IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
-	MESSAGE ("-- zetpacker_dev: ON" )
+	MESSAGE ("-- ZetPacker_dev: ON" )
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../../zetpacker/src
 	) 	
-	set( LIB_DEPS ${LIB_DEPS} 
-		${PROJECT_SOURCE_DIR}/../../zetpacker/build/${COMPILER}/${TARGET}/libzetpacker${POST_NAME}.a
-	) 
-
+	
+	file(READ "${PROJECT_SOURCE_DIR}/../../zetpacker/src/zetpacker.h" zetpacker_h)
+	
+	string(REGEX MATCH "ZETPACKER_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetpacker_h})
+	string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_MAJOR)
+	
+	string(REGEX MATCH "ZETPACKER_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetpacker_h})
+	string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_MINOR)
+	
+	string(REGEX MATCH "ZETPACKER_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetpacker_h})
+	string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_PATCH)
+	
+	set(ZETPACKER_LIB_NAME "zetpacker-${ZETPACKER_VERSION_MAJOR}-${ZETPACKER_VERSION_MINOR}-${ZETPACKER_VERSION_PATCH}")
+	
+	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetpacker/build/${COMPILER}/${TARGET}/lib${ZETPACKER_LIB_NAME}_d.a)
 else()
 	IF ( "${TARGET}" STREQUAL "debug" )
-		MESSAGE ("-- zetpacker_dev: OFF" )
+		MESSAGE ("-- ZetPacker_dev: OFF" )
 	ENDIF()
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetpacker
 	)
-	set( LIB_DEPS ${LIB_DEPS} 
- 		zetpacker
- 	)
+	
+	set( LIB_DEPS ${LIB_DEPS}   zetpacker )
 endif()
 
 IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
@@ -223,6 +234,8 @@ else()
 	
 	set( LIB_DEPS ${LIB_DEPS}   zetnet )
 endif()
+
+
 
 set(EXE_DEPS "")
 
