@@ -9,7 +9,7 @@
 
 
 
-namespace Zetgine{
+namespace zetgine{
 
 	class CMovieGif: public CMovie{
 

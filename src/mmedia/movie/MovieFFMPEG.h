@@ -7,7 +7,7 @@
 
 #ifdef __WITH_FFMPEG__
 
-namespace Zetgine{
+namespace zetgine{
 
 	/*
 	typedef struct
