@@ -45,7 +45,7 @@ set(ZETGAME_LIB_SRCS "")
 
 if(MSVC)
 	SET(COMPILER "msvc")
-
+	MESSAGE ("-- Plataform: MSVC" )
 	
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
@@ -64,7 +64,7 @@ if(MSVC)
 		set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 	endif()	
 
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")  # g++ / gcc
+else()
 
 	set( POST_NAME "")
 	SET(COMPILER "gcc")
