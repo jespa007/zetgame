@@ -24,7 +24,7 @@ Zetgame 1.0.0
 #17 Support load from Aseprite 
 #18 Different resolutions from game design resolution
 > #19 Implement Managing Scene
-#20 Integrate ezxml 
+#20 Integrate cXml 
 > #21 Implement Managing SpriteKeyFrame 
 > #22 Implement Managing functions for GUIWindow 
 > #23 Implement Scene

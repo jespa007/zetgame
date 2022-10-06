@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
 
 
 	TextureManager * texture_manager= TextureManager_New();
-	GUIWindowManager *window_manager=GUIWindowManager_New(texture_manager);
+	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager);
 	GUIWindow * window=NULL;
 
 	if(GUIWindowManager_Load(
