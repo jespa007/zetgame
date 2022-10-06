@@ -5,23 +5,23 @@ typedef struct{
 	short max_entities; // max entitites of this type (default 1)
 	short active_entities;
 	MskEcTypes msk_ec_types; // it says the components it has this entity
-}EntityTypeData;
+}EntityManagerData;
 
 
-EntityType *EntityType_New(int max, MskEcTypes msk_ec_types){
-	EntityType *es_entity_type=ZG_NEW(EntityType);
-	EntityTypeData *data=es_entity_type->data=ZG_NEW(EntityTypeData);
-	es_entity_type->data=data;
+EntityManager *EntityManager_New(int max, MskEcTypes msk_ec_types){
+	EntityManager *es_entity_manager=ZG_NEW(EntityManager);
+	EntityManagerData *data=es_entity_manager->data=ZG_NEW(EntityManagerData);
+	es_entity_manager->data=data;
 
 	data->entities=malloc(sizeof(Entity)*max);
 	data->max_entities=max;
 	data->active_entities=0;
 	data->msk_ec_types=msk_ec_types;
 
-	return es_entity_type;
+	return es_entity_manager;
 }
 
-EntityType *EntityType_NewEntity(EntityType *_this){
+EntityManager *EntityManager_NewEntity(EntityManager *_this){
 
 
 	//return;
@@ -29,7 +29,7 @@ EntityType *EntityType_NewEntity(EntityType *_this){
 
 typedef struct{
 
-}EntityTypeElement;
+}EntityManagerElement;
 
 typedef struct{
 	//Entity *entities; // max entities it'll have this type
@@ -41,17 +41,17 @@ typedef struct{
 
 	short **component_entity;//[ENTITY_COMPONENT_MAX]; // givent entity n it get the component from system
 
-}EntityTypeData;
+}EntityManagerData;
 
 
-void  EntityType_New(ESSystem *es_system, EntityTypeId entity_id, const char *name,int max,EntityComponent msk_ec_types){
-	EntityType * entity_type=ZG_NEW(EntityType);
-	EntityTypeData *data=ZG_NEW(EntityTypeData);
-	entity_type->data=data;
+void  EntityManager_New(ESSystem *es_system, EntityManagerId entity_id, const char *name,int max,EntityComponent msk_ec_types){
+	EntityManager * entity_manager=ZG_NEW(EntityManager);
+	EntityManagerData *data=ZG_NEW(EntityManagerData);
+	entity_manager->data=data;
 
 	data->es_system=es_system;
 
-	//entity_type->id=(ESSystemData *)_this->data->entity_types->count;
+	//entity_manager->id=(ESSystemData *)_this->data->entity_managers->count;
 	//data->entities=malloc(sizeof(Entity)*max);
 	data->max_entities=max;
 	data->active_entities=0;
@@ -72,21 +72,21 @@ void  EntityType_New(ESSystem *es_system, EntityTypeId entity_id, const char *na
 	};
 
 	/*for(int i=0; i < max; i++){
-		//entity_type->entities[i].type_id=entity_type->id;
+		//entity_manager->entities[i].type_id=entity_manager->id;
 	}*/
 
 
 	// set all entity types as this type
 }
 
-Entity  EntityType_NewEntity(EntityType *entity_type, int posx, int posy){
-	EntityTypeData *data=entity_type->data;
+Entity  EntityManager_NewEntity(EntityManager *entity_manager, int posx, int posy){
+	EntityManagerData *data=entity_manager->data;
 	Entity entity=ZG_INVALID_ENTITY_ID;
 	if(data->active_entities<data->max_entities){
 		uint32_t msk_ec_it=data->msk_ec_types;
 		uint32_t component_id=0;
 		uint16_t entity_id=data->active_entities;
-		Entity entity=entity_type->id|entity_id;
+		Entity entity=entity_manager->id|entity_id;
 		while(msk_ec_it>>component_id){
 			uint32_t msk_component=(msk_ec_it & (msk_ec_it<<component_id));
 			if(msk_component){ // attach component to entity

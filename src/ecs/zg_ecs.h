@@ -32,7 +32,7 @@
 // TWEENS
 //#include "component/ECTweenTransform.h"
 //#include "component/ECViewer2d.h"
-//#include "entity/EntityType.h"
+//#include "entity/EntityManager.h"
 #include "system/ESSystem.h"
 
 bool ECS_Init(void);

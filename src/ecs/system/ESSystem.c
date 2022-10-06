@@ -23,17 +23,17 @@ typedef struct {
 	uint16_t 	active_entities;
 	Entity 		**entities;
 
-}EntityTypeData;
+}EntityManagerData;
 
 typedef struct{
-	MapString *map_entity_types;
-	List *lst_entity_types;
+	MapString *map_entity_managers;
+	List *lst_entity_managers;
 	ESSystemEComponentData **components;//[ENTITY_COMPONENT_MAX];
 }ESSystemData;
 
 //---------------------------------------------------
 // PRIVATE FUNCTIONS
-void 	ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, size_t extend_entities);
+void 	ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_data, size_t extend_entities);
 
 bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegisterEComponent es_component_register){
 
@@ -179,8 +179,8 @@ void ESSystem_DeInit(void){
 ESSystem *ESSystem_New(void){
 	ESSystem *system=ZG_NEW(ESSystem);
 	ESSystemData *data=ZG_NEW(ESSystemData);
-	data->lst_entity_types=List_New();
-	data->map_entity_types=MapString_New();
+	data->lst_entity_managers=List_New();
+	data->map_entity_managers=MapString_New();
 
 	data->components=malloc(sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
 	memset(data->components,0,sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
@@ -263,7 +263,7 @@ EComponent *ESSystem_GenerateComponentRequirementList(EComponent *in_data, size_
 
 Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_t _entity_components_len){
 	ESSystemData *data=_this->data;
-	char _str_entity_type[1024]="__@_comp";
+	char _str_entity_manager[1024]="__@_comp";
 	size_t entity_components_len;
 
 	// 1. check component requirements
@@ -272,42 +272,42 @@ Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_
 	// internal type that is generated according used components...
 	for(uint16_t i=0; i < entity_components_len; i++){
 		char *num=StrUtils_IntToStr(entity_components[i]);
-		strcat(_str_entity_type,"_");
-		strcat(_str_entity_type,num);
+		strcat(_str_entity_manager,"_");
+		strcat(_str_entity_manager,num);
 		free(num);
 	}
 
-	strcat(_str_entity_type,"_@__");
+	strcat(_str_entity_manager,"_@__");
 
-	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type,NULL);
+	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_str_entity_manager,NULL);
 
-	if(entity_type_data == NULL){ // create ...
-		entity_type_data=(EntityTypeData *)ESSystem_NewEntityType(_this,_str_entity_type ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
+	if(entity_manager_data == NULL){ // create ...
+		entity_manager_data=(EntityManagerData *)ESSystem_NewEntityManager(_this,_str_entity_manager ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
 	}
 
 	// Free because we don't need it anymore
 	FREE(entity_components);
-	return ESSystem_NewEntityFromType(_this,_str_entity_type);
+	return ESSystem_NewEntityFromManager(_this,_str_entity_manager);
 }
 
-Entity  *ESSystem_NewEntityFromType(ESSystem *_this,const char *_str_entity_type){
+Entity  *ESSystem_NewEntityFromManager(ESSystem *_this,const char *_str_entity_manager){
 	ESSystemData *data=_this->data;
-	EntityTypeData *entity_type_data=MapString_GetValue(data->map_entity_types,_str_entity_type,NULL);
+	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_str_entity_manager,NULL);
 
-	if(entity_type_data == NULL){
-		Log_Error("Entity type %s not exist",_str_entity_type);
+	if(entity_manager_data == NULL){
+		Log_Error("Entity type %s not exist",_str_entity_manager);
 		return NULL;
 	}
 
 	Entity *entity=NULL;
-	if(entity_type_data->active_entities>=entity_type_data->n_entities && entity_type_data->active_entities<entity_type_data->max_entities){ // extend entity
-		ESSystem_ExtendEntities(_this,entity_type_data,1);
+	if(entity_manager_data->active_entities>=entity_manager_data->n_entities && entity_manager_data->active_entities<entity_manager_data->max_entities){ // extend entity
+		ESSystem_ExtendEntities(_this,entity_manager_data,1);
 	}else{
 		return NULL;
 	}
 
-	entity=entity_type_data->entities[entity_type_data->active_entities];
-	entity_type_data->active_entities++;
+	entity=entity_manager_data->entities[entity_manager_data->active_entities];
+	entity_manager_data->active_entities++;
 
 	entity->active=true;
 
@@ -349,68 +349,68 @@ void ESSystem_ExtendComponent(ESSystem *_this,EComponent idx_component, Entity *
 
 }
 
-void ESSystem_ExtendEntities(ESSystem *_this,EntityTypeData *entity_type_data, size_t extend_entities){
-	size_t total_extend=entity_type_data->n_entities+extend_entities;
+void ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_data, size_t extend_entities){
+	size_t total_extend=entity_manager_data->n_entities+extend_entities;
 
-	if(total_extend >= entity_type_data->max_entities){
-		Log_Error("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_type_data->name,extend_entities,entity_type_data->max_entities);
+	if(total_extend >= entity_manager_data->max_entities){
+		Log_Error("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_manager_data->name,extend_entities,entity_manager_data->max_entities);
 	}
 
-	Entity **old_ptr=entity_type_data->entities;
+	Entity **old_ptr=entity_manager_data->entities;
 
-	entity_type_data->entities=malloc(sizeof(Entity *)*total_extend);
-	memset(entity_type_data->entities,0,sizeof(Entity *)*total_extend);
+	entity_manager_data->entities=malloc(sizeof(Entity *)*total_extend);
+	memset(entity_manager_data->entities,0,sizeof(Entity *)*total_extend);
 
 	// copy old ones
 	if(old_ptr != NULL){
-		memcpy(entity_type_data->entities,old_ptr,sizeof(Entity *)*entity_type_data->n_entities);
+		memcpy(entity_manager_data->entities,old_ptr,sizeof(Entity *)*entity_manager_data->n_entities);
 		FREE(old_ptr);
 	}
 
 	// extend as many entities we need
-	for(unsigned i=entity_type_data->n_entities; i < total_extend;i++){
-		entity_type_data->entities[i]=Entity_New();
+	for(unsigned i=entity_manager_data->n_entities; i < total_extend;i++){
+		entity_manager_data->entities[i]=Entity_New();
 	}
 
 	// extend components
-	for(unsigned i=0; i < entity_type_data->n_components;i++){
-		EComponent idx_ec=entity_type_data->entity_components[i];
+	for(unsigned i=0; i < entity_manager_data->n_components;i++){
+		EComponent idx_ec=entity_manager_data->entity_components[i];
 		// extend components this type will have
-		ESSystem_ExtendComponent(_this,idx_ec,entity_type_data->entities+entity_type_data->n_entities,extend_entities);
+		ESSystem_ExtendComponent(_this,idx_ec,entity_manager_data->entities+entity_manager_data->n_entities,extend_entities);
 	};
 
 	// realloc set all entity types as this type
-	entity_type_data->n_entities=total_extend;
+	entity_manager_data->n_entities=total_extend;
 }
 
-void * ESSystem_NewEntityType(ESSystem *_this
-		, const char *_str_entity_type
+void * ESSystem_NewEntityManager(ESSystem *_this
+		, const char *_str_entity_manager
 		, uint16_t max_entities
 		, EComponent *entity_components
 		, size_t entity_components_len
 	){
 	ESSystemData *data=_this->data;
-	EntityTypeData *entity_type_data=ZG_NEW(EntityTypeData);
+	EntityManagerData *entity_manager_data=ZG_NEW(EntityManagerData);
 
 	if(entity_components_len == 0){
 		return NULL;
 	}
 
 	// check and extend required components if needed ...
-	entity_type_data->entity_components=malloc(sizeof(EComponent)*entity_components_len);
-	memset(entity_type_data->entity_components,0,sizeof(EComponent)*entity_components_len);
-	entity_type_data->n_components=entity_components_len;
+	entity_manager_data->entity_components=malloc(sizeof(EComponent)*entity_components_len);
+	memset(entity_manager_data->entity_components,0,sizeof(EComponent)*entity_components_len);
+	entity_manager_data->n_components=entity_components_len;
 
-	//entity_type_data->es_system=_this;
-	entity_type_data->n_entities=0;
-	entity_type_data->max_entities=0;
-	entity_type_data->active_entities=0;
+	//entity_manager_data->es_system=_this;
+	entity_manager_data->n_entities=0;
+	entity_manager_data->max_entities=0;
+	entity_manager_data->active_entities=0;
 
-	entity_type_data->name=malloc(strlen(_str_entity_type)*sizeof(char)+1);
-	memset(entity_type_data->name,0,strlen(_str_entity_type)*sizeof(char)+1);
-	strcpy(entity_type_data->name,_str_entity_type);
+	entity_manager_data->name=malloc(strlen(_str_entity_manager)*sizeof(char)+1);
+	memset(entity_manager_data->name,0,strlen(_str_entity_manager)*sizeof(char)+1);
+	strcpy(entity_manager_data->name,_str_entity_manager);
 
-	EComponent *dst_ptr=entity_type_data->entity_components;
+	EComponent *dst_ptr=entity_manager_data->entity_components;
 	EComponent *src_ptr=entity_components;
 
 	// add components neededs for the type...
@@ -419,19 +419,19 @@ void * ESSystem_NewEntityType(ESSystem *_this
 		*dst_ptr++=*src_ptr++;
 	}
 
-	List_Add(data->lst_entity_types,entity_type_data);
-	MapString_SetValue(data->map_entity_types,_str_entity_type,entity_type_data);
+	List_Add(data->lst_entity_managers,entity_manager_data);
+	MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager_data);
 
 	// extend entities
-	entity_type_data->max_entities=max_entities;
+	entity_manager_data->max_entities=max_entities;
 	if(max_entities != (uint16_t)UNLIMITIED_ENTITIES){
 		ESSystem_ExtendEntities(
 			_this
-			,entity_type_data
+			,entity_manager_data
 			,max_entities
 		);
 	}
-	return entity_type_data;
+	return entity_manager_data;
 }
 
 void ESSystem_Update(ESSystem * _this){
@@ -460,20 +460,20 @@ void ESSystem_Delete(ESSystem *_this){
 	ESSystemData *data=(ESSystemData *)_this->data;
 	ESSystemRegisteredEComponentData  **ptr_registered_component_data=(ESSystemRegisteredEComponentData  **)g_es_system_registered_components->items;
 	ESSystemEComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
-	MapStringIterator *iterator=MapStringIterator_New(data->map_entity_types);
+	MapStringIterator *iterator=MapStringIterator_New(data->map_entity_managers);
 
 	for(; !MapStringIterator_End(iterator);MapStringIterator_Next(iterator)){
 		//const char *key=MapStringIterator_GetKey(iterator);
-		EntityTypeData *entity_type_data=MapStringIterator_GetValue(iterator);
+		EntityManagerData *entity_manager_data=MapStringIterator_GetValue(iterator);
 
-		for(unsigned i=0; i < entity_type_data->n_entities; i++){
-			Entity_Delete(entity_type_data->entities[i]);
+		for(unsigned i=0; i < entity_manager_data->n_entities; i++){
+			Entity_Delete(entity_manager_data->entities[i]);
 		}
 
-		FREE(entity_type_data->entities);
-		FREE(entity_type_data->entity_components);
-		FREE(entity_type_data->name);
-		FREE(entity_type_data);
+		FREE(entity_manager_data->entities);
+		FREE(entity_manager_data->entity_components);
+		FREE(entity_manager_data->name);
+		FREE(entity_manager_data);
 	}
 
 	MapStringIterator_Delete(iterator);
@@ -495,8 +495,8 @@ void ESSystem_Delete(ESSystem *_this){
 		component_data++;
 	}
 
-	List_Delete(data->lst_entity_types);
-	MapString_Delete(data->map_entity_types);
+	List_Delete(data->lst_entity_managers);
+	MapString_Delete(data->map_entity_managers);
 
 	for(unsigned i=0; i < g_es_system_registered_components->count;i++){
 		FREE(data->components[i]);
