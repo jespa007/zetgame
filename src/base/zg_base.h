@@ -76,6 +76,12 @@
 #include "3rdparty/cXML/cXML.h"
 #include "3rdparty/lodepng/lodepng.h"
 
+#include	"util-fmemopen.h"
+#include	"gl/glextra.h"
+
+#include "jpeg/jpeg.h"
+#include "sdl/zg_sdl.h"
+
 //----------------------------------------
 // system
 
@@ -83,19 +89,12 @@
 #include "memmgr.h"
 #endif
 
-#include "jpeg/jpeg.h"
-#include "sdl/zg_sdl.h"
-
-
 
 #include 	"zetpacker.h"
 #include 	"zetnet.h"
 
-
 #include	"common.h"
 #include	"zg_memory.h"
-#include	"util-fmemopen.h"
-#include	"gl/glextra.h"
 
 
 #include	"Term.h"
