@@ -69,12 +69,12 @@ else()
 	set( POST_NAME "")
 	SET(COMPILER "gcc")
 
-	SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
+	SET( CMAKE_C_FLAGS " -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
 	  
 	if (MINGW)
 		MESSAGE("-- Plataform: MINGW" )
 		message("-- Mingw path: $ENV{MINGWDIR} ")
-		SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -DEZXML_NOMMAP " )
+		SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -DEZXML_NOMMAP " )
 		set(CMAKE_LEGACY_MINGW_WIN32 0)
 	elseif(UNIX)
     	MESSAGE ("-- Plataform: UNIX" )
@@ -83,26 +83,29 @@ else()
 	endif()
 	
 
-	IF ( "${TARGET}" STREQUAL "debug")
+	IF ( "${TARGET}" STREQUAL "debug" AND EXISTS  ${PROJECT_SOURCE_DIR}/../../memmgr)
 		
 		set( POST_NAME "_d")	
-		set(COMMON_C_PARAMS " ${COMMON_C_PARAMS} -g -O0 -D__DEBUG__ ")
+		set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -g -O0 -D__DEBUG__ ")
+
+		message("-- Memmanager: ON")
+		SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__MEMMANAGER__")
+		include_directories (
+			${PROJECT_SOURCE_DIR}/../../memmgr
+		)
 	
-		IF( EXISTS ${PROJECT_SOURCE_DIR}/../../memmgr )
-			message("-- Memmanager: ON")
-			SET( COMMON_C_PARAMS " ${COMMON_C_PARAMS} -D__MEMMANAGER__")
-			include_directories (
-				${PROJECT_SOURCE_DIR}/../../memmgr
-			)
-		
-	   		set(ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
-	   	else()
-	   		message("-- Memmanager: OFF (../../memmgr not exist)")
-	   	endif()
+   		set(ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
+
 	   		
 	else()
 		set(TARGET "release")
-		set(COMMON_C_PARAMS " ${COMMON_C_PARAMS} -O2 ")
+		set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -O2 ")
+	   	if(UNIX)
+			set(CMAKE_C_FLAGS " ${CMAKE_CXX_FLAGS} -fsanitize=address ")
+			message("-- Memmanager: -fsanitize=address")
+		else()
+			message("-- Memmanager: OFF (../../memmgr not exist)")
+		endif()			
 	endif()	
 	
 	#Redefine output dir ...
@@ -111,8 +114,7 @@ else()
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
 	LINK_DIRECTORIES(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})	
 	
-	SET(CMAKE_C_FLAGS   	" ${COMMON_C_PARAMS}  " )
-	
+
 endif()
 
 
