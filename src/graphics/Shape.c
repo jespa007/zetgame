@@ -25,6 +25,6 @@ void Shape_Draw(Shape *_this, Transform *_transform){
 
 void Shape_Delete(Shape *_this){
 	if(_this != NULL){
-		FREE(_this);
+		ZG_FREE(_this);
 	}
 }

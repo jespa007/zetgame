@@ -214,6 +214,6 @@ void GUIButton_Delete(GUIButton *_this){
 
 	GUIWidget_Delete(_this->widget);
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

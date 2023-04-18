@@ -6,7 +6,7 @@ Sprite2dEmitter * SpriteEmitter2d_New(void){
 }
 
 void Sprite2dEmitter_Delete(Sprite2dEmitter *_this){
-	FREE(_this);
+	ZG_FREE(_this);
 }
 
 /*void CSprite2dEmitter::DispatchCallbackFuncionSprite2dParam1(const char * obj_name,const char * function_ptr_name, std::function<void (CSprite2d *)> * function_ptr, CSprite2d * param1){

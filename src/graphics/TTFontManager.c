@@ -116,7 +116,7 @@ void 			TTFontManager_SetDefaultFont(TTFontManager *_this,TTFont * _font){
 
 void 			TTFontManager_SetDefaultFontName(TTFontManager *_this,const char * _default_font_name){
 	TTFontManagerData *data=_this->data;
-	if(data->default_font_name!=NULL){
+	if(_default_font_name!=NULL){
 		strcpy(data->default_font_name,_default_font_name);
 	}
 }
@@ -161,7 +161,6 @@ TTFont * 		TTFontManager_GetFontFromName(TTFontManager *_this,const char * _file
 	}
 
 	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
-	free(ttf_font_file_to_lower);
 
 	if((font=MapString_GetValue(data->fonts,id,NULL))==NULL){
 		if(STRCMP(ttf_font_file_to_lower,==,DEFAULT_FONT_FAMILY)){
@@ -185,6 +184,8 @@ TTFont * 		TTFontManager_GetFontFromName(TTFontManager *_this,const char * _file
 		}
 
 	}
+
+	ZG_FREE(ttf_font_file_to_lower);
 
 	return font;
 }
@@ -227,7 +228,7 @@ void TTFontManager_Delete(TTFontManager *_this){
 	}
 
 	MapString_Delete(data->fonts);
-	FREE(data);
+	ZG_FREE(data);
 	data=NULL;
-	FREE(_this);
+	ZG_FREE(_this);
 }

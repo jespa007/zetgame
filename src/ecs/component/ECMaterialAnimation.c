@@ -60,5 +60,5 @@ void	ECMaterialAnimation_Destroy(void *_this){
 	ECMaterialAnimation *ec_material_animation =_this;
 	ECMaterialAnimationData *data=ec_material_animation->data;
 	Animation_Delete(data->ani_material);
-	FREE(data);
+	ZG_FREE(data);
 }

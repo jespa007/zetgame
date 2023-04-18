@@ -242,6 +242,6 @@ void Scene_Delete(Scene *_this){
 	List_Delete(data->sprite2d_emitters);
 
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

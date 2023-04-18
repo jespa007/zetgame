@@ -11,8 +11,8 @@ BufferShort *BufferShort_New(size_t len){
 void BufferShort_Delete(BufferShort *buffer){
 	if(buffer!=NULL){
 		if(buffer->data!=NULL){
-			FREE(buffer->data);
+			ZG_FREE(buffer->data);
 		}
-		FREE(buffer);
+		ZG_FREE(buffer);
 	}
 }

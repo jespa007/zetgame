@@ -746,6 +746,6 @@ void Graphics_DeInit(void) {
 	List_DeleteAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
 
 
-	FREE(g_graphics_vars);
+	ZG_FREE(g_graphics_vars);
 }
 

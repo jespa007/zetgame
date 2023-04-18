@@ -100,15 +100,15 @@ void Textbox_RT_Delete(TextboxData *data){
 				if(_token->token_data != NULL){
 					if(_token->tbrt_token_type == TBRT_TOKEN_TYPE_WORD){
 						TBRT_TokenWord *token_word = _token->token_data;
-						FREE(token_word->word);
+						ZG_FREE(token_word->word);
 					}
-					FREE(_token->token_data);
+					ZG_FREE(_token->token_data);
 				}
-				FREE(_token);
+				ZG_FREE(_token);
 
 			}
 			List_Delete(token_line->tbrt_tokens);
-			FREE(token_line);
+			ZG_FREE(token_line);
 		}
 
 		List_Delete(data->render_text.token_lines);

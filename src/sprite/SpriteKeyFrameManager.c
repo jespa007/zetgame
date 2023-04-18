@@ -18,7 +18,7 @@ typedef struct{
 			SpriteKeyFrame_Delete(keyframepack->sprite_keyframes[i]);
 		}
 
-		FREE(keyframepack);
+		ZG_FREE(keyframepack);
 
 	}
 	return NULL;
@@ -253,6 +253,6 @@ void  SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this){
 
 	List_Delete(data->sprite_keyframe_resources);
 	MapString_Delete(data->sprite_keyframes);
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

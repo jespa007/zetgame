@@ -207,9 +207,9 @@ void KeyframeTrackGroup_FreeXYZW(KeyframeTrackGroup ** vx
 
 		if(v!=NULL && *v !=NULL){
 			if((*v)->keyframe_points!=NULL){
-				FREE((*v)->keyframe_points);
+				ZG_FREE((*v)->keyframe_points);
 			}
-			FREE(*v);
+			ZG_FREE(*v);
 			*v=NULL;
 		}
 	}
@@ -229,5 +229,5 @@ void KeyframeTrackGroup_Delete(KeyframeTrackGroup *_this){
 	if(_this->keyframe_points!=NULL){
 		free(_this->keyframe_points);
 	}
-	FREE(_this);
+	ZG_FREE(_this);
 }

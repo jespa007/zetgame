@@ -379,6 +379,6 @@ void  ParticleEmitterManager_Delete(ParticleEmitterManager *_this){
 	MapString_Delete(data->particle_emitters);
 	//MapString_Delete(data->textures);
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

@@ -156,7 +156,7 @@ void Action_Unload(Action *_this){
 			}
 		}
 
-		FREE(_this->channel_keyframe_tracks);
+		ZG_FREE(_this->channel_keyframe_tracks);
 		_this->channel_keyframe_tracks=NULL;
 
 	}
@@ -168,10 +168,10 @@ void Action_Delete(Action * _this){
 			KeyframeTrack_Delete(_this->channel_keyframe_tracks[i]);
 		}
 
-		FREE(_this->channel_keyframe_tracks);
+		ZG_FREE(_this->channel_keyframe_tracks);
 
 		ChannelsInfo_Delete(_this->channels_info);
-		FREE(_this);
+		ZG_FREE(_this);
 
 	}
 

@@ -372,6 +372,6 @@ void 	 SGNode_Delete(SGNode *_this){
 	Appearance_Delete(_data->appearance_default);
 
 
-	FREE(_data);
-	FREE(_this);
+	ZG_FREE(_data);
+	ZG_FREE(_this);
 }

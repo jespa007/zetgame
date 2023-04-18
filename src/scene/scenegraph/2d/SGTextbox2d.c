@@ -50,7 +50,7 @@ void	   	SGTextbox2d_Delete(SGTextbox2d *_this){
 
 	Textbox_Delete(_data->textbox);
 
-	FREE(_data);
-	FREE(_this);
+	ZG_FREE(_data);
+	ZG_FREE(_this);
 
 }

@@ -40,7 +40,7 @@ void Animation_OnSetChannels(Animation * _this,void (*_on_set_channels)(Channels
 
 
 void InfoAniAction_Delete(InfoAction *info_ani){
-	FREE(info_ani);
+	ZG_FREE(info_ani);
 }
 
 
@@ -200,8 +200,8 @@ void Animation_Delete(Animation * _this){
 	Tween_Delete(_data->tween);
 
 
-	FREE(_data);
-	FREE(_this);
+	ZG_FREE(_data);
+	ZG_FREE(_this);
 
 }
 

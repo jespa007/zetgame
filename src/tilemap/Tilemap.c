@@ -193,10 +193,10 @@ void Tilemap_Delete(Tilemap *_this){
 
 				for(int k=0; k < tile_animation->frames->count; k++){
 					TileAnimationFrame *frame=tile_animation->frames->items[k];
-					FREE(frame);
+					ZG_FREE(frame);
 				}
 				List_Delete(tile_animation->frames);
-				FREE(tile_animation);
+				ZG_FREE(tile_animation);
 
 			}
 			List_Delete(data->tilesets->animations);
@@ -207,15 +207,15 @@ void Tilemap_Delete(Tilemap *_this){
 			TileImage *tile_image=data->tilesets->tile_images[j];
 			if(tile_image != NULL){
 				SDL_FreeSurface(tile_image->image);
-				FREE(tile_image);
+				ZG_FREE(tile_image);
 			}
 
 
 		}
 
-		FREE(data->tilesets->tile_images);
+		ZG_FREE(data->tilesets->tile_images);
 
-		FREE(data->tilesets);
+		ZG_FREE(data->tilesets);
 	}
 
 	Geometry_Delete(data->geometry);

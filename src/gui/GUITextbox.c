@@ -41,5 +41,5 @@ void GUITextbox_Delete(GUITextbox *_this){
 	GUIWidget_Delete(_this->widget);
 	Textbox_Delete(_this->textbox);
 
-	FREE(_this);
+	ZG_FREE(_this);
 }

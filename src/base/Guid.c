@@ -27,5 +27,5 @@ Guid * Guid_New(void)
 void Guid_Delete(Guid * guid){
 	if(guid==NULL) return;
 
-	FREE(guid);
+	ZG_FREE(guid);
 }

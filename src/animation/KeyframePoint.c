@@ -8,6 +8,6 @@ KeyframePoint * KeyframePoint_New(void){
 
 void KeyframePoint_Delete(KeyframePoint * _this){
 	if(_this){
-		FREE(_this);
+		ZG_FREE(_this);
 	}
 }

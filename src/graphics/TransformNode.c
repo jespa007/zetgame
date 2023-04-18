@@ -278,6 +278,6 @@ void 	 Delete(TransformNode *_this){
 	ClearNodes(_this);
 	List_Delete(_data->child_nodes);
 
-	FREE(_data);
-	FREE(_this);
+	ZG_FREE(_data);
+	ZG_FREE(_this);
 }

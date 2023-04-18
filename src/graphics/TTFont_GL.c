@@ -130,8 +130,8 @@ void TTFont_GL_Delete(TTFont *font){
 		CharacterDataGL *ch_data=ch->character_data;
 		glDeleteTextures(1,&ch_data->texture);
 
-		FREE(ch_data);
-		FREE(ch);
+		ZG_FREE(ch_data);
+		ZG_FREE(ch);
 	}
 
 }

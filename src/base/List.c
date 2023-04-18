@@ -134,7 +134,7 @@ void 		List_Clear(List *_this){
 	if(_this == NULL) return;
 
 	if(_this->items!=NULL){
-		FREE(_this->items);
+		ZG_FREE(_this->items);
 	}
 	memset(_this,0,sizeof(List));
 }
@@ -146,10 +146,10 @@ void 		List_ClearAndFreeAllItems(List *_this){
 	if(_this->items!=NULL){
 
 		for(unsigned i=0; i < _this->count; i++){
-			FREE(_this->items[i]);
+			ZG_FREE(_this->items[i]);
 		}
 
-		FREE(_this->items);
+		ZG_FREE(_this->items);
 	}
 	memset(_this,0,sizeof(List));
 }
@@ -159,16 +159,16 @@ void List_Delete(List *_this){
 	if(_this == NULL) return;
 
 	if(_this->items!=NULL){
-		FREE(_this->items);
+		ZG_FREE(_this->items);
 	}
-	FREE(_this);
+	ZG_FREE(_this);
 }
 
 void List_DeleteAndFreeAllItems(List *_this){
 	if(_this == NULL) return;
 
 	for(unsigned i=0; i < _this->count; i++){
-		FREE(_this->items[i]);
+		ZG_FREE(_this->items[i]);
 	}
 	List_Delete(_this);
 }

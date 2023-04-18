@@ -274,7 +274,7 @@ void Geometry_GL_DeInit(Geometry * geometry) {
 	// Delete the vertex VBO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	FREE(data);
+	ZG_FREE(data);
 }
 
 

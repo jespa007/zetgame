@@ -62,6 +62,6 @@ void Shader_Delete(Shader *shader){
 		break;
 	}
 
-	FREE(shader);
+	ZG_FREE(shader);
 
 }

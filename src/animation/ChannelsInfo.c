@@ -60,7 +60,7 @@ void ChannelsInfo_Delete(ChannelsInfo * _this){
 	_this->msk_active_channels=0;
 	free(_this->channels);
 
-	FREE(_this);
+	ZG_FREE(_this);
 
 }
 

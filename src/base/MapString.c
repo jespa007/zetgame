@@ -160,6 +160,6 @@ void MapString_Delete(MapString *t){
         }
     }
 
-    FREE(t->list);
-    FREE(t);
+    ZG_FREE(t->list);
+    ZG_FREE(t);
 }

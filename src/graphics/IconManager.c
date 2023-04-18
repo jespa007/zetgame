@@ -177,7 +177,7 @@ void IconManager_Delete(IconManager * _this){
 
 	Texture_Delete(_this->texture);
 
-	FREE(_this);
+	ZG_FREE(_this);
 }
 
 

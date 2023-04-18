@@ -107,5 +107,5 @@ void ECSpriteRenderer_Update(void *_this){
 void ECSpriteRenderer_Destroy(void *_this){
 	ECSpriteRendererData * data= ((ECSpriteRenderer *)_this)->data;
 	Appearance_Delete(data->appearance);
-	FREE(data);
+	ZG_FREE(data);
 }

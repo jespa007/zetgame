@@ -219,7 +219,7 @@ void Texture_GL_Delete(Texture *texture){
 
 	Texture_GL_Unload(texture);
 
-	FREE(texture_data);
+	ZG_FREE(texture_data);
 }
 
 

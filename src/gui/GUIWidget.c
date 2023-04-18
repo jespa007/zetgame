@@ -236,8 +236,8 @@ void GUIWidget_Delete(GUIWidget *_this){
 	GUIWidgetData *_data= _this->data;
 
 	List_Delete(_data->widgets);
-	FREE(_data);
-	FREE(_this);
+	ZG_FREE(_data);
+	ZG_FREE(_this);
 }
 
 

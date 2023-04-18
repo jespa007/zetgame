@@ -238,6 +238,6 @@ void 		ViewPort_DeInit(void){
 	}
 
 
-	FREE(g_viewport_vars);
+	ZG_FREE(g_viewport_vars);
 	g_viewport_vars=NULL;
 }

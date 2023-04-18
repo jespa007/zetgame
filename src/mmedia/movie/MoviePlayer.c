@@ -6,5 +6,5 @@ MoviePlayer * MoviePlayer_New(void){
 }
 
 void MoviePlayer_Delete(MoviePlayer *_this){
-	FREE(_this);
+	ZG_FREE(_this);
 }

@@ -307,6 +307,6 @@ void KeyframeTrack_Delete(KeyframeTrack *_this)
 {
 	KeyframeTrack_Clear(_this);
 	List_Delete(_this->keyframe_points);
-	FREE(_this);
+	ZG_FREE(_this);
 }
 

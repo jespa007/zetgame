@@ -329,8 +329,8 @@ void	TTFont_Delete(TTFont *_this){
 
 	 FT_Done_Face(data->ft_face);
 
-	 FREE(_this);
-	 FREE(data);
+	 ZG_FREE(_this);
+	 ZG_FREE(data);
 
 }
 

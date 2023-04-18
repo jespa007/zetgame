@@ -49,6 +49,6 @@ void Appearance_Restore(Appearance *_this){
 
 void Appearance_Delete(Appearance * _this){
 	if(_this != NULL){
-		FREE(_this);
+		ZG_FREE(_this);
 	}
 }

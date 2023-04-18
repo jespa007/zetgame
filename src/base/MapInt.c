@@ -128,7 +128,7 @@ void MapInt_Erase(MapInt *t,intptr_t key){
 	}
 
 	MapInt *node=t->list->items[pos];
-	FREE(node);
+	ZG_FREE(node);
 
 	List_Erase(t->list,pos);
 }
@@ -137,7 +137,7 @@ void	MapInt_EraseAndFreeItem(MapInt *t,intptr_t key){
 	void * val =MapInt_Get(t,key);
 
 	if(val != NULL){
-		FREE(val);
+		ZG_FREE(val);
 		MapInt_Erase(t,key);
 	}else{
 		Log_Warning("key %i not exist in map",key);
@@ -160,7 +160,7 @@ void 	MapInt_ClearAndFreeAllItems(MapInt *t, bool delete_value){
 		// user asks to delete value too
 		if(delete_value){
 			if(node->val){
-				FREE(node->val);
+				ZG_FREE(node->val);
 			}
 		}
 
@@ -179,7 +179,7 @@ void MapInt_DeleteAndFreeAllItems(MapInt *t){
 	MapInt_ClearAndFreeAllItems(t,true);
 
 	List_Delete(t->list);
-	FREE(t);
+	ZG_FREE(t);
 }
 
 void 		MapInt_Delete(MapInt *t){
@@ -188,5 +188,5 @@ void 		MapInt_Delete(MapInt *t){
 	MapInt_ClearAndFreeAllItems(t,false);
 
 	List_Delete(t->list);
-	FREE(t);
+	ZG_FREE(t);
 }

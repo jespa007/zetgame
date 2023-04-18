@@ -10,6 +10,6 @@ RectangleCollider2d * RectangleCollider2d_New(uint16_t _width, uint16_t _height)
 
 
 void RectangleCollider2d_Delete(RectangleCollider2d * _this){
-	FREE(_this);
+	ZG_FREE(_this);
 }
 

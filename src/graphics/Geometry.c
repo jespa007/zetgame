@@ -306,7 +306,7 @@ void	Geometry_Delete(Geometry *_this){
 		break;
 	}
 
-	FREE(_this);
+	ZG_FREE(_this);
 
 }
 

@@ -51,6 +51,6 @@ void GUIFrame_Delete(GUIFrame *_this){
 
 	GUIWidget_Delete(_this->widget);
 
-	FREE(_this);
+	ZG_FREE(_this);
 
 }

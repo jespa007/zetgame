@@ -286,7 +286,7 @@ Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_
 	}
 
 	// Free because we don't need it anymore
-	FREE(entity_components);
+	ZG_FREE(entity_components);
 	return ESSystem_NewEntityFromManager(_this,_str_entity_manager);
 }
 
@@ -333,7 +333,7 @@ void ESSystem_ExtendComponent(ESSystem *_this,EComponent idx_component, Entity *
 
 	if(old_ptr != NULL){
 		memcpy(component_data->ptr_data,old_ptr,sizeof(void *)*component_data->n_elements);
-		FREE(old_ptr);
+		ZG_FREE(old_ptr);
 	}
 
 	// initialize new components
@@ -364,7 +364,7 @@ void ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_d
 	// copy old ones
 	if(old_ptr != NULL){
 		memcpy(entity_manager_data->entities,old_ptr,sizeof(Entity *)*entity_manager_data->n_entities);
-		FREE(old_ptr);
+		ZG_FREE(old_ptr);
 	}
 
 	// extend as many entities we need
@@ -470,10 +470,10 @@ void ESSystem_Delete(ESSystem *_this){
 			Entity_Delete(entity_manager_data->entities[i]);
 		}
 
-		FREE(entity_manager_data->entities);
-		FREE(entity_manager_data->entity_components);
-		FREE(entity_manager_data->name);
-		FREE(entity_manager_data);
+		ZG_FREE(entity_manager_data->entities);
+		ZG_FREE(entity_manager_data->entity_components);
+		ZG_FREE(entity_manager_data->name);
+		ZG_FREE(entity_manager_data);
 	}
 
 	MapStringIterator_Delete(iterator);
@@ -487,9 +487,9 @@ void ESSystem_Delete(ESSystem *_this){
 				if(EComponent_Destroy != NULL){
 					EComponent_Destroy(*ptr_data);
 				}
-				FREE(*ptr_data++);
+				ZG_FREE(*ptr_data++);
 			}
-			FREE((*component_data)->ptr_data);
+			ZG_FREE((*component_data)->ptr_data);
 		}
 		ptr_registered_component_data++;
 		component_data++;
@@ -499,10 +499,10 @@ void ESSystem_Delete(ESSystem *_this){
 	MapString_Delete(data->map_entity_managers);
 
 	for(unsigned i=0; i < g_es_system_registered_components->count;i++){
-		FREE(data->components[i]);
+		ZG_FREE(data->components[i]);
 	}
 
-	FREE(data->components);
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data->components);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

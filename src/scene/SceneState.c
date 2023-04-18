@@ -51,6 +51,6 @@ void SceneState_Delete(SceneState *_this){
 
 	free(data->name);
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

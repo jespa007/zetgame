@@ -79,6 +79,6 @@ bool MapStringIterator_End(MapStringIterator *_this){
 
 void				MapStringIterator_Delete(MapStringIterator *_this){
 	MapStringIteratorData *data=_this->data;
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

@@ -463,7 +463,7 @@ void Input_DeInit(void){
 	MapInt_DeleteAndFreeAllItems(g_input_vars->on_mouse_button_up);
 	MapInt_DeleteAndFreeAllItems(g_input_vars->on_drop_file);
 
-	FREE(g_input_vars);
+	ZG_FREE(g_input_vars);
 	g_input_vars=NULL;
 }
 

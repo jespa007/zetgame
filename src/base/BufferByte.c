@@ -11,8 +11,8 @@ BufferByte *BufferByte_New(size_t len){
 void BufferByte_Delete(BufferByte *buffer){
 	if(buffer!=NULL){
 		if(buffer->ptr!=NULL){
-			FREE(buffer->ptr);
+			ZG_FREE(buffer->ptr);
 		}
-		FREE(buffer);
+		ZG_FREE(buffer);
 	}
 }

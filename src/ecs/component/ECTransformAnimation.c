@@ -75,5 +75,5 @@ void	ECTransformAnimation_Destroy(void *_this){
 	ECTransformAnimation *ec_transform_animation =_this;
 	ECTransformAnimationData *data=ec_transform_animation->data;
 	Animation_Delete(data->ani_transform);
-	FREE(data);
+	ZG_FREE(data);
 }

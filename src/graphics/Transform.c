@@ -136,6 +136,6 @@ void Transform_Restore(Transform *transform){
 
 void Transform_Delete(Transform *transform){
 	if(transform!=NULL){
-		FREE(transform);
+		ZG_FREE(transform);
 	}
 }

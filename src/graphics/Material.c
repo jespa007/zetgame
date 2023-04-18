@@ -47,6 +47,6 @@ void Material_SetAlpha(Material *material,float alpha){
 
 void Material_Delete(Material *material){
 	if(material != NULL){
-		FREE(material);
+		ZG_FREE(material);
 	}
 }

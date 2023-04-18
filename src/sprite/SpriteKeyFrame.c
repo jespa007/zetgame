@@ -26,7 +26,7 @@ void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame){
 // TODO: support colliders per frame
 // 					SpriteKeyFrame_SetCollider(const char *_key, Collider XXXXX)
 /*void 				SpriteKeyFrame_Delete(SpriteKeyFrame *_this){
-	FREE(_this->frames);
-	FREE(_this);
+	ZG_FREE(_this->frames);
+	ZG_FREE(_this);
 }*/
 

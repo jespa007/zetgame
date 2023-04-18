@@ -160,7 +160,7 @@ void CGraphics_Win32_ShowInTaskBar(HWND hWnd, BOOL _show){
 List * Graphics_Win32_GetListAdapters(void){
 	List * lst_monitor_info=List_New();
     DISPLAY_DEVICE dd;
-    char device_name[33]; // 32 + 1 for the null-terminator
+    char device_name[32]; // 32 for the null-terminator
     dd.cb = sizeof(dd);
     int idx_device = 0;
     SDL_Rect rect;

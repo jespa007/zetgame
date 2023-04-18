@@ -8,5 +8,5 @@ CircleCollider2d * CircleCollider2d_New(uint16_t _radius){
 }
 
 void CircleCollider2d_Delete(CircleCollider2d * _this){
-	FREE(_this);
+	ZG_FREE(_this);
 }

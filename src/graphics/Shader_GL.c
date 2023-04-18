@@ -138,5 +138,5 @@ void Shader_GL_Delete(Shader *shader){
 		glDeleteProgram(shader_data->program);
 	}
 
-	FREE(shader_data);
+	ZG_FREE(shader_data);
 }

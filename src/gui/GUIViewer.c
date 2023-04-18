@@ -53,6 +53,6 @@ void GUIViewer_Delete(GUIViewer *_this){
 	Textbox_Delete(_this->textbox);
 	Texture_Delete(_this->texture);
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

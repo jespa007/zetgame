@@ -152,6 +152,6 @@ void Texture_Delete(Texture *_this){
 		break;
 	}
 
-	FREE(_this);
+	ZG_FREE(_this);
 }
 

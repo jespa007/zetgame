@@ -71,6 +71,6 @@ void	   SGViewer2d_Delete(SGViewer2d *_this){
 	Geometry_Delete(data->geometry);
 	SGNode_Delete(_this->node);
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }

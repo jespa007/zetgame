@@ -32,9 +32,9 @@ void Entity_Reset(Entity *_this){
 
 void Entity_Delete(Entity *_this){
 	//EntityData *data=_this->data;
-	FREE(_this->components);
-	//FREE(data);
-	FREE(_this);
+	ZG_FREE(_this->components);
+	//ZG_FREE(data);
+	ZG_FREE(_this);
 }
 /*
 void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_component){

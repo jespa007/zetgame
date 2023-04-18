@@ -321,5 +321,5 @@ void 	 ECTransform_Destroy(void *_this){
 	ECTransform_ClearNodes(_this);
 	List_Delete(_data->child_nodes);
 
-	FREE(_data);
+	ZG_FREE(_data);
 }

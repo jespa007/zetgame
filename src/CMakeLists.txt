@@ -2,6 +2,22 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)	# To enable MSVC_RUNTIME_LIBRARY. It has effect only when policy CMP0091 is set to NEW prior to the first project() 
 project(zetgame)
 
+
+IF( NOT CMAKE_BUILD_TYPE )
+   SET( CMAKE_BUILD_TYPE Release )
+ENDIF()
+
+set(POST_NAME "")
+set(IS_DEBUG FALSE)
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	set(IS_DEBUG TRUE)
+	SET( CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -D__DEBUG__ ")
+	set( POST_NAME "_d")
+endif()
+
+MESSAGE ("-- Target: " ${CMAKE_BUILD_TYPE})
+
+
 file(READ "zetgame.h" zetgame_h)
 
 string(REGEX MATCH "ZETGAME_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetgame_h})
@@ -21,25 +37,11 @@ set(ZETGAME_LIB_NAME "zetgame-${ZETGAME_VERSION_MAJOR}-${ZETGAME_VERSION_MINOR}-
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
-# INITIALIZE VARIABLES
-#
-
-
-IF ( "${TARGET}" STREQUAL "")
-   SET ( TARGET "release" )
-ENDIF ()
-
-
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#
 # COMPILE PARAMS
 #
 
-
 message("-- Install drectory: " ${CMAKE_INSTALL_PREFIX})
 
-
-set( POST_NAME "")
 set(ZETGAME_LIB_SRCS "")
 
 
@@ -66,7 +68,6 @@ if(MSVC)
 
 else()
 
-	set( POST_NAME "")
 	SET(COMPILER "gcc")
 
 	SET( CMAKE_C_FLAGS " -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
@@ -83,40 +84,44 @@ else()
 	endif()
 	
 
-	IF ( "${TARGET}" STREQUAL "debug" AND EXISTS  ${PROJECT_SOURCE_DIR}/../../memmgr)
+	IF ( IS_DEBUG)
+		set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -O0 -g ")
 		
-		set( POST_NAME "_d")	
-		set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -g -O0 -D__DEBUG__ ")
-
-		message("-- Memmanager: ON")
-		SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__MEMMANAGER__")
-		include_directories (
-			${PROJECT_SOURCE_DIR}/../../memmgr
-		)
+		IF (EXISTS ${PROJECT_SOURCE_DIR}/../../memmgr)
+		
+			message("-- Memmanager: Yes")
+			SET( CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -D__MEMMANAGER__")
+			include_directories (
+				${PROJECT_SOURCE_DIR}/../../memmgr
+			)
+			
+	   		set(ZETSCRIPT_LIB_SRCS ${ZETSCRIPT_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
+		
+		ELSE()
 	
-   		set(ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
-
-	   		
-	else()
-		set(TARGET "release")
-		set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -O2 ")
-	   	if(UNIX)
-			set(CMAKE_C_FLAGS " ${CMAKE_CXX_FLAGS} -fsanitize=address ")
-			message("-- Memmanager: -fsanitize=address")
-		else()
-			message("-- Memmanager: OFF (../../memmgr not exist)")
-		endif()			
-	endif()	
+			if(UNIX)
+				if( NOT "${DIST}" STREQUAL "Alpine")
+					set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -fsanitize=address ")
+					message("-- Memmanager: -fsanitize=address")
+				else()
+					message("-- Memmanager: -fsanitize NOT supported")
+				endif()
+			 else()
+			 	message("-- Memmanager: OFF (../../memmgr not exist)")
+			 endif()
+		ENDIF()
+	ELSE()
+		set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -O2 ")
+	ENDIF()
 	
 	#Redefine output dir ...
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${TARGET})
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 	LINK_DIRECTORIES(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})	
 	
 
 endif()
-
 
 MESSAGE ("-- Compiler: " ${COMPILER} )
 
@@ -145,7 +150,7 @@ else()
 	MESSAGE ("-- FFMPEG: OFF" )
 endif()
 
-MESSAGE ("-- Target : " ${TARGET})
+MESSAGE ("-- Target : " ${CMAKE_BUILD_TYPE})
 MESSAGE ("-- Compiler: " ${COMPILER})
 
 
@@ -175,7 +180,7 @@ if ( "${FFMPEG}" STREQUAL "true" )
 endif()
 
 
-IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
 	MESSAGE ("-- ZetPacker_dev: ON" )
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../../zetpacker/src
@@ -194,9 +199,9 @@ IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpack
 	
 	set(ZETPACKER_LIB_NAME "zetpacker-${ZETPACKER_VERSION_MAJOR}-${ZETPACKER_VERSION_MINOR}-${ZETPACKER_VERSION_PATCH}")
 	
-	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetpacker/build/${COMPILER}/${TARGET}/lib${ZETPACKER_LIB_NAME}_d.a)
+	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetpacker/build/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETPACKER_LIB_NAME}_d.a)
 else()
-	IF ( "${TARGET}" STREQUAL "debug" )
+	IF (IS_DEBUG )
 		MESSAGE ("-- ZetPacker_dev: OFF" )
 	ENDIF()
 	include_directories (
@@ -206,7 +211,7 @@ else()
 	set( LIB_DEPS ${LIB_DEPS}   zetpacker )
 endif()
 
-IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
 	MESSAGE ("-- Zetnet_dev: ON" )
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../../zetnet/src
@@ -225,9 +230,9 @@ IF ( "${TARGET}" STREQUAL "debug" AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet 
 	
 	set(ZETNET_LIB_NAME "zetnet-${ZETNET_VERSION_MAJOR}-${ZETNET_VERSION_MINOR}-${ZETNET_VERSION_PATCH}")
 	
-	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetnet/build/${COMPILER}/${TARGET}/lib${ZETNET_LIB_NAME}_d.a)
+	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetnet/build/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETNET_LIB_NAME}_d.a)
 else()
-	IF ( "${TARGET}" STREQUAL "debug" )
+	IF (IS_DEBUG )
 		MESSAGE ("-- Zetnet_dev: OFF" )
 	ENDIF()
 	include_directories (
@@ -337,10 +342,10 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	ZetGame.c		
 )
 
-add_library( ${ZETGAME_LIB_NAME$}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
+add_library( ${ZETGAME_LIB_NAME}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
 
 
-target_link_libraries(${ZETGAME_LIB_NAME$}${POST_NAME}
+target_link_libraries(${ZETGAME_LIB_NAME}${POST_NAME}
 	${LIB_DEPS}
 	${LINK_PARAMS}
 )	
@@ -357,33 +362,33 @@ add_executable(test_mixer${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
 )
 
-target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 	
 add_executable(test_2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_2d.c
 )
 
-target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #Graphics
 add_executable(test_primitives${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_primitives.c
 )
 
-target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
 )
 
-target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 add_executable(test_animation${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_animation.c
 )
 
-target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 endif()
 
@@ -393,28 +398,28 @@ add_executable(test_scenegraph${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
 )
 
-target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- SPRITE
 add_executable(test_sprite${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_sprite.c
 )
 
-target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- TILEMAP
 add_executable(test_tilemap${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
 )
 
-target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- COLLIDER2D
 add_executable(test_collider2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_collider2d.c
 )
 
-target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 
 #--- TEXTBOX
@@ -422,25 +427,25 @@ add_executable(test_textbox${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_textbox.c
 )
 
-target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- GUI
 add_executable(test_gui${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_gui.c
 )
 
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- SHADER
 add_executable(test_shader${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_shader.c
 )
 
-target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
 #--- PARTICLE SYSTEM
 #add_executable(test_particle${POST_NAME} 
 #	${PROJECT_SOURCE_DIR}/../test/test_particle_system.c
 #)
 
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME$}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )

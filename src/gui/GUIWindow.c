@@ -264,7 +264,7 @@ void GUIWindow_Delete(GUIWindow *_this) {
 	GUILabel_Delete(data->label_caption);
 	GUIButton_Delete(data->button_close);
 
-	FREE(data);
-	FREE(_this);
+	ZG_FREE(data);
+	ZG_FREE(_this);
 }
 
