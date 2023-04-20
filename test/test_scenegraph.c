@@ -313,7 +313,7 @@ int main(int argc, char * argv[]){
 	ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ALPHA_VALUE_TRANSPARENT);
 
 	// ani
-	Action_SetKeyFramesTrack(
+	Action_SetKeyframesTrack(
 			 mat_act_fade_in_out
 			,MATERIAL_CHANNEL_COLOR_A
 			,EASE_IN_OUT_SINE

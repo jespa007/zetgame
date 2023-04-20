@@ -129,11 +129,6 @@ void Animation_Clear(Animation * _this){
 
 	List_Clear(data->info_actions);
 
-	for(unsigned i=0; i < data->info_actions->count; i++){
-		InfoAniAction_Delete((InfoAction *)data->info_actions->items[i]);
-	}
-
-	List_Clear(data->info_actions);
 }
 
 void Animation_CopyChannelValues(Animation * _this, float *_array){

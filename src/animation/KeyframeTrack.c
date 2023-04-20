@@ -82,22 +82,22 @@ void KeyframeTrack_Clear(KeyframeTrack *_this)
 	List_Clear(_this->keyframe_points);
 }
 //---
-void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe_points, size_t keyframe_points_count)
+void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * _points, size_t _points_count)
 {
 	// PRE:
 	// point[x1,x2,...xn-1]: Dependen var (x,y,z, etc).
 	// point[xn]: Independent var (time).
-	if(keyframe_points_count==0){ // no keyframe_points...
+	if(_points_count==0){ // no keyframe_points...
 		return;
 	}
 
-	if(keyframe_points_count % I1D_POINT_SIZE != 0)
+	if(_points_count % I1D_POINT_SIZE != 0)
 	{
 		Log_ErrorF("Error! Data length is not equal to dimension+1");
 		return;
 	}
 
-	int number_keyframes = keyframe_points_count/I1D_POINT_SIZE;
+	int number_keyframes = _points_count/I1D_POINT_SIZE;
 	KeyframePoint *new_data=NULL, *previus_data=NULL;
 
 	// Get the independent point...
@@ -107,7 +107,7 @@ void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe
 
 	int i;
 	int length_offset = I1D_POINT_SIZE;
-	x_actual = keyframe_points[I1D_IDX_TIME];
+	x_actual = _points[I1D_IDX_TIME];
 
 
 	x_old = x_actual-1.0f;
@@ -117,7 +117,7 @@ void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe
 
 	for(i = 0; i < number_keyframes; i++)
 	{
-		x_actual = keyframe_points[actual_offset + I1D_IDX_TIME];
+		x_actual = _points[actual_offset + I1D_IDX_TIME];
 
 		if(x_actual < x_old)
 		{
@@ -129,8 +129,8 @@ void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe
 		new_data = KeyframePoint_New();
 
 		// copy first point...
-		new_data->point[I1D_IDX_TIME] 		  = keyframe_points[actual_offset + I1D_IDX_TIME];
-		new_data->point[I1D_IDX_VALUE] 		  = keyframe_points[actual_offset + I1D_IDX_VALUE];
+		new_data->point[I1D_IDX_TIME] 		  = _points[actual_offset + I1D_IDX_TIME];
+		new_data->point[I1D_IDX_VALUE] 		  = _points[actual_offset + I1D_IDX_VALUE];
 
 		// Interpolates with prevous point...
 		if(i > 0)
@@ -155,8 +155,8 @@ void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe
 		actual_offset += length_offset;
 	}
 
-	x_end = keyframe_points[(number_keyframes-1)*length_offset+ I1D_IDX_TIME];
-	x_ini = keyframe_points[(0)*length_offset +              I1D_IDX_TIME];
+	x_end = _points[(number_keyframes-1)*length_offset+ I1D_IDX_TIME];
+	x_ini = _points[(0)*length_offset +              I1D_IDX_TIME];
 
 	_this->minx_interval = MIN(_this->minx_interval, x_ini);
 	_this->maxx_interval = MAX(_this->maxx_interval, x_end);
@@ -164,10 +164,10 @@ void KeyframeTrack_AddKeyframesFloat(KeyframeTrack *_this,const float * keyframe
 	_this->rangex_interval = _this->maxx_interval-_this->minx_interval;
 }
 //---
-void KeyframeTrack_SetKeyframes(KeyframeTrack *_this,float * keyframe_points, size_t keyframe_points_count)
+void KeyframeTrack_SetKeyframes(KeyframeTrack *_this,float * _points, size_t _points_count)
 {
 	KeyframeTrack_Clear(_this);
-	KeyframeTrack_AddKeyframesFloat(_this,keyframe_points,keyframe_points_count);
+	KeyframeTrack_AddKeyframesFloat(_this,_points,_points_count);
 
 	// optimization independent var as pow2
 	_this->rangex_interval_pow2=Bit_NextPow2(_this->rangex_interval);
@@ -177,7 +177,7 @@ void KeyframeTrack_SetKeyframes(KeyframeTrack *_this,float * keyframe_points, si
 	// TODO: set all independent keyframe_points 1/maxx_interval_mask;
 }
 //---
-void KeyframeTrack_AddKeyframesBezier(KeyframeTrack * _this,List * keyframe_points)
+void KeyframeTrack_AddKeyframesBezier(KeyframeTrack * _this,List * _keyframe_points)
 {
 	// PRE:
 	// point[x1,x2,...xn-1]: Dependen var (x,y,z, etc).
@@ -188,9 +188,9 @@ void KeyframeTrack_AddKeyframesBezier(KeyframeTrack * _this,List * keyframe_poin
 
 	KeyframePoint *new_data,*first_point, *last_point;
 
-	for(unsigned i = 0; i < keyframe_points->count; i++)
+	for(unsigned i = 0; i < _keyframe_points->count; i++)
 	{
-		KeyframePoint * bp_actual=CAST_BEZIER_POINT(keyframe_points->items[i]);
+		KeyframePoint * bp_actual=CAST_BEZIER_POINT(_keyframe_points->items[i]);
 
 		x_actual = bp_actual->point[I1D_IDX_TIME];//actual_offset + 2*I1D_IDX_TIME];
 
@@ -230,8 +230,8 @@ void KeyframeTrack_AddKeyframesBezier(KeyframeTrack * _this,List * keyframe_poin
 		x_old = x_actual;
 	}
 
-	first_point=keyframe_points->items[0];
-	last_point=keyframe_points->items[keyframe_points->count-1];
+	first_point=_keyframe_points->items[0];
+	last_point=_keyframe_points->items[_keyframe_points->count-1];
 
 	_this->minx_interval = MIN(_this->minx_interval, last_point->point[I1D_IDX_TIME]);
 	_this->maxx_interval = MAX(_this->maxx_interval, first_point->point[I1D_IDX_TIME]);

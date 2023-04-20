@@ -16,7 +16,7 @@ Action * 			Action_New(uint8_t n_channels){
 }
 
 
-void 	Action_SetKeyFramesTrack(Action *_this
+void 	Action_SetKeyframesTrack(Action *_this
 		, uint8_t idx_channel
 		, Ease ease
 		,float *keyframe_points
@@ -82,19 +82,19 @@ void 				Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first 
 	if(KeyframeTrackGroup_DecomposeXYZW(keyframe_points,keyframe_points_count,x,y,z,w)){
 
 		if(x != NULL){
-			Action_SetKeyFramesTrack(_this,idx_channel_first+0,_ease,x->keyframe_points,x->keyframe_points_count);
+			Action_SetKeyframesTrack(_this,idx_channel_first+0,_ease,x->keyframe_points,x->keyframe_points_count);
 		}
 
 		if(y!=NULL){
-			Action_SetKeyFramesTrack(_this,idx_channel_first+1,_ease,y->keyframe_points,y->keyframe_points_count);
+			Action_SetKeyframesTrack(_this,idx_channel_first+1,_ease,y->keyframe_points,y->keyframe_points_count);
 		}
 
 		if(z!=NULL){
-			Action_SetKeyFramesTrack(_this,idx_channel_first+2,_ease,z->keyframe_points,z->keyframe_points_count);
+			Action_SetKeyframesTrack(_this,idx_channel_first+2,_ease,z->keyframe_points,z->keyframe_points_count);
 		}
 
 		if(w!=NULL){
-			Action_SetKeyFramesTrack(_this,idx_channel_first+3,_ease,w->keyframe_points,w->keyframe_points_count);
+			Action_SetKeyframesTrack(_this,idx_channel_first+3,_ease,w->keyframe_points,w->keyframe_points_count);
 		}
 	}
 
@@ -138,10 +138,8 @@ bool Action_Update(Action *_this, uint32_t current_time_ms, uint32_t *start_time
 
 	// update all channels...
 	for(int i = 0; i < _this->channels_info->n_channels; i++){
-		if(_this->channel_keyframe_tracks[i] != NULL){
-			if(KeyframeTrack_Interpolate(_this->channel_keyframe_tracks[i],time_ms,&point)){
+		if(KeyframeTrack_Interpolate(_this->channel_keyframe_tracks[i],time_ms,&point)){
 				_this->channels_info->channels[i]  = point;
-			}
 		}
 	}
 

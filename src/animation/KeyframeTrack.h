@@ -51,7 +51,7 @@ void			KeyframeTrack_SetEase(KeyframeTrack * _this, Ease _ease);
 void 			KeyframeTrack_Clear(KeyframeTrack * _this);
 void			KeyframeTrack_SetEase(KeyframeTrack * _this, Ease _ease);
 void 			KeyframeTrack_SetKeyframes(KeyframeTrack * _this,float * _point, size_t _point_count);
-void 			KeyframeTrack_AddKeyframesFloat(KeyframeTrack * _this,const float * _keyframe_points, size_t _keyframe_points_count);
+void 			KeyframeTrack_AddKeyframesFloat(KeyframeTrack * _this,const float * _points, size_t _points_count);
 void 			KeyframeTrack_AddKeyframesBezier(KeyframeTrack * _this,List * _point);
 bool 			KeyframeTrack_Interpolate(KeyframeTrack * _this, float _t, float * _result);
 
