@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argc);

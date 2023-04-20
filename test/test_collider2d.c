@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 #define BUTTON_GROUP_SIZE	 	50
 #define BUTTON_GROUP_OFFSET_X	200

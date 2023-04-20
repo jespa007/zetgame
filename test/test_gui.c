@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 #define WINDOW_NAME "window"
 

@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 #define TILEMAP_LAYER_NAME "mario3_world1"
 

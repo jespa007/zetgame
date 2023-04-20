@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 #define STEP_INC 0.016
 
@@ -32,8 +32,8 @@ int main(int argc, char *argv[]){
 	//Texture_SetTextureResourcePath("data/images");
 
 	//Texture * text_default = Texture_GetDefault();
-	Texture * text_png = Texture_NewFromFile("data/images/test.png");
-	Texture * text_jpg = Texture_NewFromFile("data/images/test.jpg");
+	Texture * text_png = Texture_NewFromFile("../../../test/data/images/test.png");
+	Texture * text_jpg = Texture_NewFromFile("../../../test/data/images/test.jpg");
 	//TTFont * font = TTFont_GetFontFromName("pf_arma_five.ttf",16);
 	//TTFont * font1 = TTFont_GetFontFromName("Trebuchet MS.ttf",36);
 	Animation 			*trs_animation=Animation_New(TRANSFORM_CHANNEL_MAX);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]){
 		transform.scale.y=0.5;
 		Transform_Apply(&transform);
 		//Shape_DrawRectangle(0.5f,0.5f,true);
-		Graphics_Draw(Geometry_GetDefaultRectangleTextured());
+		Graphics_Draw(&transform,Geometry_GetDefaultRectangleTextured(),NULL);
 		Transform_Restore(&transform);
 
 
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]){
 		if(scale< 0.5f || scale > 2.0f) inc_scale*=-1;
 
 
-		Graphics_DrawRectangleFilledTranslate2i(10,10,100,100,Color4f_FromHex(0xFF));
+		Graphics_DrawRectangleFilled4i(10,10,100,100,Color4f_FromHex(0xFF));
 		/*Graphics_DrawRectangle(20,20,100,100,Color4f_FromHexa(0xFFFF));
 		Graphics_DrawRectangleTextured(200,200,100,100,text_png);
 		Graphics_DrawRectangleTextured(300,300,100,100,text_jpg);

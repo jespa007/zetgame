@@ -34,7 +34,7 @@ void Transform_GL_Apply(Transform *_this){
 
 	glPushMatrix();
 
-	Matrix4f m=Quaternion_ToMatrix4f(_this->quaternion);
+	Matrix4f m=Transform_GetRotationMatrix(_this);
 
 
 	glTranslatef(_this->translate.x

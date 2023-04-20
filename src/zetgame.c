@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 static ZetGameSetupParams default_setup={
 		.graphics_api=GRAPHICS_API_GL

@@ -17,6 +17,7 @@ typedef enum{
 struct ECTransform{
 	EComponentHeader 	header;
 	Transform			transform; // world coordinates
+	Quaternion			quaternion;
 	void 				*data;
 };
 

@@ -1,17 +1,17 @@
 #include "Transform_GL.c"
-
+/*
 void Transform_UpdateRotate(Transform *_this){
 	_this->quaternion=Quaternion_FromEulerV3f(_this->rotate);
 	//_this->matrix3f=Quaternion_ToMatrix3f(_this->quaternion);
 }
-
+*/
 Transform	  Transform_DefaultValues(void){
 	Transform transform;
 	transform.translate=Vector3f_Zeros();
 	transform.rotate=Vector3f_Zeros();
 	transform.scale=Vector3f_Ones();
-	transform.quaternion=Quaternion_FromEulerV3f(transform.rotate);
-	Transform_UpdateRotate(&transform);
+	//transform.quaternion=Quaternion_FromEulerV3f(transform.rotate);
+	//Transform_UpdateRotate(&transform);
 	return transform;
 }
 
@@ -20,6 +20,12 @@ Transform  Transform_New(void){
 	return Transform_DefaultValues();
 
 }
+
+Matrix4f Transform_GetRotationMatrix(Transform *_this){
+	Quaternion q=Quaternion_FromEulerV3f(_this->rotate);
+	return Quaternion_ToMatrix4f(q);
+}
+
 
 void Transform_Apply(Transform *_this){
 
@@ -103,14 +109,14 @@ void Transform_SetRotate3f(Transform *_this,float x, float y, float z){
 			_this->rotate.y=y;
 			_this->rotate.z=z;
 
-			Transform_UpdateRotate(_this);
+			//Transform_UpdateRotate(_this);
 	}
 }
 
 void Transform_SetRotateZ(Transform *_this, float z){
 	if(_this->rotate.z!=z){
 		_this->rotate.z=z;
-		Transform_UpdateRotate(_this);
+		//Transform_UpdateRotate(_this);
 	}
 }
 

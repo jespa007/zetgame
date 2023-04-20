@@ -1,7 +1,5 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
-#include <SDL2/SDL.h>
-#include <xmp.h>
 
 int main(int argc, char *argv[]){
 
@@ -29,7 +27,7 @@ int main(int argc, char *argv[]){
 
 	if(argc == 2 && !strcmp(argv[1],"from_mem")){
 
-		Log_Info("Load from memory");
+		Log_InfoF("Load from memory");
 
 		BufferByte *bb_effect = File_Read("../../../test/data/samples/sample.wav");
 		BufferByte *bb_wav = File_Read("../../../test/data/musics/music.wav");
@@ -66,7 +64,7 @@ int main(int argc, char *argv[]){
 		request_backward_seek=0;
 
 		if(K_0){
-			Log_Info("play effect");
+			Log_InfoF("play effect");
 			Sample_Play(id_effect);
 
 		}
@@ -78,40 +76,40 @@ int main(int argc, char *argv[]){
 			}else{
 				if(Music_IsPaused(id_wav)){
 					Music_Resume(id_wav);
-					Log_Info("Resume wav");
+					Log_InfoF("Resume wav");
 				}
 				else{
-					Log_Info("Play wav");
+					Log_InfoF("Play wav");
 					Music_Play(id_wav);
 				}
 			}
 		}
 		if(K_2){
 			if(Music_IsPlaying(id_xm)&& !Music_IsPaused(id_xm)){
-				Log_Info("Pause xm");
+				Log_InfoF("Pause xm");
 				Music_Pause(id_xm);
 			}else{
 				if(Music_IsPaused(id_xm)){
 					Music_Resume(id_xm);
-					Log_Info("Resume xm");
+					Log_InfoF("Resume xm");
 				}
 				else{
-					Log_Info("Play xm");
+					Log_InfoF("Play xm");
 					Music_Play(id_xm);
 				}
 			}
 		}
 		if(K_3){
 			if(Music_IsPlaying(id_ogg)&& !Music_IsPaused(id_ogg)){
-				Log_Info("Pause ogg");
+				Log_InfoF("Pause ogg");
 				Music_Stop(id_ogg);
 			}else{
 				if(Music_IsPaused(id_ogg)){
 					Music_Resume(id_ogg);
-					Log_Info("Resume ogg");
+					Log_InfoF("Resume ogg");
 				}
 				else{
-					Log_Info("Play ogg");
+					Log_InfoF("Play ogg");
 					Music_Play(id_ogg);
 				}
 			}
@@ -142,10 +140,6 @@ int main(int argc, char *argv[]){
 
 	ZetGame_DeInit();
 
-
-#if defined(__MEMMANAGER__)
-  MEMMGR_print_status();
-#endif
 
     return 0;
 

@@ -339,7 +339,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	ecs/zg_ecs.c
 	
 	#-- Core --
-	ZetGame.c		
+	zetgame.c		
 )
 
 add_library( ${ZETGAME_LIB_NAME}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
@@ -356,7 +356,7 @@ target_link_libraries(${ZETGAME_LIB_NAME}${POST_NAME}
 # EXECUTABLES
 #
 
-IF ( FALSE )
+
 
 add_executable(test_mixer${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
@@ -390,7 +390,7 @@ add_executable(test_animation${POST_NAME}
 
 target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
-endif()
+
 
 
 #--- SCENEGRAPH

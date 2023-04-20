@@ -220,7 +220,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	*transform_world=*transform_local;
 
 	// todo: quaternions
-	_this->transform.quaternion = transform_world->quaternion = local_quaternion = Quaternion_FromEulerV3f(transform_local->rotate);
+	_this->quaternion = local_quaternion = Quaternion_FromEulerV3f(transform_local->rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
 	if(ECTransform_GetParent(_this) != NULL) { // it's not root node....
@@ -235,7 +235,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 		Transform *parent_transform_world=&parent->transform;
 
 		// todo: quaternions
-		//Quaternion total_quaternion=parent->quaternion;//getTransform()getActualRotateMatrix());
+		Quaternion parent_quaternion=parent->quaternion;//getTransform()getActualRotateMatrix());
 
 		// ok. Let's to transform position child from rotation m_scrParent value ...
 		Vector3f transform_child_from_parent=transform_local->translate;
@@ -256,9 +256,9 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 			transform_world->translate=transform_local->translate;
 		}
 
-		transform_child_from_parent=Quaternion_InverseTransformV3f(parent_transform_world->quaternion,transform_child_from_parent);
+		transform_child_from_parent=Quaternion_InverseTransformV3f(parent_quaternion,transform_child_from_parent);
 		transform_world->translate=Vector3f_Add(transform_world->translate,transform_child_from_parent);
-		transform_world->quaternion=Quaternion_Mul(local_quaternion,parent_transform_world->quaternion);
+		_this->quaternion=Quaternion_Mul(local_quaternion,parent_quaternion);
 
 	}
 	else { // Is the root, then add origin on their initial values ...
@@ -273,7 +273,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 		//}
 
 		if((data->transform_attributes & EC_TRANSFORM_ROTATE)){
-			transform_world->quaternion=local_quaternion;
+			_this->quaternion=local_quaternion;
 		}
 	}
 }

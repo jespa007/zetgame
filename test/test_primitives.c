@@ -1,4 +1,4 @@
-#include "ZetGame.h"
+#include "zetgame.h"
 
 #define SHAPE_WIDTH			50
 #define SHAPER_COLOR		0xff707070
@@ -29,9 +29,7 @@ int main(int argc, char *argv[]){
 				circle_info[i].border_width,
 				circle_info[i].border_color
 		);
-		List_Add(textures,texture=Texture_New());
-
-		Texture_UpdateFromSurface(texture,srf);
+		List_Add(textures,texture=Texture_NewFromSurface(srf));
 
 		SDL_FreeSurface(srf);
 	}
@@ -53,7 +51,7 @@ int main(int argc, char *argv[]){
 			appearance->texture=textures->items[i];
 
 			// circle
-			Graphics_DrawRectangleTexturedTranslate2i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR4F_WHITE,textures->items[i],NULL);
+			Graphics_DrawRectangleTextured4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,COLOR4F_WHITE,textures->items[i],NULL);
 			x+=SHAPE_WIDTH+10;
 
 			if((i%2==0) && i > 0){

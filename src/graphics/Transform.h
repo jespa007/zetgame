@@ -25,16 +25,18 @@ struct Transform{
 	// DON'T MOVE!
 	//----------------------------
 
-	Quaternion 	quaternion;	// keep to perform fast interpolations between rotations
+	//Quaternion 	quaternion;	// keep to perform fast interpolations between rotations
 	//Matrix3f	matrix3f; 	// keep to perform fast transformations as well as flush into gl
 	//uint32_t	transform_properties;
 };
 
 Transform     Transform_New(void);
 Transform	  Transform_DefaultValues(void);
-void 		  Transform_Update(Transform *_this);
+//void 		  Transform_Update(Transform *_this);
 
-void 		Transform_Apply(Transform *_this);
+void 	  	  Transform_Apply(Transform *_this);
+
+Matrix4f	  Transform_GetRotationMatrix(Transform *_this);
 
 // Translate
 void Transform_SetTranslate3f(Transform *_this, float x,float y, float z);
