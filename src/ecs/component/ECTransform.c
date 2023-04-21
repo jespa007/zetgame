@@ -232,6 +232,10 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 
 		// todo: quaternions
 		//Quaternion parent_quaternion_world=parent->quaternion;//getTransform()getActualRotateMatrix());
+		if(data->transform_local.rotate.z==90){
+			int i=0;
+			i++;
+		}
 
 		// ok. Let's to transform position child from rotation m_scrParent value ...
 		Vector3f translate_from_parent=data->transform_local.translate;
@@ -254,7 +258,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 
 		translate_from_parent=Quaternion_InverseTransformV3f(parent->quaternion,translate_from_parent);
 		_this->transform.translate=Vector3f_Add(_this->transform.translate,translate_from_parent);
-		_this->quaternion=Quaternion_Mul(local_quaternion,parent->quaternion);
+		//_this->quaternion=Quaternion_Mul(local_quaternion,parent->quaternion);
 
 	}
 	else { // Is the root, then add origin on their initial values ...

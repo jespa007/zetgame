@@ -81,9 +81,9 @@ int main(int argc, char * argv[]){
 				{
 					 // x y rot
 					 //---------
-					 {  0,-30,-90}
-					,{ 24, 24,45}
-					,{-24, 24,-90-90-45}
+					 {  0,-30,0}
+					,{ 24, 24,0}
+					,{-24, 24,0}
 
 				}
 			}
@@ -216,6 +216,8 @@ int main(int argc, char * argv[]){
 		,false
 	);
 
+	Entity *first_van=NULL;
+
 	//----------------------------------
 	// SETUP FAN...
 	for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
@@ -246,14 +248,14 @@ int main(int argc, char * argv[]){
 			,spr_base_van->components[EC_TRANSFORM]
 		);
 
-		ECTransformAnimation_StartTween(
+		/*ECTransformAnimation_StartTween(
 					spr_base_van->components[EC_TRANSFORM_ANIMATION]
 					,TRANSFORM_CHANNEL_ROTATE_Z
 					, EASE_OUT_SINE
 					, 0
 					, 360
 					, 1000
-					, ANIMATION_LOOP_REPEAT_INFINITE);
+					, ANIMATION_LOOP_REPEAT_INFINITE);*/
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
@@ -264,6 +266,10 @@ int main(int argc, char * argv[]){
 						,9
 						,text_vane
 						,true);
+
+			if(i==0){
+				first_van=spr_image_van;
+			}
 
 			ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
 			ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
@@ -325,6 +331,7 @@ int main(int argc, char * argv[]){
 	Scene_Start(scene);
 
 	//Transform transform_camera=Transform_DefaultValues();
+	float rot=0;
 	do{
 
 		Graphics_BeginRender();
@@ -334,6 +341,10 @@ int main(int argc, char * argv[]){
 					spr_image_sun->components[EC_MATERIAL_ANIMATION]
 					,mat_act_fade_in_out
 					,0);
+		}
+
+		if(K_RIGHT){
+			ECTransform_SetRotate3f(first_van->components[EC_TRANSFORM],0,0,rot+=4);
 		}
 
 		Scene_Update(scene);

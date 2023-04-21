@@ -126,8 +126,8 @@ Quaternion Quaternion_FromAngleAxis(float angle, Vector3f axis) {
 	Vector3f vn = Vector3f_Normalize(axis);
 	Quaternion q;
 
-	float sinAngle = Luts_Sin[LUTS_DEGREES_2_FIXED(angle)>>1];
-	float cosAngle = Luts_Cos[LUTS_DEGREES_2_FIXED(angle)>>1];
+	float sinAngle = Luts_Sin[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>2];
+	float cosAngle = Luts_Cos[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>2];
 	
 	q.w=cosAngle;
 	q.x=vn.x * sinAngle;
