@@ -85,23 +85,23 @@ else()
 	
 
 	IF ( IS_DEBUG)
-		set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -O0 -g ")
+		set(CMAKE_C_FLAGS " ${CMAKE_CXX_FLAGS} -O0 -g ")
 		
 		IF (EXISTS ${PROJECT_SOURCE_DIR}/../../memmgr)
 		
 			message("-- Memmanager: Yes")
-			SET( CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -D__MEMMANAGER__")
+			SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__MEMMANAGER__")
 			include_directories (
 				${PROJECT_SOURCE_DIR}/../../memmgr
 			)
 			
-	   		set(ZETSCRIPT_LIB_SRCS ${ZETSCRIPT_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
+	   		set(ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS} ${PROJECT_SOURCE_DIR}/../../memmgr/memmgr.c)
 		
 		ELSE()
 	
 			if(UNIX)
 				if( NOT "${DIST}" STREQUAL "Alpine")
-					set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -fsanitize=address ")
+					set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -fsanitize=address ")
 					message("-- Memmanager: -fsanitize=address")
 				else()
 					message("-- Memmanager: -fsanitize NOT supported")
@@ -111,7 +111,7 @@ else()
 			 endif()
 		ENDIF()
 	ELSE()
-		set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -O2 ")
+		set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -O2 ")
 	ENDIF()
 	
 	#Redefine output dir ...

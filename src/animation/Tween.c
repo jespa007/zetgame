@@ -37,7 +37,7 @@ void Tween_Start(Tween *_this
 	_this->channels_info->msk_active_channels|=0x1<<_idx_channel;
 }
 
-void Tween_Update(Tween *_this, uint32_t _time){
+void Tween_Update(Tween *_this, uint32_t *_msk_active_channels, uint32_t _time){
 	if(_this->channels_info->msk_active_channels){
 		for(unsigned i = 0; i < _this->channels_info->n_channels; i++){
 			if(_this->channels_info->msk_active_channels & (0x1<<i)){ // update
@@ -53,11 +53,9 @@ void Tween_Update(Tween *_this, uint32_t _time){
 					value=tween_channel->from+ease_linear(t)*(tween_channel->to - tween_channel->from);
 				}else{ // set last and delete active msk
 					value=tween_channel->to;
-					_this->channels_info->msk_active_channels&=~(0x1<<i);
+					*_msk_active_channels&=~(0x1<<i);
 				}
-
 				_this->channels_info->channels[i]=value;
-
 			}
 		}
 	}

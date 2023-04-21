@@ -213,52 +213,48 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	ECTransformData *data = _this->data;
 
 	Quaternion local_quaternion;
-	Transform *transform_world=&_this->transform;
-	Transform *transform_local=&data->transform_local;
+	Quaternion world_quaternion;
+	//Transform *transform_world=&_this->transform;
+	//Transform *transform_local=&data->transform_local;
 
 	// transfer local -> absolute ...
-	*transform_world=*transform_local;
+	_this->transform=data->transform_local;
 
 	// todo: quaternions
-	_this->quaternion = local_quaternion = Quaternion_FromEulerV3f(transform_local->rotate);
+	_this->quaternion = world_quaternion= local_quaternion = Quaternion_FromEulerV3f(data->transform_local.rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
-	if(ECTransform_GetParent(_this) != NULL) { // it's not root node....
+	if(data->parent != NULL) { // it's not root node....
 
 		ECTransform *parent=data->parent;
-		if(parent == NULL){
-			Log_ErrorF("Expected parent not null!!");
-			return;
-		}
-
 		//ECTransformData *parent_data = parent->data;
-		Transform *parent_transform_world=&parent->transform;
+		Transform parent_transform=parent->transform;
 
 		// todo: quaternions
-		Quaternion parent_quaternion=parent->quaternion;//getTransform()getActualRotateMatrix());
+		//Quaternion parent_quaternion_world=parent->quaternion;//getTransform()getActualRotateMatrix());
 
 		// ok. Let's to transform position child from rotation m_scrParent value ...
-		Vector3f transform_child_from_parent=transform_local->translate;
+		Vector3f translate_from_parent=data->transform_local.translate;
 
 		// the is propagated ...
 		if(data->transform_attributes & EC_TRANSFORM_SCALE) {
 			// transforms the scale ...
-			transform_world->scale=Vector3f_Mul(transform_world->scale,parent_transform_world->scale);
+			_this->transform.scale=Vector3f_Mul(_this->transform.scale,parent_transform.scale);
 		}
 		// Set origin translation ...
 		if(data->transform_attributes & EC_TRANSFORM_TRANSLATE){
-			transform_world->translate=parent_transform_world->translate;
+			_this->transform.translate=parent_transform.translate;
 
 			// Scale the translation...
-			transform_child_from_parent=Vector3f_Mul(transform_child_from_parent,parent_transform_world->scale);
+			translate_from_parent=Vector3f_Mul(translate_from_parent,parent_transform.scale);
 
 		}else{
-			transform_world->translate=transform_local->translate;
+			_this->transform.translate=data->transform_local.translate;
 		}
 
-		transform_child_from_parent=Quaternion_InverseTransformV3f(parent_quaternion,transform_child_from_parent);
-		transform_world->translate=Vector3f_Add(transform_world->translate,transform_child_from_parent);
-		_this->quaternion=Quaternion_Mul(local_quaternion,parent_quaternion);
+		translate_from_parent=Quaternion_InverseTransformV3f(parent->quaternion,translate_from_parent);
+		_this->transform.translate=Vector3f_Add(_this->transform.translate,translate_from_parent);
+		_this->quaternion=Quaternion_Mul(local_quaternion,parent->quaternion);
 
 	}
 	else { // Is the root, then add origin on their initial values ...

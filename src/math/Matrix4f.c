@@ -13,8 +13,6 @@ Matrix4f Matrix4f_FromMatrix3f(const Matrix3f *_m3){
 		,_m3->e31,_m3->e32,_m3->e33	,0
 		, 0		 , 0	  , 0		,1
 	};
-
-
 }
 
 Matrix4f Matrix4f_Identity(void){

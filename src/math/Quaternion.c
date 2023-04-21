@@ -44,34 +44,41 @@ Quaternion Quaternion_Inverse(Quaternion q){
 }
 
 Matrix3f  Quaternion_ToMatrix3f(Quaternion q){
+
+	// Covert a quaternion into a full three-dimensional rotation matrix.
+    //
+	// Input
+	// :param Q: A 4 element array representing the quaternion (q0,q1,q2,q3)
+    //
+	// Output
+	// :return: A 3x3 element matrix representing the full 3D rotation matrix.
+	//		 This rotation matrix converts a point in the local reference
+	//		 frame to a point in the global reference frame.
+
+
 	Matrix3f matrix= Matrix3f_Identity();
+	float * mat_array = &matrix.e11;
 
-	float sqw = q.w*q.w;
-    float sqx = q.x*q.x;
-    float sqy = q.y*q.y;
-    float sqz = q.z*q.z;
-    float invs = 1.0f / (sqx + sqy + sqz + sqw);
+	// Extract the values from Q
+	float q0 = q.w;
+	float q1 = q.x;
+	float q2 = q.y;
+	float q3 = q.z;
 
-    float * mat_array = &matrix.e11;
+	// First row of the rotation matrix
+	mat_array[M3_E11] = 2 * (q0 * q0 + q1 * q1) - 1;
+	mat_array[M3_E12] = 2 * (q1 * q2 - q0 * q3);
+	mat_array[M3_E13] = 2 * (q1 * q3 + q0 * q2);
 
-    mat_array[M3_E11] = ( sqx - sqy - sqz + sqw) * invs;
-    mat_array[M3_E22] = (-sqx + sqy - sqz + sqw) * invs;
-    mat_array[M3_E33] = (-sqx - sqy + sqz + sqw) * invs;
+	// Second row of the rotation matrix
+	mat_array[M3_E21] = 2 * (q1 * q2 + q0 * q3);
+	mat_array[M3_E22] = 2 * (q0 * q0 + q2 * q2) - 1;
+	mat_array[M3_E23] = 2 * (q2 * q3 - q0 * q1);
 
-    float tmp1 = q.x*q.y;
-    float tmp2 = q.z*q.w;
-    mat_array[M3_E21] = 2.0 * (tmp1 + tmp2) * invs;
-    mat_array[M3_E12] = 2.0 * (tmp1 - tmp2) * invs;
-
-    tmp1 = q.x*q.z;
-    tmp2 = q.y*q.w;
-    mat_array[M3_E31] = 2.0 * (tmp1 - tmp2) * invs;
-    mat_array[M3_E13] = 2.0 * (tmp1 + tmp2) * invs;
-
-    tmp1 = q.y*q.z;
-    tmp2 = q.x*q.w;
-    mat_array[M3_E32] = 2.0 * (tmp1 + tmp2) * invs;
-    mat_array[M3_E23] = 2.0 * (tmp1 - tmp2) * invs;
+	// Third row of the rotation matrix
+	mat_array[M3_E31] = 2 * (q1 * q3 - q0 * q2);
+	mat_array[M3_E32] = 2 * (q2 * q3 + q0 * q1);
+	mat_array[M3_E33] = 2 * (q0 * q0 + q3 * q3) - 1;
 
 	return matrix;
 }
@@ -92,21 +99,23 @@ Quaternion Quaternion_FromEulerV3f(Vector3f v){
 	//z *= 0.5f;
 	Quaternion q;
 
-	unsigned angle_x=LUTS_DEGREES_2_FIXED(v.x)>>1;
-	unsigned angle_y=LUTS_DEGREES_2_FIXED(v.y)>>1;
-	unsigned angle_z=LUTS_DEGREES_2_FIXED(v.z)>>1;
+	// divide by 4 because luts are calculated for 2PI, and the formula calcules angle in radiants but multiplied by 0.5
+	unsigned angle_x=(LUTS_DEGREES_2_FIXED(v.x)>>2)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
+	unsigned angle_y=(LUTS_DEGREES_2_FIXED(v.y)>>2)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
+	unsigned angle_z=(LUTS_DEGREES_2_FIXED(v.z)>>2)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
 
-	float sinx = Luts_Sin[angle_x];
-	float siny = Luts_Sin[angle_y];
-	float sinz = Luts_Sin[angle_z];
 	float cosx = Luts_Cos[angle_x];
-	float cosy = Luts_Cos[angle_y];
-	float cosz = Luts_Cos[angle_z];
+	float sinx = Luts_Sin[angle_x];
 
+	float cosy = Luts_Cos[angle_y];
+	float siny = Luts_Sin[angle_y];
+
+	float cosz = Luts_Cos[angle_z];
+	float sinz = Luts_Sin[angle_z];
 
 	q.w = cosx * cosy * cosz + sinx * siny * sinz;
-	q.x = sinx * cosy * cosz + cosx * siny * sinz;
-	q.y = cosx * siny * cosz - sinx * cosy * sinz;
+	q.x = sinx * cosy * cosz - cosx * siny * sinz;
+	q.y = cosx * siny * cosz + sinx * cosy * sinz;
 	q.z = cosx * cosy * sinz - sinx * siny * cosz;
 
 	return q;

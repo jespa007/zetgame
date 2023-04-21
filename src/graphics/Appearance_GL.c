@@ -5,6 +5,9 @@ void Appearance_GL_Apply(Appearance * appearance){
 
 	glPushAttrib( GL_TEXTURE_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_DEPTH_BUFFER_BIT | GL_CURRENT_BIT);
 
+	// restore color to white
+	glColor3f(1,1,1);
+
 	if((appearance->properties & APPEARANCE_CULL_FACE)){
 		glEnable(GL_CULL_FACE);
 	}else{

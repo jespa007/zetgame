@@ -85,6 +85,8 @@ int main(int argc, char *argv[]){
 			// transfer last values
 			Animation_CopyChannelValues(trs_animation,&transform.translate.x);
 
+			//printf("%.02f %.02f %.02f\n",transform.translate.x,transform.translate.y,transform.translate.z);
+
 			//trs_animation
 		}else{ // my custom move
 			//Shape2d_SetDimensions(shape2d,100,100);
@@ -115,14 +117,27 @@ int main(int argc, char *argv[]){
 				, 500
 				, false
 			);
+
+			Animation_StartTween(
+				 trs_animation
+				, SDL_GetTicks()
+				, TRANSFORM_CHANNEL_ROTATE_Z
+				, EASE_LINEAR
+				, 0
+				, 90
+				, 2000
+				, false
+			);
 		}
 
+		//printf("%.02f %.02f %0.2f\n",transform.rotate.x,transform.rotate.y,transform.rotate.z);
+
 		// width and height
-		transform.scale.x=0.5;
-		transform.scale.y=0.5;
+		//transform.scale.x=0.5;
+		//transform.scale.y=0.5;
 		Transform_Apply(&transform);
 		//Shape_DrawRectangle(0.5f,0.5f,true);
-		Graphics_Draw(&transform,Geometry_GetDefaultRectangleTextured(),NULL);
+		Graphics_Draw(&transform,Geometry_GetDefaultRectangleTextured(),appearance);
 		Transform_Restore(&transform);
 
 
@@ -131,13 +146,13 @@ int main(int argc, char *argv[]){
 		scale+=inc_scale;
 
 		if(K_LEFT){
-			rotate-=4;
-			printf("angle %f\n",rotate);
+			transform.rotate.z-=4;
+			printf("angle %f\n",transform.rotate.z);
 		}
 
 		if(K_RIGHT){
-			rotate+=4;
-			printf("angle %f\n",rotate);
+			transform.rotate.z+=4;
+			printf("angle %f\n",transform.rotate.z);
 		}
 
 
@@ -187,10 +202,6 @@ int main(int argc, char *argv[]){
 
 
 	ZetGame_DeInit();
-
-#ifdef __MEMMANAGER__
-	MEMMGR_print_status();
-#endif
 
 	return 0;
 }

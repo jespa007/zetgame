@@ -100,24 +100,13 @@ Vector2i 	Transform_GetPosition2i(Transform *_this){
 
 
 void Transform_SetRotate3f(Transform *_this,float x, float y, float z){
-	if(!(
-			   _this->rotate.x==x
-			&& _this->rotate.y==y
-			&& _this->rotate.z==z
-		)){
-			_this->rotate.x=x;
-			_this->rotate.y=y;
-			_this->rotate.z=z;
-
-			//Transform_UpdateRotate(_this);
-	}
+		_this->rotate.x=x;
+		_this->rotate.y=y;
+		_this->rotate.z=z;
 }
 
 void Transform_SetRotateZ(Transform *_this, float z){
-	if(_this->rotate.z!=z){
-		_this->rotate.z=z;
-		//Transform_UpdateRotate(_this);
-	}
+	_this->rotate.z=z;
 }
 
 //------------------

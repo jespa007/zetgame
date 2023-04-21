@@ -20,7 +20,7 @@ void Tween_Start(Tween *_this
 		, int _repeat
 		);
 
-void Tween_Update(Tween *_this, uint32_t _time);
+void Tween_Update(Tween *_this,uint32_t *_msk_active_channels,uint32_t _time);
 
 void Tween_Delete(Tween *_this);
 
