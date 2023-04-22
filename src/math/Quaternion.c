@@ -99,10 +99,10 @@ Quaternion Quaternion_FromEulerV3f(Vector3f v){
 	//z *= 0.5f;
 	Quaternion q;
 
-	// divide by 4 because luts are calculated for 2PI, and the formula calcules angle in radiants but multiplied by 0.5
-	unsigned angle_x=(LUTS_DEGREES_2_FIXED(v.x)>>2)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
-	unsigned angle_y=(LUTS_DEGREES_2_FIXED(v.y)>>2)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
-	unsigned angle_z=(LUTS_DEGREES_2_FIXED(v.z)>>2)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
+	// divide by 1 because quaternions works in 180º
+	unsigned angle_x=(LUTS_DEGREES_2_FIXED(v.x)>>1)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
+	unsigned angle_y=(LUTS_DEGREES_2_FIXED(v.y)>>1)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
+	unsigned angle_z=(LUTS_DEGREES_2_FIXED(v.z)>>1)&LUTS_SIZE_MASK; // put mask to avoid overflow on negative numbers
 
 	float cosx = Luts_Cos[angle_x];
 	float sinx = Luts_Sin[angle_x];
@@ -114,8 +114,8 @@ Quaternion Quaternion_FromEulerV3f(Vector3f v){
 	float sinz = Luts_Sin[angle_z];
 
 	q.w = cosx * cosy * cosz + sinx * siny * sinz;
-	q.x = sinx * cosy * cosz - cosx * siny * sinz;
-	q.y = cosx * siny * cosz + sinx * cosy * sinz;
+	q.x = sinx * cosy * cosz + cosx * siny * sinz;
+	q.y = cosx * siny * cosz - sinx * cosy * sinz;
 	q.z = cosx * cosy * sinz - sinx * siny * cosz;
 
 	return q;
@@ -126,8 +126,8 @@ Quaternion Quaternion_FromAngleAxis(float angle, Vector3f axis) {
 	Vector3f vn = Vector3f_Normalize(axis);
 	Quaternion q;
 
-	float sinAngle = Luts_Sin[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>2];
-	float cosAngle = Luts_Cos[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>2];
+	float sinAngle = Luts_Sin[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>1];
+	float cosAngle = Luts_Cos[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>1];
 	
 	q.w=cosAngle;
 	q.x=vn.x * sinAngle;
