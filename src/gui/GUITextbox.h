@@ -9,7 +9,6 @@ struct GUITextbox{
 	void 		*data;
 };
 
-
 GUITextbox *GUITextbox_New(int x, int y, uint16_t width, uint16_t height);
 void GUITextbox_Delete(GUITextbox *_this);
 

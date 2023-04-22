@@ -323,9 +323,14 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 					 GUIWidget_SetHeight(label->widget,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
+					 GUIWidget_SetHeight(label->widget,int_value);
+				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+				 Textbox_SetFont(label->textbox,TTFontManager_GetFont(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"text")){
+				 Textbox_SetText(label->textbox,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;

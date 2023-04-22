@@ -130,16 +130,7 @@ int main(int argc, char *argv[]){
 			);
 		}
 
-		//printf("%.02f %.02f %0.2f\n",transform.rotate.x,transform.rotate.y,transform.rotate.z);
-
-		// width and height
-		//transform.scale.x=0.5;
-		//transform.scale.y=0.5;
-		Transform_Apply(&transform);
-		//Shape_DrawRectangle(0.5f,0.5f,true);
 		Graphics_Draw(&transform,Geometry_GetDefaultRectangleTextured(),appearance);
-		Transform_Restore(&transform);
-
 
 		x+=inc_x;
 		y+=inc_y;

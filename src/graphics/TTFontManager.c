@@ -83,7 +83,7 @@ TTFont * 		TTFontManager_GetFontFromFontInfo(TTFontManager *_this, TTFontInfo * 
 		return TTFontManager_GetEmbeddedFont();
 	}
 
-	return TTFontManager_GetFontFromName(_this,font_info->font_name, font_info->font_size);
+	return TTFontManager_GetFont(_this,font_info->font_name, font_info->font_size);
 }
 
 
@@ -139,7 +139,7 @@ const char * 	TTFontManager_GetFontResourcePath(TTFontManager *_this){
 
 // MEMBERS
 
-TTFont * 		TTFontManager_GetFontFromName(TTFontManager *_this,const char * _filename,uint8_t _font_size){
+TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uint8_t _font_size){
 	TTFontManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};

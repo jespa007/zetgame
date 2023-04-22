@@ -3,7 +3,7 @@
 //bool screen_shoot_request;
 uint32_t start_ticks;
 
-
+#define GRAPHICS_GL_DISABLE_VSYNCH
 
 static SDL_GLContext * g_sdl_gl_context = NULL;
 
@@ -17,8 +17,15 @@ bool Graphics_GL_Init(void){
 		return false;
 	}
 
-	// Disable vsync
-	SDL_GL_SetSwapInterval(0);
+	// Disable vsync (Because it takes lot of high CPU)
+	SDL_GL_SetSwapInterval(
+#ifdef GRAPHICS_GL_DISABLE_VSYNCH
+			0
+#else
+			1
+#endif
+	);
+
 	//SDL_GL_SetSwapInterval(1);
 
 	// ini opengl core functions...
@@ -109,7 +116,6 @@ void Graphics_GL_SetCameraTransform(Transform *transform){
 }
 
 void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){
-
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
@@ -127,9 +133,9 @@ void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){
 		break;
 	}
 
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
 }
 
 
@@ -172,10 +178,12 @@ void Graphics_GL_EndRender(void) {
 	SDL_GL_SwapWindow(g_graphics_vars->sdl_window);
 
 
+#ifdef GRAPHICS_GL_DISABLE_VSYNCH
 	// because we had disabled vsync we have to wait for 60 FPS...
 	if(to_16 > 0){
 		SDL_Delay(to_16);
 	}
+#endif
 }
 
 SDL_Surface * Graphics_GL_ScreenShoot(void){

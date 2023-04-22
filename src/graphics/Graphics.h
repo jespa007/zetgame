@@ -2,7 +2,7 @@
 #define __GRAPHICS_H__
 
 #define MSK_GRAPHIC_PROPERTY_NO_SHOW_ICON_TASKBAR	(0x1<<0x0)
-#define MSK_GRAPHIC_PROPERTY_DESKTOP				(0x1<<0x1)
+#define MSK_GRAPHIC_PROPERTY_FULLSCREEN				(0x1<<0x1)
 
 
 typedef enum{
@@ -32,12 +32,16 @@ Vector2f Graphics_GetScale(void);
 GraphicsApi Graphics_GetGraphicsApi(void);
 unsigned Graphics_GetNumMonitors(void);
 bool Graphics_GetScreenBounds(int num_display, SDL_Rect * rect );
+bool Graphics_IsFullscreen(void);
 void Graphics_ToggleFullscreen(void);
+void Graphics_SetFullscreen(bool _fullscreen);
 
 void Graphics_SetLineThickness(uint8_t _thickness);
 void Graphics_SetPointSize(uint8_t _point_size);
 void Graphics_SetColor4f(float _r, float _g, float _b, float _a);
 
+uint16_t Graphics_GetWindowWidth(void);
+uint16_t Graphics_GetWindowHeight(void);
 uint16_t Graphics_GetWidth(void);
 uint16_t Graphics_GetHeight(void);
 float Graphics_GetOneOverWidth(void);

@@ -70,16 +70,10 @@ fi
 
 #define basic
 ZLIB_VERSION="zlib-1.2.8"
-SDL2_VERSION="SDL2-2.0.14"
+SDL2_VERSION="SDL2-2.24.1"
 LIBJPEG_VERSION="jpeg-9b"
 FREETYPE2_VERSION="freetype-2.5.2"
 LIBXMP_VERSION="libxmp-lite-4.5.0"
-
-ZLIB_FILE=$ZLIB_VERSION".tar.gz"
-SDL2_FILE=$SDL2_VERSION".tar.gz"
-LIBJPEG_FILE=$LIBJPEG_VERSION".tar.gz"
-FREETYPE2_FILE=$FREETYPE2_VERSION".tar.gz"
-LIBXMP_FILE=$LIBXMP_VERSION".tar.gz"
 
 RESULT_FILE_Z="libz.a"
 
@@ -105,7 +99,7 @@ echo building zlib...
 
 if ! [ -d $THIRD_PARTY_BUILD_DIR"/$ZLIB_VERSION" ] 
 then
-	tar xf $THIRD_PARTY_SOURCES_DIR"/"$ZLIB_FILE
+	tar xf $THIRD_PARTY_SOURCES_DIR"/"$ZLIB_VERSION".tar.gz"
 fi
 
 cd $ZLIB_VERSION
@@ -132,7 +126,6 @@ fi
 
 cd ..
 
-
 #------------------------------------------------------------------------------------------------------------------------
 #
 # SDL2
@@ -142,7 +135,7 @@ echo building SDL2...
 
 if ! [ -d $THIRD_PARTY_BUILD_DIR"/$SDL2_VERSION" ] 
 then
-	tar xf $THIRD_PARTY_SOURCES_DIR"/"$SDL2_FILE
+	tar xf $THIRD_PARTY_SOURCES_DIR"/"$SDL2_VERSION".tar.gz"
 fi
 
 cd $SDL2_VERSION
@@ -218,7 +211,7 @@ echo building freetype2...
 
 if ! [ -d $THIRD_PARTY_BUILD_DIR"/$FREETYPE2_VERSION" ] 
 then
-	tar xf $THIRD_PARTY_SOURCES_DIR"/"$FREETYPE2_FILE
+	tar xf $THIRD_PARTY_SOURCES_DIR"/"$FREETYPE2_VERSION".tar.gz"
 fi
 
 cd $FREETYPE2_VERSION
@@ -258,7 +251,7 @@ echo building xmp...
 
 if ! [ -d $THIRD_PARTY_BUILD_DIR"/$LIBXMP_VERSION" ] 
 then
-	tar xf $THIRD_PARTY_SOURCES_DIR"/"$LIBXMP_FILE
+	tar xf $THIRD_PARTY_SOURCES_DIR"/"$LIBXMP_VERSION".tar.gz"
 fi
 
 cd $LIBXMP_VERSION
@@ -267,7 +260,6 @@ if ! [ -f $THIRD_PARTY_INSTALL_DIR"/lib/libxmp-lite"$EXTENSION_STATIC_LIB ]
 then
 
 	./configure --disable-shared --enable-static --build=$BUILD --prefix=$THIRD_PARTY_INSTALL_DIR
-
 
 	if ! [ $? -eq 0 ] 
 	then

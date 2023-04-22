@@ -31,7 +31,7 @@ void 			TTFontManager_SetDefaultFontSize(TTFontManager *_this,uint8_t font_size)
 uint8_t 		TTFontManager_GetDefaultFontSize(TTFontManager *_this);
 
 
-TTFont * 		TTFontManager_GetFontFromName(TTFontManager *_this,const char * font_name,uint8_t font_size);
+TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * font_name,uint8_t font_size);
 TTFont * 		TTFontManager_GetFontFromMemory( TTFontManager *_this,const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size);
 TTFont * 		TTFontManager_GetFontFromFontInfo(TTFontManager *_this,TTFontInfo * font_info);
 void 			TTFontManager_SetFontResourcePath(TTFontManager *_this,const char * path);

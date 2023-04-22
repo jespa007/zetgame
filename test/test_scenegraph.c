@@ -176,7 +176,7 @@ int main(int argc, char * argv[]){
 	//memset(&setup,0,sizeof(setup));
 	//setup.width=640;
 	//setup.height=480;
-	//setup.graphic_properties=MSK_GRAPHIC_PROPERTY_DESKTOP;
+	//setup.graphic_properties=MSK_GRAPHIC_PROPERTY_FULLSCREEN;
 	//ZetGame_Init(&setup);
 
 	// Initializes zetgame with viewport as 640x480 by default
@@ -340,6 +340,10 @@ int main(int argc, char * argv[]){
 
 		if(Input_IsLeftButtonPressed()){
 			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
+		}
+
+		if(K_T){
+			Graphics_ToggleFullscreen();
 		}
 
 		Graphics_EndRender();

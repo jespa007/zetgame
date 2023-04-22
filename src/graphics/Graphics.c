@@ -38,6 +38,10 @@ typedef struct{
 	Geometry *geometry_rectangle_default;
 	Appearance *appearance_rectangle_default;
 	Material *material_rectangle_default;
+	SDL_Rect *rect_display;
+	int num_displays;
+	int active_display;
+	bool fullscreen;
 
 }GraphicsVars;
 
@@ -57,8 +61,8 @@ bool Graphics_Init(
 		, uint16_t _width, uint16_t _height // logical resolution
 		//, uint16_t _window_width, uint16_t _window_height // screen resolution
 		,GraphicsApi _video_context
-		,const char *caption
-		,uint16_t properties
+		,const char *_caption
+		,uint16_t _properties
 	) {
 
 	uint16_t _window_width=_width;
@@ -90,15 +94,31 @@ bool Graphics_Init(
 		}
 	}
 
-	if(properties & MSK_GRAPHIC_PROPERTY_DESKTOP){
-		SDL_DisplayMode current;
+	g_graphics_vars->num_displays=SDL_GetNumVideoDisplays();
+	if(g_graphics_vars->num_displays < 0){
+		Log_Error("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
+		return false;
+	}
+	g_graphics_vars->rect_display=(SDL_Rect *)malloc(sizeof(SDL_Rect)*g_graphics_vars->num_displays);
+	for(int i=0 ; i < g_graphics_vars->num_displays; i++){
+		if(SDL_GetDisplayBounds(i, &g_graphics_vars->rect_display[i])!=0){
+			Log_Error("SDL_GetDisplayBounds error : %s\n", SDL_GetError());
+			return false;
+		}
+	}
+
+	if(_properties & MSK_GRAPHIC_PROPERTY_FULLSCREEN){
+
+		/*SDL_DisplayMode current;
 		if(SDL_GetCurrentDisplayMode(0, &current) != 0){
 			Log_Error("Unable to get display mode: %s", SDL_GetError());
 			return false;
 		}
 		_window_width=current.w;
-		_window_height=current.h;
+		_window_height=current.h;*/
+		g_graphics_vars->fullscreen=true;
 	}
+
 
 
 	switch(g_graphics_vars->graphics_api){
@@ -110,11 +130,11 @@ bool Graphics_Init(
 
 	// main window is always created at the main screen...
 	g_graphics_vars->sdl_window = SDL_CreateWindow(
-			caption
-			, start_posx
-			, start_posy
-			, _window_width
-			, _window_height
+			_caption
+			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].x:g_graphics_vars->rect_display[g_graphics_vars->active_display].x+(g_graphics_vars->rect_display[g_graphics_vars->active_display].w>>1)
+			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].y-1:g_graphics_vars->rect_display[g_graphics_vars->active_display].y+(g_graphics_vars->rect_display[g_graphics_vars->active_display].h>>1)
+			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].w:_width
+			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].h:_height
 			, video_flags);
 	if (!g_graphics_vars->sdl_window) {
 		Log_Error("Unable to create window: %s", SDL_GetError());
@@ -130,19 +150,7 @@ bool Graphics_Init(
 	g_graphics_vars->one_over_height=1.0f/(g_graphics_vars->height);
 	g_graphics_vars->aspect_ratio=((float)_width/(float)_height);
 	g_graphics_vars->one_over_aspect_ratio=1.0f/g_graphics_vars->aspect_ratio;
-	g_graphics_vars->scale = Vector2f_New2f(1,1);
 
-	// set logical res if different from screen res
-	if(
-			_width  != _window_width
-		|| 	_height != _window_height
-	){
-
-		g_graphics_vars->scale = Vector2f_New2f(
-				(float)_width/(float)_window_width
-				,(float)_height/(float)_window_height
-		);
-	}
 
 	Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
 	Log_Info("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
@@ -176,6 +184,9 @@ bool Graphics_Init(
 	g_graphics_vars->appearance_rectangle_default=Appearance_New();
 	g_graphics_vars->material_rectangle_default=Material_New(0);
 	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
+
+	Graphics_SetFullscreen(g_graphics_vars->fullscreen);
+
 
 	return ok;
 }
@@ -320,7 +331,7 @@ static void Graphics_PrintAdapterInformation(void){
 
 /// Queries the Screen to see if it's set to Fullscreen or Not
 /// @return SDL_FALSE if windowed, SDL_TRUE if fullscreen
-bool Graphics_IsFullScreen(void) {
+/*bool Graphics_IsFullScreen(void) {
 
 	uint32_t flags = SDL_GetWindowFlags(g_graphics_vars->sdl_window);
 
@@ -349,6 +360,80 @@ void Graphics_ToggleFullscreen(void)
 
 		}
 	}
+}*/
+bool Graphics_IsFullscreen(void){
+	return g_graphics_vars->fullscreen;
+}
+
+void Graphics_ToggleFullscreen(void){
+	Graphics_SetFullscreen(!g_graphics_vars->fullscreen);
+}
+
+void 	Graphics_SetFullscreen(bool _fullscreen){
+
+	// if request is the same
+	if(g_graphics_vars->fullscreen == _fullscreen){
+		return;
+	}
+
+	g_graphics_vars->scale = Vector2f_New2f(
+		1
+		,1
+	);
+
+	if(_fullscreen){
+		int wx=0,wy=0;
+		SDL_GetWindowPosition(g_graphics_vars->sdl_window,&wx,&wy);
+		g_graphics_vars->active_display=-1;
+		for(int i=0; (i < g_graphics_vars->num_displays) && (g_graphics_vars->active_display==-1);i++){
+			if(g_graphics_vars->rect_display[i].x<=wx && wx<(g_graphics_vars->rect_display[i].x+g_graphics_vars->rect_display[i].w)){
+				g_graphics_vars->active_display=i;
+			}
+		}
+
+
+		//SDL_SetWindowBordered( window, SDL_FALSE );
+		SDL_SetWindowFullscreen(g_graphics_vars->sdl_window,SDL_WINDOW_FULLSCREEN_DESKTOP);
+		// FULLSCREEN
+		//calculeScaleFactors();
+		g_graphics_vars->scale = Vector2f_New2f(
+			(float)g_graphics_vars->width/(float)g_graphics_vars->rect_display[g_graphics_vars->active_display].w
+			,(float)g_graphics_vars->height/(float)g_graphics_vars->rect_display[g_graphics_vars->active_display].h
+		);
+
+		SDL_SetWindowPosition(
+			g_graphics_vars->sdl_window
+			, g_graphics_vars->rect_display[g_graphics_vars->active_display].x
+			, g_graphics_vars->rect_display[g_graphics_vars->active_display].y-1
+		);
+
+		/*SDL_SetWindowSize(
+			window
+			, rect_display.w
+			,rect_display.h
+		);*/
+
+	}else{
+		// WINDOWED
+		//SDL_SetWindowBordered( window, SDL_TRUE );
+		SDL_SetWindowFullscreen(g_graphics_vars->sdl_window,0);
+
+
+		SDL_SetWindowPosition(
+			g_graphics_vars->sdl_window
+			, g_graphics_vars->rect_display[g_graphics_vars->active_display].x+(g_graphics_vars->rect_display[g_graphics_vars->active_display].w>>1)-(g_graphics_vars->width>>1)
+			,g_graphics_vars->rect_display[g_graphics_vars->active_display].y+(g_graphics_vars->rect_display[g_graphics_vars->active_display].h>>1)-(g_graphics_vars->height>>1)
+		);
+
+		SDL_SetWindowSize(
+			g_graphics_vars->sdl_window
+			, g_graphics_vars->width
+			,g_graphics_vars->height
+		);
+	}
+
+	Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
+	g_graphics_vars->fullscreen=_fullscreen;
 }
 
 // main screen starts at 0,0
@@ -386,6 +471,13 @@ void Graphics_PrintGraphicsInfo(void){
 				current.format
 		);
 	}
+}
+
+uint16_t Graphics_GetWindowWidth(void){
+	return g_graphics_vars->rect_display[g_graphics_vars->active_display].w;
+}
+uint16_t Graphics_GetWindowHeight(void){
+	return g_graphics_vars->rect_display[g_graphics_vars->active_display].h;
 }
 
 
@@ -504,7 +596,6 @@ void Graphics_EndRender(void)
 
 			SDL_FreeSurface(srf_screen_shoot);
 		}
-
 	}
 }
 //---------------------------------------------------------------------------------------------------------------------------
@@ -536,16 +627,15 @@ void Graphics_DrawPoint2f(float _x, float _y, Color4f _color, uint8_t _point_siz
 
 void Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size){
 	Graphics_DrawPoint2f(
-			ViewPort_ScreenToWorldPositionX(_x)
-			,ViewPort_ScreenToWorldPositionY(_y)
-			,_color
-			,_point_size
+		ViewPort_ScreenToWorldPositionX(_x)
+		,ViewPort_ScreenToWorldPositionY(_y)
+		,_color
+		,_point_size
 	);
 }
 
 
 void Graphics_DrawRectangle4i(int _x, int _y, uint16_t _w, uint16_t _h, Color4f _color, uint8_t _thickness){
-
 
 	Vector3f translate=ViewPort_ScreenToWorld(_x,_y);
 	Vector3f scale=ViewPort_ScreenToWorldDimension2i(_w,_h);
@@ -575,7 +665,6 @@ void Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t heigh
 	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
-
 	Graphics_DrawRectangleFilled4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color);
 }
 
@@ -596,7 +685,6 @@ void Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, 
 
 void Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
 
-
 	Vector2i p1_2d=Vector2i_New(_x-(_width>>1),_y+(_height>>1));
 	Vector2i p2_2d=Vector2i_New(_x+(_width>>1),_y-(_height>>1));
 
@@ -608,7 +696,6 @@ void Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t 
 
 void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2,  Color4f _color,Texture *_texture, TextureRect * _text_crop){
 	Transform t=Transform_New();
-
 
 	// setup transform
 	float w=fabs(_x2-_x1);
@@ -672,7 +759,6 @@ void Graphics_DrawCircle3f(float _x, float _y, float _r, Color4f _color, uint8_t
 
 void Graphics_DrawCircle3i(int _x, int _y, int _r, Color4f _color, uint8_t _thickness){
 
-
 	Graphics_DrawCircle3f(
 			ViewPort_ScreenToWorldPositionX(_x)
 			,ViewPort_ScreenToWorldPositionY(_y)
@@ -681,9 +767,6 @@ void Graphics_DrawCircle3i(int _x, int _y, int _r, Color4f _color, uint8_t _thic
 			,_thickness
 	);
 }
-
-
-
 
 void Graphics_Print(int x, int y, Color4f color, const char *in, ...){
 
@@ -695,11 +778,9 @@ void Graphics_Print(int x, int y, Color4f color, const char *in, ...){
 	TTFont_RenderTextBegin(NULL);
 	TTFont_Print(TTFontManager_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
 	TTFont_RenderTextEnd();
-
 }
 
 void Graphics_WPrint(int x, int y, Color4f color, const wchar_t *in, ...){
-
 	wchar_t out[1024]={0};
 	ZG_WVARGS(out,in);
 
@@ -707,9 +788,7 @@ void Graphics_WPrint(int x, int y, Color4f color, const wchar_t *in, ...){
 	TTFont_WPrint(TTFontManager_GetEmbeddedFont(),x,y,color,out);
 	TTFont_RenderTextEnd();
 }
-
 //---------------------------------------------------------------------------------------------------------------------------
-
 void Graphics_DeInit(void) {
 
 	if(g_graphics_vars == NULL){
@@ -745,7 +824,7 @@ void Graphics_DeInit(void) {
 	List_DeleteAndFreeAllItems(g_graphics_vars->adapters);
 	List_DeleteAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
 
-
+	ZG_FREE(g_graphics_vars->rect_display);
 	ZG_FREE(g_graphics_vars);
 }
 

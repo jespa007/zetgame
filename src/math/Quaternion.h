@@ -1,8 +1,6 @@
 #ifndef __QUATERNION_H__
 #define __QUATERNION_H__
 
-// Constraints: It works animation for 180º
-
 typedef struct Quaternion Quaternion;
 
 struct Quaternion{
