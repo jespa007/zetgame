@@ -10,7 +10,8 @@ int main(int argc, char *argv[]){
 
 
 	TextureManager * texture_manager= TextureManager_New();
-	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager);
+	TTFontManager * ttfont_manager= TTFontManager_New();
+	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager,ttfont_manager);
 	GUIWindow * window=NULL;
 
 	if(GUIWindowManager_Load(
@@ -44,6 +45,7 @@ int main(int argc, char *argv[]){
 	GUIViewer_Delete(gui_viewer);
 	GUIWindow_Delete(window);
 	TextureManager_Delete(texture_manager);
+	TTFontManager_Delete(ttfont_manager);
 	GUIWindowManager_Delete(window_manager);
 
 	ZetGame_DeInit();

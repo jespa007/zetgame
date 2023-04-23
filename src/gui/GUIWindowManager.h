@@ -7,7 +7,7 @@ struct GUIWindowManager{
 	void *data;
 };
 
-GUIWindowManager 	*	GUIWindowManager_New(TextureManager	* _texture_manager);
+GUIWindowManager 	*	GUIWindowManager_New(TextureManager	* _texture_manager, TTFontManager * _ttfont_manager);
 bool 					GUIWindowManager_Load(GUIWindowManager *_this,const char *_xml_filename);
 GUIWindow 	  		*	GUIWindowManager_Get(GUIWindowManager *_this,const char *_wnd_id);
 

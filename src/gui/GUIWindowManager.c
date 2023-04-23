@@ -1,19 +1,20 @@
 #include "zg_gui.h"
 
 typedef struct{
+	MapString 			* 	windows;
+	TextureManager   	*   texture_manager;
+	TTFontManager   	*   ttfont_manager;
+}GUIWindowManagerData;
+
+typedef struct{
 	GUIWindow			*window;
 	List				*labels;
 	List				*buttons;
 	List				*viewers;
 	List				*frames;
 	List				*textboxes;
+	GUIWindowManagerData *gui_window_manager_data;
 }GUIWMWindowData;
-
-
-typedef struct{
-	MapString 			* 	windows;
-	TextureManager   	*   texture_manager;
-}GUIWindowManagerData;
 
 void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 	GUIWMWindowData *window_data=(GUIWMWindowData *)node->val;
@@ -57,12 +58,16 @@ void GUIWindowManager_OnDeleteTexture(MapStringNode *node){
 }
 
 // MEMBERS
-GUIWindowManager *GUIWindowManager_New(TextureManager	* _texture_manager){
+GUIWindowManager *GUIWindowManager_New(
+		TextureManager	* _texture_manager
+		, TTFontManager * _ttfont_manager
+){
 	GUIWindowManager *window_manager=ZG_NEW(GUIWindowManager);
 	GUIWindowManagerData *data=ZG_NEW(GUIWindowManagerData);
 
 	data->windows = MapString_New();//new std::map<std::string,TTFont *>();
 	data->texture_manager = _texture_manager;
+	data->ttfont_manager = _ttfont_manager;
 
 	data->windows->on_delete=GUIWindowManager_OnDeleteGUIWMWindowData;
 
@@ -328,7 +333,7 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-				 Textbox_SetFont(label->textbox,TTFontManager_GetFont(attribute->value));
+				 Textbox_SetFont(label->textbox,TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
 			 }else if(STRCMP(attribute->name,==,"text")){
 				 Textbox_SetText(label->textbox,attribute->value);
 			 }else{
@@ -435,6 +440,7 @@ bool GUIWindowManager_LoadFromMemory(
 	 window_data->viewers=List_New();
 	 window_data->textboxes=List_New();
 	 window_data->frames=List_New();
+	 window_data->gui_window_manager_data=data;
 
 
 	 window_data->window=GUIWindow_New(0,0,10,10);
