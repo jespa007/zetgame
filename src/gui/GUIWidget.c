@@ -6,6 +6,7 @@ typedef struct{
 	GUIWidget *parent;
 	Vector2i position_local, position_world, position_screen;
 	Vector2i dimensions;
+	GUIWindow *window;
 
 	// events
 	CallbackWidgetUpdate post_update,draw,update;
@@ -34,6 +35,16 @@ GUIWidget  * GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 	data->dimensions.y=height;
 
 	return widget;
+}
+
+void GUIWidget_SetWindow(GUIWidget *_this,GUIWindow *_window){
+	GUIWidgetData *data=_this->data;
+	if(data->window!=NULL){
+		Log_ErrorF("widget already has a window");
+		return;
+	}
+
+	data->window=_window;
 }
 
 void GUIWidget_SetPositionX(GUIWidget *_this,int x){

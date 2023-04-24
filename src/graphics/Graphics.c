@@ -77,7 +77,7 @@ bool Graphics_Init(
 	g_graphics_vars = ZG_NEW(GraphicsVars);
 	g_graphics_vars->capture_screen_callbacks=List_New();
 
-	uint32_t video_flags = 0;
+	uint32_t video_flags = SDL_WINDOW_RESIZABLE;
 	bool ok=false;
 
 	if (SDL_Init(0 ) < 0) {
@@ -436,7 +436,6 @@ void 	Graphics_SetFullscreen(bool _fullscreen){
 		);
 	}
 
-	Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
 	g_graphics_vars->fullscreen=_fullscreen;
 }
 

@@ -22,7 +22,6 @@ GUILabel *GUILabel_New(int x, int y, uint16_t width, uint16_t height){
 	return label;
 }
 
-
 static void GUILabel_Draw(void *gui_label){
 	GUILabel *_this=gui_label;
 	Transform	transform=Transform_DefaultValues();

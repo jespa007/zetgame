@@ -455,6 +455,9 @@ bool GUIWindowManager_LoadFromMemory(
 				 GUIWindow_SetBackgroundColorHexStr(window_data->window,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"window-style")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"caption")){
+				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+				 GUIWindow_SetCaption(window_data->window,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 			 }

@@ -140,6 +140,11 @@ void 		GUIWindow_SetBackgroundColorHexStr(GUIWindow * _this, const char * color)
 	data->frame_content->widget->background_color=Color4f_FromHexStr(color);
 }
 
+void 		GUIWindow_SetCaption(GUIWindow * _this, const char *_caption){
+	GUIWindowData *data=_this->data;
+	Textbox_SetText(data->label_caption->textbox,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
+}
+
 
 void GUIWindow_OnSetWidth(void *gui_window, uint16_t width){
 

@@ -11,11 +11,11 @@ int main(int argc, char *argv[]){
 	//TextureManager_SetTextureResourcePath("data/images");
 
 	Texture * text_default = TextureManager_GetDefaultTexture();
-	Texture * text_png = Texture_NewFromFile("data/imagestest.png");
-	Texture * text_jpg = Texture_NewFromFile("data/imagestest.jpg");
-	TTFont * font = TTFont_NewFromFile("data/fonts/pf_arma_five.ttf",16);
-	TTFont * font1 = TTFont_NewFromFile("data/fonts/g5lis1b.ttf",36);
-	TTFont * font2 = TTFont_NewFromFile("data/fonts/Trebuchet MS.ttf",36);
+	Texture * text_png = Texture_NewFromFile("../../../test/data/images/test.png");
+	Texture * text_jpg = Texture_NewFromFile("../../../test/data/images/test.jpg");
+	TTFont * font = TTFont_NewFromFile("../../../test/data/fonts/pf_arma_five.ttf",16);
+	TTFont * font1 = TTFont_NewFromFile("../../../test/data/fonts/g5lis1b.ttf",36);
+	TTFont * font2 = TTFont_NewFromFile("../../../test/data/fonts/Trebuchet MS.ttf",36);
 	//Shape2d * shape2d = Shape2d_New();
 	Geometry *geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
 	Appearance *appearance=Appearance_New();
@@ -46,9 +46,7 @@ int main(int argc, char *argv[]){
 		// test max draw sprites ...
 		for(int i=0; i<10;i++){
 			Transform_SetPosition2i(&transform,rand()%Graphics_GetWidth(),rand()%Graphics_GetHeight());
-			Transform_Apply(&transform);
 			Graphics_Draw(&transform,geometry,NULL);
-			Transform_Restore(&transform);
 		}
 
 		Graphics_EndRender();

@@ -12,6 +12,7 @@ struct GUILabel{
 
 
 GUILabel *GUILabel_New(int x, int y, uint16_t width, uint16_t height);
+void GUILabel_SetText(GUILabel *_this, const char *_text);
 void GUILabel_Delete(GUILabel *_this);
 
 #endif
