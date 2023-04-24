@@ -294,6 +294,7 @@ void Input_Update() {
 				break;
 			case SDL_MOUSEMOTION:
 
+
 				if(!g_input_vars->enable_mouse_events){
 					continue; // next loop
 				}

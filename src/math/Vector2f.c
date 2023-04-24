@@ -1,6 +1,6 @@
 #include "zg_math.h"
 
-Vector2f Vector2f_New2f(float x, float y){
+Vector2f Vector2f_New(float x, float y){
 	Vector2f v={.x=x,.y=y};
 	return v;
 }

@@ -333,7 +333,7 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-				 Textbox_SetFont(label->textbox,TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
+				 //Textbox_SetFont(label->textbox,TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
 			 }else if(STRCMP(attribute->name,==,"text")){
 				 Textbox_SetText(label->textbox,attribute->value);
 			 }else{

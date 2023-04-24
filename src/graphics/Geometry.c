@@ -158,6 +158,18 @@ Geometry	* Geometry_NewRectangleFilled(uint32_t _properties){
 
 			Geometry_SetMeshTexture(geometry,mesh_texture,ARRAY_SIZE(mesh_texture));
 		}
+
+		if(_properties & GEOMETRY_PROPERTY_COLOR){
+
+			float mesh_color[]={
+				  1.0f,1.0f,1.0f,  // bottom left
+				  1.0f,1.0f,1.0f,  // bottom right
+				  1.0f,1.0f,1.0f,  // top left
+				  1.0f,1.0f,1.0f   // top right
+			};
+
+			Geometry_SetMeshColor(geometry,mesh_color,ARRAY_SIZE(mesh_color));
+		}
 	}
 
 	return geometry;

@@ -119,6 +119,9 @@ void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
+	glViewport(0, 0, Graphics_GetWindowWidth(), Graphics_GetWindowHeight());
+
+
 	switch(projection_mode){
 	case PROJECTION_MODE_ORTHO:
 		glOrtho(-Graphics_GetAspectRatio(), Graphics_GetAspectRatio(), -1, 1, -1, 1);

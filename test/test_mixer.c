@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 		if(K_1){
 
 			if(Music_IsPlaying(id_wav)&& !Music_IsPaused(id_wav)){
-				Log_Info("Pause wav");
+				Log_InfoF("Pause wav");
 				Music_Pause(id_wav);
 			}else{
 				if(Music_IsPaused(id_wav)){
@@ -143,4 +143,4 @@ int main(int argc, char *argv[]){
 
     return 0;
 
-};
+}

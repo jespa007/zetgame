@@ -42,6 +42,7 @@ typedef struct{
 	int num_displays;
 	int active_display;
 	bool fullscreen;
+	PROJECTION_MODE projection_mode;
 
 }GraphicsVars;
 
@@ -150,6 +151,7 @@ bool Graphics_Init(
 	g_graphics_vars->one_over_height=1.0f/(g_graphics_vars->height);
 	g_graphics_vars->aspect_ratio=((float)_width/(float)_height);
 	g_graphics_vars->one_over_aspect_ratio=1.0f/g_graphics_vars->aspect_ratio;
+	g_graphics_vars->scale=Vector2f_New(1,1);
 
 
 	Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
@@ -195,11 +197,13 @@ Vector2f Graphics_GetScale(){
 	return g_graphics_vars->scale;
 }
 
-void Graphics_SetProjectionMode(PROJECTION_MODE projection_mode){
+void Graphics_SetProjectionMode(PROJECTION_MODE _projection_mode){
 	//Input_SetupCursors();
+	g_graphics_vars->projection_mode=_projection_mode;
+
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
-		Graphics_GL_SetProjectionMode(projection_mode);
+		Graphics_GL_SetProjectionMode(_projection_mode);
 		break;
 
 	}
@@ -376,7 +380,7 @@ void 	Graphics_SetFullscreen(bool _fullscreen){
 		return;
 	}
 
-	g_graphics_vars->scale = Vector2f_New2f(
+	g_graphics_vars->scale = Vector2f_New(
 		1
 		,1
 	);
@@ -396,7 +400,7 @@ void 	Graphics_SetFullscreen(bool _fullscreen){
 		SDL_SetWindowFullscreen(g_graphics_vars->sdl_window,SDL_WINDOW_FULLSCREEN_DESKTOP);
 		// FULLSCREEN
 		//calculeScaleFactors();
-		g_graphics_vars->scale = Vector2f_New2f(
+		g_graphics_vars->scale = Vector2f_New(
 			(float)g_graphics_vars->width/(float)g_graphics_vars->rect_display[g_graphics_vars->active_display].w
 			,(float)g_graphics_vars->height/(float)g_graphics_vars->rect_display[g_graphics_vars->active_display].h
 		);
@@ -474,10 +478,14 @@ void Graphics_PrintGraphicsInfo(void){
 }
 
 uint16_t Graphics_GetWindowWidth(void){
-	return g_graphics_vars->rect_display[g_graphics_vars->active_display].w;
+	int w,h;
+	SDL_GetWindowSize(g_graphics_vars->sdl_window,&w,&h);
+	return w;
 }
 uint16_t Graphics_GetWindowHeight(void){
-	return g_graphics_vars->rect_display[g_graphics_vars->active_display].h;
+	int w,h;
+	SDL_GetWindowSize(g_graphics_vars->sdl_window,&w,&h);
+	return h;
 }
 
 
@@ -501,10 +509,18 @@ uint8_t Graphics_GetBytesPerPixel(void){
 }
 
 float Graphics_GetAspectRatio(void){
+	if(g_graphics_vars->projection_mode==PROJECTION_MODE_ORTHO){
+		return 1;
+	}
+
 	return g_graphics_vars->aspect_ratio;
 }
 
 float Graphics_GetOneOverAspectRatio(void){
+	if(g_graphics_vars->projection_mode==PROJECTION_MODE_ORTHO){
+		return 1;
+	}
+
 	return g_graphics_vars->one_over_aspect_ratio;
 }
 

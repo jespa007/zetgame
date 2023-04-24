@@ -62,7 +62,6 @@ void Geometry_GL_SetIndices(Geometry * geometry, const short *indices,size_t ind
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data->index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_len*sizeof(short), indices, GL_STATIC_DRAW);
 
-
 }
 
 

@@ -11,7 +11,7 @@ set(POST_NAME "")
 set(IS_DEBUG FALSE)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	set(IS_DEBUG TRUE)
-	SET( CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -D__DEBUG__ ")
+	SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__DEBUG__ ")
 	set( POST_NAME "_d")
 endif()
 
@@ -70,7 +70,7 @@ else()
 
 	SET(COMPILER "gcc")
 
-	SET( CMAKE_C_FLAGS " -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
+	SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
 	  
 	if (MINGW)
 		MESSAGE("-- Plataform: MINGW" )
@@ -85,7 +85,7 @@ else()
 	
 
 	IF ( IS_DEBUG)
-		set(CMAKE_C_FLAGS " ${CMAKE_CXX_FLAGS} -O0 -g ")
+		set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -O0 -g ")
 		
 		IF (EXISTS ${PROJECT_SOURCE_DIR}/../../memmgr)
 		
