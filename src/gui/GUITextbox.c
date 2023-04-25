@@ -5,22 +5,24 @@
 static void GUITextbox_Draw(void *gui_textbox);
 
 GUITextbox *GUITextbox_New(int x, int y, uint16_t width, uint16_t height){
-	GUITextbox *label = ZG_NEW(GUITextbox);
+	GUITextbox *textbox = ZG_NEW(GUITextbox);
 
-	label->widget=GUIWidget_New( x,  y,  width,  height);
-	label->widget->type=WIDGET_TYPE_TEXTBOX;
-	label->textbox=Textbox_New();
+	textbox->widget=GUIWidget_New( x,  y,  width,  height);
+	textbox->widget->type=WIDGET_TYPE_TEXTBOX;
+	textbox->widget->gui_ptr=textbox;
 
-	GUIWidget_SetDrawFunction(label->widget
+	textbox->textbox=Textbox_New();
+
+	GUIWidget_SetDrawFunction(textbox->widget
 			,(CallbackWidgetUpdate){
 				.ptr_function=GUITextbox_Draw
-				,.calling_widget=label
+				,.calling_widget=textbox
 			}
 	);
 
 	// SETUP LABEL
 
-	return label;
+	return textbox;
 }
 
 

@@ -1,7 +1,6 @@
 #include "zg_gui.h"
 
 #define DEFAULT_WINDOW_WIDTH 			150
-#define DEFAULT_WINDOW_CAPTION_HEIGHT 	32
 #define DEFAULT_WINDOW_CONTENT_HEIHGT 	300
 
 
@@ -42,6 +41,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 
 	window->widget=GUIWidget_New(x, y, _width, _height);
 	window->widget->type=WIDGET_TYPE_WINDOW;
+	window->widget->gui_ptr=window;
 
 	// CAPTION
 	data->frame_caption=GUIFrame_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);

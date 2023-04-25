@@ -13,6 +13,7 @@ GUILabel *GUILabel_New(int x, int y, uint16_t width, uint16_t height){
 
 	label->widget=GUIWidget_New( x,  y,  width,  height);
 	label->widget->type=WIDGET_TYPE_LABEL;
+	label->widget->gui_ptr=label;
 
 	GUIWidget_SetDrawFunction(label->widget
 			,(CallbackWidgetUpdate){

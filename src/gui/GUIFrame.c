@@ -9,6 +9,7 @@ GUIFrame * GUIFrame_New(int x, int y, uint16_t width, uint16_t height){
 	GUIFrame * gui_frame=ZG_NEW(GUIFrame);
 	gui_frame->widget=GUIWidget_New( x,  y,  width,  height);
 	gui_frame->widget->type=WIDGET_TYPE_FRAME;
+	gui_frame->widget->gui_ptr=gui_frame;
 
 	GUIWidget_UpdateFunctionOverride(gui_frame->widget
 				,(CallbackWidgetUpdate){

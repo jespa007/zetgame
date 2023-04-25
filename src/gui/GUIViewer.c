@@ -13,6 +13,8 @@ GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
 	// SETUP WIDGET
 	viewer->widget=GUIWidget_New( x,  y,  width,  height);
 	viewer->widget->type=WIDGET_TYPE_VIEWER;
+	viewer->widget->gui_ptr=viewer;
+
 	viewer->textbox=Textbox_New();
 
 

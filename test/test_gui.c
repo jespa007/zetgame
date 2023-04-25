@@ -5,8 +5,11 @@
 int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argc);
 	UNUSUED_PARAM(argv);
-
-	ZetGame_Init(NULL);
+	ZetGameSetupParams params;
+	memset(&params,0,sizeof(params));
+	params.width=1024;
+	params.height=768;
+	ZetGame_Init(&params);
 
 
 	TextureManager * texture_manager= TextureManager_New();

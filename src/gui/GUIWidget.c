@@ -134,7 +134,7 @@ GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	if(_this->type == WIDGET_TYPE_WINDOW){
 		// THIS IS NOT CORRECT
-		return (GUIWindow 		*)_this;
+		return (GUIWindow 		*)_this->gui_ptr;
 	}
 
 	if(data->parent){

@@ -146,8 +146,6 @@ int main(int argc, char *argv[]){
 	colliders[2].transform.scale.x=ViewPort_ScreenToWorldWidth(100);
 
 
-
-
 	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_POINT;
 	SelectCollider select_collider=SELECT_COLLIDER_POINT;
 

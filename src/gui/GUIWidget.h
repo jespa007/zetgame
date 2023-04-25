@@ -48,6 +48,7 @@ typedef struct{
 
 struct GUIWidget{
 	WidgetType			type;
+	void				*gui_ptr;
 	Color4f				color,background_color;
 	float 				opacity;
 	bool 				is_enabled;

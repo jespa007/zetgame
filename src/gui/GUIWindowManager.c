@@ -444,7 +444,7 @@ bool GUIWindowManager_LoadFromMemory(
 	 window_data->gui_window_manager_data=data;
 
 
-	 window_data->window=GUIWindow_New(0,0,10,10,_this);
+	 window_data->window=GUIWindow_New(0,0,Graphics_GetWidth(),Graphics_GetHeight()-DEFAULT_WINDOW_CAPTION_HEIGHT,_this);
 	 XmlAttribute *attribute=doc->root->attributes;
 	 XmlElement *children=doc->root->children;
 
