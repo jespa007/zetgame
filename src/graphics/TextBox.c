@@ -259,6 +259,11 @@ void     Textbox_SetText(TextBox *_this,const char *in, ...){
 	Textbox_RT_Build(_this);
 }
 
+const char *    Textbox_GetText(TextBox *_this){
+	TextboxData *data=_this->data;
+	return data->text;
+}
+
 
 void     Textbox_WSetText(TextBox *_this,const wchar_t *in, ...){
 	wchar_t out[1024]={0};
@@ -288,6 +293,11 @@ void     Textbox_SetFont(TextBox *_this, TTFont *font){
 	}
 }
 
+TTFont *   Textbox_GetFont(TextBox *_this){
+	TextboxData *data=_this->data;
+	return data->font;
+}
+
 void	 Textbox_SetTextAlign(TextBox *_this, TextAlign text_align){
 	TextboxData *data=_this->data;
 	data->text_align=text_align;
@@ -299,13 +309,26 @@ void	 Textbox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align){
 }
 
 
-void	 Textbox_SetDimensions(TextBox *_this, uint16_t w, uint16_t h){
+void	 Textbox_SetDimensions(TextBox *_this, uint16_t _width, uint16_t _height){
+	Textbox_SetWidth(_this,_width);
+	Textbox_SetHeight(_this,_height);
+}
+
+void	 Textbox_SetWidth(TextBox *_this, uint16_t _width){
 	TextboxData *data=_this->data;
 
-	if(!(data->dimensions.x==w && data->dimensions.y==h)){
+	if(data->dimensions.x!=_width){
 		Textbox_RT_Build(_this);
-		data->dimensions.x=w;
-		data->dimensions.y=h;
+		data->dimensions.x=_width;
+	}
+}
+
+void	 Textbox_SetHeight(TextBox *_this, uint16_t _height){
+	TextboxData *data=_this->data;
+
+	if(data->dimensions.y !=_height){
+		data->dimensions.y=_height;
+		Textbox_RT_Build(_this);
 	}
 }
 

@@ -8,12 +8,13 @@ struct TTFontManager{
 };
 
 typedef struct{
-	const char * 	font_name;
+	const char  	*font_name;
 	uint8_t 		font_size;
 }TTFontInfo;
 
 // STATIC
 void			TTFontManager_Init(void);
+TTFontInfo 		TTFontManager_GetEmbeddedFontInfo(void);
 FT_Library 		TTFontManager_GetFreeTypeHandler(void);
 void			TTFontManager_DeInit(void);
 TTFont * 		TTFontManager_GetEmbeddedFont(void);

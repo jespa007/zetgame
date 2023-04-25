@@ -41,6 +41,7 @@ GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
 	GUIButton * button = ZG_NEW(GUIButton);
 	// SETUP WIDGET
 	button->widget = GUIWidget_New( x,  y,  width,  height);
+	button->widget->type=WIDGET_TYPE_BUTTON;
 	button->textbox=Textbox_New();
 	GUIWidget_SetDrawFunction(button->widget,(CallbackWidgetUpdate){
 		.ptr_function=GUIButton_Draw

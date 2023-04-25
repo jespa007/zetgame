@@ -320,22 +320,23 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetWidth(label->widget,int_value);
+					 GUILabel_SetWidth(label,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetHeight(label->widget,int_value);
+					 GUILabel_SetHeight(label,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetHeight(label->widget,int_value);
+					 GUILabel_SetFontSize(label,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
+				 GUILabel_SetFontName(label,attribute->name);
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 				 //Textbox_SetFont(label->textbox,TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 Textbox_SetText(label->textbox,attribute->value);
+				 GUILabel_SetText(label,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -406,7 +407,7 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 
 bool GUIWindowManager_LoadFromMemory(
 		GUIWindowManager *_this
-		,const char *_path
+		,const char *_id
 		,uint8_t *_xml_buf
 		,size_t _xml_len
 	){
@@ -443,21 +444,31 @@ bool GUIWindowManager_LoadFromMemory(
 	 window_data->gui_window_manager_data=data;
 
 
-	 window_data->window=GUIWindow_New(0,0,10,10);
+	 window_data->window=GUIWindow_New(0,0,10,10,_this);
 	 XmlAttribute *attribute=doc->root->attributes;
 	 XmlElement *children=doc->root->children;
 
 	 // setup window
 	 if(attribute != NULL){
 		 do{
+			 int int_value=0;
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(STRCMP(attribute->name,==,"background-color")){
 				 GUIWindow_SetBackgroundColorHexStr(window_data->window,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"window-style")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"caption")){
+				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
+				 }
+			 }else if(STRCMP(attribute->name,==,"width")){
+				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
+					 GUIWindow_SetWidth(window_data->window,int_value);
+				 }
+			 }else if(STRCMP(attribute->name,==,"height")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-				 GUIWindow_SetCaption(window_data->window,attribute->value);
+				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
+					 GUIWindow_SetHeight(window_data->window,int_value);
+				 }
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 			 }
@@ -474,15 +485,13 @@ bool GUIWindowManager_LoadFromMemory(
 		 }while(children != children->parent->children);
 	 }
 
+	 ok=true;
+
+	MapString_SetValue(data->windows,_id,window_data);
+
 wm_load_from_memmory_exit:
 
 	freeDoc(doc);
-
-	char *filename=Path_GetFilename(_path);
-
-	MapString_SetValue(data->windows,filename,window_data);
-
-	free(filename);
 
 	return ok;
 
@@ -498,13 +507,13 @@ wm_load_from_memmory_exit:
 bool GUIWindowManager_Load(GUIWindowManager *_this,const char *_json_tmx_file){
 
 	BufferByte *_xml_buf=NULL;bool ok=false;
-	char *_path=NULL;
+	char *file=NULL;
 
 
 	if((_xml_buf=File_Read(_json_tmx_file))!=NULL){
 		ok=GUIWindowManager_LoadFromMemory(
 				_this
-				,_path=Path_GetDirectoryName(_json_tmx_file)
+				,file=Path_GetFilenameWithoutExtension(_json_tmx_file)
 				,_xml_buf->ptr
 				,_xml_buf->len
 		);
@@ -512,11 +521,23 @@ bool GUIWindowManager_Load(GUIWindowManager *_this,const char *_json_tmx_file){
 
 
 	if(_xml_buf) BufferByte_Delete(_xml_buf);
-	if(_path) free(_path);
+	if(file) free(file);
 
 
 	return ok;
 }
+
+TextureManager		*	GUIWindowManager_GetTextureManager(GUIWindowManager *_this){
+	GUIWindowManagerData *data=_this->data;
+	return data->texture_manager;
+}
+
+TTFontManager		*	GUIWindowManager_GetTTFontManager(GUIWindowManager *_this){
+	GUIWindowManagerData *data=_this->data;
+	return data->ttfont_manager;
+
+}
+
 
 GUIWindow *GUIWindowManager_Get(GUIWindowManager *_this, const char *key){
 	GUIWindowManagerData *data=_this->data;

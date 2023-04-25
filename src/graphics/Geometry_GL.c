@@ -50,7 +50,7 @@ void Geometry_GL_SetIndices(Geometry * geometry, const short *indices,size_t ind
 
 
 	if(indices_len != geometry->index_length){
-		Log_Error("Index count doesn't matches (indices:%i vertexs:%i)",indices_len,geometry->index_length);
+		Log_Error("Index count doesn't matches (indices:%i vertexes:%i)",indices_len,geometry->index_length);
 		return;
 	}
 

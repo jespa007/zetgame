@@ -121,8 +121,48 @@ void GUIWidget_AttachWidgetBase(GUIWidget *_this, GUIWidget *widget_to_attach){
 
 	// now widget has this parent
 	data_widget->parent=_this;
-
 }
+
+
+// it goes parent to parent till it founds a widget with type window
+GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this){
+
+	if(_this == NULL){
+		return NULL;
+	}
+
+	GUIWidgetData *data=_this->data;
+	if(_this->type == WIDGET_TYPE_WINDOW){
+		// THIS IS NOT CORRECT
+		return (GUIWindow 		*)_this;
+	}
+
+	if(data->parent){
+		return GUIWidget_GetWindow(data->parent);
+	}
+	return NULL;
+}
+
+TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this){
+	GUIWindow *window=GUIWidget_GetWindow(_this);
+
+	if(window == NULL){
+		Log_ErrorF("Cannot get TTFontManager because there's not window attached in this widget");
+	}
+
+	return GUIWindow_GetTTFontManager(window);
+}
+
+TextureManager 	*GUIWidget_GetTextureManager(GUIWidget *_this){
+	GUIWindow *window=GUIWidget_GetWindow(_this);
+
+	if(window == NULL){
+		Log_ErrorF("Cannot get TextureManager because there's not window attached in this widget");
+	}
+
+	return GUIWindow_GetTextureManager(window);
+}
+
 
 void GUIWidget_AttachWidget(GUIWidget *_this, GUIWidget *widget_to_attach){
 

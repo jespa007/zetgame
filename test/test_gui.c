@@ -25,25 +25,28 @@ int main(int argc, char *argv[]){
 	}
 
 
-	window=GUIWindow_New(10,10,200,100);
-	GUIViewer * gui_viewer=GUIViewer_New(10,10,42,42);
+	//window=GUIWindow_New(10,10,200,100);
+	//GUIViewer * gui_viewer=GUIViewer_New(10,10,42,42);
 
-	//Textbox_SetText(gui_viewer->widget->textbox,"1");
-	//GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
-	do{
-		Graphics_BeginRender();
+	if(window){
+
+		//Textbox_SetText(gui_viewer->widget->textbox,"1");
+		//GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
+		do{
+			Graphics_BeginRender();
 
 
-		GUIWidget_Update(window->widget);
+			GUIWidget_Update(window->widget);
 
-		Graphics_EndRender();
+			Graphics_EndRender();
 
-		Input_Update();
+			Input_Update();
 
-	}while(!K_ESC);
+		}while(!K_ESC);
+	}
 
-	GUIViewer_Delete(gui_viewer);
-	GUIWindow_Delete(window);
+	//GUIViewer_Delete(gui_viewer);
+	//GUIWindow_Delete(window);
 	TextureManager_Delete(texture_manager);
 	TTFontManager_Delete(ttfont_manager);
 	GUIWindowManager_Delete(window_manager);

@@ -110,6 +110,7 @@
 #undef glBindVertexArray
 #undef glDeleteVertexArrays
 #undef glVertexAttribPointer
+#undef glDrawElements
 
 // program
 #undef	glCreateProgram
@@ -226,6 +227,10 @@ void 	__glEnableClientState__(const char *file, int line,GLenum cap){
 	glPrintError(file,line);
 }
 
+void __glDrawElements__(const char *file, int line, GLenum _mode,GLsizei _index_length,GLenum  _type, const void *_ptr){
+	glDrawElements(_mode,_index_length,  _type, (void *)_ptr);
+	glPrintError(file,line);
+}
 
 void 	__glDisableClientState__(const char *file, int line,GLenum cap){
 	glDisableClientState(cap);

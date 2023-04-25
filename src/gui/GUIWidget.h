@@ -9,10 +9,12 @@
 #define GUI_GET_RELATIVE_Y(widget) (widget->position_local.y + widget->position_offset.y)
 
 typedef enum{
-	WIDGET_TYPE_WIDGET=0
+	WIDGET_TYPE_UNKNOWN=0
+	,WIDGET_TYPE_WIDGET
 	,WIDGET_TYPE_FRAME
 	,WIDGET_TYPE_LABEL
 	,WIDGET_TYPE_TEXTBOX
+	,WIDGET_TYPE_BUTTON
 	,WIDGET_TYPE_VIEWER
 	,WIDGET_TYPE_WINDOW
 }WidgetType;
@@ -24,6 +26,9 @@ typedef enum{
 }WidgetPosition;
 
 typedef struct GUIWidget GUIWidget;
+typedef struct GUIWindow GUIWindow;
+typedef struct GUIWindowManager GUIWindowManager;
+
 
 typedef struct{
 	void (*ptr_function)(void *_this, uint16_t new_size);
@@ -70,6 +75,10 @@ bool	GUIWidget_IsPointCollision(GUIWidget *_this,Vector2i point);
 void GUIWidget_Update(GUIWidget *_this);
 
 void GUIWidget_Draw(GUIWidget *_this);
+
+GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this);
+TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this);
+TextureManager 	*GUIWidget_GetTextureManager(GUIWidget *_this);
 
 void GUIWidget_AttachWidget(GUIWidget *_this, GUIWidget *widget);
 GUIWidget * GUIWidget_GetParent(GUIWidget *_this);

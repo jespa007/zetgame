@@ -106,8 +106,9 @@
 
 // vertex array
 #define glGenVertexArrays(n, arrays)										__glGenVertexArrays__(__FILE__,__LINE__,n,arrays)
-#define glEnableVertexAttribArray(index) 									__glEnableVertexAttribArray__(__FILE__,__LINE__,index)
-#define glDisableVertexAttribArray(index) 									__glDisableVertexAttribArray__(__FILE__,__LINE__,index)
+#define glEnableVertexAttribArray(index) 									__glEnableVertexAttribArray__(__FILE__,__LINE__,_index)
+#define glDisableVertexAttribArray(_index) 									__glDisableVertexAttribArray__(__FILE__,__LINE__,_index)
+#define glDrawElements(_mode,_index_length, _type,_ptr)						__glDrawElements__(__FILE__,__LINE__, _mode,_index_length, _type,_ptr)
 #define glBindVertexArray(array)											__glBindVertexArray__(__FILE__,__LINE__,array)
 #define glDeleteVertexArrays(n,arrays)										__glDeleteVertexArrays__(__FILE__,__LINE__,n,arrays)
 #define glVertexAttribPointer(index,size,type, normalized,\
@@ -217,6 +218,7 @@ void 	__glPointParameterfv__(const char *file, int line,GLenum pname,	const GLfl
 
 // vertexs
 void 	__glGenVertexArrays__(const char *file, int line, GLsizei n,	GLuint *arrays);
+void 	__glDrawElements__(const char *file, int line, GLenum _mode,GLsizei _index_length,GLenum  _type, const void *_ptr);
 void 	__glVertexAttribPointer__(const char *file, int line, 	GLuint index,	GLint size,	GLenum type,GLboolean normalized,GLsizei stride,const GLvoid * pointer);
 void 	__glBindVertexArray__(const char *file, int line, 	GLuint array);
 void 	__glEnableVertexAttribArray__( const char *file, int line,	GLuint index);

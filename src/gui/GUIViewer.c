@@ -8,26 +8,27 @@ typedef struct{
 }GUIViewerData;
 
 GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
-	GUIViewer *texture = ZG_NEW(GUIViewer);
+	GUIViewer *viewer = ZG_NEW(GUIViewer);
 
 	// SETUP WIDGET
-	texture->widget=GUIWidget_New( x,  y,  width,  height);
-	texture->textbox=Textbox_New();
+	viewer->widget=GUIWidget_New( x,  y,  width,  height);
+	viewer->widget->type=WIDGET_TYPE_VIEWER;
+	viewer->textbox=Textbox_New();
 
 
 	// SETUP DATA
 	GUIViewerData *data = ZG_NEW(GUIViewerData);
 	data->texture = NULL;
-	texture->data=data;
+	viewer->data=data;
 
-	GUIWidget_SetDrawFunction(texture->widget
+	GUIWidget_SetDrawFunction(viewer->widget
 			,(CallbackWidgetUpdate){
 				.ptr_function=GUIViewer_DrawWidget
-				,.calling_widget=texture
+				,.calling_widget=viewer
 			}
 	);
 
-	return texture;
+	return viewer;
 }
 
 static void GUIViewer_DrawWidget(void *gui_texture){

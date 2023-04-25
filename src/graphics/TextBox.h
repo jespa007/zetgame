@@ -23,13 +23,17 @@ struct TextBox{
 
 TextBox *Textbox_New(void);
 
-void	 Textbox_SetDimensions(TextBox *_this, uint16_t w, uint16_t h);
-void	 Textbox_SetTextAlign(TextBox *_this, TextAlign text_align);
-void	 Textbox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align);
-void     Textbox_SetText(TextBox *_this,const char *s, ...);
-void     Textbox_WSetText(TextBox *_this,const wchar_t *s, ...);
-void     Textbox_SetFont(TextBox *_this, TTFont *font);
-void	 Textbox_Draw(TextBox *_this, Transform *transform, Color4f *color);
-void	 Textbox_Delete(TextBox *_this);
+void			Textbox_SetDimensions(TextBox *_this, uint16_t w, uint16_t h);
+void	 		Textbox_SetWidth(TextBox *_this, uint16_t _width);
+void	 		Textbox_SetHeight(TextBox *_this, uint16_t _height);
+void	 		Textbox_SetTextAlign(TextBox *_this, TextAlign text_align);
+void	 		Textbox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align);
+void     		Textbox_SetText(TextBox *_this,const char *s, ...);
+const char *    Textbox_GetText(TextBox *_this);
+void     		Textbox_WSetText(TextBox *_this,const wchar_t *s, ...);
+void     		Textbox_SetFont(TextBox *_this, TTFont *font);
+TTFont 		*   Textbox_GetFont(TextBox *_this);
+void	 		Textbox_Draw(TextBox *_this, Transform *transform, Color4f *color);
+void	 		Textbox_Delete(TextBox *_this);
 
 #endif

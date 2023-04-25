@@ -8,6 +8,7 @@ GUITextbox *GUITextbox_New(int x, int y, uint16_t width, uint16_t height){
 	GUITextbox *label = ZG_NEW(GUITextbox);
 
 	label->widget=GUIWidget_New( x,  y,  width,  height);
+	label->widget->type=WIDGET_TYPE_TEXTBOX;
 	label->textbox=Textbox_New();
 
 	GUIWidget_SetDrawFunction(label->widget

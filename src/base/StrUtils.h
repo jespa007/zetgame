@@ -7,6 +7,25 @@ typedef enum{
 
 }CharType;
 
+#define	 STR_MAX			4096
+
+
+#define 	STR_CAPTURE_BASE(_str_out, _first_param, _str_in)\
+{va_list  ap;\
+int max_len=(int)((sizeof(_str_out)/sizeof(char))-1);\
+va_start(ap, _first_param);\
+int n=vsnprintf(_str_out,max_len,_str_in,  ap);\
+if(n>=(int)max_len || n==-1){\
+	_str_out[max_len-1]=0;\
+	_str_out[max_len-2]='.';\
+	_str_out[max_len-3]='.';\
+	_str_out[max_len-4]='.';\
+}\
+va_end(ap);}
+
+#define 	STR_CAPTURE_VARGS(_str_out, _str_in)\
+STR_CAPTURE_BASE(_str_out,_str_in,_str_in)\
+
 
 char *			StrUtils_StrClone(const char *in_str);
 char *			StrUtils_StrCloneN(const char *in, size_t len);

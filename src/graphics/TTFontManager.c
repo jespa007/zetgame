@@ -28,6 +28,13 @@ FT_Library TTFontManager_GetFreeTypeHandler(void){
 	return g_ft_handler;
 }
 
+TTFontInfo TTFontManager_GetEmbeddedFontInfo(void){
+	return (TTFontInfo){
+		.font_name=DEFAULT_FONT_FAMILY
+		,.font_size=DEFAULT_FONT_SIZE
+	};
+}
+
 TTFont * 		TTFontManager_GetEmbeddedFont(void){
 	if(g_font_embedded == NULL){
 		g_font_embedded=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,DEFAULT_FONT_SIZE);
@@ -40,7 +47,6 @@ void	 TTFontManager_OnDeleteNode(MapStringNode *node){
 	if(font!=NULL){
 		TTFont_Delete(font);
 	}
-
 }
 
 
