@@ -12,8 +12,14 @@ int main(int argc, char *argv[]){
 	ZetGame_Init(&params);
 
 
+
 	TextureManager * texture_manager= TextureManager_New();
 	TTFontManager * ttfont_manager= TTFontManager_New();
+
+	TTFontManager_SetFontResourcePath(ttfont_manager,"../../../test/data/fonts");
+	TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
+
+
 	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager,ttfont_manager);
 	GUIWindow * window=NULL;
 

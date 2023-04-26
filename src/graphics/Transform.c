@@ -62,8 +62,20 @@ void Transform_SetTranslateZ(Transform *_this,float z){
 	_this->translate.z=z;
 }
 
-void Transform_SetPosition2i(Transform *_this,int x, int y){
-	_this->translate=ViewPort_ScreenToWorld(x,y);
+void Transform_SetPosition2i(Transform *_this,int _x, int _y){
+	_this->translate=ViewPort_ScreenToWorld(_x,_y);
+	//CLR_MSK(_this->transform_properties,TRANSFORM_PROPERTY_POSITION_RELATIVE_X|TRANSFORM_PROPERTY_POSITION_RELATIVE_Y);
+}
+
+void Transform_SetDisplacement2i(Transform *_this,int _rel_x, int _rel_y){
+
+	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
+	//Transform_SetPosition2i(&data->transform_local,x,y);
+	_this->translate=(Vector3f){
+		.x=ViewPort_ScreenToWorldWidth(_rel_x)
+		,.y=-ViewPort_ScreenToWorldHeight(_rel_y)
+		,.z=0
+	};
 	//CLR_MSK(_this->transform_properties,TRANSFORM_PROPERTY_POSITION_RELATIVE_X|TRANSFORM_PROPERTY_POSITION_RELATIVE_Y);
 }
 

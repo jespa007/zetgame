@@ -219,6 +219,8 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"font-name")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"src")){
+				 GUIViewer_SetImage(viewer,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;

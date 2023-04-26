@@ -33,7 +33,7 @@
 		left="480" top="155" width="50" height="50"
 		font-size="25"
 	></img>
-	<img  id="star2" top="155" left="540" src="star_off1.png" 
+	<img  id="star2" top="155" left="540" src="star_on.png" 
 		width="50" height="50"
 		font-size="25"
 	></img>

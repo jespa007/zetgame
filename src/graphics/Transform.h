@@ -46,6 +46,7 @@ void Transform_SetTranslateZ(Transform *_this,float z);
 
 // For 2D position
 void 		Transform_SetPosition2i(Transform *_this, int x,int y);
+void 		Transform_SetDisplacement2i(Transform *_this, int x,int y);
 //void 		Transform_SetPositionRelativeX(Transform *_this,int x);
 //void 		Transform_SetPositionRelativeY(Transform *_this,int y);
 //void 		Transform_SetPositionRelative2i(Transform *_this, int x,int y);

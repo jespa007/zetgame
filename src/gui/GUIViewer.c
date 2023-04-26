@@ -4,7 +4,8 @@
 static void GUIViewer_DrawWidget(void *gui_texture);
 
 typedef struct{
-	Texture *texture;
+	Texture 	*texture;
+	TextBox 	*textbox;
 }GUIViewerData;
 
 GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
@@ -15,12 +16,11 @@ GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
 	viewer->widget->type=WIDGET_TYPE_VIEWER;
 	viewer->widget->gui_ptr=viewer;
 
-	viewer->textbox=Textbox_New();
-
 
 	// SETUP DATA
 	GUIViewerData *data = ZG_NEW(GUIViewerData);
 	data->texture = NULL;
+	data->textbox=Textbox_New();
 	viewer->data=data;
 
 	GUIWidget_SetDrawFunction(viewer->widget
@@ -35,15 +35,25 @@ GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
 
 static void GUIViewer_DrawWidget(void *gui_texture){
 	GUIViewer *_this=gui_texture;
+	GUIViewerData *data=_this->data;
 	Transform transform=Transform_DefaultValues();
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 	Vector2i dim=GUIWidget_GetDimensions(_this->widget);
 
-	Graphics_DrawRectangleTextured4i(position.x,position.y,dim.x,dim.y,COLOR4F_WHITE,_this->texture,NULL);
+	Graphics_DrawRectangleTextured4i(position.x,position.y,dim.x,dim.y,COLOR4F_WHITE,data->texture,NULL);
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	Textbox_Draw(_this->textbox,&transform,&_this->widget->color);
+	Textbox_Draw(data->textbox,&transform,&_this->widget->color);
+}
+
+void		GUIViewer_SetImage(GUIViewer *_this, const char *_image){
+	GUIViewerData *data=_this->data;
+	TextureManager *texture_manager=GUIWidget_GetTextureManager(_this->widget);
+	Texture *texture=TextureManager_Get(texture_manager,_image);
+	if(texture!=NULL){
+		data->texture=texture;
+	}
 }
 
 
@@ -52,9 +62,7 @@ void GUIViewer_Delete(GUIViewer *_this){
 	GUIViewerData *data=_this->data;
 
 	GUIWidget_Delete(_this->widget);
-
-	Textbox_Delete(_this->textbox);
-	Texture_Delete(_this->texture);
+	Textbox_Delete(data->textbox);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);
