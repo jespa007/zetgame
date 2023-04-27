@@ -15,10 +15,10 @@ typedef struct{
 }TTFontData;
 
 typedef struct{
-    void 	* character_data;   // ID handle of the glyph texture
     Vector2i size;    			// Size of glyph
     Vector2i bearing;  			// Offset from baseline to left/top of glyph
     GLuint 	 advance;    		// Horizontal offset to advance to next glyph
+    void 	* data;   			// ID handle of the glyph texture
 }TTFontCharacter;
 
 
@@ -28,7 +28,61 @@ typedef struct{
 #include "TTFont_GL.c"
 
 
-//-----
+void	 TTFont_OnDeleteNode(MapIntNode *node);
+
+
+
+//--------
+// PRIVATE
+TTFontCharacter *TTFont_BuildChar(TTFont *_this,unsigned long c){
+	//GLuint VAO, VBO;
+	TTFontCharacter *font_character=NULL;
+	TTFontData *data=_this->data;
+	FT_Face face=data->ft_face;
+
+
+    // Load first 128 characters of ASCII set
+	// Load character glyph
+	if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+	{
+		Log_ErrorF("FREETYTPE: Failed to load Glyph");
+		return NULL;
+	}
+
+	// Now store character for later use
+	font_character = ZG_NEW(TTFontCharacter);
+
+	*font_character=(TTFontCharacter){
+		.data=NULL
+		,.size=Vector2i_New(face->glyph->bitmap.width, face->glyph->bitmap.rows)
+		,.bearing=Vector2i_New(face->glyph->bitmap_left, face->glyph->bitmap_top)
+		,.advance=face->glyph->advance.x
+	};
+
+
+	//
+	switch(Graphics_GetGraphicsApi()){
+	case GRAPHICS_API_GL:
+		TTFont_GL_BuildChar(font_character,face);
+		break;
+	default:
+		break;
+	}
+
+    return font_character;
+}
+
+void TTFont_BuildChars(TTFont *_this,unsigned long char_ini, unsigned long char_end){
+	//GLuint VAO, VBO;
+    // Load first 128 characters of ASCII set
+    for (unsigned long c = char_ini; c < char_end; c++)
+    {
+    	TTFontCharacter *font_character=TTFont_BuildChar(_this,c);
+    	MapInt_Set(_this->characters,c,font_character);
+    }
+}
+
+
 TTFont * TTFont_New(FT_Face face,uint8_t font_size){
 
     TTFont *font=ZG_NEW(TTFont);
@@ -47,6 +101,7 @@ TTFont * TTFont_New(FT_Face face,uint8_t font_size){
     font->font_size=font_size;
     font->ascender=face->ascender>>6;
     font->characters=MapInt_New();
+    font->characters->on_delete=TTFont_OnDeleteNode;
 
     // data
     font_data->geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
@@ -86,27 +141,15 @@ void TTFont_SetTransformation(TTFont * _this, float _weight, float _shear)
 	_this->shear = _shear;
 }
 
-void TTFont_setStyle(TTFont * _this, uint8_t _style)
+void TTFont_SetStyle(TTFont * _this, uint8_t _style)
 {
 	TTFont_SetTransformation(_this,(_style & TTFONT_STYLE_BOLD)?(BOLD_WEIGHT):(1.0), (_style & TTFONT_STYLE_ITALIC)?(ITALIC_SHEAR):(0.0));
 	_this->style = _style;
 }
 
-TTFontCharacter * TTFont_BuildChar(TTFont * _this, unsigned long c){
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		return TTFont_GL_BuildChar(_this,c);
-		break;
-	default:
-		break;
-	}
-
-	return NULL;
-}
-
-
-
+//--------
+// PUBLIC
 TTFont * TTFont_NewFromFile(const char *ttf_file, size_t font_size){
 
 	FT_Face face;
@@ -121,14 +164,7 @@ TTFont * TTFont_NewFromFile(const char *ttf_file, size_t font_size){
     // Create new font with size...
     font=TTFont_New(face,font_size);
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_BuildChars(font,0,MAX_CHARACTER_VALUE);
-		break;
-	default:
-		break;
-
-	}
+	TTFont_BuildChars(font,0,MAX_CHARACTER_VALUE);
 
 
 	return font;
@@ -147,19 +183,10 @@ TTFont * TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, size_t f
     // Create new font with size...
     font=TTFont_New(face,font_size);
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_BuildChars(font,0,MAX_CHARACTER_VALUE);
-		break;
-	default:
-		break;
-
-	}
+	TTFont_BuildChars(font,0,MAX_CHARACTER_VALUE);
 
 	return font;
 }
-
-
 
 
 //-------------------------------------------------------------
@@ -205,14 +232,12 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 	{
 		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(_this->characters,c);
 		if(ch==NULL){ // build
-			ch=TTFont_GL_BuildChar(_this,c);
+			ch=TTFont_BuildChar(_this,c);
 
 			if(ch==NULL){
 				continue;
 			}
 		}
-
-		CharacterDataGL *ch_data=ch->character_data;
 
 		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,_this->ascender - ch->size.y);
 		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,_this->ascender);
@@ -224,7 +249,13 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 				_x3d+p2_3d.x, _y3d-p2_3d.y,0    // top right
 		};
 
-		glBindTexture(GL_TEXTURE_2D, ch_data->texture);
+		//----------------------------------
+		// TODO: Put in TTFont_GL.c
+		CharacterDataGL *ch_data=ch->data;
+		glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be Texture and Bind according
+		// TODO: Put in TTFont_GL.c
+		//----------------------------------
+
 		Geometry_SetMeshVertex(data->geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 		Geometry_Draw(data->geometry);
 
@@ -307,6 +338,17 @@ uint16_t 		TTFont_WGetWidthN(TTFont *_this, const wchar_t *str, size_t len){
 	return TTFont_GetWidthBuiltInt(_this,str,len,CHAR_TYPE_WCHAR);
 }
 
+void	TTFont_OnDeleteNode(MapIntNode *node){
+	TTFontCharacter * _font_character = node->val;
+	switch(Graphics_GetGraphicsApi()){
+	case GRAPHICS_API_GL:
+		TTFont_GL_DeleteChar(_font_character);
+		break;
+	}
+
+	ZG_FREE(_font_character);
+}
+
 
 void	TTFont_Delete(TTFont *_this){
 
@@ -317,12 +359,6 @@ void	TTFont_Delete(TTFont *_this){
 	TTFontData *data=_this->data;
 
 	Geometry_Delete(data->geometry);
-
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		TTFont_GL_Delete(_this);
-		break;
-	}
 
 	// delete all element list using free (no destructors involved) ...
 	MapInt_Delete(_this->characters);

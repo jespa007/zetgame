@@ -11,7 +11,7 @@ struct MapIntNode{
 
 struct MapInt{
 	List	 	*	list;
-	void 		* 	(* on_delete)(MapIntNode *node);
+	void 		 	(* on_delete)(MapIntNode *node);
 
 };
 

@@ -334,7 +334,7 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 					 GUILabel_SetFontSize(label,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
-				 GUILabel_SetFontName(label,attribute->name);
+				 GUILabel_SetFontName(label,attribute->value);
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 				 //Textbox_SetFont(label->textbox,TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
 			 }else if(STRCMP(attribute->name,==,"text")){

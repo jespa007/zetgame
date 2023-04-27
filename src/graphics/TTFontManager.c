@@ -149,7 +149,7 @@ TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uin
 	TTFontManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
-	TTFont * font=NULL;
+	TTFont * font=NULL,*new_font=NULL;
 	//char filename[PATH_MAX]={0};
 	char *ttf_font_file_to_lower=NULL;
 
@@ -170,7 +170,7 @@ TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uin
 
 	if((font=MapString_GetValue(data->fonts,id,NULL))==NULL){
 		if(STRCMP(ttf_font_file_to_lower,==,DEFAULT_FONT_FAMILY)){
-			font=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
+			new_font=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 		}
 		else{
 			char filename[PATH_MAX]={0};
@@ -181,12 +181,14 @@ TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uin
 				sprintf(filename,"%s/%s",data->font_resource_path,_filename);
 			}
 
-			if((font=TTFont_NewFromFile(filename,_font_size))!=NULL){
-				MapString_SetValue(data->fonts,id,font);
-			}
-			else{
+			if((new_font=TTFont_NewFromFile(filename,_font_size))==NULL){
 				font=TTFontManager_GetEmbeddedFont();
 			}
+		}
+
+		if(new_font != NULL){
+			font=new_font;
+			MapString_SetValue(data->fonts,id,new_font);
 		}
 
 	}
