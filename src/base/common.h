@@ -43,7 +43,7 @@ typedef unsigned int uint_t;
 
 
 typedef struct {
-	CallbackType  ptr_function;
+	CallbackType  		ptr_function;
 	void 				* user_data;
 }Callback;
 

@@ -83,7 +83,7 @@ void TTFont_BuildChars(TTFont *_this,unsigned long char_ini, unsigned long char_
 }
 
 
-TTFont * TTFont_New(FT_Face face,uint8_t font_size){
+TTFont * TTFont_New(FT_Face face,uint16_t font_size){
 
     TTFont *font=ZG_NEW(TTFont);
     TTFontData *font_data=ZG_NEW(TTFontData);

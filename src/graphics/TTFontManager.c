@@ -182,7 +182,11 @@ TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uin
 			}
 
 			if((new_font=TTFont_NewFromFile(filename,_font_size))==NULL){
-				font=TTFontManager_GetEmbeddedFont();
+				// load default font but configured by font size
+				sprintf(id,"%s_s%i_hl",DEFAULT_FONT_FAMILY,_font_size);
+				if((font=MapString_GetValue(data->fonts,id,NULL))==NULL){ // create new
+					new_font=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
+				}
 			}
 		}
 

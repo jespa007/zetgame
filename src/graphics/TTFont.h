@@ -13,7 +13,7 @@ struct TTFont
 {
 	const char *font_filename;
 	MapInt *	characters;
-    uint8_t 	font_size;
+    uint16_t 	font_size;
     uint16_t 	space_width; // in pixels
     uint32_t 	font_properties;
 	uint32_t	ascender;
@@ -25,7 +25,7 @@ struct TTFont
 
 
 // members
-TTFont * 		TTFont_New(FT_Face face,uint8_t font_size);
+TTFont * 		TTFont_New(FT_Face face,uint16_t font_size);
 TTFont * 		TTFont_NewFromFile(const char *ttf_file, size_t font_size);
 TTFont * 		TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, size_t font_size);
 
