@@ -40,7 +40,7 @@ void 	Action_SetKeyframesTrack(Action *_this
 	_this->channels_info->msk_active_channels|=(0x1<<idx_channel);
 }
 
-
+/*
 void 				Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first ,uint32_t msk_keyframe_track_group, Ease _ease,const float *keyframe_points, size_t keyframe_points_count){
 	KeyframeTrackGroup *x=NULL, *y=NULL, *z=NULL, *w=NULL;
 
@@ -99,14 +99,14 @@ void 				Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first 
 	}
 
 	KeyframeTrackGroup_FreeXYZW(&x,&y,&z,&w);
-}
+}*/
 
 bool Action_Update(Action *_this, uint32_t current_time_ms, uint32_t *start_time_ms, int * repeat){
 
 	float point=0;
 	bool update=true;
 
-	if(_this->channels_info == NULL){
+	if(_this->channels_info == NULL || _this->duration == 0){
 		return false;
 	}
 

@@ -1,4 +1,5 @@
 #include "graphics/zg_graphics.h"
+#include "animation/zg_animation.h"
 #include "mmedia/zg_mmedia.h"
 #include "ecs/zg_ecs.h"
 #include "Scene.h"

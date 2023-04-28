@@ -21,7 +21,7 @@ struct Action{
 Action * 		Action_New(uint8_t n_channels);
 bool 			Action_Update(Action *action, uint32_t current_ms, uint32_t *start_time_ms, int *repeat);
 void 			Action_SetKeyframesTrack(Action *_this, uint8_t idx_channel, Ease ease,float *keyframe_points, size_t keyframe_points_count);
-void 			Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first ,uint32_t msk_keyframe_track_group, Ease _ease,const float *points, size_t points_count);
+//void 			Action_SetKeyframesTrackGroup(Action *_this, uint8_t idx_channel_first ,uint32_t msk_keyframe_track_group, Ease _ease,const float *points, size_t points_count);
 void			Action_Unload(Action *action);
 void			Action_Delete(Action *action);
 

@@ -93,7 +93,7 @@ void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
 	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
 	//Transform_SetPosition2i(&data->transform_local,x,y);
 
-	Transform_SetPosition2i(&data->transform_local.translate, x,y);
+	Transform_SetPosition2i(&data->transform_local, x,y);
 
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
@@ -104,7 +104,7 @@ void ECTransform_SetDisplacement2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
 	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
 	//Transform_SetPosition2i(&data->transform_local,x,y);
-	Transform_SetDisplacement2i(&data->transform_local.translate, x,y);
+	Transform_SetDisplacement2i(&data->transform_local, x,y);
 
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;

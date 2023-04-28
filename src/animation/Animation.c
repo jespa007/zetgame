@@ -107,14 +107,16 @@ void Animation_ClearAction(Animation *_this,Action *_action){
 	Log_WarningF("action not exist");
 }
 
-void Animation_StartTween(Animation *_this
+void Animation_StartTween(
+		Animation *_this
 		, uint32_t _start_time
 		, uint8_t _idx_channel
 		, Ease _ease
 		, float _from
 		, float _to
 		, uint32_t _duration
-		, int _repeat){
+		, int _repeat
+){
 	AnimationData *data = (AnimationData *)_this->data;
 	Tween_Start(data->tween, _start_time,_idx_channel, _ease, _from, _to, _duration,_repeat);
 

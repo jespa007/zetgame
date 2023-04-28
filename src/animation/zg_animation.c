@@ -4,6 +4,11 @@
 #include "ChannelsInfo.c"
 #include "KeyframeTrack.c"
 #include "KeyframePoint.c"
-#include "KeyframeTrackGroup.c"
+//#include "KeyframeTrackGroup.c"
 #include "Tween.c"
 #include "TweenChannel.c"
+#include "TransformAction.c"
+#include "TransformAnimation.c"
+#include "MaterialAction.c"
+#include "MaterialAnimation.c"
+

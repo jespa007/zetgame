@@ -2,16 +2,23 @@
 
 #define STEP_INC 0.016
 
-void normalize_from_relative_pixels(float *v, size_t count){
+void convert_to_displacement2d_x(float *vx, size_t count){
 	size_t it=0;
 
 	for(;it<count;){
 
-		v[it+1]=ViewPort_ScreenToWorldWidth(v[it+1]);
-		v[it+2]=ViewPort_ScreenToWorldHeight(v[it+2]);
+		vx[it+1]=ViewPort_ScreenToWorldWidth(vx[it+1]);
+		it+=2;
+	}
+}
 
+void convert_to_displacement2d_y(float *vy, size_t count){
+	size_t it=0;
 
-		it+=3;
+	for(;it<count;){
+
+		vy[it+1]=ViewPort_ScreenToWorldHeight(vy[it+1]);
+		it+=2;
 	}
 }
 
@@ -21,7 +28,6 @@ int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argv);
 
 	ZetGame_Init(NULL);
-	float rotate=0;
 	float scale=1;
 	float x=0.2,y=0.1;
 
@@ -29,39 +35,53 @@ int main(int argc, char *argv[]){
 	float inc_y=STEP_INC; // [-1 to 1]
 	float inc_scale=STEP_INC; // [0.5 to 1.5]
 
-	//Texture_SetTextureResourcePath("data/images");
-
-	//Texture * text_default = Texture_GetDefault();
 	Texture * text_png = Texture_NewFromFile("../../../test/data/images/test.png");
 	Texture * text_jpg = Texture_NewFromFile("../../../test/data/images/test.jpg");
-	//TTFont * font = TTFont_GetFontFromName("pf_arma_five.ttf",16);
-	//TTFont * font1 = TTFont_GetFontFromName("Trebuchet MS.ttf",36);
-	Animation 			*trs_animation=Animation_New(TRANSFORM_CHANNEL_MAX);
-	Action			   *act_translate=Action_New(TRANSFORM_CHANNEL_MAX);
-	Action			   *act_rotate=Action_New(TRANSFORM_CHANNEL_MAX);
-	Action			   *act_scale=Action_New(TRANSFORM_CHANNEL_MAX);
+	TransformAnimation 			*trs_animation=TransformAnimation_New();
+	TransformAction	    		*act_translate=TransformAction_New();
 
 
 
-	float 				tr_values[]={
-			0,10,10
-			,1000,100,100
-			,2000,10,10
+	float 				tr_values_x[]={
+	//  t    x
+	//-----+-----
+	   0    ,10
+	  ,1000 ,100
+	  ,2000 ,10
 
 	};
 
-	normalize_from_relative_pixels(tr_values,ARRAY_SIZE(tr_values));
+	float 				tr_values_y[]={
+		//  t    y
+		//-----+----
+		   0    ,10
+		  ,1000 ,100
+		  ,2000 ,10
 
-	Action_SetKeyframesTrackGroup(
-			act_translate
-			,TRANSFORM_CHANNEL_TRANSLATE_X
-			,KEYFRAME_TRACK_GROUP_COMPONENT_X | KEYFRAME_TRACK_GROUP_COMPONENT_Y
-			,EASE_IN_OUT_SINE
-			,tr_values
-			,ARRAY_SIZE(tr_values)
+		};
+
+	convert_to_displacement2d_x(tr_values_x,ARRAY_SIZE(tr_values_x));
+	convert_to_displacement2d_y(tr_values_y,ARRAY_SIZE(tr_values_y));
+
+	// set key frames x an y
+	TransformAction_SetKeyframesTrack(
+		act_translate
+		,TRANSFORM_CHANNEL_TRANSLATE_X
+		,EASE_IN_OUT_SINE
+		,tr_values_x
+		,ARRAY_SIZE(tr_values_x)
 	);
 
-	Animation_StartAction(trs_animation
+	TransformAction_SetKeyframesTrack(
+		act_translate
+		,TRANSFORM_CHANNEL_TRANSLATE_Y
+		,EASE_IN_OUT_SINE
+		,tr_values_y
+		,ARRAY_SIZE(tr_values_y)
+	);
+
+	TransformAnimation_StartAction(
+			trs_animation
 			,act_translate
 			,SDL_GetTicks()
 			,1);
@@ -74,29 +94,14 @@ int main(int argc, char *argv[]){
 
 
 	Graphics_SetBackgroundColor(Color4f_FromHex(0xFFFF));
-	//Shape2d_SetTranslate2f(shape2d,0,0);
 
 	do{
 		Graphics_BeginRender();
 
-		//Graphics_DrawRectangleTextured(200,200,100,100,(Color4f){1,1,1,1},text_png,NULL);
-
-		if(Animation_Update(trs_animation,SDL_GetTicks())){ // let animation do the move...
-			// transfer last values
-			Animation_CopyChannelValues(trs_animation,&transform.translate.x);
-
-			//printf("%.02f %.02f %.02f\n",transform.translate.x,transform.translate.y,transform.translate.z);
-
-			//trs_animation
-		}else{ // my custom move
-			//Shape2d_SetDimensions(shape2d,100,100);
-			/*transform.translate=Vector3f_New3f(x,y,0);
-			Transform_SetScale3f(&transform,scale,scale,1);
-			Transform_SetRotate3f(&transform,0,0,rotate+=5);*/
-		}
+		TransformAnimation_Update(trs_animation,&transform);
 
 		if(K_S){
-			Animation_StartTween(
+			TransformAnimation_StartTween(
 				  trs_animation
 				 , SDL_GetTicks()
 				, TRANSFORM_CHANNEL_SCALE_Y
@@ -107,9 +112,9 @@ int main(int argc, char *argv[]){
 				, false
 			);
 
-			Animation_StartTween(
+			TransformAnimation_StartTween(
 				  trs_animation
-				  , SDL_GetTicks()
+				, SDL_GetTicks()
 				, TRANSFORM_CHANNEL_SCALE_X
 				, EASE_OUT_SINE
 				, 1.0f
@@ -118,7 +123,7 @@ int main(int argc, char *argv[]){
 				, false
 			);
 
-			Animation_StartTween(
+			TransformAnimation_StartTween(
 				 trs_animation
 				, SDL_GetTicks()
 				, TRANSFORM_CHANNEL_ROTATE_Z
@@ -138,15 +143,11 @@ int main(int argc, char *argv[]){
 
 		if(K_LEFT){
 			transform.rotate.z-=4;
-			printf("angle %f\n",transform.rotate.z);
 		}
 
 		if(K_RIGHT){
 			transform.rotate.z+=4;
-			printf("angle %f\n",transform.rotate.z);
 		}
-
-
 
 
 		if(y<-1 || y > 1) inc_y*=-1;
@@ -155,33 +156,14 @@ int main(int argc, char *argv[]){
 
 
 		Graphics_DrawRectangleFilled4i(10,10,100,100,Color4f_FromHex(0xFF));
-		/*Graphics_DrawRectangle(20,20,100,100,Color4f_FromHexa(0xFFFF));
-		Graphics_DrawRectangleTextured(200,200,100,100,text_png);
-		Graphics_DrawRectangleTextured(300,300,100,100,text_jpg);
-		Graphics_DrawRectangleTextured(100,200,100,100,text_default);
-
-
-		//Shape_SetAppearance(v2d->shape2d->shape,appearance); // 10000 sprites at 4FPS
-		Appearance_Apply(appearance);// 10000 sprites at 20FPS
-
-		// test max draw sprites ...
-		for(int i=0; i<100000;i++){
-			shape2d->shape->transform->translate.x=rand()*0.001f;
-			shape2d->shape->transform->translate.y=rand()*0.001f;
-			Shape2d_Draw(shape2d);
-		}
-
-		Appearance_Restore(appearance);*/
 
 		Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);
 
-	Animation_Delete(trs_animation);
-	Action_Delete(act_translate);
-	Action_Delete(act_rotate);
-	Action_Delete(act_scale);
+	TransformAnimation_Delete(trs_animation);
+	TransformAction_Delete(act_translate);
 
 	//Transform_Delete(transform);
 
