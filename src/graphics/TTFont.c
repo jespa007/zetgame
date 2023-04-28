@@ -239,8 +239,9 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 			}
 		}
 
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,_this->ascender - ch->size.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,_this->ascender);
+		int bearing_y=ch->size.y-ch->bearing.y;
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,bearing_y+_this->ascender - ch->size.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,bearing_y+_this->ascender);
 
 		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
