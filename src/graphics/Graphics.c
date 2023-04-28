@@ -434,8 +434,11 @@ void 	Graphics_SetFullscreen(bool _fullscreen){
 			, g_graphics_vars->width
 			,g_graphics_vars->height
 		);
+
+
 	}
 
+	Graphics_SetProjectionMode(g_graphics_vars->projection_mode);
 	g_graphics_vars->fullscreen=_fullscreen;
 }
 

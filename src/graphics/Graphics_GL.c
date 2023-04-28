@@ -5,17 +5,17 @@ uint32_t start_ticks;
 
 #define GRAPHICS_GL_DISABLE_VSYNCH
 
-static SDL_GLContext * g_sdl_gl_context = NULL;
+//static SDL_GLContext * g_sdl_gl_context = NULL;
 
 
 bool Graphics_GL_Init(void){
 
 	// Attach the OpenGL context to our window
-	g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
+	/*g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
 	if(g_sdl_gl_context == NULL){
 		Log_Error("Cannot create gl context:%s",SDL_GetError());
 		return false;
-	}
+	}*/
 
 	// Disable vsync (Because it takes lot of high CPU)
 	SDL_GL_SetSwapInterval(
