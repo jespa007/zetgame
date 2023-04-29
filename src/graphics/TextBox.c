@@ -52,21 +52,21 @@ typedef struct{
 	Vector2i		dimensions;
 	TBRenderText	render_text;
 
-}TextboxData;
+}TextBoxData;
 
 
-TextBox *Textbox_New(void){
+TextBox *TextBox_New(void){
 	TextBox *textbox = ZG_NEW(TextBox);
-	TextboxData *data=ZG_NEW(TextboxData);
+	TextBoxData *data=ZG_NEW(TextBoxData);
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
 	data->font=TTFontManager_GetEmbeddedFont();
-	Textbox_SetText(textbox,"");
+	TextBox_SetText(textbox,"");
 	return textbox;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-TBRT_Token *Textbox_RT_NewTokenWord(
+TBRT_Token *TextBox_RT_NewTokenWord(
 		char *word
 		,uint16_t word_width
 		){
@@ -80,7 +80,7 @@ TBRT_Token *Textbox_RT_NewTokenWord(
 	return token;
 }
 
-TBRT_TokenLine *Textbox_RT_NewLine(TextboxData *data){
+TBRT_TokenLine *TextBox_RT_NewLine(TextBoxData *data){
 
 	TBRT_TokenLine *tbrt_token_line=ZG_NEW(TBRT_TokenLine);
 	tbrt_token_line->tbrt_tokens=List_New();
@@ -90,7 +90,7 @@ TBRT_TokenLine *Textbox_RT_NewLine(TextboxData *data){
 }
 
 
-void Textbox_RT_Delete(TextboxData *data){
+void TextBox_RT_Delete(TextBoxData *data){
 
 	if(data->render_text.token_lines!=NULL){
 		for(unsigned i=0; i < data->render_text.token_lines->count; i++){
@@ -119,15 +119,15 @@ void Textbox_RT_Delete(TextboxData *data){
 }
 
 
-void Textbox_RT_Init(TextboxData *data){
+void TextBox_RT_Init(TextBoxData *data){
 
-	Textbox_RT_Delete(data);
+	TextBox_RT_Delete(data);
 
 	data->render_text.token_lines=List_New();
 }
 
-void Textbox_RT_Build(TextBox *_this){
-	TextboxData *data=_this->data;
+void TextBox_RT_Build(TextBox *_this){
+	TextBoxData *data=_this->data;
 	unsigned long ch_space=(unsigned long)' ';
 	size_t sizeof_char=sizeof(char);
 	if(data->char_type==CHAR_TYPE_WCHAR){
@@ -138,7 +138,7 @@ void Textbox_RT_Build(TextBox *_this){
 	float inv_sizeof_char=1.0f/sizeof_char;
 
 	// reset current render text data...
-	Textbox_RT_Init(data);
+	TextBox_RT_Init(data);
 
 	if(data->char_type==CHAR_TYPE_WCHAR){
 		if(StrUtils_WStrIsNullOrEmpty((wchar_t *)data->text)) return;
@@ -165,7 +165,7 @@ void Textbox_RT_Build(TextBox *_this){
 
 	for(unsigned i=0; i < lines->count; i++){
 		void *text_line=lines->items[i];
-		tbrt_token_line=Textbox_RT_NewLine(data);
+		tbrt_token_line=TextBox_RT_NewLine(data);
 		unsigned long ch=0;
 		do{
 
@@ -220,11 +220,11 @@ void Textbox_RT_Build(TextBox *_this){
 			}
 
 			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){ // if line exceeds max dimension, create new line..
-				tbrt_token_line=Textbox_RT_NewLine(data);
+				tbrt_token_line=TextBox_RT_NewLine(data);
 			}
 
 			// add word token...
-			List_Add(tbrt_token_line->tbrt_tokens,Textbox_RT_NewTokenWord(word,word_width));
+			List_Add(tbrt_token_line->tbrt_tokens,TextBox_RT_NewTokenWord(word,word_width));
 
 
 			tbrt_token_line->total_width+=(word_width+space_width);
@@ -239,12 +239,49 @@ void Textbox_RT_Build(TextBox *_this){
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
+TextAlign TextBox_ParseTextAlign(const char *_text_align){
+	TextAlign text_align=TEXT_ALIGN_LEFT; // by default
+	char *str_text_align=StrUtils_ToLower(_text_align);
+	if(STRCMP(str_text_align,==,"left")){
+		text_align=TEXT_ALIGN_LEFT;
+	}else if(STRCMP(str_text_align,==,"center")){
+		text_align=TEXT_ALIGN_CENTER;
+	}else if(STRCMP(str_text_align,==,"right")){
+		text_align=TEXT_ALIGN_RIGHT;
+	}else if(STRCMP(str_text_align,==,"justify")){
+		text_align=TEXT_ALIGN_JUSTIFY;
+	}else{
+		Log_Error("Unknow align text '%s' ",_text_align);
+	}
 
-void     Textbox_SetText(TextBox *_this,const char *in, ...){
+	ZG_FREE(str_text_align);
+
+	return text_align;
+}
+
+VerticalAlign TextBox_ParseVerticalAlign(const char *_vertical_text){
+	VerticalAlign vertical_align=VERTICAL_ALIGN_TOP; // by default
+	char *str_vertical_align=StrUtils_ToLower(_vertical_text);
+	if(STRCMP(str_vertical_align,==,"top")){
+		vertical_align=VERTICAL_ALIGN_CENTER;
+	}else if(STRCMP(str_vertical_align,==,"center")){
+		vertical_align=VERTICAL_ALIGN_BOTTOM;
+	}else{
+		Log_Error("Unknow vertical text '%s' ",_vertical_text);
+	}
+
+	ZG_FREE(str_vertical_align);
+
+	return vertical_align;
+}
+
+
+
+void     TextBox_SetText(TextBox *_this,const char *in, ...){
 	char out[1024]={0};
 	ZG_VARGS(out,in);
 
-	TextboxData *data=_this->data;
+	TextBoxData *data=_this->data;
 	if(data->text!=NULL){
 		free(data->text);
 	}
@@ -256,20 +293,20 @@ void     Textbox_SetText(TextBox *_this,const char *in, ...){
 
 	strcpy(data->text,out);
 
-	Textbox_RT_Build(_this);
+	TextBox_RT_Build(_this);
 }
 
-const char *    Textbox_GetText(TextBox *_this){
-	TextboxData *data=_this->data;
+const char *    TextBox_GetText(TextBox *_this){
+	TextBoxData *data=_this->data;
 	return data->text;
 }
 
 
-void     Textbox_WSetText(TextBox *_this,const wchar_t *in, ...){
+void     TextBox_WSetText(TextBox *_this,const wchar_t *in, ...){
 	wchar_t out[1024]={0};
 	ZG_WVARGS(out,in);
 
-	TextboxData *data=_this->data;
+	TextBoxData *data=_this->data;
 	if(data->text!=NULL){
 		free(data->text);
 	}
@@ -281,60 +318,60 @@ void     Textbox_WSetText(TextBox *_this,const wchar_t *in, ...){
 
 	wcscpy(data->text,out);
 
-	Textbox_RT_Build(_this);
+	TextBox_RT_Build(_this);
 }
 
-void     Textbox_SetFont(TextBox *_this, TTFont *font){
-	TextboxData *data=_this->data;
+void     TextBox_SetFont(TextBox *_this, TTFont *font){
+	TextBoxData *data=_this->data;
 
 	if(data->font != font){
 		data->font=font;
-		Textbox_RT_Build(_this);
+		TextBox_RT_Build(_this);
 	}
 }
 
-TTFont *   Textbox_GetFont(TextBox *_this){
-	TextboxData *data=_this->data;
+TTFont *   TextBox_GetFont(TextBox *_this){
+	TextBoxData *data=_this->data;
 	return data->font;
 }
 
-void	 Textbox_SetTextAlign(TextBox *_this, TextAlign text_align){
-	TextboxData *data=_this->data;
+void	 TextBox_SetTextAlign(TextBox *_this, TextAlign text_align){
+	TextBoxData *data=_this->data;
 	data->text_align=text_align;
 }
 
-void	 Textbox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align){
-	TextboxData *data=_this->data;
+void	 TextBox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align){
+	TextBoxData *data=_this->data;
 	data->vertical_align=vertical_align;
 }
 
 
-void	 Textbox_SetDimensions(TextBox *_this, uint16_t _width, uint16_t _height){
-	Textbox_SetWidth(_this,_width);
-	Textbox_SetHeight(_this,_height);
+void	 TextBox_SetDimensions(TextBox *_this, uint16_t _width, uint16_t _height){
+	TextBox_SetWidth(_this,_width);
+	TextBox_SetHeight(_this,_height);
 }
 
-void	 Textbox_SetWidth(TextBox *_this, uint16_t _width){
-	TextboxData *data=_this->data;
+void	 TextBox_SetWidth(TextBox *_this, uint16_t _width){
+	TextBoxData *data=_this->data;
 
 	if(data->dimensions.x!=_width){
-		Textbox_RT_Build(_this);
+		TextBox_RT_Build(_this);
 		data->dimensions.x=_width;
 	}
 }
 
-void	 Textbox_SetHeight(TextBox *_this, uint16_t _height){
-	TextboxData *data=_this->data;
+void	 TextBox_SetHeight(TextBox *_this, uint16_t _height){
+	TextBoxData *data=_this->data;
 
 	if(data->dimensions.y !=_height){
 		data->dimensions.y=_height;
-		Textbox_RT_Build(_this);
+		TextBox_RT_Build(_this);
 	}
 }
 
-void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
+void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
-	TextboxData *data=_this->data;
+	TextBoxData *data=_this->data;
 
 	// TODO: pos is at center box by default, do a wat yo change render center
 	//Vector2i start_pos=Vector2i_New(0,0);
@@ -432,16 +469,16 @@ void	 Textbox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 }
 
-void Textbox_Delete(TextBox * _this){
+void TextBox_Delete(TextBox * _this){
 	if(_this==NULL) return;
-	TextboxData *data=_this->data;
+	TextBoxData *data=_this->data;
 
 
 	if(data->text!=NULL){
 		free(data->text);
 	}
 
-	Textbox_RT_Delete(data);
+	TextBox_RT_Delete(data);
 
 	free(_this->data);
 	free(_this);

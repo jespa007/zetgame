@@ -51,6 +51,12 @@ void TTFont_GL_BuildChar(TTFontCharacter *_font_character, FT_Face _face){
 
 }
 
+void TTFont_GL_DrawCharacter(TTFontCharacter *_font_character){
+	CharacterDataGL *ch_data=_font_character->data;
+	glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be Texture and Bind according
+}
+
+
 
 void TTFont_GL_DeleteChar(TTFontCharacter *_font_character){
 	CharacterDataGL *ch_data=_font_character->data;

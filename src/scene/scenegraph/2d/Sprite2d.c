@@ -368,8 +368,8 @@ void CSprite2d::update(){
 		default:
 			break;
 		case CChannels::COMPONENTS_TYPE::COMPONENTS_TYPE_MATERIAL:
-			if(c->msk_active_channels & (0x1 << CMaterialChannels::ALPHA)){
-				float opacity = c->result[CMaterialChannels::ALPHA];
+			if(c->msk_active_channels & (0x1 << CMaterialComponents::ALPHA)){
+				float opacity = c->result[CMaterialComponents::ALPHA];
 				setOpacity(opacity);
 
 				if((sprite_properties & ALPHA_AS_LIFE)!= 0 ){
@@ -379,11 +379,11 @@ void CSprite2d::update(){
 			break;
 		case CChannels::COMPONENTS_TYPE::COMPONENTS_TYPE_TRANSFORM:
 			action_translate=true;
-			if(c->msk_active_channels & (0x1 << CTransformChannels::TRANSLATEX)){
-				x_action_translate=c->result[CTransformChannels::TRANSLATEX];
+			if(c->msk_active_channels & (0x1 << CTransformComponents::TRANSLATEX)){
+				x_action_translate=c->result[CTransformComponents::TRANSLATEX];
 			}
-			if(c->msk_active_channels & (0x1 << CTransformChannels::TRANSFORM_COMPONENTS::TRANSLATEY)){
-				y_action_translate=c->result[CTransformChannels::TRANSLATEY];
+			if(c->msk_active_channels & (0x1 << CTransformComponents::TRANSFORM_COMPONENTS::TRANSLATEY)){
+				y_action_translate=c->result[CTransformComponents::TRANSLATEY];
 			}
 			break;
 		}
@@ -554,12 +554,12 @@ void CSprite2d::draw(){
 		break;
 
 	case  SPRITE2D_TYPES::TEXT2D:
-		drawSGTextbox2d();
+		drawSGTextBox2d();
 		break;
 	}
 }
 
-void CSprite2d::drawSGTextbox2d() {
+void CSprite2d::drawSGTextBox2d() {
 
 	font->renderText(
 			GET_ACTIVE_RENDER->projection_to_pixelX(absolute_translation->x),

@@ -20,7 +20,7 @@ GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
 	// SETUP DATA
 	GUIViewerData *data = ZG_NEW(GUIViewerData);
 	data->texture = NULL;
-	data->textbox=Textbox_New();
+	data->textbox=TextBox_New();
 	viewer->data=data;
 
 	GUIWidget_SetDrawFunction(viewer->widget
@@ -39,12 +39,19 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	Transform transform=Transform_DefaultValues();
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
-	Vector2i dim=GUIWidget_GetDimensions(_this->widget);
+	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
 
-	Graphics_DrawRectangleTextured4i(position.x,position.y,dim.x,dim.y,COLOR4F_WHITE,data->texture,NULL);
+	if(position.y==50){
+		int kk=0;
+	}
+
+	position.x+=dimensions.x>>1;
+	position.y+=dimensions.y>>1;
+
+	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE,data->texture,NULL);
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	Textbox_Draw(data->textbox,&transform,&_this->widget->color);
+	TextBox_Draw(data->textbox,&transform,&_this->widget->color);
 }
 
 void		GUIViewer_SetImage(GUIViewer *_this, const char *_image){
@@ -62,7 +69,7 @@ void GUIViewer_Delete(GUIViewer *_this){
 	GUIViewerData *data=_this->data;
 
 	GUIWidget_Delete(_this->widget);
-	Textbox_Delete(data->textbox);
+	TextBox_Delete(data->textbox);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

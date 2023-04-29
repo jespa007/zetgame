@@ -1,17 +1,17 @@
 #ifndef __SGTEXTBOX_H__
 #define __SGTEXTBOX_H__
 
-typedef struct SGTextbox2d SGTextbox2d;
-struct SGTextbox2d{
+typedef struct SGTextBox2d SGTextBox2d;
+struct SGTextBox2d{
 	SGNode *node;
 	void *	data;
 };
 
-SGTextbox2d * 	SGTextbox2d_New(void);
-void			SGTextbox2d_SetDimensions(SGTextbox2d *_this,uint16_t width, uint16_t height);
-void 			SGTextbox2d_SetText(SGTextbox2d *_this, const char *str, ...);
-void 			SGTextbox2d_SetWText(SGTextbox2d *_this, const wchar_t *str, ...);
-void	   		SGTextbox2d_Delete(SGTextbox2d *_this);
+SGTextBox2d * 	SGTextBox2d_New(void);
+void			SGTextBox2d_SetDimensions(SGTextBox2d *_this,uint16_t width, uint16_t height);
+void 			SGTextBox2d_SetText(SGTextBox2d *_this, const char *str, ...);
+void 			SGTextBox2d_SetWText(SGTextBox2d *_this, const wchar_t *str, ...);
+void	   		SGTextBox2d_Delete(SGTextBox2d *_this);
 
 #endif
 

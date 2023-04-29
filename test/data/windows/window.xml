@@ -3,9 +3,12 @@
 
 	<label 
 		id="lbl_score" 
-		left="10" 
-		top="10" 
-		height="25" 
+		left="0" 
+		top="0" 
+		text-align="left"
+		text-top="top"
+		height="35"
+		width="1000"  
 	    text="Score:" 
 	    font-size="20"
 	    font-name="half_bold_pixel-7.ttf" 

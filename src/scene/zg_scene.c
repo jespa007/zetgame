@@ -6,7 +6,7 @@
 #include "Scene.c"
 
 
-//#include "scenegraph/2d/SGTextbox2d.c"
+//#include "scenegraph/2d/SGTextBox2d.c"
 //#include "scenegraph/2d/SGViewer2d.c"
 //#include "scenegraph/2d/Sprite2dEmitter.c"
 //#include "scenegraph/SGNode.c"

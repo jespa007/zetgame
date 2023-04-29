@@ -30,8 +30,6 @@ typedef struct{
 
 void	 TTFont_OnDeleteNode(MapIntNode *node);
 
-
-
 //--------
 // PRIVATE
 TTFontCharacter *TTFont_BuildChar(TTFont *_this,unsigned long c){
@@ -218,6 +216,16 @@ void TTFont_RenderTextEnd(void){
 //
 //
 
+void TTFont_DrawCharacter(TTFontCharacter *_ch){
+	switch(Graphics_GetGraphicsApi()){
+	case GRAPHICS_API_GL:
+		TTFont_GL_DrawCharacter(_ch);
+		break;
+	default:
+		break;
+	}
+}
+
 void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
 	if(_this == NULL) return;
 
@@ -239,9 +247,9 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 			}
 		}
 
-		int bearing_y=ch->size.y-ch->bearing.y;
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,bearing_y+_this->ascender - ch->size.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->size.x,bearing_y+_this->ascender);
+		int end_y=ch->size.y-ch->bearing.y+_this->ascender;
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,end_y - ch->size.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,end_y);
 
 		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
@@ -250,12 +258,7 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 				_x3d+p2_3d.x, _y3d-p2_3d.y,0    // top right
 		};
 
-		//----------------------------------
-		// TODO: Put in TTFont_GL.c
-		CharacterDataGL *ch_data=ch->data;
-		glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be Texture and Bind according
-		// TODO: Put in TTFont_GL.c
-		//----------------------------------
+		TTFont_DrawCharacter(ch);
 
 		Geometry_SetMeshVertex(data->geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 		Geometry_Draw(data->geometry);
@@ -263,6 +266,7 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		_x3d += ViewPort_ScreenToWorldWidth(ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 }
+
 /*
 void TTFont_GL_Print(TTFont *_this,float x, float y,Color4f color,const char *str){
 	TTFont_RenderText(_this,x,y,color,str,CHAR_TYPE_CHAR);

@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 
 	if(window){
 
-		//Textbox_SetText(gui_viewer->widget->textbox,"1");
+		//TextBox_SetText(gui_viewer->widget->textbox,"1");
 		//GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
 			Graphics_BeginRender();

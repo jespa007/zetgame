@@ -28,7 +28,7 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 				{window_data->buttons,(void (*)(void *))GUIButton_Delete}
 				,{window_data->labels,(void (*)(void *))GUILabel_Delete}
 				,{window_data->viewers,(void (*)(void *))GUIViewer_Delete}
-				,{window_data->textboxes,(void (*)(void *))GUITextbox_Delete}
+				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
 				,{window_data->frames,(void (*)(void *))GUIFrame_Delete}
 		};
 
@@ -76,10 +76,10 @@ GUIWindowManager *GUIWindowManager_New(
 	return window_manager;
 }
 
-bool GUIWindowManager_NewTextbox(GUIWMWindowData *_window_data,GUIWidget *_parent,const XmlElement *e ){
+bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_parent,const XmlElement *e ){
 	bool ok=true;
 	XmlAttribute *attribute=e->attributes;
-	GUITextbox *textbox=GUITextbox_New(0,0,10,10);
+	GUITextBox *textbox=GUITextBox_New(0,0,10,10);
 	int int_value=0;
 
 	if(_parent != NULL){
@@ -314,17 +314,14 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionX(label->widget,int_value);
 				 }
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"top")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionY(label->widget,int_value);
 				 }
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUILabel_SetWidth(label,int_value);
 				 }
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUILabel_SetHeight(label,int_value);
@@ -335,15 +332,16 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
 				 GUILabel_SetFontName(label,attribute->value);
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-				 //Textbox_SetFont(label->textbox,TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
 			 }else if(STRCMP(attribute->name,==,"text")){
 				 GUILabel_SetText(label,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"text-align")){
+				 GUILabel_SetTextAlign(label,TextBox_ParseTextAlign(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"vertical-align")){
+				 GUILabel_SetVerticalAlign(label,TextBox_ParseVerticalAlign(attribute->value));
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
-
 
 			 attribute=attribute->next;
 		 }while(attribute != attribute->parent->attributes);
@@ -388,7 +386,7 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 	 }else if(STRCMP(e->name,==,"img")){
 		 return GUIWindowManager_NewViewer(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"textbox")){
-		 return GUIWindowManager_NewTextbox(_window_data,_parent,e);
+		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else{
 		Log_Error("unexpected tag '%s'",e->name);
 		ok=false;

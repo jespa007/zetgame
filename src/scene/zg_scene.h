@@ -7,7 +7,7 @@
 //#include "scenegraph/SGCamera.h"
 //#include "scenegraph/SGRender.h"
 
-//#include "scenegraph/2d/SGTextbox2d.h"
+//#include "scenegraph/2d/SGTextBox2d.h"
 //#include "scenegraph/2d/SGViewer2d.h"
 //#include "scenegraph/2d/Sprite2dEmitter.h"
 

@@ -25,7 +25,7 @@ GUILabel *GUILabel_New(int x, int y, uint16_t width, uint16_t height){
 	// SETUP DATA
 	GUILabelData *data = ZG_NEW(GUILabelData);
 	TTFontInfo font_info=TTFontManager_GetEmbeddedFontInfo();
-	data->textbox=Textbox_New();
+	data->textbox=TextBox_New();
 	strcpy(data->font_name,font_info.font_name);
 	label->data=data;
 
@@ -37,22 +37,21 @@ void 			GUILabel_SetText(GUILabel *_this, const char *_text_in,...){
 	char text_out[STR_MAX];
 	STR_CAPTURE_VARGS(text_out,_text_in);
 
-	Textbox_SetText(data->textbox,text_out);
-
+	TextBox_SetText(data->textbox,text_out);
 }
 
 void 			GUILabel_SetHeight(GUILabel *_this,uint16_t _height){
 	GUILabelData *data=_this->data;
 
 	GUIWidget_SetHeight(_this->widget,_height);
-	Textbox_SetHeight(data->textbox,_height);
+	TextBox_SetHeight(data->textbox,_height);
 }
 
 void 			GUILabel_SetWidth(GUILabel *_this,uint16_t _width){
 	GUILabelData *data=_this->data;
 
 	GUIWidget_SetWidth(_this->widget,_width);
-	Textbox_SetWidth(data->textbox,_width);
+	TextBox_SetWidth(data->textbox,_width);
 }
 
 void 			GUILabel_SetFontName(GUILabel *_this, const char *_font_name){
@@ -60,10 +59,10 @@ void 			GUILabel_SetFontName(GUILabel *_this, const char *_font_name){
 	TTFontManager *tffont_manager=GUIWidget_GetTTFontManager(_this->widget);
 
 	if(tffont_manager != NULL){
-		TTFont *font=Textbox_GetFont(data->textbox);
+		TTFont *font=TextBox_GetFont(data->textbox);
 		if((font=TTFontManager_GetFont(tffont_manager,_font_name,font->font_size))!=NULL){
 			// if font manager was able to create the font, update font name
-			Textbox_SetFont(data->textbox,font);
+			TextBox_SetFont(data->textbox,font);
 			//strcpy(data->font_name,_font_name);
 		}
 	}
@@ -85,7 +84,7 @@ void 			GUILabel_SetFontSize(GUILabel *_this, uint8_t _font_size){
 
 		if((font=TTFontManager_GetFont(tffont_manager,data->font_name,_font_size))!=NULL){
 			// if font manager was able to create the font, update font size
-			Textbox_SetFont(data->textbox,font);
+			TextBox_SetFont(data->textbox,font);
 		}
 	}
 }
@@ -93,9 +92,20 @@ void 			GUILabel_SetFontSize(GUILabel *_this, uint8_t _font_size){
 uint8_t			GUILabel_GetFontSize(GUILabel *_this){
 	GUILabelData *data=_this->data;
 
-	TTFont *font=Textbox_GetFont(data->textbox);
+	TTFont *font=TextBox_GetFont(data->textbox);
 	return font->font_size;
 }
+
+void			GUILabel_SetTextAlign(GUILabel *_this,TextAlign _text_align){
+	GUILabelData *data=_this->data;
+	TextBox_SetTextAlign(data->textbox,_text_align);
+}
+
+void			GUILabel_SetVerticalAlign(GUILabel *_this,VerticalAlign _vertical_align){
+	GUILabelData *data=_this->data;
+	TextBox_SetVerticalAlign(data->textbox,_vertical_align);
+}
+
 
 static void GUILabel_Draw(void *gui_label){
 	GUILabel *_this=gui_label;
@@ -103,9 +113,13 @@ static void GUILabel_Draw(void *gui_label){
 	Transform	transform=Transform_DefaultValues();
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
+	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
+
+	position.x+=dimensions.x>>1;
+	position.y+=dimensions.y>>1;
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	Textbox_Draw(data->textbox,&transform,&_this->widget->color);
+	TextBox_Draw(data->textbox,&transform,&_this->widget->color);
 }
 
 
@@ -115,7 +129,7 @@ void GUILabel_Delete(GUILabel *_this){
 	GUILabelData *data=_this->data;
 
 	GUIWidget_Delete(_this->widget);
-	Textbox_Delete(data->textbox);
+	TextBox_Delete(data->textbox);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

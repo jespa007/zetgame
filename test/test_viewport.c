@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
 	//TextureManager_SetTextureResourcePath("data/images");
 
 	Texture * text_png = Texture_NewFromFile("data/images/test.png");
-	TextBox *textbox	=Textbox_New();
+	TextBox *textbox	=TextBox_New();
 	Transform transform=Transform_DefaultValues();
 
 	do{
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
 			Graphics_ClearScreen(Color4f_FromRGB(32+i*10,32+i*10,32+i*10));
 			Graphics_DrawRectangleTextured4i(0,0,100,100,Color4f_FromRGB(0,200,0),text_png,NULL);
 			Graphics_DrawRectangleFilled4i(0,0,10,10,COLOR4F_WHITE);
-			Textbox_Draw(textbox,&transform,NULL);
+			TextBox_Draw(textbox,&transform,NULL);
 
 			ViewPort_Pop();
 		}
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 	}while(!K_ESC);
 
 	Texture_Delete(text_png);
-	Textbox_Delete(textbox);
+	TextBox_Delete(textbox);
 
 	ZetGame_DeInit();
 

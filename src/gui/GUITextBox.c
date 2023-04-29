@@ -2,20 +2,20 @@
 
 
 
-static void GUITextbox_Draw(void *gui_textbox);
+static void GUITextBox_Draw(void *gui_textbox);
 
-GUITextbox *GUITextbox_New(int x, int y, uint16_t width, uint16_t height){
-	GUITextbox *textbox = ZG_NEW(GUITextbox);
+GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
+	GUITextBox *textbox = ZG_NEW(GUITextBox);
 
 	textbox->widget=GUIWidget_New( x,  y,  width,  height);
 	textbox->widget->type=WIDGET_TYPE_TEXTBOX;
 	textbox->widget->gui_ptr=textbox;
 
-	textbox->textbox=Textbox_New();
+	textbox->textbox=TextBox_New();
 
 	GUIWidget_SetDrawFunction(textbox->widget
 			,(CallbackWidgetUpdate){
-				.ptr_function=GUITextbox_Draw
+				.ptr_function=GUITextBox_Draw
 				,.calling_widget=textbox
 			}
 	);
@@ -26,23 +26,23 @@ GUITextbox *GUITextbox_New(int x, int y, uint16_t width, uint16_t height){
 }
 
 
-static void GUITextbox_Draw(void *gui_textbox){
-	GUITextbox *_this=gui_textbox;
+static void GUITextBox_Draw(void *gui_textbox){
+	GUITextBox *_this=gui_textbox;
 	Transform	transform=Transform_DefaultValues();
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	Textbox_Draw(_this->textbox,&transform,&_this->widget->color);
+	TextBox_Draw(_this->textbox,&transform,&_this->widget->color);
 
 }
 
 
-void GUITextbox_Delete(GUITextbox *_this){
+void GUITextBox_Delete(GUITextBox *_this){
 	if(_this == NULL) return;
 
 	GUIWidget_Delete(_this->widget);
-	Textbox_Delete(_this->textbox);
+	TextBox_Delete(_this->textbox);
 
 	ZG_FREE(_this);
 }

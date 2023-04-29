@@ -2,16 +2,16 @@
 
 typedef struct{
 	TextBox *textbox;
-}SGTextbox2dData;
+}SGTextBox2dData;
 
 
-SGTextbox2d * 	SGTextbox2d_New(void){
-	SGTextbox2d *sg_textbox = ZG_NEW(SGTextbox2d);
-	SGTextbox2dData * data=sg_textbox->data=ZG_NEW(SGTextbox2dData);
+SGTextBox2d * 	SGTextBox2d_New(void){
+	SGTextBox2d *sg_textbox = ZG_NEW(SGTextBox2d);
+	SGTextBox2dData * data=sg_textbox->data=ZG_NEW(SGTextBox2dData);
 	sg_textbox->node=SGNode_New();
-	data->textbox=Textbox_New();
+	data->textbox=TextBox_New();
 
-	SGTextbox2d_SetDimensions(sg_textbox,100,100);
+	SGTextBox2d_SetDimensions(sg_textbox,100,100);
 
 	//sg_textbox->node->sgnode_type=SGNODE_TYPE_TEXTBOX;
 
@@ -19,36 +19,36 @@ SGTextbox2d * 	SGTextbox2d_New(void){
 
 }
 
-void 	SGTextbox2d_SetDimensions(SGTextbox2d *_this,uint16_t width, uint16_t height){
+void 	SGTextBox2d_SetDimensions(SGTextBox2d *_this,uint16_t width, uint16_t height){
 
-	SGTextbox2dData * data= _this->data;
-	Textbox_SetDimensions(data->textbox,width,height);
+	SGTextBox2dData * data= _this->data;
+	TextBox_SetDimensions(data->textbox,width,height);
 
 }
 
-void 		SGTextbox2d_SetText(SGTextbox2d *_this, const char * in,... ){
-	SGTextbox2dData *_data=_this->data;
+void 		SGTextBox2d_SetText(SGTextBox2d *_this, const char * in,... ){
+	SGTextBox2dData *_data=_this->data;
 	char out[4096];
 
 	ZG_VARGS(out,in);
 
-	Textbox_SetText(_data->textbox,out);
+	TextBox_SetText(_data->textbox,out);
 }
 
-void 		SGTextbox2d_SetWText(SGTextbox2d *_this, const wchar_t * in,... ){
-	SGTextbox2dData *_data=_this->data;
+void 		SGTextBox2d_SetWText(SGTextBox2d *_this, const wchar_t * in,... ){
+	SGTextBox2dData *_data=_this->data;
 	wchar_t out[4096];
 
 	ZG_WVARGS(out,in);
 
-	Textbox_WSetText(_data->textbox,out);
+	TextBox_WSetText(_data->textbox,out);
 }
 
 
-void	   	SGTextbox2d_Delete(SGTextbox2d *_this){
-	SGTextbox2dData *_data=_this->data;
+void	   	SGTextBox2d_Delete(SGTextBox2d *_this){
+	SGTextBox2dData *_data=_this->data;
 
-	Textbox_Delete(_data->textbox);
+	TextBox_Delete(_data->textbox);
 
 	ZG_FREE(_data);
 	ZG_FREE(_this);

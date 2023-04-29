@@ -36,8 +36,8 @@ public:
 	void setup(uint8_t max_sprites, unsigned short properties);
 	void setScale(float );
 
-	void setupAsSGTextbox2d(uint8_t max_texts,const std::string & font, uint8_t size,const CColor3i & color);
-	void setupAsSGTextbox2d(uint8_t max_texts,const std::string & font, uint8_t size,const CColor3i & color, unsigned short properties);
+	void setupAsSGTextBox2d(uint8_t max_texts,const std::string & font, uint8_t size,const CColor3i & color);
+	void setupAsSGTextBox2d(uint8_t max_texts,const std::string & font, uint8_t size,const CColor3i & color, unsigned short properties);
 	void addSprite2dFrameAnimation(const std::string & key,CSprite2dFrameAnimation *_sprite_animation);
 
 	//

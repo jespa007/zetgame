@@ -24,7 +24,7 @@ void	ECMaterialAnimation_Setup(void *_this, Entity *_entity){
 	_entity->components[EC_MATERIAL_ANIMATION]=_this;
 
 	ECMaterialAnimationData *data=ZG_NEW(ECMaterialAnimationData);
-	data->ani_material=Animation_New(MATERIAL_CHANNEL_MAX);
+	data->ani_material=Animation_New(MATERIAL_COMPONENT_MAX);
 
 	ec_material_animation->data=data;
 }

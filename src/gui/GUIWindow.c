@@ -58,7 +58,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 			,DEFAULT_WINDOW_CAPTION_HEIGHT*0.75
 			);
 
-	Textbox_SetText(data->button_close->textbox,"");
+	TextBox_SetText(data->button_close->textbox,"");
 	GUIButton_SetIcon(data->button_close,IconManager_GetIconDefault(DEFAULT_ICON_CLOSE_BIG));
 
 

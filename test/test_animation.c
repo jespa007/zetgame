@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
 	// set key frames x an y
 	TransformAction_SetKeyframesTrack(
 		act_translate
-		,TRANSFORM_CHANNEL_TRANSLATE_X
+		,TRANSFORM_COMPONENT_TRANSLATE_X
 		,EASE_IN_OUT_SINE
 		,tr_values_x
 		,ARRAY_SIZE(tr_values_x)
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 
 	TransformAction_SetKeyframesTrack(
 		act_translate
-		,TRANSFORM_CHANNEL_TRANSLATE_Y
+		,TRANSFORM_COMPONENT_TRANSLATE_Y
 		,EASE_IN_OUT_SINE
 		,tr_values_y
 		,ARRAY_SIZE(tr_values_y)
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 			TransformAnimation_StartTween(
 				  trs_animation
 				 , SDL_GetTicks()
-				, TRANSFORM_CHANNEL_SCALE_Y
+				, TRANSFORM_COMPONENT_SCALE_Y
 				, EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]){
 			TransformAnimation_StartTween(
 				  trs_animation
 				, SDL_GetTicks()
-				, TRANSFORM_CHANNEL_SCALE_X
+				, TRANSFORM_COMPONENT_SCALE_X
 				, EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]){
 			TransformAnimation_StartTween(
 				 trs_animation
 				, SDL_GetTicks()
-				, TRANSFORM_CHANNEL_ROTATE_Z
+				, TRANSFORM_COMPONENT_ROTATE_Z
 				, EASE_LINEAR
 				, 0
 				, 90

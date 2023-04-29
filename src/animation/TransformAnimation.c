@@ -9,7 +9,7 @@ typedef struct{
 TransformAnimation *TransformAnimation_New(void){
 	TransformAnimation *transform_animation=ZG_NEW(TransformAnimation);
 	TransformAnimationData *data=ZG_NEW(TransformAnimationData);
-	data->animation=Animation_New(TRANSFORM_CHANNEL_MAX);
+	data->animation=Animation_New(TRANSFORM_COMPONENT_MAX);
 
 	transform_animation->data=data;
 

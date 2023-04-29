@@ -3,6 +3,20 @@
 
 typedef struct Transform Transform;
 
+
+typedef enum{
+	TRANSFORM_COMPONENT_TRANSLATE_X	=0,
+	TRANSFORM_COMPONENT_TRANSLATE_Y	,
+	TRANSFORM_COMPONENT_TRANSLATE_Z	,
+	TRANSFORM_COMPONENT_ROTATE_X    	,
+	TRANSFORM_COMPONENT_ROTATE_Y  	,
+	TRANSFORM_COMPONENT_ROTATE_Z  	,
+	TRANSFORM_COMPONENT_SCALE_X  		,
+	TRANSFORM_COMPONENT_SCALE_Y  		,
+	TRANSFORM_COMPONENT_SCALE_Z  		,
+	TRANSFORM_COMPONENT_MAX
+}TransformComponent;
+
 struct Transform{
 	//----------------------------
 	// DON'T MOVE! THESE ORDER IS NEEDED FOR PASS ANIMATION COMPONENTS
@@ -11,6 +25,7 @@ struct Transform{
 	Vector3f scale;
 	// DON'T MOVE!
 	//----------------------------
+	Vector3f origin;
 
 	//Quaternion 	quaternion;	// keep to perform fast interpolations between rotations
 	//Matrix3f	matrix3f; 	// keep to perform fast transformations as well as flush into gl

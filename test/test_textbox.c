@@ -51,23 +51,23 @@ int main(int argc, char * argv[]){
 	ZetGame_SetDebugMode(true);
 
 	//TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",16);
-	TextBox *textbox=Textbox_New();
+	TextBox *textbox=TextBox_New();
 	Transform transform=Transform_New();
-	Textbox_SetText(textbox,"H L");
+	TextBox_SetText(textbox,"H L");
 	do
 	{
 		Graphics_BeginRender();
 
 		PrintFontInfo *aux_ptr=(PrintFontInfo *)print_font_info;
 		while(aux_ptr->text !=NULL){
-			//Textbox_SetPosition2i(textbox,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
-			Textbox_SetDimensions(textbox,aux_ptr->w,aux_ptr->h);
-			Textbox_SetText(textbox,aux_ptr->text);
-			Textbox_SetTextAlign(textbox,aux_ptr->text_align);
-			Textbox_SetVerticalAlign(textbox,aux_ptr->vertical_align);
+			//TextBox_SetPosition2i(textbox,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
+			TextBox_SetDimensions(textbox,aux_ptr->w,aux_ptr->h);
+			TextBox_SetText(textbox,aux_ptr->text);
+			TextBox_SetTextAlign(textbox,aux_ptr->text_align);
+			TextBox_SetVerticalAlign(textbox,aux_ptr->vertical_align);
 
 			Transform_SetPosition2i(&transform,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
-			Textbox_Draw(textbox,&transform,NULL);
+			TextBox_Draw(textbox,&transform,NULL);
 
 			aux_ptr++;
 		}
@@ -81,7 +81,7 @@ int main(int argc, char * argv[]){
 	//Transform_Delete(transform);
 
 
-	Textbox_Delete(textbox);
+	TextBox_Delete(textbox);
 
 	ZetGame_DeInit();
 

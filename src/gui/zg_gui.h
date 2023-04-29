@@ -8,7 +8,7 @@
 #include "GUIFrame.h"
 #include "GUIButton.h"
 #include "GUILabel.h"
-#include "GUITextbox.h"
+#include "GUITextBox.h"
 #include "GUIViewer.h"
 #include "GUIWindow.h"
 #include "GUIWindowManager.h"

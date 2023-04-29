@@ -89,7 +89,7 @@ void CSprite2dEmitter::setup(uint8_t max_sprites){
 	setup(max_sprites,0);
 }
 
-void CSprite2dEmitter::setupAsSGTextbox2d(uint8_t max_texts,const std::string & ttf_font, uint8_t font_size,const CColor3i & color, unsigned short properties ){
+void CSprite2dEmitter::setupAsSGTextBox2d(uint8_t max_texts,const std::string & ttf_font, uint8_t font_size,const CColor3i & color, unsigned short properties ){
 
 	if(max_texts == 0) return;
 
@@ -122,8 +122,8 @@ void CSprite2dEmitter::setupAsSGTextbox2d(uint8_t max_texts,const std::string & 
 	}
 }
 
-void CSprite2dEmitter::setupAsSGTextbox2d(uint8_t max_texts,const std::string & font_name, uint8_t size,const CColor3i & color ){
-	setupAsSGTextbox2d( max_texts, font_name,  size,   color,0 );
+void CSprite2dEmitter::setupAsSGTextBox2d(uint8_t max_texts,const std::string & font_name, uint8_t size,const CColor3i & color ){
+	setupAsSGTextBox2d( max_texts, font_name,  size,   color,0 );
 }
 
 void CSprite2dEmitter::setScale(float s){

@@ -203,7 +203,7 @@ int main(int argc, char * argv[]){
 	Texture * text_wheel=TextureManager_Get(tm,"wheel.png");
 
 	// setup animations/actions...
-	Action 	  	 			*mat_act_fade_in_out=Action_New(MATERIAL_CHANNEL_MAX);
+	Action 	  	 			*mat_act_fade_in_out=Action_New(MATERIAL_COMPONENT_MAX);
 
 	//---
 	// ground
@@ -248,7 +248,7 @@ int main(int argc, char * argv[]){
 
 		ECTransformAnimation_StartTween(
 					spr_base_van->components[EC_TRANSFORM_ANIMATION]
-					,TRANSFORM_CHANNEL_ROTATE_Z
+					,TRANSFORM_COMPONENT_ROTATE_Z
 					, EASE_LINEAR
 					, 0
 					, 360
@@ -289,7 +289,7 @@ int main(int argc, char * argv[]){
 
 	ECTransformAnimation_StartTween(
 		spr_base_car->components[EC_TRANSFORM_ANIMATION]
-		,TRANSFORM_CHANNEL_TRANSLATE_X
+		,TRANSFORM_COMPONENT_TRANSLATE_X
 		,EASE_OUT_SINE
 		,-2
 		,0
@@ -299,7 +299,7 @@ int main(int argc, char * argv[]){
 
 	ECTransformAnimation_StartTween(
 		spr_base_car->components[EC_TRANSFORM_ANIMATION]
-		,TRANSFORM_CHANNEL_TRANSLATE_Y
+		,TRANSFORM_COMPONENT_TRANSLATE_Y
 		,EASE_OUT_SINE
 		,-0.24-0.1
 		,-0.23-0.1
@@ -315,7 +315,7 @@ int main(int argc, char * argv[]){
 	// ani
 	Action_SetKeyframesTrack(
 			 mat_act_fade_in_out
-			,MATERIAL_CHANNEL_COLOR_A
+			,MATERIAL_COMPONENT_COLOR_A
 			,EASE_IN_OUT_SINE
 			,alpha_fade_in_out_keyframes
 			,ARRAY_SIZE(alpha_fade_in_out_keyframes)

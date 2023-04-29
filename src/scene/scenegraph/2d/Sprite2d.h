@@ -50,7 +50,7 @@ public:
 
 	CSprite2d(short id,SPRITE2D_TYPES sprite2d_type = SPRITE2D_TYPES::NORMAL);
 
-	//void startSGTextbox2d(std::string text, int x,int y, double angle_dir, double  _speed);
+	//void startSGTextBox2d(std::string text, int x,int y, double angle_dir, double  _speed);
 
 	void setText(const string & _text);
 	void start(int x,int y, double angle_dir, double  _speed, tInfoSprite2dGroup * _info_group=NULL);
@@ -149,7 +149,7 @@ public:
 
 	virtual void draw();
 	void drawSprite2d();
-	void drawSGTextbox2d();
+	void drawSGTextBox2d();
 
 	void setCheckCollision(bool _check_collision);
 
