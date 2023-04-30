@@ -12,12 +12,15 @@
 typedef struct{
     Geometry 	*geometry;
     FT_Face 	ft_face;
+    int			max_bearing_y;
 }TTFontData;
 
 typedef struct{
     Vector2i size;    			// Size of glyph
     Vector2i bearing;  			// Offset from baseline to left/top of glyph
-    GLuint 	 advance;    		// Horizontal offset to advance to next glyph
+    int 	 advance_x;    		// Horizontal offset to advance to next glyph
+    int 	 advance_y;    		// Horizontal offset to advance to next glyph
+
     void 	* data;   			// ID handle of the glyph texture
 }TTFontCharacter;
 
@@ -54,7 +57,8 @@ TTFontCharacter *TTFont_BuildChar(TTFont *_this,unsigned long c){
 		.data=NULL
 		,.size=Vector2i_New(face->glyph->bitmap.width, face->glyph->bitmap.rows)
 		,.bearing=Vector2i_New(face->glyph->bitmap_left, face->glyph->bitmap_top)
-		,.advance=face->glyph->advance.x
+		,.advance_x=face->glyph->advance.x
+		,.advance_y=face->glyph->advance.y
 	};
 
 
@@ -73,11 +77,15 @@ TTFontCharacter *TTFont_BuildChar(TTFont *_this,unsigned long c){
 void TTFont_BuildChars(TTFont *_this,unsigned long char_ini, unsigned long char_end){
 	//GLuint VAO, VBO;
     // Load first 128 characters of ASCII set
+	TTFontData *font_data=_this->data;
+	int max_bearing_y=-1;
     for (unsigned long c = char_ini; c < char_end; c++)
     {
     	TTFontCharacter *font_character=TTFont_BuildChar(_this,c);
+    	max_bearing_y=MAX(max_bearing_y,font_character->bearing.y);
     	MapInt_Set(_this->characters,c,font_character);
     }
+    font_data->max_bearing_y=max_bearing_y;
 }
 
 
@@ -100,6 +108,15 @@ TTFont * TTFont_New(FT_Face face,uint16_t font_size){
     font->ascender=face->ascender>>6;
     font->characters=MapInt_New();
     font->characters->on_delete=TTFont_OnDeleteNode;
+
+    int descender=face->descender>>6;
+    int bb_xmin=face->bbox.xMin>>6;
+    int bb_xmax=face->bbox.xMax>>6;
+    int bb_ymin=face->bbox.yMin>>6;
+    int bb_ymax=face->bbox.yMax>>6;
+    int height=face->height>>6;
+
+    int max_height=face->max_advance_height>>6;
 
     // data
     font_data->geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
@@ -233,7 +250,6 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 	unsigned long c=0;
 	TTFontData *data=_this->data;
 
-
 	Graphics_SetColor4f(_color.r,_color.g, _color.b,1);
 
 	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0)
@@ -248,8 +264,8 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		}
 
 		int end_y=ch->size.y-ch->bearing.y+_this->ascender;
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,end_y - ch->size.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,end_y);
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,data->max_bearing_y-ch->bearing.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,data->max_bearing_y-ch->bearing.y+ch->size.y);
 
 		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
@@ -263,7 +279,7 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		Geometry_SetMeshVertex(data->geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
 		Geometry_Draw(data->geometry);
 
-		_x3d += ViewPort_ScreenToWorldWidth(ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		_x3d += ViewPort_ScreenToWorldWidth(ch->advance_x >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 }
 
@@ -319,7 +335,7 @@ uint16_t TTFont_GetWidthBuiltInt(TTFont *_this, const void *text, size_t len, Ch
 			}
 		}
 
-		width += (ch->advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		width += (ch->advance_x >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 		n++;
 	}
 

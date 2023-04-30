@@ -83,16 +83,16 @@ TTFontManager *	TTFontManager_New(void){
 
 	return tfm;
 }
-
+/*
 TTFont * 		TTFontManager_GetFontFromFontInfo(TTFontManager *_this, TTFontInfo * font_info){
 	if(font_info==NULL){
 		return TTFontManager_GetEmbeddedFont();
 	}
 
 	return TTFontManager_GetFont(_this,font_info->font_name, font_info->font_size);
-}
+}*/
 
-
+/*
 TTFontInfo 		TTFontManager_GetDefaultFontInfo(TTFontManager *_this){
 	TTFontManagerData *data=_this->data;
 	TTFontInfo font_info;
@@ -145,7 +145,7 @@ const char * 	TTFontManager_GetFontResourcePath(TTFontManager *_this){
 
 // MEMBERS
 
-TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uint8_t _font_size){
+TTFont * 		TTFontManager_NewFont(TTFontManager *_this,const char * _filename,uint8_t _font_size){
 	TTFontManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
@@ -243,4 +243,4 @@ void TTFontManager_Delete(TTFontManager *_this){
 	ZG_FREE(data);
 	data=NULL;
 	ZG_FREE(_this);
-}
+}*/

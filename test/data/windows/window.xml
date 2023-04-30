@@ -1,6 +1,7 @@
 <!--  comment  -->
 <window background-color="#0F0F0F" window-style="none" caption="Test">
 
+
 	<label 
 		id="lbl_score" 
 		left="0" 
