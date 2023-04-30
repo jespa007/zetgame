@@ -31,7 +31,7 @@ string(STRIP "${CMAKE_MATCH_1}" ZETGAME_VERSION_PATCH)
 
 
 
-MESSAGE("-- ZetGame ${ZETGAME_VERSION_MAJOR}.${ZETGAME_VERSION_MINOR}.${ZETGAME_VERSION_PATCH}" )
+MESSAGE("-- zetgame ${ZETGAME_VERSION_MAJOR}.${ZETGAME_VERSION_MINOR}.${ZETGAME_VERSION_PATCH}" )
 
 set(ZETGAME_LIB_NAME "zetgame-${ZETGAME_VERSION_MAJOR}-${ZETGAME_VERSION_MINOR}-${ZETGAME_VERSION_PATCH}")
 
@@ -181,7 +181,7 @@ endif()
 
 
 IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
-	MESSAGE ("-- ZetPacker_dev: ON" )
+	MESSAGE ("-- zetpacker_dev: ON" )
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../../zetpacker/src
 	) 	
@@ -202,7 +202,7 @@ IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
 	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetpacker/bin/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETPACKER_LIB_NAME}_d.a)
 else()
 	IF (IS_DEBUG )
-		MESSAGE ("-- ZetPacker_dev: OFF" )
+		MESSAGE ("-- zetpacker_dev: OFF" )
 	ENDIF()
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetpacker
@@ -212,7 +212,7 @@ else()
 endif()
 
 IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
-	MESSAGE ("-- Zetnet_dev: ON" )
+	MESSAGE ("-- zetnet_dev: ON" )
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../../zetnet/src
 	) 	
@@ -233,7 +233,7 @@ IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
 	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetnet/bin/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETNET_LIB_NAME}_d.a)
 else()
 	IF (IS_DEBUG )
-		MESSAGE ("-- Zetnet_dev: OFF" )
+		MESSAGE ("-- zetnet_dev: OFF" )
 	ENDIF()
 	include_directories (
 		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet
