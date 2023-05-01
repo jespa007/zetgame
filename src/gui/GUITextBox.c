@@ -24,9 +24,8 @@ GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
 
 	// SETUP DATA
 	GUITextBoxData *data = ZG_NEW(GUITextBoxData);
-	TTFontInfo font_info=TTFontManager_GetEmbeddedFontInfo();
+	//TTFontInfo font_info=TTFontManager_GetEmbeddedFontInfo();
 	data->textbox=TextBox_New();
-	strcpy(data->font_name,font_info.font_name);
 	label->data=data;
 
 	return label;
@@ -54,19 +53,9 @@ void 			GUITextBox_SetWidth(GUITextBox *_this,uint16_t _width){
 	TextBox_SetWidth(data->textbox,_width);
 }
 
-void 			GUITextBox_SetFontName(GUITextBox *_this, const char *_font_name){
+void 			GUITextBox_SetFontFile(GUITextBox *_this, const char *_font_file){
 	GUITextBoxData *data=_this->data;
-	TTFontManager *tffont_manager=GUIWidget_GetTTFontManager(_this->widget);
-
-	if(tffont_manager != NULL){
-		TTFont *font=TextBox_GetFont(data->textbox);
-		TTFontManager_SetFontName(tffont_manager,font,_font_name);
-		/*if((font=TTFontManager_GetFont(tffont_manager,_font_name,font->font_size))!=NULL){
-			// if font manager was able to create the font, update font name
-			TextBox_SetFont(data->textbox,font);
-			//strcpy(data->font_name,_font_name);
-		}*/
-	}
+	TextBox_SetFontFile(data->textbox,_font_file);
 }
 
 const char *	GUITextBox_GetFontName(GUITextBox *_this){
@@ -78,23 +67,13 @@ const char *	GUITextBox_GetFontName(GUITextBox *_this){
 
 void 			GUITextBox_SetFontSize(GUITextBox *_this, uint8_t _font_size){
 	GUITextBoxData *data=_this->data;
-	TTFontManager *tffont_manager=GUIWidget_GetTTFontManager(_this->widget);
-
-	if(tffont_manager != NULL){
-		TTFont *font=NULL;
-
-		if((font=TTFontManager_GetFont(tffont_manager,data->font_name,_font_size))!=NULL){
-			// if font manager was able to create the font, update font size
-			TextBox_SetFont(data->textbox,font);
-		}
-	}
+	TextBox_SetFontSize(data->textbox,_font_size);
 }
 
-uint8_t			GUITextBox_GetFontSize(GUITextBox *_this){
+uint16_t			GUITextBox_GetFontSize(GUITextBox *_this){
 	GUITextBoxData *data=_this->data;
 
-	TTFont *font=TextBox_GetFont(data->textbox);
-	return font->GetFontSize();
+	return TextBox_GetFontSize(data->textbox);
 }
 
 void			GUITextBox_SetTextAlign(GUITextBox *_this,TextAlign _text_align){
@@ -107,6 +86,15 @@ void			GUITextBox_SetVerticalAlign(GUITextBox *_this,VerticalAlign _vertical_ali
 	TextBox_SetVerticalAlign(data->textbox,_vertical_align);
 }
 
+void GUITextBox_SetBorderThickness(GUITextBox *_this,int _thickness){
+	GUITextBoxData *data=_this->data;
+	TextBox_SetBorderThickness(data->textbox,_thickness);
+}
+
+void GUITextBox_SetBorderColorHtml(GUITextBox *_this,const char *_color_html){
+	GUITextBoxData *data=_this->data;
+	TextBox_SetBorderColor4f(data->textbox,Color4f_FromHtml(_color_html));
+}
 
 static void GUITextBox_Draw(void *gui_label){
 	GUITextBox *_this=gui_label;

@@ -24,14 +24,14 @@ Color4f Color4f_FromHex(uint32_t hex){
 		};
 }
 
-Color4f Color4f_FromHexStr(const char * _hex_str){
-	char *hex_str=(char *)_hex_str;
-	if(hex_str==NULL || *hex_str==0) {
+Color4f Color4f_FromHtml(const char * _html){
+	char *html=(char *)_html;
+	if(_html==NULL || *_html==0) {
 		Log_ErrorF("string empty or null");
 		return COLOR4F_WHITE;
 	}
 
-	if(*hex_str!='#') {
+	if(*html!='#') {
 		Log_ErrorF("Invalid hex colorit should start by # (example #0e0e0e)");
 		return COLOR4F_WHITE;
 	}
@@ -39,7 +39,7 @@ Color4f Color4f_FromHexStr(const char * _hex_str){
 
 	int hex;
 
-	if(StrUtils_StrToInt(&hex,hex_str+1,16)){
+	if(StrUtils_StrToInt(&hex,html+1,16)){
 		return (Color4f){
 				 .a=((hex&0xFF000000)>>24)*ONE_OVER_256
 				,.r=((hex&0x00FF0000)>>16)*ONE_OVER_256

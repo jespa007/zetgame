@@ -6,6 +6,11 @@ typedef struct{
 	GUIWidget *parent;
 	Vector2i position_local, position_world, position_screen;
 	Vector2i dimensions;
+	void				*gui_ptr;
+	Color4f				color,background_color;
+	float 				opacity;
+	bool 				is_enabled;
+
 	GUIWindow *window;
 
 	// events
@@ -23,10 +28,10 @@ GUIWidget  * GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 	data->widgets = List_New();
 	widget->data=data;
 
-	widget->is_enabled=true;
-	widget->color=COLOR4F_WHITE;
-	widget->background_color=COLOR4F_WHITE;
-	widget->opacity=ALPHA_VALUE_SOLID;
+	data->is_enabled=true;
+	data->color=COLOR4F_WHITE;
+	data->background_color=COLOR4F_WHITE;
+	data->opacity=ALPHA_VALUE_SOLID;
 
 	data->position_local.x=x;
 	data->position_local.y=y;
@@ -95,6 +100,22 @@ void GUIWidget_SetDimensions(GUIWidget *_this,uint16_t width, uint16_t height){
 	GUIWidget_SetWidth(_this,width);
 }
 
+Color4f GUIWidget_GetBackgroundColor4f(GUIWidget *_this){
+	GUIWidgetData *data=_this->data;
+	return data->background_color;
+}
+
+void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,Color4f _color){
+	GUIWidgetData *data=_this->data;
+	data->background_color=_color;
+}
+
+
+bool GUIWidget_IsEnabled(GUIWidget *_this){
+	GUIWidgetData *data=_this->data;
+	return data->is_enabled;
+}
+
 Vector2i GUIWidget_GetDimensions(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	return data->dimensions;
@@ -134,7 +155,7 @@ GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	if(_this->type == WIDGET_TYPE_WINDOW){
 		// THIS IS NOT CORRECT
-		return (GUIWindow 		*)_this->gui_ptr;
+		return (GUIWindow 		*)data->gui_ptr;
 	}
 
 	if(data->parent){
@@ -142,7 +163,7 @@ GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this){
 	}
 	return NULL;
 }
-
+/*
 TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this){
 	GUIWindow *window=GUIWidget_GetWindow(_this);
 
@@ -152,7 +173,7 @@ TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this){
 
 	return GUIWindow_GetTTFontManager(window);
 }
-
+*/
 TextureManager 	*GUIWidget_GetTextureManager(GUIWidget *_this){
 	GUIWindow *window=GUIWidget_GetWindow(_this);
 

@@ -177,7 +177,7 @@ bool Graphics_Init(
 
 	Graphics_PrintAdapterInformation();
 
-	TTFontManager_Init();
+	TTFont_Init();
 	IconManager_Init();
 	ViewPort_Init(_width,_height);
 
@@ -794,7 +794,7 @@ void Graphics_Print(int x, int y, Color4f color, const char *in, ...){
 	Vector3f pos3d=ViewPort_ScreenToWorld(x,y);
 
 	TTFont_RenderTextBegin(NULL);
-	TTFont_Print(TTFontManager_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
+	TTFont_Print(TTFont_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
 	TTFont_RenderTextEnd();
 }
 
@@ -803,7 +803,7 @@ void Graphics_WPrint(int x, int y, Color4f color, const wchar_t *in, ...){
 	ZG_WVARGS(out,in);
 
 	TTFont_RenderTextBegin(NULL);
-	TTFont_WPrint(TTFontManager_GetEmbeddedFont(),x,y,color,out);
+	TTFont_WPrint(TTFont_GetEmbeddedFont(),x,y,color,out);
 	TTFont_RenderTextEnd();
 }
 //---------------------------------------------------------------------------------------------------------------------------
@@ -818,7 +818,7 @@ void Graphics_DeInit(void) {
 	TextureManager_DeInit();
 	Geometry_DeInit();
 
-	TTFontManager_DeInit();
+	TTFont_DeInit();
 	ViewPort_DeInit();
 
 

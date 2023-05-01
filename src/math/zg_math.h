@@ -11,6 +11,7 @@
 #include "Vector4i.h"
 #include "Vector4f.h"
 #include "Rectanglef.h"
+#include "Rectanglei.h"
 
 #include "Matrix3f.h"
 #include "Matrix4f.h"

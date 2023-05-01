@@ -51,7 +51,8 @@ typedef struct{
 	TextAlign 		text_align;
 	Vector2i		dimensions;
 	TBRenderText	render_text;
-
+	Color4f			border_color;
+	int				border_tickness;
 }TextBoxData;
 
 
@@ -60,9 +61,10 @@ TextBox *TextBox_New(void){
 	TextBoxData *data=ZG_NEW(TextBoxData);
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
-	data->font=TTFontManager_GetEmbeddedFont();
+	data->font=TTFont_New();
 	TextBox_SetText(textbox,"");
 	return textbox;
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -161,7 +163,7 @@ void TextBox_RT_Build(TextBox *_this){
 
 
 	uint16_t word_width=0;
-	uint16_t space_width=data->font->space_width;
+	uint16_t space_width=TTFont_GetFontWidth(data->font);
 
 	for(unsigned i=0; i < lines->count; i++){
 		void *text_line=lines->items[i];
@@ -263,9 +265,9 @@ VerticalAlign TextBox_ParseVerticalAlign(const char *_vertical_text){
 	VerticalAlign vertical_align=VERTICAL_ALIGN_TOP; // by default
 	char *str_vertical_align=StrUtils_ToLower(_vertical_text);
 	if(STRCMP(str_vertical_align,==,"top")){
-		vertical_align=VERTICAL_ALIGN_CENTER;
+		vertical_align=VERTICAL_ALIGN_TOP;
 	}else if(STRCMP(str_vertical_align,==,"center")){
-		vertical_align=VERTICAL_ALIGN_BOTTOM;
+		vertical_align=VERTICAL_ALIGN_CENTER;
 	}else{
 		Log_Error("Unknow vertical text '%s' ",_vertical_text);
 	}
@@ -275,6 +277,15 @@ VerticalAlign TextBox_ParseVerticalAlign(const char *_vertical_text){
 	return vertical_align;
 }
 
+void	 		TextBox_SetBorderThickness(TextBox *_this, uint16_t _border_tickness){
+	TextBoxData *data=_this->data;
+	data->border_tickness=_border_tickness;
+}
+
+void	 		TextBox_SetBorderColor4f(TextBox *_this, Color4f _border_color){
+	TextBoxData *data=_this->data;
+	data->border_color=_border_color;
+}
 
 
 void     TextBox_SetText(TextBox *_this,const char *in, ...){
@@ -321,14 +332,24 @@ void     TextBox_WSetText(TextBox *_this,const wchar_t *in, ...){
 	TextBox_RT_Build(_this);
 }
 
-void     TextBox_SetFont(TextBox *_this, TTFont *font){
+void     TextBox_SetFontFile(TextBox *_this, const char *_font_file){
 	TextBoxData *data=_this->data;
+	TTFont_LoadFromFile(data->font,_font_file);
+	TextBox_RT_Build(_this);
 
-	if(data->font != font){
-		data->font=font;
-		TextBox_RT_Build(_this);
-	}
 }
+
+void     		TextBox_SetFontSize(TextBox *_this, uint16_t _font_size){
+	TextBoxData *data=_this->data;
+	TTFont_SetFontSize(data->font,_font_size);
+	TextBox_RT_Build(_this);
+}
+
+uint16_t     		TextBox_GetFontSize(TextBox *_this){
+	TextBoxData *data=_this->data;
+	return TTFont_GetFontSize(data->font);
+}
+
 
 TTFont *   TextBox_GetFont(TextBox *_this){
 	TextBoxData *data=_this->data;
@@ -387,7 +408,9 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	float y_draw=0;
 	float y_draw_inc=0;
 	Vector3f dim3d=ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
-	uint16_t text_total_height=data->render_text.token_lines->count*TTFont_GetFontHeight(data->font->ascender);
+	int ascender=TTFont_GetAscender(data->font);
+	int space_width=TTFont_GetSpaceWidth(data->font);
+	uint16_t text_total_height=data->render_text.token_lines->count*ascender;
 
 	if(data->vertical_align == VERTICAL_ALIGN_CENTER){
 		y=-(text_total_height>>1);
@@ -397,16 +420,16 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	}
 
 	y_draw=-ViewPort_ScreenToWorldHeight(y);
-	y_draw_inc=-ViewPort_ScreenToWorldHeight(data->font->ascender);
+	y_draw_inc=-ViewPort_ScreenToWorldHeight(ascender);
 
-	if(ZetGame_IsDebugMode()){
+	if(data->border_tickness>0){
 		Graphics_DrawRectangle4f(
 				0 // x:0 translation keeps current translate
 				,0// y:0 translation keeps current translate
 				,dim3d.x
 				,dim3d.y
-				,COLOR4F_WHITE
-				,2
+				,data->border_color
+				,data->border_tickness
 				);
 	}
 
@@ -441,7 +464,7 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 				token_word=((TBRT_TokenWord*)token->token_data);
 				if(w>0){ // render space
 					//TTFont_Print(data->font,x,y,COLOR4F_WHITE," ");
-					x+=(data->font->space_width)*inc_x;
+					x+=(space_width)*inc_x;
 				}
 
 				x_draw=ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
@@ -479,6 +502,8 @@ void TextBox_Delete(TextBox * _this){
 	}
 
 	TextBox_RT_Delete(data);
+
+	TTFont_Delete(data->font);
 
 	free(_this->data);
 	free(_this);

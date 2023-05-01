@@ -9,3 +9,4 @@
 
 #include "Quaternion.c"
 #include "Rectanglef.c"
+#include "Rectanglei.c"

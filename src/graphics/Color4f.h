@@ -24,6 +24,6 @@ Color4f Color4f_New(float r, float g, float b, float a);
 Color4f Color4f_FromRGB(uint8_t r, uint8_t g, uint8_t b);
 Color4f Color4f_FromRGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 Color4f Color4f_FromHex(uint32_t hex);
-Color4f Color4f_FromHexStr(const char * color);
+Color4f Color4f_FromHtml(const char * color);
 
 #endif

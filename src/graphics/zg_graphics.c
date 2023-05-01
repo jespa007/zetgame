@@ -7,7 +7,7 @@
 #include "Shader.c"
 #include "Geometry.c"
 #include "TTFont.c"
-#include "TTFontManager.c"
+//#include "TTFontManager.c"
 
 #include "Appearance.c"
 

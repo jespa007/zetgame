@@ -2,7 +2,7 @@
 <window background-color="#0F0F0F" window-style="none" caption="Test">
 
 
-	<label 
+	<textbox 
 		id="lbl_score" 
 		left="0" 
 		top="0" 
@@ -12,18 +12,18 @@
 		width="1000"  
 	    text="Score:" 
 	    font-size="20"
-	    font-name="half_bold_pixel-7.ttf" 
-	></label>	
+	    font-file="half_bold_pixel-7.ttf" 
+	></textbox>	
 	
-	<label
+	<textbox
 		id="lbl_exp" 
 		left="10" 
 		top="35" 
 		height="25" 
 		text="Exp:"
 		font-size="20" 
-		font-name="half_bold_pixel-7.ttf"
-	></label>
+		font-file="half_bold_pixel-7.ttf"
+	></textbox>
 
 	<img 
 		id="img_time_left" 
@@ -34,17 +34,17 @@
 		src="clock.png" 
 	></img>		
 	    
-	<label 
+	<textbox 
 		id="lbl_time_left" 
 		left="38" 
 		top="60" 
 		height="25"
 		text="05:00"  
 	    font-size="20" 
-	    font-name="half_bold_pixel-7.ttf"
-	></label>		
+	    font-file="half_bold_pixel-7.ttf"
+	></textbox>		
 
-	<label 
+	<textbox 
 		id="lbl_level" 
 		top="165" 
 		left="450" 
@@ -52,8 +52,8 @@
 		text="Level" 
 		font-size="45" 
 		text-align="right"
-		font-name="half_bold_pixel-7.ttf"
-	 ></label>
+		font-file="half_bold_pixel-7.ttf"
+	 ></textbox>
 	 
 	<img  
 		id="star1" 
@@ -63,7 +63,7 @@
 		width="50"
 		height="50"
 		font-color="#0"
-		font-name="half_bold_pixel-7.ttf"
+		font-file="half_bold_pixel-7.ttf"
 		font-size="25"
 	></img>
 	
@@ -75,7 +75,7 @@
 		width="50" height="50"
 		font-color="#0"
 		font-size="25"
-		font-name="half_bold_pixel-7.ttf"
+		font-file="half_bold_pixel-7.ttf"
 	></img>
 	
 	<img  
@@ -87,7 +87,7 @@
 		height="50"
 		font-color="#0"
 		font-size="25"
-		font-name="half_bold_pixel-7.ttf"
+		font-file="half_bold_pixel-7.ttf"
 	></img>
 	
 	<img  
@@ -98,7 +98,7 @@
 		width="50" height="50"
 		font-color="#0"
 		font-size="25"
-		font-name="half_bold_pixel-7.ttf"
+		font-file="half_bold_pixel-7.ttf"
 	></img>
 	
 	<img  	
@@ -109,34 +109,38 @@
 		width="50" height="50"
 		font-color="#0"
 		font-size="25"
-		font-name="half_bold_pixel-7.ttf"
+		font-file="half_bold_pixel-7.ttf"
 	></img>
 
-	<label 
+	<textbox 
 		id="lbl_title" 
 		top="50" 
 		left="0"   
 		width="1024" 
 	    text="Bird"
 	    font-size="120" 
+	    border-thickness="2"
+	    border-color="#FFFFFF"
 	    text-align="center"
-	    font-name="half_bold_pixel-7.ttf"
-	></label>
+	    font-file="half_bold_pixel-7.ttf"
+	></textbox>
 	    
-	<label 
+	<textbox 
 		id="lbl_description" 
 		top="250" 
 		left="50" 
 		width="900" 
 		height="10"
-	    text="Welcome to Bird game ! To start the game touch click [ Start ] button or by pressing the space key. To train click [ Tutorial ] button or press T key."
+	    text="Welcome to Bird game! To start the game touch click [ Start ] button or by pressing the space key. To train click [ Tutorial ] button or press T key."
 	    font-size="25" 
 	    text-align="justify" 
+	    border-thickness="2"
+	    border-color="#ffffff"
 	    line-height="0" 
-	    font-name="Trebuchet MS.ttf"
-	></label>	    
+	    font-file="Trebuchet MS.ttf"
+	></textbox>	    
 	
-	<label 
+	<textbox 
 		id="lbl_start"  
 		left="312" 
 		top="400" 
@@ -146,12 +150,12 @@
 	    font-size="25" 
 	    text-align="center" 
 	    vertical-align="center" 
-	    border-width="2" 
+	    border-thickness="2" 
 	    border-color="#FFFFFF"
-	    font-name="half_bold_pixel-7.ttf"
-	 ></label>
+	    font-file="half_bold_pixel-7.ttf"
+	 ></textbox>
 
-	<label 
+	<textbox 
 		id="lbl_tutorial"  
 		left="312" 
 		top="470" 
@@ -161,12 +165,12 @@
 	    font-size="25" 
 	    text-align="center" 
 	    vertical-align="center" 
-	    border-width="2" 
+	    border-thickness="2" 
 	    border-color="#FFFFFF"
-	    font-name="half_bold_pixel-7.ttf"
-	 ></label>	 
+	    font-file="half_bold_pixel-7.ttf"
+	 ></textbox>	 
 
-	<label 
+	<textbox 
 		id="lbl_level_selection"  
 		left="312" 
 		top="540" 
@@ -176,21 +180,23 @@
 	    font-size="25" 
 	    text-align="center" 
 	    vertical-align="center" 
-	    border-width="2" 
+	    border-thickness="2" 
 	    border-color="#FFFFFF"
-	    font-name="half_bold_pixel-7.ttf"
-	 ></label>
+	    font-file="half_bold_pixel-7.ttf"
+	 ></textbox>
 
-	<label 
+	<textbox 
 		id="lbl_exit"  
-		left="312" top="610" height="60" width="420"
+		left="312" 
+		top="610" 
+		height="60" 
+		width="420"
 	    text="[ESC] Exit"
+	    vertical-align="top"
 	    font-size="25" 
-	    text-align="center" 
-	    vertical-align="center" 
-	    border-width="2"
+	    border-thickness="2"
 	    border-color="#FFFFFF"
-	    font-name="half_bold_pixel-7.ttf"
-	 ></label>		
+	    
+	 ></textbox>		
 
 </window>

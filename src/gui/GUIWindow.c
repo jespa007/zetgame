@@ -9,12 +9,14 @@ typedef struct{
 	GUIFrame		*	frame_content,
 					*	frame_caption;
 
-	GUITextBox		* 	label_caption;
+	GUITextBox		* 	textbox_caption;
 	GUIButton		*	button_close;
 
-	bool			visible_caption;
-	bool			start_dragging;
-	Vector2i 		start_mouse_position;
+	bool				visible_caption;
+	bool				start_dragging;
+	Vector2i 			start_mouse_position;
+
+	WindowStyle			window_style;
 
 	GUIWindowManager	*window_manager;
 
@@ -45,10 +47,10 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 
 	// CAPTION
 	data->frame_caption=GUIFrame_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	data->frame_caption->widget->background_color=Color4f_FromRGB(0,128,255);
+	GUIWidget_SetBackground4f(data->frame_caption->widget,Color4f_FromRGB(0,128,255));
 
-	data->label_caption=GUITextBox_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	GUITextBox_SetText(data->label_caption,"Window");
+	data->textbox_caption=GUITextBox_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
+	GUITextBox_SetText(data->textbox_caption,"Window");
 
 
 	data->button_close=GUIButton_New(
@@ -68,7 +70,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 
 
 	// SETUP CAPTION
-	GUIWidget_AttachWidget(data->frame_caption->widget,data->label_caption->widget);
+	GUIWidget_AttachWidget(data->frame_caption->widget,data->textbox_caption->widget);
 	GUIWidget_AttachWidget(data->frame_caption->widget,data->button_close->widget);
 
 	// SETUP WINDOW
@@ -79,7 +81,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 	data->visible_caption=true;
 	data->start_dragging=false;
 	data->window_manager=_window_manager;
-
+	data->window_style=WINDOW_STYLE_NORMAL;
 
 
 	Input_AddEventOnMouseButtonDown((CallbackMouseEvent){
@@ -122,7 +124,7 @@ void GUIWindow_SetWidth(GUIWindow *_this,uint16_t _width){
 	GUIWindowData *data= _this->data;
 	GUIWidget_SetWidth(data->frame_content->widget,_width);
 	GUIWidget_SetWidth(data->frame_caption->widget,_width);
-	GUIWidget_SetWidth(data->label_caption->widget,_width);
+	GUIWidget_SetWidth(data->textbox_caption->widget,_width);
 	GUIWidget_SetPositionX(data->button_close->widget,_width-DEFAULT_WINDOW_CAPTION_HEIGHT);
 }
 
@@ -151,17 +153,17 @@ void GUIWindow_SetVisibleCaption(GUIWindow *_this, bool _v){
 
 void GUIWindow_SetBackgroundColor3i(GUIWindow * _this, uint8_t r, uint8_t g, uint8_t b){
 	GUIWindowData *data=_this->data;
-	data->frame_content->widget->background_color=Color4f_FromRGB(r,g,b);
+	GUIWidget_SetBackground4f(data->frame_content->widget,Color4f_FromRGB(r,g,b));
 }
 
-void 		GUIWindow_SetBackgroundColorHexStr(GUIWindow * _this, const char * color){
+void 		GUIWindow_SetBackgroundColor4f(GUIWindow * _this, Color4f color){
 	GUIWindowData *data=_this->data;
-	data->frame_content->widget->background_color=Color4f_FromHexStr(color);
+	GUIWidget_SetBackgroundColor4f(data->frame_content->widget,color);
 }
 
-void 		GUIWindow_SetCaption(GUIWindow * _this, const char *_caption){
+void 		GUIWindow_SetCaptionTitle(GUIWindow * _this, const char *_caption){
 	GUIWindowData *data=_this->data;
-	GUITextBox_SetText(data->label_caption,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
+	GUITextBox_SetText(data->textbox_caption,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
 }
 
 TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
@@ -171,7 +173,7 @@ TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
 	}
 	return NULL;
 }
-
+/*
 TTFontManager 		*GUIWindow_GetTTFontManager(GUIWindow * _this){
 	GUIWindowData *data=_this->data;
 	if(data->window_manager){
@@ -179,7 +181,19 @@ TTFontManager 		*GUIWindow_GetTTFontManager(GUIWindow * _this){
 	}
 	return NULL;
 }
+*/
 
+void 				GUIWindow_SetWindowStyle(GUIWindow * _this, WindowStyle _window_style){
+	GUIWindowData *data=_this->data;
+	switch(data->window_style=_window_style){
+	case WINDOW_STYLE_NONE:
+		GUIWindow_SetVisibleCaption(_this,false);
+		break;
+	case WINDOW_STYLE_NORMAL:
+		GUIWindow_SetVisibleCaption(_this,true);
+		break;
+	}
+}
 
 void GUIWindow_OnSetWidth(void *gui_window, uint16_t width){
 
@@ -290,9 +304,7 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 
 		data->start_dragging = false;
 	}
-
 }
-
 
 void GUIWindow_Delete(GUIWindow *_this) {
 	if(_this == NULL) return;
@@ -301,7 +313,7 @@ void GUIWindow_Delete(GUIWindow *_this) {
 	GUIWidget_Delete(_this->widget);
 	GUIFrame_Delete(data->frame_caption);
 	GUIFrame_Delete(data->frame_content);
-	GUITextBox_Delete(data->label_caption);
+	GUITextBox_Delete(data->textbox_caption);
 	GUIButton_Delete(data->button_close);
 
 	ZG_FREE(data);

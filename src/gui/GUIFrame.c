@@ -35,7 +35,7 @@ void GUIFrame_Update(void * gui_frame){
 
 	ViewPort_Push(position.x,position.y,dimensions.x,dimensions.y,PROJECTION_MODE_ORTHO);
 
-	Graphics_ClearScreen(_this->widget->background_color);
+	Graphics_ClearScreen(GUIWidget_GetBackgroundColor4f(_this->widget));
 
 	// reset absolute position due frame starts as a new screen...
 	GUIWidget_SetPositionAbsolute2i(_this->widget,0,0);

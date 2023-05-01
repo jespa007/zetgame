@@ -41,10 +41,6 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
 
-	if(position.y==50){
-		int kk=0;
-	}
-
 	position.x+=dimensions.x>>1;
 	position.y+=dimensions.y>>1;
 

@@ -107,7 +107,7 @@ void GUIButton_PostUpdate(void *gui_button){
 	GUIButton *_this=gui_button;
 	GUIButtonData *data = _this->data;
 
-	if(!_this->widget->is_enabled){
+	if(!GUIWidget_IsEnabled(_this->widget)){
 		return;
 	}
 
@@ -157,10 +157,10 @@ static void  GUIButton_Draw(void *gui_button){
 	position.x+=dimensions.x>>1;
 	position.y+=dimensions.y>>1;
 
-	Color4f result_font_color = _this->widget->color;
+	Color4f result_font_color = GUIWidget_GetColor4f(_this->widget);
 	//Color4f background_result=_this->widget->background_color;
 
-	float alpha=1*_this->widget->opacity;
+	float alpha=1*GUIWidget_GetOpacity(_this->widget);
 	if(!_this->widget->is_enabled){
 		alpha*=0.25f;
 	}else if(!data->mouse_collide){

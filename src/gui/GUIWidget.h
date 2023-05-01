@@ -49,36 +49,41 @@ typedef struct{
 struct GUIWidget{
 	WidgetType			type;
 	void				*gui_ptr;
-	Color4f				color,background_color;
-	float 				opacity;
-	bool 				is_enabled;
 	void 				*data;
 };
 
 GUIWidget * GUIWidget_New(int x, int y, uint16_t width, uint16_t height);
-void GUIWidget_SetDrawFunction(GUIWidget *_this,CallbackWidgetUpdate draw);
-void GUIWidget_SetPostUpdateFunction(GUIWidget *_this,CallbackWidgetUpdate post_update);
-void GUIWidget_UpdateFunctionOverride(GUIWidget *_this,CallbackWidgetUpdate update);
-void GUIWidget_OnSetHeight(GUIWidget *_this,CallbackWidgetOnSetDimension on_set_height);
-void GUIWidget_OnSetWidth(GUIWidget *_this,CallbackWidgetOnSetDimension on_set_width);
-void GUIWidget_AttachWidgetFunctionOverride(GUIWidget *_this,CallbackWidgetAttachWidget on_set_width);
+void 		GUIWidget_SetDrawFunction(GUIWidget *_this,CallbackWidgetUpdate draw);
+void 		GUIWidget_SetPostUpdateFunction(GUIWidget *_this,CallbackWidgetUpdate post_update);
+void 		GUIWidget_UpdateFunctionOverride(GUIWidget *_this,CallbackWidgetUpdate update);
+void 		GUIWidget_OnSetHeight(GUIWidget *_this,CallbackWidgetOnSetDimension on_set_height);
+void 		GUIWidget_OnSetWidth(GUIWidget *_this,CallbackWidgetOnSetDimension on_set_width);
+void 		GUIWidget_AttachWidgetFunctionOverride(GUIWidget *_this,CallbackWidgetAttachWidget on_set_width);
 
-void GUIWidget_SetPosition2i(GUIWidget *_this,int x, int y);
-void GUIWidget_SetPositionX(GUIWidget *_this,int x);
-void GUIWidget_SetPositionY(GUIWidget *_this,int y);
-void GUIWidget_SetWidth(GUIWidget *_this,uint16_t width);
-void GUIWidget_SetHeight(GUIWidget *_this,uint16_t height);
-void GUIWidget_SetDimensions(GUIWidget *_this,uint16_t width, uint16_t height);
-Vector2i GUIWidget_GetDimensions(GUIWidget *_this);
+void 		GUIWidget_SetPosition2i(GUIWidget *_this,int x, int y);
+void 		GUIWidget_SetPositionX(GUIWidget *_this,int x);
+void 		GUIWidget_SetPositionY(GUIWidget *_this,int y);
+void 		GUIWidget_SetWidth(GUIWidget *_this,uint16_t width);
+void 		GUIWidget_SetHeight(GUIWidget *_this,uint16_t height);
+void 		GUIWidget_SetDimensions(GUIWidget *_this,uint16_t width, uint16_t height);
+Color4f 	GUIWidget_GetBackgroundColor4f(GUIWidget *_this);
+void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,Color4f _color);
+Color4f 	GUIWidget_GetColor4f(GUIWidget *_this);
+void 		GUIWidget_SetColor4f(GUIWidget *_this,Color4f _color);
+float 		GUIWidget_GetOpacity4f(GUIWidget *_this);
+void 		GUIWidget_SetOpacity4f(GUIWidget *_this,float  _opacity);
 
-bool	GUIWidget_IsPointCollision(GUIWidget *_this,Vector2i point);
+bool 		GUIWidget_IsEnabled(GUIWidget *_this);
+Vector2i 	GUIWidget_GetDimensions(GUIWidget *_this);
 
-void GUIWidget_Update(GUIWidget *_this);
+bool		GUIWidget_IsPointCollision(GUIWidget *_this,Vector2i point);
+
+void 		GUIWidget_Update(GUIWidget *_this);
 
 void GUIWidget_Draw(GUIWidget *_this);
 
 GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this);
-TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this);
+//TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this);
 TextureManager 	*GUIWidget_GetTextureManager(GUIWidget *_this);
 
 void GUIWidget_AttachWidget(GUIWidget *_this, GUIWidget *widget);

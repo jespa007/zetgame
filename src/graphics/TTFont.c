@@ -13,14 +13,14 @@ typedef struct{
 	const char *font_filename;
 	MapInt *	characters;
     uint16_t 	font_size;
-    uint16_t 	space_width; // in pixels
+    int 		space_width; // in pixels
     uint32_t 	font_properties;
-	uint32_t	ascender;
+	int			ascender;
 	float 		weight,shear;
 	uint8_t 	style;
     Geometry 	*geometry;
     FT_Face 	ft_face;
-    int			max_bearing_y;
+    //int			max_bearing_y;
 }TTFontData;
 
 typedef struct{
@@ -28,7 +28,7 @@ typedef struct{
     Vector2i bearing;  			// Offset from baseline to left/top of glyph
     int 	 advance_x;    		// Horizontal offset to advance to next glyph
     int 	 advance_y;    		// Horizontal offset to advance to next glyph
-
+    //Rectanglei	box;
     void 	* data;   			// ID handle of the glyph texture
 }TTFontCharacter;
 
@@ -37,12 +37,81 @@ typedef struct{
 
 #include "TTFont_GL.c"
 
-//static TTFont 		*g_font_embedded=NULL;
+
+//-------
+// GLOBAL
+static TTFont 		*	g_font_embedded=NULL;
 static FT_Library		g_ft_handler=NULL;
+static char				g_font_resource_path[256]={0};
 
 
 void 					TTFont_Unload(TTFont *_this);
 void	 				TTFont_OnDeleteNode(MapIntNode *node);
+TTFont 			* 		TTFont_NewEmpty(void);
+TTFont 			*		TTFont_NewFromMemory(
+	const uint8_t *buffer
+	, size_t buffer_len
+);
+
+
+// STATIC
+void	TTFont_Init(void){
+	if(g_ft_handler == NULL){
+		// All functions return a value different than 0 whenever an error occurred
+		if (FT_Init_FreeType(&g_ft_handler)){
+			Log_ErrorF("FREETYPE: Could not init FreeType Library");
+		}
+	}
+}
+
+TTFont * 		TTFont_GetEmbeddedFont(void){
+	if(g_font_embedded == NULL){
+		g_font_embedded=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len);
+	}
+	return g_font_embedded;
+}
+
+void 			TTFont_SetFontResourcePath(const char * path){
+	strcpy(g_font_resource_path,path);
+}
+
+const char * 	TTFont_GetFontResourcePath(void){
+	return g_font_resource_path;
+}
+
+TTFont *TTFont_NewFromMemory(
+		const uint8_t *buffer
+		, size_t buffer_len
+){
+	TTFont *font=TTFont_NewEmpty();
+	TTFont_LoadFromMemory(font, buffer,buffer_len);
+	return font;
+}
+
+
+TTFont * TTFont_NewFromFile(
+	const char *_filename
+){
+	TTFont *font=TTFont_NewEmpty();
+	TTFont_LoadFromFile(font,_filename);
+	return font;
+}
+
+
+void	TTFont_DeInit(void){
+	// erase all loaded fonts...
+	if(g_font_embedded != NULL){
+		TTFont_Delete(g_font_embedded);
+		g_font_embedded = NULL;
+	}
+
+
+	if(g_ft_handler != NULL){
+		FT_Done_FreeType(g_ft_handler);
+		g_ft_handler=NULL;
+	}
+
+}
 
 //--------
 // PRIVATE
@@ -70,6 +139,13 @@ TTFontCharacter *TTFont_BuildChar(TTFont *_this,unsigned long c){
 		,.bearing=Vector2i_New(face->glyph->bitmap_left, face->glyph->bitmap_top)
 		,.advance_x=face->glyph->advance.x
 		,.advance_y=face->glyph->advance.y
+		/*,.box=Rectanglei_New(
+				face->bbox.xMin>>6
+				,face->bbox.yMin>>6
+				,face->bbox.xMax>>6
+				,face->bbox.yMax>>6
+
+			)*/
 	};
 
 
@@ -89,7 +165,6 @@ void TTFont_BuildChars(
 	TTFont *_this
 	,unsigned long char_ini
 	, unsigned long char_end
-	, uint16_t _font_size
 ){
     // Create new font with size...
 	TTFontData *data=_this->data;
@@ -108,15 +183,14 @@ void TTFont_BuildChars(
 	// main
     data->ascender=data->ft_face->ascender>>6;
 
-	int max_bearing_y=-1;
+	//int max_bearing_y=-1;
     for (unsigned long c = char_ini; c < char_end; c++)
     {
     	TTFontCharacter *font_character=TTFont_BuildChar(_this,c);
-    	max_bearing_y=MAX(max_bearing_y,font_character->bearing.y);
+    	//max_bearing_y=MAX(max_bearing_y,font_character->bearing.y);
     	MapInt_Set(data->characters,c,font_character);
     }
-    data->max_bearing_y=max_bearing_y;
-    data->font_size=_font_size;
+    //data->max_bearing_y=max_bearing_y;
 }
 
 
@@ -167,25 +241,6 @@ void TTFont_SetStyle(TTFont * _this, uint8_t _style){
 	TTFont_SetTransformation(_this,(_style & TTFONT_STYLE_BOLD)?(BOLD_WEIGHT):(1.0), (_style & TTFONT_STYLE_ITALIC)?(ITALIC_SHEAR):(0.0));
 	data->style = _style;
 }
-//---------------
-// PUBLIC STATIC
-TTFont *TTFont_NewFromMemory(
-		const uint8_t *buffer
-		, size_t buffer_len
-){
-	TTFont *font=TTFont_NewEmpty();
-	TTFont_LoadFromMemory(font, buffer,buffer_len);
-	return font;
-}
-
-
-TTFont * TTFont_NewFromFile(
-	const char *_filename
-){
-	TTFont *font=TTFont_NewEmpty();
-	TTFont_LoadFromFile(font,_filename);
-	return font;
-}
 
 //---------------
 // PUBLIC MEMBERS
@@ -193,22 +248,21 @@ TTFont * TTFont_New(void){
 	return TTFont_NewFromMemory(
 		pf_arma_five_ttf
 		,pf_arma_five_ttf_len
-		,DEFAULT_FONT_SIZE
 	);
 }
 
 
 void TTFont_LoadFromMemory(
 		TTFont *_this
-		,const uint8_t *buffer
-		, size_t buffer_len
+		,const uint8_t *_buffer
+		, size_t _buffer_len
 ){
 	TTFontData *data=_this->data;
 
 	TTFont_Unload(_this);
 
 	// Load font as face
-	if (FT_New_Memory_Face(TTFontManager_GetFreeTypeHandler(), buffer, buffer_len, 0, &data->ft_face)){
+	if (FT_New_Memory_Face(g_ft_handler, _buffer, _buffer_len, 0, &data->ft_face)){
 		Log_ErrorF("FT_New_Memory_Face: Failed to load");
 		return;
 	}
@@ -226,16 +280,17 @@ void TTFont_LoadFromFile(
 ){
 	BufferByte *buffer= NULL;
 	char filename[PATH_MAX]={0};
-	bool file_exist=false;
+	bool file_exists=false;
+
 	strcpy(filename,_filename);
 
 	if((file_exists=File_Exists(filename)) == false){
-		sprintf(filename,"%s/%s",TTFontManager_GetFontResourcePath(),_filename);
+		sprintf(filename,"%s/%s",g_font_resource_path,_filename);
 		file_exists=File_Exists(filename);
 	}
 
 	if(file_exists){
-		buffer=FileSystem_ReadFile(_filename);
+		buffer=FileSystem_ReadFile(filename);
 
 		TTFont_LoadFromMemory(
 				_this
@@ -249,14 +304,31 @@ void TTFont_LoadFromFile(
 	}
 }
 
+int				TTFont_GetAscender(TTFont *_this){
+	TTFontData *data=_this->data;
+	return data->ascender;
+}
+
+int				TTFont_GetSpaceWidth(TTFont *_this){
+	TTFontData *data=_this->data;
+	return data->space_width;
+}
+
+
+int TTFont_GetFontWidth(TTFont *_this){
+	TTFontData *data=_this->data;
+	return data->space_width;
+}
 
 void	 		TTFont_SetFontSize(TTFont *_this,uint16_t _font_size){
+
+	TTFontData *data=_this->data;
+	data->font_size=_font_size;
 
 	TTFont_BuildChars(
 		_this
 		,0
 		,MAX_CHARACTER_VALUE
-		,_font_size
 	);
 }
 
@@ -304,11 +376,13 @@ void TTFont_DrawCharacter(TTFontCharacter *_ch){
 }
 
 void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
+	TTFontData *data=_this->data;
+
 	if(_this == NULL) return;
 
 	void *ptr=(void *)_text;
 	unsigned long c=0;
-	TTFontData *data=_this->data;
+
 
 	Graphics_SetColor4f(_color.r,_color.g, _color.b,1);
 
@@ -324,8 +398,9 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 		}
 
 		int end_y=ch->size.y-ch->bearing.y+data->ascender;
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,data->max_bearing_y-ch->bearing.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,data->max_bearing_y-ch->bearing.y+ch->size.y);
+		// calcule p1 and p2 center
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y+data->ascender);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y+data->ascender);
 
 		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left

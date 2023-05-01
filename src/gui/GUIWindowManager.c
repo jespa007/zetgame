@@ -3,7 +3,7 @@
 typedef struct{
 	MapString 			* 	windows;
 	TextureManager   	*   texture_manager;
-	TTFontManager   	*   ttfont_manager;
+	//TTFontManager   	*   ttfont_manager;
 }GUIWindowManagerData;
 
 typedef struct{
@@ -59,14 +59,14 @@ void GUIWindowManager_OnDeleteTexture(MapStringNode *node){
 // MEMBERS
 GUIWindowManager *GUIWindowManager_New(
 		TextureManager	* _texture_manager
-		, TTFontManager * _ttfont_manager
+		//, TTFontManager * _ttfont_manager
 ){
 	GUIWindowManager *window_manager=ZG_NEW(GUIWindowManager);
 	GUIWindowManagerData *data=ZG_NEW(GUIWindowManagerData);
 
 	data->windows = MapString_New();//new std::map<std::string,TTFont *>();
 	data->texture_manager = _texture_manager;
-	data->ttfont_manager = _ttfont_manager;
+	//data->ttfont_manager = _ttfont_manager;
 
 	data->windows->on_delete=GUIWindowManager_OnDeleteGUIWMWindowData;
 
@@ -113,7 +113,7 @@ bool GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"font-name")){
+			 }else if(STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
@@ -163,7 +163,7 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"font-name")){
+			 }else if(STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"src")){
 				 GUIViewer_SetImage(viewer,attribute->value);
@@ -222,7 +222,7 @@ bool GUIWindowManager_NewButton(GUIWMWindowData *_window_data,GUIWidget *_parent
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"font-name")){
+			 }else if(STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
@@ -276,14 +276,20 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUITextBox_SetFontSize(textbox,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"font-name")){
-				 GUITextBox_SetFontName(textbox,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"font-file")){
+				 GUITextBox_SetFontFile(textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text")){
 				 GUITextBox_SetText(textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text-align")){
 				 GUITextBox_SetTextAlign(textbox,TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-align")){
 				 GUITextBox_SetVerticalAlign(textbox,TextBox_ParseVerticalAlign(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"border-thickness")){
+				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
+					 GUITextBox_SetBorderThickness(textbox,int_value);
+				 }
+			 }else if(STRCMP(attribute->name,==,"border-color")){
+				 GUITextBox_SetBorderColorHtml(textbox,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -399,9 +405,11 @@ bool GUIWindowManager_LoadFromMemory(
 			 int int_value=0;
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(STRCMP(attribute->name,==,"background-color")){
-				 GUIWindow_SetBackgroundColorHexStr(window_data->window,attribute->value);
+				 GUIWindow_SetBackgroundColorHtml(window_data->window,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"window-style")){
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+				 if(STRCMP(attribute->value,==,"none")){
+					 GUIWindow_SetWindowStyle(window_data->window,WINDOW_STYLE_NONE);
+				 }
 			 }else if(STRCMP(attribute->name,==,"caption")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 				 }
@@ -476,13 +484,13 @@ TextureManager		*	GUIWindowManager_GetTextureManager(GUIWindowManager *_this){
 	GUIWindowManagerData *data=_this->data;
 	return data->texture_manager;
 }
-
+/*
 TTFontManager		*	GUIWindowManager_GetTTFontManager(GUIWindowManager *_this){
 	GUIWindowManagerData *data=_this->data;
 	return data->ttfont_manager;
 
 }
-
+*/
 
 GUIWindow *GUIWindowManager_Get(GUIWindowManager *_this, const char *key){
 	GUIWindowManagerData *data=_this->data;

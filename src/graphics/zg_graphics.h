@@ -13,7 +13,7 @@
 #include "Appearance.h"
 #include "Shader.h"
 #include "TTFont.h"
-#include "TTFontManager.h"
+//#include "TTFontManager.h"
 #include "Shape.h"
 #include "TextBox.h"
 

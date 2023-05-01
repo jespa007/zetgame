@@ -184,7 +184,7 @@ int main(int argc, char * argv[]){
 
 	Scene * scene = Scene_New();
 	TextureManager *tm=TextureManager_New();
-	TTFontManager *ttfm=TTFontManager_New();
+	//TTFontManager *ttfm=TTFontManager_New();
 	Entity
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
@@ -194,7 +194,7 @@ int main(int argc, char * argv[]){
 	Entity *spr_base_car=NULL,*spr_track_car=NULL;
 
 
-	TTFontManager_SetFontResourcePath(ttfm,"../../../test/data/fonts");
+	TTFont_SetFontResourcePath("../../../test/data/fonts");
 	TextureManager_SetTextureResourcePath(tm,"../../../test/data/images");
 
 	Texture * text_ground=TextureManager_Get(tm,"ground.png");
@@ -355,7 +355,7 @@ int main(int argc, char * argv[]){
 	Scene_Delete(scene);
 
 	TextureManager_Delete(tm);
-	TTFontManager_Delete(ttfm);
+	//TTFontManager_Delete(ttfm);
 
 
 	Action_Delete(mat_act_fade_in_out);

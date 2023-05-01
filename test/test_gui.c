@@ -14,13 +14,13 @@ int main(int argc, char *argv[]){
 
 
 	TextureManager * texture_manager= TextureManager_New();
-	TTFontManager * ttfont_manager= TTFontManager_New();
+	//TTFontManager * ttfont_manager= TTFontManager_New();
 
-	TTFontManager_SetFontResourcePath(ttfont_manager,"../../../test/data/fonts");
+	TTFont_SetFontResourcePath("../../../test/data/fonts");
 	TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
 
 
-	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager,ttfont_manager);
+	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager);
 	GUIWindow * window=NULL;
 
 	if(GUIWindowManager_Load(
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 	//GUIViewer_Delete(gui_viewer);
 	//GUIWindow_Delete(window);
 	TextureManager_Delete(texture_manager);
-	TTFontManager_Delete(ttfont_manager);
+//	TTFontManager_Delete(ttfont_manager);
 	GUIWindowManager_Delete(window_manager);
 
 	ZetGame_DeInit();

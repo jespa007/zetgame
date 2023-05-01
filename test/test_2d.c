@@ -13,9 +13,9 @@ int main(int argc, char *argv[]){
 	Texture * text_default = TextureManager_GetDefaultTexture();
 	Texture * text_png = Texture_NewFromFile("../../../test/data/images/test.png");
 	Texture * text_jpg = Texture_NewFromFile("../../../test/data/images/test.jpg");
-	TTFont * font = TTFont_NewFromFile("../../../test/data/fonts/pf_arma_five.ttf",16);
-	TTFont * font1 = TTFont_NewFromFile("../../../test/data/fonts/g5lis1b.ttf",36);
-	TTFont * font2 = TTFont_NewFromFile("../../../test/data/fonts/Trebuchet MS.ttf",36);
+	TTFont * font = TTFont_NewFromFile("../../../test/data/fonts/pf_arma_five.ttf");
+	TTFont * font1 = TTFont_NewFromFile("../../../test/data/fonts/g5lis1b.ttf");
+	TTFont * font2 = TTFont_NewFromFile("../../../test/data/fonts/Trebuchet MS.ttf");
 	//Shape2d * shape2d = Shape2d_New();
 	Geometry *geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
 	Appearance *appearance=Appearance_New();
