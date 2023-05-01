@@ -405,7 +405,7 @@ bool GUIWindowManager_LoadFromMemory(
 			 int int_value=0;
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(STRCMP(attribute->name,==,"background-color")){
-				 GUIWindow_SetBackgroundColorHtml(window_data->window,attribute->value);
+				 GUIWindow_SetBackgroundColor4f(window_data->window,Color4f_FromHtml(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"window-style")){
 				 if(STRCMP(attribute->value,==,"none")){
 					 GUIWindow_SetWindowStyle(window_data->window,WINDOW_STYLE_NONE);

@@ -47,7 +47,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 
 	// CAPTION
 	data->frame_caption=GUIFrame_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	GUIWidget_SetBackground4f(data->frame_caption->widget,Color4f_FromRGB(0,128,255));
+	GUIWidget_SetBackgroundColor4f(data->frame_caption->widget,Color4f_FromRGB(0,128,255));
 
 	data->textbox_caption=GUITextBox_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
 	GUITextBox_SetText(data->textbox_caption,"Window");
@@ -153,7 +153,7 @@ void GUIWindow_SetVisibleCaption(GUIWindow *_this, bool _v){
 
 void GUIWindow_SetBackgroundColor3i(GUIWindow * _this, uint8_t r, uint8_t g, uint8_t b){
 	GUIWindowData *data=_this->data;
-	GUIWidget_SetBackground4f(data->frame_content->widget,Color4f_FromRGB(r,g,b));
+	GUIWidget_SetBackgroundColor4f(data->frame_content->widget,Color4f_FromRGB(r,g,b));
 }
 
 void 		GUIWindow_SetBackgroundColor4f(GUIWindow * _this, Color4f color){

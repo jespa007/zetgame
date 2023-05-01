@@ -110,6 +110,21 @@ void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,Color4f _color){
 	data->background_color=_color;
 }
 
+Color4f 	GUIWidget_GetColor4f(GUIWidget *_this){
+	GUIWidgetData *data=_this->data;
+	return data->color;
+}
+
+float 		GUIWidget_GetOpacity(GUIWidget *_this){
+	GUIWidgetData *data=_this->data;
+	return data->opacity;
+}
+
+void 		GUIWidget_SetOpacity(GUIWidget *_this,float  _opacity){
+	GUIWidgetData *data=_this->data;
+	data->opacity=_opacity;
+}
+
 
 bool GUIWidget_IsEnabled(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;

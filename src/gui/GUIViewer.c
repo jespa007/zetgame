@@ -37,6 +37,7 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	GUIViewer *_this=gui_texture;
 	GUIViewerData *data=_this->data;
 	Transform transform=Transform_DefaultValues();
+	Color4f color=GUIWidget_GetColor4f(_this->widget);
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
@@ -47,7 +48,7 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE,data->texture,NULL);
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	TextBox_Draw(data->textbox,&transform,&_this->widget->color);
+	TextBox_Draw(data->textbox,&transform,&color);
 }
 
 void		GUIViewer_SetImage(GUIViewer *_this, const char *_image){

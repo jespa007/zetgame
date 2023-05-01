@@ -161,7 +161,7 @@ static void  GUIButton_Draw(void *gui_button){
 	//Color4f background_result=_this->widget->background_color;
 
 	float alpha=1*GUIWidget_GetOpacity(_this->widget);
-	if(!_this->widget->is_enabled){
+	if(!GUIWidget_IsEnabled(_this->widget)){
 		alpha*=0.25f;
 	}else if(!data->mouse_collide){
 		alpha*=0.5f;

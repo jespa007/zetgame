@@ -100,6 +100,7 @@ static void GUITextBox_Draw(void *gui_label){
 	GUITextBox *_this=gui_label;
 	GUITextBoxData *data=_this->data;
 	Transform	transform=Transform_DefaultValues();
+	Color4f color=GUIWidget_GetColor4f(_this->widget);
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
 	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
@@ -108,7 +109,7 @@ static void GUITextBox_Draw(void *gui_label){
 	position.y+=dimensions.y>>1;
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	TextBox_Draw(data->textbox,&transform,&_this->widget->color);
+	TextBox_Draw(data->textbox,&transform,&color);
 }
 
 
