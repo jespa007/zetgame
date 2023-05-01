@@ -6,7 +6,6 @@ typedef struct{
 }MaterialActionData;
 
 
-
 // PUBLIC
 MaterialAction 	*	MaterialAction_New(void){
 	MaterialAction *transform_action=ZG_NEW(MaterialAction);
@@ -19,6 +18,7 @@ MaterialAction 	*	MaterialAction_New(void){
 
 	return transform_action;
 }
+
 void					MaterialAction_SetKeyframesTrack(
 		MaterialAction *_this
 		, uint8_t _idx_channel

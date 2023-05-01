@@ -1,7 +1,7 @@
 #include "zg_graphics.h"
 
 typedef struct{
-	MapString 	* 	fonts;
+	List 		* 	fonts;
 	TTFont 		* 	default_font;
 	const char 	*	font_resource_path;
 	TTFont 		* 	font_embedded;
@@ -83,16 +83,16 @@ TTFontManager *	TTFontManager_New(void){
 
 	return tfm;
 }
-/*
+
 TTFont * 		TTFontManager_GetFontFromFontInfo(TTFontManager *_this, TTFontInfo * font_info){
 	if(font_info==NULL){
 		return TTFontManager_GetEmbeddedFont();
 	}
 
 	return TTFontManager_GetFont(_this,font_info->font_name, font_info->font_size);
-}*/
+}
 
-/*
+
 TTFontInfo 		TTFontManager_GetDefaultFontInfo(TTFontManager *_this){
 	TTFontManagerData *data=_this->data;
 	TTFontInfo font_info;
@@ -144,8 +144,55 @@ const char * 	TTFontManager_GetFontResourcePath(TTFontManager *_this){
 }
 
 // MEMBERS
+TTFont * 		TTFontManager_NewFont(TTFontManager *_this){
+	TTFontManagerData *data=_this->data;
+	TTFont *font=NULL;
 
-TTFont * 		TTFontManager_NewFont(TTFontManager *_this,const char * _filename,uint8_t _font_size){
+	if(STRCMP(data->default_font_name,==,DEFAULT_FONT_FAMILY)){
+		font=TTFont_New();
+	}else{
+		char filename[PATH_MAX]={0};
+		strcpy(filename,data->default_font_name);
+
+		if(File_Exists(filename) == false){
+			sprintf(filename,"%s/%s",data->font_resource_path,data->default_font_name);
+		}
+
+		if(File_Exists(filename)){
+			font=TTFont_NewFromFile(filename);
+		}else{
+			font=TTFont_New();
+			Log_Error("Default font '%s' not exist",data->default_font_name);
+		}
+	}
+
+	List_Add(data->fonts,font);
+
+	return font;
+
+}
+
+void			TTFontManager_SetFontName(
+		TTFontManager *_this
+		, TTFont * _font
+		, const char *_font_name
+){
+	TTFontManagerData *data=_this->data;
+	char filename[PATH_MAX]={0};
+	strcpy(filename,_font_name);
+
+	if(File_Exists(filename) == false){
+		sprintf(filename,"%s/%s",data->font_resource_path,_font_name);
+	}
+
+	if(File_Exists(filename)){
+		TTFont_LoadFromFile(_font, filename);
+	}else{
+		Log_Error("Font '%s' not exist",_font_name);
+	}
+}
+/*
+TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uint8_t _font_size){
 	TTFontManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
@@ -227,7 +274,7 @@ TTFont * 		TTFontManager_GetFontFromMemory(TTFontManager *_this, const uint8_t *
 	}
 
 	return font;
-}
+}*/
 
 
 void TTFontManager_Delete(TTFontManager *_this){
@@ -235,12 +282,16 @@ void TTFontManager_Delete(TTFontManager *_this){
 
 	// erase all loaded fonts...
 	if(data->fonts!=NULL){
-		MapString_Delete(data->fonts);
-		data->fonts=NULL;
+		for(int i=0; i < data->fonts->size; i++){
+			TTFont *font=data->fonts->items[i];
+			TTFont_Delete(font);
+		}
 	}
 
-	MapString_Delete(data->fonts);
+	List_Delete(data->fonts);
+	data->fonts=NULL;
+
 	ZG_FREE(data);
 	data=NULL;
 	ZG_FREE(_this);
-}*/
+}

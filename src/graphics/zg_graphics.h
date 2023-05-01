@@ -4,6 +4,8 @@
 #include "Geometry.h"
 #include "Texture.h"
 #include "TextureRect.h"
+#include "Image.h"
+#include "ImageManager.h"
 #include "TextureManager.h"
 #include "IconManager.h"
 #include "Material.h"

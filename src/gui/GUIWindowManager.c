@@ -8,7 +8,6 @@ typedef struct{
 
 typedef struct{
 	GUIWindow			*window;
-	List				*labels;
 	List				*buttons;
 	List				*viewers;
 	List				*frames;
@@ -26,7 +25,7 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 			void (*delete)(void *_this);
 		}widget_deallocate_collections[]={
 				{window_data->buttons,(void (*)(void *))GUIButton_Delete}
-				,{window_data->labels,(void (*)(void *))GUILabel_Delete}
+				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
 				,{window_data->viewers,(void (*)(void *))GUIViewer_Delete}
 				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
 				,{window_data->frames,(void (*)(void *))GUIFrame_Delete}
@@ -76,59 +75,6 @@ GUIWindowManager *GUIWindowManager_New(
 	return window_manager;
 }
 
-bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_parent,const XmlElement *e ){
-	bool ok=true;
-	XmlAttribute *attribute=e->attributes;
-	GUITextBox *textbox=GUITextBox_New(0,0,10,10);
-	int int_value=0;
-
-	if(_parent != NULL){
-		GUIWidget_AttachWidget(_parent,textbox->widget);
-	}
-
-
-	 if(attribute != NULL){
-		 do{
-			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
-
-			 if(STRCMP(attribute->name,==,"id")){
-				 // set id
-			 }else if(STRCMP(attribute->name,==,"left")){
-				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionX(textbox->widget,int_value);
-				 }
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"top")){
-				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionY(textbox->widget,int_value);
-				 }
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"width")){
-				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetWidth(textbox->widget,int_value);
-				 }
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"height")){
-				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetHeight(textbox->widget,int_value);
-				 }
-			 }else if(STRCMP(attribute->name,==,"font-size")){
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"font-name")){
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else{
-				 Log_Error("unexpected attribute '%s'",attribute->name);
-				 ok=false;
-			 }
-
-			 attribute=attribute->next;
-		 }while(attribute != attribute->parent->attributes);
-		// process attributes
-	}
-
-	 List_Add(_window_data->textboxes,textbox);
-	return ok;
-}
 
 bool GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,GUIWidget *_parent, const XmlElement *e ){
 	bool ok=true;
@@ -293,15 +239,15 @@ bool GUIWindowManager_NewButton(GUIWMWindowData *_window_data,GUIWidget *_parent
 	return ok;
 }
 
-bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent, const XmlElement *e ){
+bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_parent, const XmlElement *e ){
 	bool ok=true;
 	int int_value=0;
 	XmlAttribute *attribute=e->attributes;
-	GUILabel *label=GUILabel_New(0,0,10,10);
+	GUITextBox *textbox=GUITextBox_New(0,0,10,10);
 
 
 	if(_parent != NULL){
-		GUIWidget_AttachWidget(_parent,label->widget);
+		GUIWidget_AttachWidget(_parent,textbox->widget);
 	}
 
 	 if(attribute != NULL){
@@ -312,32 +258,32 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 				 // set id
 			 }else if(STRCMP(attribute->name,==,"left")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionX(label->widget,int_value);
+					 GUIWidget_SetPositionX(textbox->widget,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"top")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionY(label->widget,int_value);
+					 GUIWidget_SetPositionY(textbox->widget,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUILabel_SetWidth(label,int_value);
+					 GUITextBox_SetWidth(textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUILabel_SetHeight(label,int_value);
+					 GUITextBox_SetHeight(textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUILabel_SetFontSize(label,int_value);
+					 GUITextBox_SetFontSize(textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-name")){
-				 GUILabel_SetFontName(label,attribute->value);
+				 GUITextBox_SetFontName(textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 GUILabel_SetText(label,attribute->value);
+				 GUITextBox_SetText(textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text-align")){
-				 GUILabel_SetTextAlign(label,TextBox_ParseTextAlign(attribute->value));
+				 GUITextBox_SetTextAlign(textbox,TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-align")){
-				 GUILabel_SetVerticalAlign(label,TextBox_ParseVerticalAlign(attribute->value));
+				 GUITextBox_SetVerticalAlign(textbox,TextBox_ParseVerticalAlign(attribute->value));
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -348,7 +294,7 @@ bool GUIWindowManager_NewLabel(GUIWMWindowData *_window_data,GUIWidget *_parent,
 		// process attributes
 	}
 
-	 List_Add(_window_data->labels,label);
+	 List_Add(_window_data->textboxes,textbox);
 
 	return ok;
 }
@@ -379,8 +325,8 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 	 Log_Debug("[tag]: %s", e->name);
 
 	 // create widget from its tag name
-	 if(STRCMP(e->name,==,"label")){
-		 return GUIWindowManager_NewLabel(_window_data,_parent,e);
+	 if(STRCMP(e->name,==,"textbox")){
+		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"button")){
 		 return GUIWindowManager_NewButton(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"img")){
@@ -437,9 +383,8 @@ bool GUIWindowManager_LoadFromMemory(
 
 	 // setup gui elements
 	 window_data->buttons=List_New();
-	 window_data->labels=List_New();
-	 window_data->viewers=List_New();
 	 window_data->textboxes=List_New();
+	 window_data->viewers=List_New();
 	 window_data->frames=List_New();
 	 window_data->gui_window_manager_data=data;
 

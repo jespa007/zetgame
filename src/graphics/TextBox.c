@@ -387,7 +387,7 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	float y_draw=0;
 	float y_draw_inc=0;
 	Vector3f dim3d=ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
-	uint16_t text_total_height=data->render_text.token_lines->count*data->font->ascender;
+	uint16_t text_total_height=data->render_text.token_lines->count*TTFont_GetFontHeight(data->font->ascender);
 
 	if(data->vertical_align == VERTICAL_ALIGN_CENTER){
 		y=-(text_total_height>>1);

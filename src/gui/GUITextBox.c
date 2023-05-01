@@ -1,48 +1,138 @@
 #include "zg_gui.h"
 
+static void GUITextBox_Draw(void *gui_label);
 
-
-static void GUITextBox_Draw(void *gui_textbox);
+typedef struct{
+	TTFont *	font;
+	TextBox *	textbox;
+	char		font_name[50];
+}GUITextBoxData;
 
 GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
-	GUITextBox *textbox = ZG_NEW(GUITextBox);
+	GUITextBox *label = ZG_NEW(GUITextBox);
 
-	textbox->widget=GUIWidget_New( x,  y,  width,  height);
-	textbox->widget->type=WIDGET_TYPE_TEXTBOX;
-	textbox->widget->gui_ptr=textbox;
+	label->widget=GUIWidget_New( x,  y,  width,  height);
+	label->widget->type=WIDGET_TYPE_LABEL;
+	label->widget->gui_ptr=label;
 
-	textbox->textbox=TextBox_New();
-
-	GUIWidget_SetDrawFunction(textbox->widget
+	GUIWidget_SetDrawFunction(label->widget
 			,(CallbackWidgetUpdate){
 				.ptr_function=GUITextBox_Draw
-				,.calling_widget=textbox
+				,.calling_widget=label
 			}
 	);
 
-	// SETUP LABEL
+	// SETUP DATA
+	GUITextBoxData *data = ZG_NEW(GUITextBoxData);
+	TTFontInfo font_info=TTFontManager_GetEmbeddedFontInfo();
+	data->textbox=TextBox_New();
+	strcpy(data->font_name,font_info.font_name);
+	label->data=data;
 
-	return textbox;
+	return label;
+}
+
+void 			GUITextBox_SetText(GUITextBox *_this, const char *_text_in,...){
+	GUITextBoxData *data=_this->data;
+	char text_out[STR_MAX];
+	STR_CAPTURE_VARGS(text_out,_text_in);
+
+	TextBox_SetText(data->textbox,text_out);
+}
+
+void 			GUITextBox_SetHeight(GUITextBox *_this,uint16_t _height){
+	GUITextBoxData *data=_this->data;
+
+	GUIWidget_SetHeight(_this->widget,_height);
+	TextBox_SetHeight(data->textbox,_height);
+}
+
+void 			GUITextBox_SetWidth(GUITextBox *_this,uint16_t _width){
+	GUITextBoxData *data=_this->data;
+
+	GUIWidget_SetWidth(_this->widget,_width);
+	TextBox_SetWidth(data->textbox,_width);
+}
+
+void 			GUITextBox_SetFontName(GUITextBox *_this, const char *_font_name){
+	GUITextBoxData *data=_this->data;
+	TTFontManager *tffont_manager=GUIWidget_GetTTFontManager(_this->widget);
+
+	if(tffont_manager != NULL){
+		TTFont *font=TextBox_GetFont(data->textbox);
+		TTFontManager_SetFontName(tffont_manager,font,_font_name);
+		/*if((font=TTFontManager_GetFont(tffont_manager,_font_name,font->font_size))!=NULL){
+			// if font manager was able to create the font, update font name
+			TextBox_SetFont(data->textbox,font);
+			//strcpy(data->font_name,_font_name);
+		}*/
+	}
+}
+
+const char *	GUITextBox_GetFontName(GUITextBox *_this){
+	GUITextBoxData *data=_this->data;
+	return data->font_name;
+
 }
 
 
-static void GUITextBox_Draw(void *gui_textbox){
-	GUITextBox *_this=gui_textbox;
+void 			GUITextBox_SetFontSize(GUITextBox *_this, uint8_t _font_size){
+	GUITextBoxData *data=_this->data;
+	TTFontManager *tffont_manager=GUIWidget_GetTTFontManager(_this->widget);
+
+	if(tffont_manager != NULL){
+		TTFont *font=NULL;
+
+		if((font=TTFontManager_GetFont(tffont_manager,data->font_name,_font_size))!=NULL){
+			// if font manager was able to create the font, update font size
+			TextBox_SetFont(data->textbox,font);
+		}
+	}
+}
+
+uint8_t			GUITextBox_GetFontSize(GUITextBox *_this){
+	GUITextBoxData *data=_this->data;
+
+	TTFont *font=TextBox_GetFont(data->textbox);
+	return font->GetFontSize();
+}
+
+void			GUITextBox_SetTextAlign(GUITextBox *_this,TextAlign _text_align){
+	GUITextBoxData *data=_this->data;
+	TextBox_SetTextAlign(data->textbox,_text_align);
+}
+
+void			GUITextBox_SetVerticalAlign(GUITextBox *_this,VerticalAlign _vertical_align){
+	GUITextBoxData *data=_this->data;
+	TextBox_SetVerticalAlign(data->textbox,_vertical_align);
+}
+
+
+static void GUITextBox_Draw(void *gui_label){
+	GUITextBox *_this=gui_label;
+	GUITextBoxData *data=_this->data;
 	Transform	transform=Transform_DefaultValues();
 
 	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
+	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
+
+	position.x+=dimensions.x>>1;
+	position.y+=dimensions.y>>1;
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	TextBox_Draw(_this->textbox,&transform,&_this->widget->color);
-
+	TextBox_Draw(data->textbox,&transform,&_this->widget->color);
 }
+
 
 
 void GUITextBox_Delete(GUITextBox *_this){
 	if(_this == NULL) return;
+	GUITextBoxData *data=_this->data;
 
 	GUIWidget_Delete(_this->widget);
-	TextBox_Delete(_this->textbox);
+	TextBox_Delete(data->textbox);
 
+	ZG_FREE(data);
 	ZG_FREE(_this);
+
 }

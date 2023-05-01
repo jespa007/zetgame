@@ -9,7 +9,7 @@ typedef struct{
 	GUIFrame		*	frame_content,
 					*	frame_caption;
 
-	GUILabel		* 	label_caption;
+	GUITextBox		* 	label_caption;
 	GUIButton		*	button_close;
 
 	bool			visible_caption;
@@ -47,8 +47,8 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 	data->frame_caption=GUIFrame_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
 	data->frame_caption->widget->background_color=Color4f_FromRGB(0,128,255);
 
-	data->label_caption=GUILabel_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	GUILabel_SetText(data->label_caption,"Window");
+	data->label_caption=GUITextBox_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
+	GUITextBox_SetText(data->label_caption,"Window");
 
 
 	data->button_close=GUIButton_New(
@@ -161,7 +161,7 @@ void 		GUIWindow_SetBackgroundColorHexStr(GUIWindow * _this, const char * color)
 
 void 		GUIWindow_SetCaption(GUIWindow * _this, const char *_caption){
 	GUIWindowData *data=_this->data;
-	GUILabel_SetText(data->label_caption,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
+	GUITextBox_SetText(data->label_caption,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
 }
 
 TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
@@ -301,7 +301,7 @@ void GUIWindow_Delete(GUIWindow *_this) {
 	GUIWidget_Delete(_this->widget);
 	GUIFrame_Delete(data->frame_caption);
 	GUIFrame_Delete(data->frame_content);
-	GUILabel_Delete(data->label_caption);
+	GUITextBox_Delete(data->label_caption);
 	GUIButton_Delete(data->button_close);
 
 	ZG_FREE(data);

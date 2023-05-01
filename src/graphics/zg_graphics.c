@@ -1,5 +1,7 @@
 #include "Color4f.c"
 #include "IconManager.c"
+#include "Image.c"
+#include "ImageManager.c"
 #include "Texture.c"
 #include "TextureManager.c"
 #include "Shader.c"

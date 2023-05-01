@@ -9,27 +9,30 @@
 typedef struct TTFont 			TTFont;
 
 
-struct TTFont
-{
-	const char *font_filename;
-	MapInt *	characters;
-    uint16_t 	font_size;
-    uint16_t 	space_width; // in pixels
-    uint32_t 	font_properties;
-	uint32_t	ascender;
-	float 		weight,shear;
-	uint8_t 	style;
-
+struct TTFont{
     void 		*data;
 };
 
 
-// members
-TTFont * 		TTFont_New(FT_Face face,uint16_t font_size);
-TTFont * 		TTFont_NewFromFile(const char *ttf_file, size_t font_size);
-TTFont * 		TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, size_t font_size);
 
-TTFont *		TTFont_Get(const char *ttf_file);
+// static
+TTFont * 		TTFont_NewFromFile(
+		const char *ttf_file
+);
+
+TTFont * 		TTFont_NewFromMemory(
+		const uint8_t *buffer
+		, size_t buffer_len
+);
+
+
+// members
+TTFont * 		TTFont_New(void);
+TTFont * 		TTFont_LoadFromFile(TTFont *_this,const char *ttf_file);
+TTFont * 		TTFont_LoadFromMemory(TTFont *_this,const uint8_t *buffer, size_t buffer_len);
+void	 		TTFont_SetStyle(TTFont *_this,uint8_t _style);
+void	 		TTFont_SetFontSize(TTFont *_this,uint16_t _font_size);
+uint16_t 		TTFont_GetFontSize(TTFont *_this);
 void 			TTFont_RenderTextBegin(Color4f *color);
 void 			TTFont_RenderTextEnd(void);
 void 			TTFont_Print(TTFont *_this,float posx, float posy,Color4f _color, const char *str,...);
