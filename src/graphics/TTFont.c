@@ -388,7 +388,7 @@ void TTFont_DrawCharacter(TTFontCharacter *_ch){
 	}
 }
 
-BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
+BoundingBox TTFont_GetBoundingBoxInternal(TTFont *_this, const void *_text, CharType _char_type){
 	TTFontData *data=_this->data;
 	BoundingBox bb=BoundingBox_New4f(
 			 FLT_MAX
@@ -397,7 +397,7 @@ BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
 			,-FLT_MAX
 	);
 
-	char *ptr=(char *)_text;
+	void *ptr=(void *)_text;
 	unsigned long c=0;
 
 	// supose text starts from
@@ -405,7 +405,7 @@ BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
 	float y=0;
 
 
-	while((c=StrUtils_GetCharAndAdvance(&ptr,CHAR_TYPE_CHAR))!=0){
+	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0){
 		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(data->characters,c);
 
 		bb.minx=MIN(bb.minx,x+ch->bearing.x);
@@ -420,6 +420,15 @@ BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
 
 	return bb;
 }
+
+BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
+	return TTFont_GetBoundingBoxInternal(_this,_text,CHAR_TYPE_CHAR);
+}
+
+BoundingBox TTFont_WGetBoundingBox(TTFont *_this, const char *_text){
+	return TTFont_GetBoundingBoxInternal(_this,_text,CHAR_TYPE_WCHAR);
+}
+
 
 void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
 	TTFontData *data=_this->data;

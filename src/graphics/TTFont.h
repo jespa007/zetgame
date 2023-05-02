@@ -58,6 +58,7 @@ void 			TTFont_WPrint(TTFont *_this,float posx, float posy,Color4f _color, const
 
 // Metrics
 BoundingBox 	TTFont_GetBoundingBox(TTFont *_this, const char *_text);
+BoundingBox 	TTFont_WGetBoundingBox(TTFont *_this, const char *_text);
 uint16_t 		TTFont_GetWidth(TTFont *_this, const char *str);
 uint16_t 		TTFont_WGetWidth(TTFont *_this, const wchar_t *str);
 uint16_t 		TTFont_GetWidthN(TTFont *_this, const char *str, size_t len);

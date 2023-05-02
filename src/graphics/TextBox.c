@@ -172,6 +172,7 @@ void TextBox_RT_Build(TextBox *_this){
 
 
 	uint16_t word_width=0;
+	BoundingBox bb_word;//=TTFont_GetBoundingBox(data->font,);
 	uint16_t space_width=TTFont_GetFontWidth(data->font);
 
 	// for each line
@@ -226,10 +227,14 @@ void TextBox_RT_Build(TextBox *_this){
 
 			// get length rendered word...
 			if(data->char_type==CHAR_TYPE_WCHAR){
-				word_width=TTFont_WGetWidthN(data->font,word_ini,word_len);
+				bb_word=TTFont_GetBoundingBox(data->font,word_ini);
+				//word_width=TTFont_WGetWidthN(data->font,word_ini,word_len);
 			}else{
-				word_width=TTFont_GetWidthN(data->font,word_ini,word_len);
+				bb_word=TTFont_WGetBoundingBox(data->font,word_ini);
+				//word_width=TTFont_GetWidthN(data->font,word_ini,word_len);
 			}
+
+			word_width=bb_word.maxx-bb_word.minx;
 
 			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
 				// if line exceeds max dimension, create new line..
@@ -241,9 +246,7 @@ void TextBox_RT_Build(TextBox *_this){
 
 			tbrt_token_line->total_width+=(word_width+space_width);
 
-			BoundingBox_New(
 
-			);
 
 
 		}while(ch!=0); // not end line...
