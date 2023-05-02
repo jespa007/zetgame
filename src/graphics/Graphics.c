@@ -78,7 +78,7 @@ bool Graphics_Init(
 	g_graphics_vars->capture_screen_callbacks=List_New();
 
 	uint32_t video_flags = 0;
-	bool ok=false;
+
 
 	if (SDL_Init(0 ) < 0) {
 		Log_Error("Unable to init SDL: %s\n", SDL_GetError());
@@ -160,7 +160,9 @@ bool Graphics_Init(
 	//Input_SetupCursors();
 	switch(g_graphics_vars->graphics_api){
 	case GRAPHICS_API_GL:
-		ok=Graphics_GL_Init();
+		if(Graphics_GL_Init()==false){
+			return false;
+		}
 		break;
 	}
 
@@ -190,7 +192,7 @@ bool Graphics_Init(
 	Graphics_SetFullscreen(g_graphics_vars->fullscreen);
 
 
-	return ok;
+	return true;
 }
 
 Vector2f Graphics_GetScale(){

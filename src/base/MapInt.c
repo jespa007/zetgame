@@ -145,47 +145,48 @@ void	MapInt_EraseAndFreeItem(MapInt *t,intptr_t key){
 
 }
 
-void 	MapInt_Clear(MapInt *t){
-	if(t==NULL) return;
+void 	MapInt_Clear(MapInt *t, bool _free_all_items){
+	/*if(t==NULL) return;
 
-	List_Clear(t->list);
-}
+	List_Clear(t->list);*/
 
-void 	MapInt_ClearAndFreeAllItems(MapInt *t, bool delete_value){
 	if(t==NULL) return;
 
 	for(unsigned i=0;i<t->list->count;i++){
 		MapIntNode * node=t->list->items[i];
 
+		if(t->on_delete != NULL){
+			t->on_delete(node);
+		}
+
 		// user asks to delete value too
-		if(delete_value){
+		if(_free_all_items){
 			if(node->val){
 				ZG_FREE(node->val);
 			}
 		}
 
-		if(t->on_delete != NULL){
-			t->on_delete(node);
-		}
 		free(node);
 	}
 
 	List_Clear(t->list);
 }
 
+
+/*
 void MapInt_DeleteAndFreeAllItems(MapInt *t){
 	if(t==NULL) return;
 
-	MapInt_ClearAndFreeAllItems(t,true);
+	MapInt_Clear(t,true);
 
 	List_Delete(t->list);
 	ZG_FREE(t);
-}
+}*/
 
-void 		MapInt_Delete(MapInt *t){
+void 		MapInt_Delete(MapInt *t, bool _free_all_items){
 	if(t==NULL) return;
 
-	MapInt_ClearAndFreeAllItems(t,false);
+	MapInt_Clear(t,_free_all_items);
 
 	List_Delete(t->list);
 	ZG_FREE(t);

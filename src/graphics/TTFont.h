@@ -2,8 +2,13 @@
 #define __TTFONT_H__
 
 #define MAX_CHARACTER_VALUE	128
-#define TTFONT_STYLE_BOLD		(0x1 << 0)
-#define TTFONT_STYLE_ITALIC		(0x1 << 1)
+
+
+typedef enum{
+	TTFONT_STYLE_PLAIN=0x0
+	,TTFONT_STYLE_BOLD=0x1
+	,TTFONT_STYLE_ITALIC=0x2
+}TTFontStyle;
 
 
 typedef struct TTFont 			TTFont;
@@ -40,7 +45,7 @@ void			TTFont_DeInit(void);
 TTFont * 		TTFont_New(void);
 void			TTFont_LoadFromFile(TTFont *_this,const char *ttf_file);
 void 			TTFont_LoadFromMemory(TTFont *_this,const uint8_t *buffer, size_t buffer_len);
-void	 		TTFont_SetStyle(TTFont *_this,uint8_t _style);
+void	 		TTFont_SetStyle(TTFont *_this,TTFontStyle _style);
 void	 		TTFont_SetFontSize(TTFont *_this,uint16_t _font_size);
 uint16_t 		TTFont_GetFontSize(TTFont *_this);
 int				TTFont_GetAscender(TTFont *_this);

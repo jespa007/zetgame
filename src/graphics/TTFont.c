@@ -20,6 +20,7 @@ typedef struct{
 	uint8_t 	style;
     Geometry 	*geometry;
     FT_Face 	ft_face;
+    TTFontStyle	font_style;
     //int			max_bearing_y;
 }TTFontData;
 
@@ -169,9 +170,21 @@ void TTFont_BuildChars(
     // Create new font with size...
 	TTFontData *data=_this->data;
 
-	MapInt_Clear(data->characters);
+	MapInt_Clear(data->characters,true);
 
     FT_Set_Pixel_Sizes(data->ft_face, 0, data->font_size);
+    if(FT_Set_Char_Size(
+		data->ft_face
+		, (FT_F26Dot6)(0)
+		, (FT_F26Dot6)(data->font_size << 6)
+		, 0
+		, 0
+	)!=0){
+    	Log_ErrorF("FREETYTPE: Can't set pizel size");
+    }
+
+   // TTFont_setStyle(_this,data->font_style);
+
 	// Load space character
 	if (FT_Load_Char(data->ft_face, ' ', FT_LOAD_RENDER)==0)
 	{
@@ -236,7 +249,7 @@ void TTFont_SetTransformation(TTFont * _this, float _weight, float _shear)
 	data->shear = _shear;
 }
 
-void TTFont_SetStyle(TTFont * _this, uint8_t _style){
+void TTFont_SetStyle(TTFont * _this, TTFontStyle _style){
 	TTFontData *data=_this->data;
 	TTFont_SetTransformation(_this,(_style & TTFONT_STYLE_BOLD)?(BOLD_WEIGHT):(1.0), (_style & TTFONT_STYLE_ITALIC)?(ITALIC_SHEAR):(0.0));
 	data->style = _style;
@@ -399,8 +412,8 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 
 		int end_y=ch->size.y-ch->bearing.y+data->ascender;
 		// calcule p1 and p2 center
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y+data->ascender);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y+data->ascender);
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y-data->ascender);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
 
 		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
@@ -509,6 +522,9 @@ void	TTFont_OnDeleteNode(MapIntNode *node){
 void	TTFont_Unload(TTFont *_this){
 
 	TTFontData *data=_this->data;
+
+	MapInt_Clear(data->characters,true);
+
 	if(data->ft_face != NULL){
 		FT_Done_Face(data->ft_face);
 		data->ft_face=NULL;
@@ -521,7 +537,7 @@ void	TTFont_Delete(TTFont *_this){
 
 	TTFont_Unload(_this);
 	TTFontData *data=_this->data;
-	MapInt_Delete(data->characters);
+	MapInt_Delete(data->characters,false);
 	Geometry_Delete(data->geometry);
 	ZG_FREE(_this);
 	ZG_FREE(data);

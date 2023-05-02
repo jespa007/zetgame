@@ -49,8 +49,9 @@ int main(int argc, char * argv[]){
 
 	ZetGame_Init(&setup_options);
 
-	//TTFont * font2 = TTFont_GetFontFromName("Trebuchet MS.ttf",16);
+
 	TextBox *textbox=TextBox_New();
+	TextBox_SetFontFile(textbox,"../../../test/data/fonts/Trebuchet MS.ttf");
 	Transform transform=Transform_New();
 	TextBox_SetText(textbox,"H L");
 	TextBox_SetBorderThickness(textbox,1);
@@ -81,8 +82,8 @@ int main(int argc, char * argv[]){
 
 	//Transform_Delete(transform);
 
-
 	TextBox_Delete(textbox);
+
 
 	ZetGame_DeInit();
 

@@ -356,6 +356,7 @@ target_link_libraries(${ZETGAME_LIB_NAME}${POST_NAME}
 # EXECUTABLES
 #
 
+if(false)
 
 add_executable(test_mixer${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
@@ -389,9 +390,6 @@ add_executable(test_animation${POST_NAME}
 
 target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
-
-
-
 #--- SCENEGRAPH
 add_executable(test_scenegraph${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
@@ -420,6 +418,20 @@ add_executable(test_collider2d${POST_NAME}
 
 target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
+#--- SHADER
+add_executable(test_shader${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_shader.c
+)
+
+target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+
+endif()
+
+#--- PARTICLE SYSTEM
+#add_executable(test_particle${POST_NAME} 
+#	${PROJECT_SOURCE_DIR}/../test/test_particle_system.c
+#)
+
 
 #--- TEXTBOX
 add_executable(test_textbox${POST_NAME} 
@@ -428,6 +440,7 @@ add_executable(test_textbox${POST_NAME}
 
 target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
+
 #--- GUI
 add_executable(test_gui${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_gui.c
@@ -435,16 +448,3 @@ add_executable(test_gui${POST_NAME}
 
 target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
-#--- SHADER
-add_executable(test_shader${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_shader.c
-)
-
-target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
-
-#--- PARTICLE SYSTEM
-#add_executable(test_particle${POST_NAME} 
-#	${PROJECT_SOURCE_DIR}/../test/test_particle_system.c
-#)
-
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
