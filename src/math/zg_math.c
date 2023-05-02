@@ -8,5 +8,6 @@
 #include "Matrix4f.c"
 
 #include "Quaternion.c"
-#include "Rectanglef.c"
-#include "Rectanglei.c"
+#include "Rectangle4f.c"
+#include "Rectangle4i.c"
+#include "BoundingBox.c"

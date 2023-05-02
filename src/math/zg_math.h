@@ -10,8 +10,9 @@
 #include "Vector3f.h"
 #include "Vector4i.h"
 #include "Vector4f.h"
-#include "Rectanglef.h"
-#include "Rectanglei.h"
+#include "Rectangle4f.h"
+#include "Rectangle4i.h"
+#include "BoundingBox.h"
 
 #include "Matrix3f.h"
 #include "Matrix4f.h"

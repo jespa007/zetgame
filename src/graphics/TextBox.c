@@ -38,7 +38,8 @@ typedef struct{
 
 
 typedef struct{
-	List	*token_lines; // each line a list of tb_tokens word, end line, format, etc
+	List	*		token_lines; // each line a list of tb_tokens word, end line, format, etc
+	BoundingBox		bounding_box; // bounding total rendered text
 }TBRenderText;
 
 
@@ -71,7 +72,7 @@ TextBox *TextBox_New(void){
 TBRT_Token *TextBox_RT_NewTokenWord(
 		char *word
 		,uint16_t word_width
-		){
+){
 	TBRT_Token *token=ZG_NEW(TBRT_Token);
 	TBRT_TokenWord *token_word=ZG_NEW(TBRT_TokenWord);
 	token_word->word_width=word_width;
@@ -137,6 +138,13 @@ void TextBox_RT_Build(TextBox *_this){
 		ch_space=(unsigned long)L' ';
 	}
 
+	data->render_text.bounding_box=BoundingBox_New4f(
+		 FLT_MAX
+		,FLT_MAX
+		,-FLT_MAX
+		,-FLT_MAX
+	);
+
 	float inv_sizeof_char=1.0f/sizeof_char;
 
 	// reset current render text data...
@@ -151,6 +159,7 @@ void TextBox_RT_Build(TextBox *_this){
 
 	List *lines=NULL;
 
+	// split text by lines with <br> token
 	if(data->char_type==CHAR_TYPE_WCHAR){
 		lines=StrUtils_WStrSplitWStr(data->text,L"<br>"); // get lines ...
 	}
@@ -165,6 +174,7 @@ void TextBox_RT_Build(TextBox *_this){
 	uint16_t word_width=0;
 	uint16_t space_width=TTFont_GetFontWidth(data->font);
 
+	// for each line
 	for(unsigned i=0; i < lines->count; i++){
 		void *text_line=lines->items[i];
 		tbrt_token_line=TextBox_RT_NewLine(data);
@@ -178,12 +188,12 @@ void TextBox_RT_Build(TextBox *_this){
 			bool end_char=false;
 
 
+			// process word
 			do{
 
 				ch=StrUtils_GetChar(text_line,data->char_type);
 				if(!(ch == 0 || ch == ch_space)){
 					StrUtils_Advance(&text_line,data->char_type);
-
 				}else{
 					end_char=true;
 				}
@@ -214,22 +224,26 @@ void TextBox_RT_Build(TextBox *_this){
 			memset(word,0,word_len*inv_sizeof_char+sizeof_char);
 			memcpy(word,word_ini,word_len*inv_sizeof_char);
 
-			// get len word...
+			// get length rendered word...
 			if(data->char_type==CHAR_TYPE_WCHAR){
 				word_width=TTFont_WGetWidthN(data->font,word_ini,word_len);
 			}else{
 				word_width=TTFont_GetWidthN(data->font,word_ini,word_len);
 			}
 
-			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){ // if line exceeds max dimension, create new line..
+			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
+				// if line exceeds max dimension, create new line..
 				tbrt_token_line=TextBox_RT_NewLine(data);
 			}
 
 			// add word token...
 			List_Add(tbrt_token_line->tbrt_tokens,TextBox_RT_NewTokenWord(word,word_width));
 
-
 			tbrt_token_line->total_width+=(word_width+space_width);
+
+			BoundingBox_New(
+
+			);
 
 
 		}while(ch!=0); // not end line...

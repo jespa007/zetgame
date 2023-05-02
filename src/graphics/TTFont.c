@@ -29,7 +29,7 @@ typedef struct{
     Vector2i bearing;  			// Offset from baseline to left/top of glyph
     int 	 advance_x;    		// Horizontal offset to advance to next glyph
     int 	 advance_y;    		// Horizontal offset to advance to next glyph
-    //Rectanglei	box;
+    //Rectangle4i	box;
     void 	* data;   			// ID handle of the glyph texture
 }TTFontCharacter;
 
@@ -140,7 +140,7 @@ TTFontCharacter *TTFont_BuildChar(TTFont *_this,unsigned long c){
 		,.bearing=Vector2i_New(face->glyph->bitmap_left, face->glyph->bitmap_top)
 		,.advance_x=face->glyph->advance.x
 		,.advance_y=face->glyph->advance.y
-		/*,.box=Rectanglei_New(
+		/*,.box=Rectangle4i_New(
 				face->bbox.xMin>>6
 				,face->bbox.yMin>>6
 				,face->bbox.xMax>>6
@@ -388,6 +388,39 @@ void TTFont_DrawCharacter(TTFontCharacter *_ch){
 	}
 }
 
+BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
+	TTFontData *data=_this->data;
+	BoundingBox bb=BoundingBox_New4f(
+			 FLT_MAX
+			,FLT_MAX
+			,-FLT_MAX
+			,-FLT_MAX
+	);
+
+	char *ptr=(char *)_text;
+	unsigned long c=0;
+
+	// supose text starts from
+	float x=0;
+	float y=0;
+
+
+	while((c=StrUtils_GetCharAndAdvance(&ptr,CHAR_TYPE_CHAR))!=0){
+		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(data->characters,c);
+
+		bb.minx=MIN(bb.minx,x+ch->bearing.x);
+		bb.miny=MIN(bb.miny,-ch->bearing.y);
+		bb.maxx=MAX(bb.maxx,x+ch->bearing.x+ch->size.x);
+		bb.maxy=MAX(bb.maxy,ch->size.y-ch->bearing.y);
+		//max,Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y);
+		//Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
+
+		x+=ch->advance_x >> 6;
+	}
+
+	return bb;
+}
+
 void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
 	TTFontData *data=_this->data;
 
@@ -412,7 +445,7 @@ void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const
 
 		int end_y=ch->size.y-ch->bearing.y+data->ascender;
 		// calcule p1 and p2 center
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y-data->ascender);
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y);
 		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
 
 		const float mesh_vertex []={
@@ -516,7 +549,7 @@ void	TTFont_OnDeleteNode(MapIntNode *node){
 		break;
 	}
 
-	ZG_FREE(_font_character);
+	//ZG_FREE(_font_character);
 }
 
 void	TTFont_Unload(TTFont *_this){
