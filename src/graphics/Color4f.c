@@ -2,9 +2,14 @@
 
 
 
-Color4f Color4f_New(float r, float g, float b, float a){
+Color4f Color4f_New4f(float r, float g, float b, float a){
 	return (Color4f){.r=r,.g=g,.b=b,.a=a};
 }
+
+Color4f Color4f_New3f(float r, float g, float b){
+	return (Color4f){.r=r,.g=g,.b=b,.a=1};
+}
+
 
 Color4f Color4f_FromRGB(uint8_t r, uint8_t g, uint8_t b){
 	return (Color4f){.r=r*ONE_OVER_256,.g=g*ONE_OVER_256,.b=b*ONE_OVER_256,ALPHA_VALUE_SOLID};

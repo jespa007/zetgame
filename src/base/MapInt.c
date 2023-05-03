@@ -1,14 +1,14 @@
 #include "zg_base.h"
 
 MapInt *MapInt_New(){
-	MapInt *t = ZG_NEW(MapInt);
-	memset(t,0,sizeof(MapInt));
-	t->list=List_New();
-    return t;
+	MapInt *_this = ZG_NEW(MapInt);
+	memset(_this,0,sizeof(MapInt));
+	_this->list=List_New();
+    return _this;
 }
 
-int MapString_GetIdx(MapInt *t,intptr_t  key){
-	List *l=t->list;
+int MapString_GetIdx(MapInt *_this,intptr_t  key){
+	List *l=_this->list;
 	intptr_t idx_min=0;
 	intptr_t idx_max=l->count-1;//n_allocated_pointers-1;
 
@@ -37,9 +37,9 @@ int MapString_GetIdx(MapInt *t,intptr_t  key){
 	return ZG_ERROR;
 }
 
-int MapString_GetIdxToInsert(MapInt *t,intptr_t  key){
+int MapString_GetIdxToInsert(MapInt *_this,intptr_t  key){
 	// PRE: array is already ordered
-	List *l=t->list;
+	List *l=_this->list;
 	intptr_t size=l->count - 1;
 	intptr_t idx_min = 0, idx_max = size;
 	MapIntNode *max_node=NULL;
@@ -73,27 +73,27 @@ int MapString_GetIdxToInsert(MapInt *t,intptr_t  key){
 	return ZG_ERROR;
 }
 
-bool		MapInt_Exist(MapInt *t,intptr_t key){
-	if(t==NULL) return false;
+bool		MapInt_Exist(MapInt *_this,intptr_t key){
+	if(_this==NULL) return false;
 
-	return MapString_GetIdx(t,key) != ZG_ERROR;
+	return MapString_GetIdx(_this,key) != ZG_ERROR;
 
 }
 
-void 		MapInt_Set(MapInt *t,intptr_t key,void * val){
+void 		MapInt_Set(MapInt *_this,intptr_t key,void * val){
 	MapIntNode *node = NULL;
 
-	if(t==NULL) return;
+	if(_this==NULL) return;
 
-	int pos=MapString_GetIdx(t,key);
+	int pos=MapString_GetIdx(_this,key);
 	if(pos != ZG_ERROR){ // value already exist (assign)...
-		node=t->list->items[pos];
+		node=_this->list->items[pos];
 		node->val=val;
 	}
 	else{ // insert
 
 		// get position to insert...
-		if((pos=MapString_GetIdxToInsert(t,key))!=ZG_ERROR){
+		if((pos=MapString_GetIdxToInsert(_this,key))!=ZG_ERROR){
 			node=malloc(sizeof(MapIntNode));
 			memset(node,0,sizeof(MapIntNode));
 
@@ -103,60 +103,60 @@ void 		MapInt_Set(MapInt *t,intptr_t key,void * val){
 
 
 			// .. and finally insert.
-			List_Insert(t->list,pos,node);
+			List_Insert(_this->list,pos,node);
 		}
 	}
 }
 
-void * 		MapInt_Get(MapInt *t,intptr_t key){
+void * 		MapInt_Get(MapInt *_this,intptr_t key){
 
-	if(t==NULL) return NULL;
+	if(_this==NULL) return NULL;
 
-	int pos=MapString_GetIdx(t,key);
+	int pos=MapString_GetIdx(_this,key);
 	if(pos != ZG_ERROR){
-		return ((MapIntNode *)t->list->items[pos])->val;
+		return ((MapIntNode *)_this->list->items[pos])->val;
 	}
 
 	return NULL;
 }
 
-void MapInt_Erase(MapInt *t,intptr_t key){
-	int pos=MapString_GetIdx(t,key);
+void MapInt_Erase(MapInt *_this,intptr_t key){
+	int pos=MapString_GetIdx(_this,key);
 	if(pos == ZG_ERROR){ // value already exist (assign)...
 		Log_ErrorF("key not found");
 		return;
 	}
 
-	MapInt *node=t->list->items[pos];
+	MapInt *node=_this->list->items[pos];
 	ZG_FREE(node);
 
-	List_Erase(t->list,pos);
+	List_Erase(_this->list,pos);
 }
 
-void	MapInt_EraseAndFreeItem(MapInt *t,intptr_t key){
-	void * val =MapInt_Get(t,key);
+void	MapInt_EraseAndFreeItem(MapInt *_this,intptr_t key){
+	void * val =MapInt_Get(_this,key);
 
 	if(val != NULL){
 		ZG_FREE(val);
-		MapInt_Erase(t,key);
+		MapInt_Erase(_this,key);
 	}else{
 		Log_Warning("key %i not exist in map",key);
 	}
 
 }
 
-void 	MapInt_Clear(MapInt *t, bool _free_all_items){
-	/*if(t==NULL) return;
+void 	MapInt_Clear(MapInt *_this, bool _free_all_items){
+	/*if(_this==NULL) return;
 
-	List_Clear(t->list);*/
+	List_Clear(_this->list);*/
 
-	if(t==NULL) return;
+	if(_this==NULL) return;
 
-	for(unsigned i=0;i<t->list->count;i++){
-		MapIntNode * node=t->list->items[i];
+	for(unsigned i=0;i<_this->list->count;i++){
+		MapIntNode * node=_this->list->items[i];
 
-		if(t->on_delete != NULL){
-			t->on_delete(node);
+		if(_this->on_delete != NULL){
+			_this->on_delete(node);
 		}
 
 		// user asks to delete value too
@@ -169,25 +169,25 @@ void 	MapInt_Clear(MapInt *t, bool _free_all_items){
 		free(node);
 	}
 
-	List_Clear(t->list);
+	List_Clear(_this->list);
 }
 
 
-/*
-void MapInt_DeleteAndFreeAllItems(MapInt *t){
-	if(t==NULL) return;
 
-	MapInt_Clear(t,true);
+void MapInt_DeleteAndFreeAllItems(MapInt *_this){
+	if(_this==NULL) return;
 
-	List_Delete(t->list);
-	ZG_FREE(t);
-}*/
+	MapInt_Clear(_this,true);
 
-void 		MapInt_Delete(MapInt *t, bool _free_all_items){
-	if(t==NULL) return;
+	List_Delete(_this->list);
+	ZG_FREE(_this);
+}
 
-	MapInt_Clear(t,_free_all_items);
+void 		MapInt_Delete(MapInt *_this){
+	if(_this==NULL) return;
 
-	List_Delete(t->list);
-	ZG_FREE(t);
+	MapInt_Clear(_this,false);
+
+	List_Delete(_this->list);
+	ZG_FREE(_this);
 }

@@ -7,8 +7,13 @@ struct BoundingBox{
 	float minx,miny,maxx,maxy;
 };
 
-BoundingBox  BoundingBox_New();
-BoundingBox  BoundingBox_New4f(float _x1,float_ y1,float _x2,float _y2);
+BoundingBox  BoundingBox_New(void);
+BoundingBox  BoundingBox_New4f(
+	float xmin
+	,float _ymin
+	,float _xmax
+	,float _ymax
+);
 
 
 #endif

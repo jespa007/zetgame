@@ -457,12 +457,12 @@ void Input_Update() {
 //------------------------------------------------------------------------------------------------
 void Input_DeInit(void){
 
-	MapInt_Delete(g_input_vars->on_key_up,true);
-	MapInt_Delete(g_input_vars->on_key_down,true);
-	MapInt_Delete(g_input_vars->on_mouse_button_down,true);
-	MapInt_Delete(g_input_vars->on_mouse_motion,true);
-	MapInt_Delete(g_input_vars->on_mouse_button_up,true);
-	MapInt_Delete(g_input_vars->on_drop_file,true);
+	MapInt_DeleteAndFreeAllItems(g_input_vars->on_key_up);
+	MapInt_DeleteAndFreeAllItems(g_input_vars->on_key_down);
+	MapInt_DeleteAndFreeAllItems(g_input_vars->on_mouse_button_down);
+	MapInt_DeleteAndFreeAllItems(g_input_vars->on_mouse_motion);
+	MapInt_DeleteAndFreeAllItems(g_input_vars->on_mouse_button_up);
+	MapInt_DeleteAndFreeAllItems(g_input_vars->on_drop_file);
 
 	ZG_FREE(g_input_vars);
 	g_input_vars=NULL;

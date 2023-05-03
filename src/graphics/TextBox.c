@@ -133,6 +133,7 @@ void TextBox_RT_Build(TextBox *_this){
 	TextBoxData *data=_this->data;
 	unsigned long ch_space=(unsigned long)' ';
 	size_t sizeof_char=sizeof(char);
+	int ascender=TTFont_GetAscender(data->font);
 	if(data->char_type==CHAR_TYPE_WCHAR){
 		sizeof_char=sizeof(wchar_t);
 		ch_space=(unsigned long)L' ';
@@ -170,15 +171,23 @@ void TextBox_RT_Build(TextBox *_this){
 
 	TBRT_TokenLine *tbrt_token_line=NULL;//data->render_text.tb_tokens;
 
-
 	uint16_t word_width=0;
 	BoundingBox bb_word;//=TTFont_GetBoundingBox(data->font,);
 	uint16_t space_width=TTFont_GetFontWidth(data->font);
+	int y=0;
 
 	// for each line
 	for(unsigned i=0; i < lines->count; i++){
 		void *text_line=lines->items[i];
 		tbrt_token_line=TextBox_RT_NewLine(data);
+		BoundingBox bb_line=BoundingBox_New4f(
+				 FLT_MAX
+				,FLT_MAX
+				,-FLT_MAX
+				,-FLT_MAX
+		);
+
+		bool first=true;
 		unsigned long ch=0;
 		do{
 
@@ -227,10 +236,10 @@ void TextBox_RT_Build(TextBox *_this){
 
 			// get length rendered word...
 			if(data->char_type==CHAR_TYPE_WCHAR){
-				bb_word=TTFont_GetBoundingBox(data->font,word_ini);
+				bb_word=TTFont_WGetBoundingBoxN(data->font,word_ini,word_len);
 				//word_width=TTFont_WGetWidthN(data->font,word_ini,word_len);
 			}else{
-				bb_word=TTFont_WGetBoundingBox(data->font,word_ini);
+				bb_word=TTFont_GetBoundingBoxN(data->font,word_ini,word_len);
 				//word_width=TTFont_GetWidthN(data->font,word_ini,word_len);
 			}
 
@@ -239,6 +248,25 @@ void TextBox_RT_Build(TextBox *_this){
 			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
 				// if line exceeds max dimension, create new line..
 				tbrt_token_line=TextBox_RT_NewLine(data);
+				first=true;
+				y+=ascender;
+			}
+
+			if(first){
+				// init line
+				bb_line=BoundingBox_New4f(
+						bb_word.minx
+						,bb_word.miny
+						,bb_word.maxx
+						,y+bb_word.maxy
+				);
+
+				first = false;
+			}else{
+				// update max x and y intervals
+				bb_line.miny=MIN(bb_line.miny,bb_word.miny);
+				bb_line.maxx=MAX(bb_line.maxx,tbrt_token_line->total_width);
+				bb_line.maxy=MAX(bb_line.maxy,y+bb_word.maxy);
 			}
 
 			// add word token...
@@ -247,9 +275,21 @@ void TextBox_RT_Build(TextBox *_this){
 			tbrt_token_line->total_width+=(word_width+space_width);
 
 
-
-
 		}while(ch!=0); // not end line...
+
+		// update last word
+		bb_line.miny=MIN(bb_line.miny,bb_word.miny);
+		bb_line.maxx=MAX(bb_line.maxx,tbrt_token_line->total_width);
+		bb_line.maxy=MAX(bb_line.maxy,y+bb_word.maxy);
+		// update total rect
+
+		data->render_text.bounding_box.minx=MIN(data->render_text.bounding_box.minx,bb_line.minx);
+		data->render_text.bounding_box.miny=MIN(data->render_text.bounding_box.miny,bb_line.miny);
+		data->render_text.bounding_box.maxx=MAX(data->render_text.bounding_box.maxx,bb_line.maxx);
+		data->render_text.bounding_box.maxy=MAX(data->render_text.bounding_box.maxy,bb_line.maxy);
+
+		y+=ascender;
+
 
 	}
 
@@ -447,7 +487,22 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 				,dim3d.y
 				,data->border_color
 				,data->border_tickness
-				);
+		);
+	}
+
+	if(ZetGame_IsDebugMode()){
+		Vector3f dim3d_render_font=ViewPort_ScreenToWorldDimension2i(
+				data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx
+				,data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny
+		);
+		Graphics_DrawRectangle4f(
+				0 // x:0 translation keeps current translate
+				,0// y:0 translation keeps current translate
+				,dim3d_render_font.x
+				,dim3d_render_font.y
+				,Color4f_New4f(1,0,0,0)
+				,2
+		);
 	}
 
 	TTFont_RenderTextBegin(color);

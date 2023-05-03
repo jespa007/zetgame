@@ -43,19 +43,18 @@ int main(int argc, char * argv[]){
 	ZetGameSetupParams setup_options;
 	memset(&setup_options,0,sizeof(ZetGameSetupParams));
 
-
 	setup_options.width=WIDTH_RESOLUTION;
 	setup_options.height=HEIGHT_RESOLUTION;
 
 	ZetGame_Init(&setup_options);
-
+	ZetGame_SetDebugMode(true);
 
 	TextBox *textbox=TextBox_New();
 	TextBox_SetFontFile(textbox,"../../../test/data/fonts/Trebuchet MS.ttf");
 	Transform transform=Transform_New();
 	TextBox_SetText(textbox,"H L");
 	TextBox_SetBorderThickness(textbox,1);
-	TextBox_SetBorderColor4f(textbox,Color4f_New(1,1,1,1));
+	TextBox_SetBorderColor4f(textbox,Color4f_New3f(1,1,1));
 	do{
 
 		Graphics_BeginRender();

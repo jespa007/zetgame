@@ -388,7 +388,7 @@ void TTFont_DrawCharacter(TTFontCharacter *_ch){
 	}
 }
 
-BoundingBox TTFont_GetBoundingBoxInternal(TTFont *_this, const void *_text, CharType _char_type){
+BoundingBox TTFont_GetBoundingBoxInternal(TTFont *_this, const void *_text, size_t len, CharType _char_type){
 	TTFontData *data=_this->data;
 	BoundingBox bb=BoundingBox_New4f(
 			 FLT_MAX
@@ -399,16 +399,22 @@ BoundingBox TTFont_GetBoundingBoxInternal(TTFont *_this, const void *_text, Char
 
 	void *ptr=(void *)_text;
 	unsigned long c=0;
+	unsigned n=0;
+	int x=0;
 
-	// supose text starts from
-	float x=0;
-	float y=0;
-
-
-	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0){
+	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0 && (n < len)){
 		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(data->characters,c);
+		if(ch==NULL){ // build
+			ch=TTFont_BuildChar(_this,c);
 
-		bb.minx=MIN(bb.minx,x+ch->bearing.x);
+			if(ch==NULL){
+				continue;
+			}
+		}
+
+		if(x==0){
+			bb.minx=ch->bearing.x;
+		}
 		bb.miny=MIN(bb.miny,-ch->bearing.y);
 		bb.maxx=MAX(bb.maxx,x+ch->bearing.x+ch->size.x);
 		bb.maxy=MAX(bb.maxy,ch->size.y-ch->bearing.y);
@@ -416,18 +422,28 @@ BoundingBox TTFont_GetBoundingBoxInternal(TTFont *_this, const void *_text, Char
 		//Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
 
 		x+=ch->advance_x >> 6;
+		n++;
 	}
 
 	return bb;
 }
 
 BoundingBox TTFont_GetBoundingBox(TTFont *_this, const char *_text){
-	return TTFont_GetBoundingBoxInternal(_this,_text,CHAR_TYPE_CHAR);
+	return TTFont_GetBoundingBoxInternal(_this,_text,strlen(_text),CHAR_TYPE_CHAR);
 }
 
-BoundingBox TTFont_WGetBoundingBox(TTFont *_this, const char *_text){
-	return TTFont_GetBoundingBoxInternal(_this,_text,CHAR_TYPE_WCHAR);
+BoundingBox TTFont_WGetBoundingBox(TTFont *_this, const wchar_t *_text){
+	return TTFont_GetBoundingBoxInternal(_this,_text,wcslen(_text),CHAR_TYPE_WCHAR);
 }
+
+BoundingBox 	TTFont_GetBoundingBoxN(TTFont *_this, const char *_text, size_t len){
+	return TTFont_GetBoundingBoxInternal(_this,_text,len,CHAR_TYPE_CHAR);
+}
+
+BoundingBox 	TTFont_WGetBoundingBoxN(TTFont *_this, const wchar_t *_text, size_t len){
+	return TTFont_GetBoundingBoxInternal(_this,_text,len,CHAR_TYPE_WCHAR);
+}
+
 
 
 void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
@@ -534,20 +550,20 @@ uint16_t TTFont_GetWidthBuiltInt(TTFont *_this, const void *text, size_t len, Ch
 
 }
 
-uint16_t 		TTFont_GetWidth(TTFont *_this, const char *str){
-	return TTFont_GetWidthBuiltInt(_this,str,strlen(str),CHAR_TYPE_CHAR);
+uint16_t 		TTFont_GetWidth(TTFont *_this, const char *_text){
+	return TTFont_GetWidthBuiltInt(_this,_text,strlen(_text),CHAR_TYPE_CHAR);
 }
 
-uint16_t 		TTFont_WGetWidth(TTFont *_this, const wchar_t *str){
-	return TTFont_GetWidthBuiltInt(_this,str,wcslen(str),CHAR_TYPE_WCHAR);
+uint16_t 		TTFont_WGetWidth(TTFont *_this, const wchar_t *_text){
+	return TTFont_GetWidthBuiltInt(_this,_text,wcslen(_text),CHAR_TYPE_WCHAR);
 }
 
-uint16_t 		TTFont_GetWidthN(TTFont *_this, const char *str, size_t len){
-	return TTFont_GetWidthBuiltInt(_this,str,len,CHAR_TYPE_CHAR);
+uint16_t 		TTFont_GetWidthN(TTFont *_this, const char *_text, size_t _len){
+	return TTFont_GetWidthBuiltInt(_this,_text,_len,CHAR_TYPE_CHAR);
 
 }
-uint16_t 		TTFont_WGetWidthN(TTFont *_this, const wchar_t *str, size_t len){
-	return TTFont_GetWidthBuiltInt(_this,str,len,CHAR_TYPE_WCHAR);
+uint16_t 		TTFont_WGetWidthN(TTFont *_this, const wchar_t *_text, size_t _len){
+	return TTFont_GetWidthBuiltInt(_this,_text,_len,CHAR_TYPE_WCHAR);
 }
 
 void	TTFont_OnDeleteNode(MapIntNode *node){
@@ -558,14 +574,14 @@ void	TTFont_OnDeleteNode(MapIntNode *node){
 		break;
 	}
 
-	//ZG_FREE(_font_character);
+	ZG_FREE(_font_character);
 }
 
 void	TTFont_Unload(TTFont *_this){
 
 	TTFontData *data=_this->data;
 
-	MapInt_Clear(data->characters,true);
+	MapInt_Clear(data->characters,false);
 
 	if(data->ft_face != NULL){
 		FT_Done_Face(data->ft_face);
@@ -579,7 +595,7 @@ void	TTFont_Delete(TTFont *_this){
 
 	TTFont_Unload(_this);
 	TTFontData *data=_this->data;
-	MapInt_Delete(data->characters,false);
+	MapInt_Delete(data->characters);
 	Geometry_Delete(data->geometry);
 	ZG_FREE(_this);
 	ZG_FREE(data);

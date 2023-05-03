@@ -16,15 +16,15 @@ struct MapInt{
 };
 
 MapInt * 	MapInt_New(void);
-bool		MapInt_Exist(MapInt *t,intptr_t key);
-void 		MapInt_Set(MapInt *t,intptr_t key,void * val);
-void * 		MapInt_Get(MapInt *t,intptr_t key);
-void 		MapInt_Erase(MapInt *t,intptr_t key);
-void 		MapInt_EraseAndFreeItem(MapInt *t,intptr_t key);
-void 		MapInt_Clear(MapInt *t, bool _free_all_items);
+bool		MapInt_Exist(MapInt *_this,intptr_t key);
+void 		MapInt_Set(MapInt *_this,intptr_t key,void * val);
+void * 		MapInt_Get(MapInt *_this,intptr_t key);
+void 		MapInt_Erase(MapInt *_this,intptr_t key);
+void 		MapInt_EraseAndFreeItem(MapInt *_this,intptr_t key);
+void 		MapInt_Clear(MapInt *_this, bool _free_all_items);
 //void 		MapInt_ClearAndFreeAllItems(MapInt *m, bool delete_value);
-void 		MapInt_Delete(MapInt *m, bool _free_all_items);
-//void 		MapInt_DeleteAndFreeAllItems(MapInt *m);
+void 		MapInt_Delete(MapInt *_this);
+void 		MapInt_DeleteAndFreeAllItems(MapInt *_this);
 
 
 #endif

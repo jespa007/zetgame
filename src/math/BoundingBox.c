@@ -2,7 +2,7 @@
 #include "zg_math.h"
 
 BoundingBox  BoundingBox_New(void){
-	return (Rectangle4i){
+	return (BoundingBox){
 		 .minx=0
 		,.miny=0
 		,.maxx=0
@@ -10,16 +10,16 @@ BoundingBox  BoundingBox_New(void){
 	};
 }
 
-BoundingBox  BoundingBox_New4i(
+BoundingBox  BoundingBox_New4f(
 		float _minx
 		,float _miny
 		,float _maxx
 		,float _maxy
 ){
 	return (BoundingBox){
-		 .x1=_minx
-		,.y1=_miny
-		,.x2=_maxx
-		,.y2=_maxy
+		 .minx=_minx
+		,.miny=_miny
+		,.maxx=_maxx
+		,.maxy=_maxy
 	};
 }
