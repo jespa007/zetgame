@@ -187,7 +187,7 @@ void TextBox_RT_Build(TextBox *_this){
 				,-FLT_MAX
 		);
 
-		bool first=true;
+		bool first_line=true;
 		unsigned long ch=0;
 		do{
 
@@ -248,11 +248,11 @@ void TextBox_RT_Build(TextBox *_this){
 			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
 				// if line exceeds max dimension, create new line..
 				tbrt_token_line=TextBox_RT_NewLine(data);
-				first=true;
+				first_line=true;
 				y+=ascender;
 			}
 
-			if(first){
+			if(first_line){
 				// init line
 				bb_line=BoundingBox_New4f(
 						bb_word.minx
@@ -261,7 +261,7 @@ void TextBox_RT_Build(TextBox *_this){
 						,y+bb_word.maxy
 				);
 
-				first = false;
+				first_line = false;
 			}else{
 				// update max x and y intervals
 				bb_line.miny=MIN(bb_line.miny,bb_word.miny);
