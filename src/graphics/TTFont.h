@@ -19,7 +19,6 @@ struct TTFont{
 };
 
 
-
 // static
 TTFont * 		TTFont_NewFromFile(
 		const char *ttf_file
@@ -38,7 +37,6 @@ TTFont * 		TTFont_GetEmbeddedFont(void);
 void 			TTFont_SetFontResourcePath(const char * path);
 const char * 	TTFont_GetFontResourcePath(void);
 void			TTFont_DeInit(void);
-
 
 
 // members
