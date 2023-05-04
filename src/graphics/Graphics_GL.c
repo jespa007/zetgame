@@ -11,18 +11,20 @@ uint32_t start_ticks;
 bool Graphics_GL_Init(void){
 
 	// Attach the OpenGL context to our window
-// Only in windows it should create opengl context. In linux is created by SDL already. If you create
+// Only creates opengl context in Windows environment. In linux is already created
+#ifdef _WIN32
 	SDL_GLContext *g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
 	if(g_sdl_gl_context == NULL){
 		Log_Error("Cannot create gl context:%s",SDL_GetError());
 		return false;
 	}
 
-	if(SDL_GL_MakeCurrent(g_graphics_vars->sdl_window,
+	/*if(SDL_GL_MakeCurrent(g_graphics_vars->sdl_window,
 			g_sdl_gl_context)!=0){
 		Log_Error("Cannot make current context:%s",SDL_GetError());
 		return false;
-	}
+	}*/
+#endif
 
 	// Disable vsync (Because it takes lot of high CPU)
 	SDL_GL_SetSwapInterval(

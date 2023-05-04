@@ -459,7 +459,8 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		//start_pos=Vector2i_New(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
 	}
 
-	int y=-(data->dimensions.y>>1); // default aligned top-left
+	uint16_t text_total_height=data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny;
+	int y=-(data->dimensions.y>>1)-data->render_text.bounding_box.miny; // default aligned top-left
 	int x=0;
 	float x_draw=0;
 	float y_draw=0;
@@ -467,13 +468,14 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	Vector3f dim3d=ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
 	int ascender=TTFont_GetAscender(data->font);
 	int space_width=TTFont_GetSpaceWidth(data->font);
-	uint16_t text_total_height=data->render_text.token_lines->count*ascender;
+	//uint16_t text_total_height=data->render_text.token_lines->count*ascender;
+
 
 	if(data->vertical_align == VERTICAL_ALIGN_CENTER){
-		y=-(text_total_height>>1);
+		y=-(text_total_height>>1)-data->render_text.bounding_box.miny;
 	}
 	else if(data->vertical_align == VERTICAL_ALIGN_BOTTOM){
-		y=+(data->dimensions.y>>1)-text_total_height;
+		y=+(data->dimensions.y>>1)-text_total_height-data->render_text.bounding_box.miny;
 	}
 
 	y_draw=-ViewPort_ScreenToWorldHeight(y);

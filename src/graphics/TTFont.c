@@ -46,6 +46,9 @@ static FT_Library		g_ft_handler=NULL;
 static char				g_font_resource_path[256]={0};
 
 
+// Prototypes
+void 					TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type);
+
 void 					TTFont_Unload(TTFont *_this);
 void	 				TTFont_OnDeleteNode(MapIntNode *node);
 TTFont 			* 		TTFont_NewEmpty(void);
@@ -445,50 +448,6 @@ BoundingBox 	TTFont_WGetBoundingBoxN(TTFont *_this, const wchar_t *_text, size_t
 }
 
 
-
-void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
-	TTFontData *data=_this->data;
-
-	if(_this == NULL) return;
-
-	void *ptr=(void *)_text;
-	unsigned long c=0;
-
-
-	Graphics_SetColor4f(_color.r,_color.g, _color.b,1);
-
-	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0)
-	{
-		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(data->characters,c);
-		if(ch==NULL){ // build
-			ch=TTFont_BuildChar(_this,c);
-
-			if(ch==NULL){
-				continue;
-			}
-		}
-
-		int end_y=ch->size.y-ch->bearing.y+data->ascender;
-		// calcule p1 and p2 center
-		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y);
-		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
-
-		const float mesh_vertex []={
-				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
-				_x3d+p2_3d.x, _y3d-p1_3d.y,0,  // bottom right
-				_x3d+p1_3d.x, _y3d-p2_3d.y,0,   // top left
-				_x3d+p2_3d.x, _y3d-p2_3d.y,0    // top right
-		};
-
-		TTFont_DrawCharacter(ch);
-
-		Geometry_SetMeshVertex(data->geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
-		Geometry_Draw(data->geometry);
-
-		_x3d += ViewPort_ScreenToWorldWidth(ch->advance_x >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-	}
-}
-
 /*
 void TTFont_GL_Print(TTFont *_this,float x, float y,Color4f color,const char *str){
 	TTFont_RenderText(_this,x,y,color,str,CHAR_TYPE_CHAR);
@@ -564,6 +523,49 @@ uint16_t 		TTFont_GetWidthN(TTFont *_this, const char *_text, size_t _len){
 }
 uint16_t 		TTFont_WGetWidthN(TTFont *_this, const wchar_t *_text, size_t _len){
 	return TTFont_GetWidthBuiltInt(_this,_text,_len,CHAR_TYPE_WCHAR);
+}
+
+void TTFont_RenderText(TTFont *_this,float _x3d, float _y3d,Color4f _color,const void *_text, CharType _char_type){
+	TTFontData *data=_this->data;
+
+	if(_this == NULL) return;
+
+	void *ptr=(void *)_text;
+	unsigned long c=0;
+
+
+	Graphics_SetColor4f(_color.r,_color.g, _color.b,1);
+
+	while((c=StrUtils_GetCharAndAdvance(&ptr,_char_type))!=0)
+	{
+		TTFontCharacter *ch=(TTFontCharacter *)MapInt_Get(data->characters,c);
+		if(ch==NULL){ // build
+			ch=TTFont_BuildChar(_this,c);
+
+			if(ch==NULL){
+				continue;
+			}
+		}
+
+		//int end_y=ch->size.y-ch->bearing.y+data->ascender;
+		// calcule p1 and p2 center
+		Vector3f p1_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y);
+		Vector3f p2_3d=ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
+
+		const float mesh_vertex []={
+				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
+				_x3d+p2_3d.x, _y3d-p1_3d.y,0,  // bottom right
+				_x3d+p1_3d.x, _y3d-p2_3d.y,0,   // top left
+				_x3d+p2_3d.x, _y3d-p2_3d.y,0    // top right
+		};
+
+		TTFont_DrawCharacter(ch);
+
+		Geometry_SetMeshVertex(data->geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
+		Geometry_Draw(data->geometry);
+
+		_x3d += ViewPort_ScreenToWorldWidth(ch->advance_x >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+	}
 }
 
 void	TTFont_OnDeleteNode(MapIntNode *node){
