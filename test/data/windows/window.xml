@@ -10,7 +10,7 @@
 		text-top="top"
 		height="35"
 		width="1000"  
-	    text="Score:" 
+	    text="" 
 	    font-size="20"
 	    font-file="half_bold_pixel-7.ttf" 
 	></textbox>	
@@ -192,11 +192,12 @@
 		height="60" 
 		width="420"
 	    text="[ESC] Exit"
-	    vertical-align="top"
 	    font-size="25" 
+	    text-align="center" 
+	    vertical-align="center" 
 	    border-thickness="2"
 	    border-color="#FFFFFF"
-	    
-	 ></textbox>		
+	    font-file="half_bold_pixel-7.ttf"
+	></textbox>
 
 </window>

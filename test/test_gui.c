@@ -11,8 +11,6 @@ int main(int argc, char *argv[]){
 	params.height=768;
 	ZetGame_Init(&params);
 
-
-
 	TextureManager * texture_manager= TextureManager_New();
 	//TTFontManager * ttfont_manager= TTFontManager_New();
 

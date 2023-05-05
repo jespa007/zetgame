@@ -61,9 +61,7 @@ void 			GUITextBox_SetFontFile(GUITextBox *_this, const char *_font_file){
 const char *	GUITextBox_GetFontName(GUITextBox *_this){
 	GUITextBoxData *data=_this->data;
 	return data->font_name;
-
 }
-
 
 void 			GUITextBox_SetFontSize(GUITextBox *_this, uint8_t _font_size){
 	GUITextBoxData *data=_this->data;
@@ -112,8 +110,6 @@ static void GUITextBox_Draw(void *gui_label){
 	TextBox_Draw(data->textbox,&transform,&color);
 }
 
-
-
 void GUITextBox_Delete(GUITextBox *_this){
 	if(_this == NULL) return;
 	GUITextBoxData *data=_this->data;
@@ -123,5 +119,4 @@ void GUITextBox_Delete(GUITextBox *_this){
 
 	ZG_FREE(data);
 	ZG_FREE(_this);
-
 }

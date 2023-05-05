@@ -450,6 +450,15 @@ void	 TextBox_SetHeight(TextBox *_this, uint16_t _height){
 void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 	TextBoxData *data=_this->data;
+	float x_draw=0;
+	float y_draw=0;
+	float y_draw_inc=0;
+	int y=0;
+	int x=0;
+	uint16_t text_total_height=0;
+	Vector3f dim3d;
+	int ascender=0;
+	int space_width=0;
 
 	// TODO: pos is at center box by default, do a wat yo change render center
 	//Vector2i start_pos=Vector2i_New(0,0);
@@ -459,15 +468,13 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		//start_pos=Vector2i_New(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
 	}
 
-	uint16_t text_total_height=data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny;
-	int y=-(data->dimensions.y>>1)-data->render_text.bounding_box.miny; // default aligned top-left
-	int x=0;
-	float x_draw=0;
-	float y_draw=0;
-	float y_draw_inc=0;
-	Vector3f dim3d=ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
-	int ascender=TTFont_GetAscender(data->font);
-	int space_width=TTFont_GetSpaceWidth(data->font);
+	text_total_height=data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny;
+	y=-(data->dimensions.y>>1)-data->render_text.bounding_box.miny; // default aligned top-left
+	x=0;
+
+	dim3d=ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
+	ascender=TTFont_GetAscender(data->font);
+	space_width=TTFont_GetSpaceWidth(data->font);
 	//uint16_t text_total_height=data->render_text.token_lines->count*ascender;
 
 
@@ -569,7 +576,6 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 void TextBox_Delete(TextBox * _this){
 	if(_this==NULL) return;
 	TextBoxData *data=_this->data;
-
 
 	if(data->text!=NULL){
 		free(data->text);

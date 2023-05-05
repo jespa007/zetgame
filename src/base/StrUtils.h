@@ -14,6 +14,7 @@ typedef enum{
 {va_list  ap;\
 int max_len=(int)((sizeof(_str_out)/sizeof(char))-1);\
 va_start(ap, _first_param);\
+printf("s:%s max_len:%i %s\n",_str_out,max_len,_str_in);\
 int n=vsnprintf(_str_out,max_len,_str_in,  ap);\
 if(n>=(int)max_len || n==-1){\
 	_str_out[max_len-1]=0;\

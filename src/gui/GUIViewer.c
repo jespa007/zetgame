@@ -60,7 +60,6 @@ void		GUIViewer_SetTexture(GUIViewer *_this, const char *_texture_id){
 	}
 }
 
-
 void GUIViewer_Delete(GUIViewer *_this){
 	if(_this == NULL) return;
 	GUIViewerData *data=_this->data;

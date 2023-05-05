@@ -251,11 +251,12 @@ parseAttribute(XmlDoc *doc, const char **xmlText, XmlElement *element)
 	startval = *xmlText;
 	skipUntil(doc, xmlText, *(*xmlText-1));
 	if (!**xmlText) FAIL(XML_EOF);
-	if (*xmlText - startval)
-	{
+	// we allocate even though is empty string
+	//if (*xmlText - startval)
+	//{
 	    attribute->value = calloc(1, (size_t)(*xmlText - startval) + 1);
 	    memcpy(attribute->value, startval, (size_t)(*xmlText - startval));
-	}
+	//}
 	++(*xmlText);
 	return attribute;
     }

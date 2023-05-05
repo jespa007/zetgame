@@ -27,7 +27,6 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 				{window_data->buttons,(void (*)(void *))GUIButton_Delete}
 				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
 				,{window_data->viewers,(void (*)(void *))GUIViewer_Delete}
-				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
 				,{window_data->frames,(void (*)(void *))GUIFrame_Delete}
 		};
 
