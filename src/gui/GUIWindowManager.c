@@ -22,7 +22,7 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 
 		struct{
 			List	*list;
-			void (*delete)(void *_this);
+			void (*delete_callback)(void *_this);
 		}widget_deallocate_collections[]={
 				{window_data->buttons,(void (*)(void *))GUIButton_Delete}
 				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
@@ -35,7 +35,7 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 
 			// deallocate all widgets
 			for(int i=0; i < widget_deallocate_collections[j].list->count; i++){
-				widget_deallocate_collections[j].delete(widget_deallocate_collections[j].list->items[i]);
+				widget_deallocate_collections[j].delete_callback(widget_deallocate_collections[j].list->items[i]);
 			}
 
 			List_Delete(widget_deallocate_collections[j].list);
@@ -165,8 +165,8 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"src")){
-				 GUIViewer_SetImage(viewer,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"texture")){
+				 GUIViewer_SetTexture(viewer,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -335,7 +335,7 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"button")){
 		 return GUIWindowManager_NewButton(_window_data,_parent,e);
-	 }else if(STRCMP(e->name,==,"img")){
+	 }else if(STRCMP(e->name,==,"viewer")){
 		 return GUIWindowManager_NewViewer(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"textbox")){
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
@@ -411,8 +411,7 @@ bool GUIWindowManager_LoadFromMemory(
 					 GUIWindow_SetWindowStyle(window_data->window,WINDOW_STYLE_NONE);
 				 }
 			 }else if(STRCMP(attribute->name,==,"caption")){
-				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-				 }
+				 GUIWindow_SetCaptionTitle(window_data->window,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUIWindow_SetWidth(window_data->window,int_value);

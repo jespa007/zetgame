@@ -54,6 +54,11 @@ void 		TextureManager_SetTextureResourcePath(TextureManager *_this,const char * 
 }
 
 Texture * 		TextureManager_Get(TextureManager *_this,const char * _filename){
+
+	if(_this==NULL){
+		return NULL;
+	}
+
 	TextureManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};

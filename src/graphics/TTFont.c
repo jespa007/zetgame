@@ -173,7 +173,7 @@ void TTFont_BuildChars(
     // Create new font with size...
 	TTFontData *data=_this->data;
 
-	MapInt_Clear(data->characters,true);
+	MapInt_Clear(data->characters);
 
     FT_Set_Pixel_Sizes(data->ft_face, 0, data->font_size);
     if(FT_Set_Char_Size(
@@ -583,7 +583,7 @@ void	TTFont_Unload(TTFont *_this){
 
 	TTFontData *data=_this->data;
 
-	MapInt_Clear(data->characters,false);
+	MapInt_Clear(data->characters);
 
 	if(data->ft_face != NULL){
 		FT_Done_Face(data->ft_face);

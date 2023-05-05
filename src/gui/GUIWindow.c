@@ -167,6 +167,11 @@ void 		GUIWindow_SetCaptionTitle(GUIWindow * _this, const char *_caption){
 }
 
 TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
+
+	if(_this == NULL){
+		return NULL;
+	}
+
 	GUIWindowData *data=_this->data;
 	if(data->window_manager){
 		return GUIWindowManager_GetTextureManager(data->window_manager);//data->ttfont_manager;

@@ -145,7 +145,7 @@ void	MapInt_EraseAndFreeItem(MapInt *_this,intptr_t key){
 
 }
 
-void 	MapInt_Clear(MapInt *_this, bool _free_all_items){
+void 	MapInt_ClearInternal(MapInt *_this, bool _free_all_items){
 	/*if(_this==NULL) return;
 
 	List_Clear(_this->list);*/
@@ -172,12 +172,23 @@ void 	MapInt_Clear(MapInt *_this, bool _free_all_items){
 	List_Clear(_this->list);
 }
 
+void 	MapInt_ClearAndFreeAllItems(MapInt *_this){
+	MapInt_ClearInternal(_this,true);
+}
+
+void 	MapInt_Clear(MapInt *_this){
+	MapInt_ClearInternal(_this,false);
+}
+
+
+
+
 
 
 void MapInt_DeleteAndFreeAllItems(MapInt *_this){
 	if(_this==NULL) return;
 
-	MapInt_Clear(_this,true);
+	MapInt_ClearAndFreeAllItems(_this);
 
 	List_Delete(_this->list);
 	ZG_FREE(_this);
@@ -186,7 +197,7 @@ void MapInt_DeleteAndFreeAllItems(MapInt *_this){
 void 		MapInt_Delete(MapInt *_this){
 	if(_this==NULL) return;
 
-	MapInt_Clear(_this,false);
+	MapInt_Clear(_this);
 
 	List_Delete(_this->list);
 	ZG_FREE(_this);

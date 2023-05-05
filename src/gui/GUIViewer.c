@@ -51,10 +51,10 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	TextBox_Draw(data->textbox,&transform,&color);
 }
 
-void		GUIViewer_SetImage(GUIViewer *_this, const char *_image){
+void		GUIViewer_SetTexture(GUIViewer *_this, const char *_texture_id){
 	GUIViewerData *data=_this->data;
 	TextureManager *texture_manager=GUIWidget_GetTextureManager(_this->widget);
-	Texture *texture=TextureManager_Get(texture_manager,_image);
+	Texture *texture=TextureManager_Get(texture_manager,_texture_id);
 	if(texture!=NULL){
 		data->texture=texture;
 	}

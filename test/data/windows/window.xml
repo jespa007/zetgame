@@ -25,14 +25,14 @@
 		font-file="half_bold_pixel-7.ttf"
 	></textbox>
 
-	<img 
+	<viewer 
 		id="img_time_left" 
 		left="10" 
 		top="55" 
 		height="25"
 		width="25"
-		src="clock.png" 
-	></img>		
+		texture="clock.png" 
+	></viewer>		
 	    
 	<textbox 
 		id="lbl_time_left" 
@@ -55,9 +55,9 @@
 		font-file="half_bold_pixel-7.ttf"
 	 ></textbox>
 	 
-	<img  
+	<viewer  
 		id="star1" 
-		src="star_on.png" 
+		texture="star_on.png" 
 		left="480" 
 		top="155" 
 		width="50"
@@ -65,52 +65,52 @@
 		font-color="#0"
 		font-file="half_bold_pixel-7.ttf"
 		font-size="25"
-	></img>
+	></viewer>
 	
-	<img  
+	<viewer  
 		id="star2" 
 		top="155" 
 		left="540" 
-		src="star_off1.png" 
+		texture="star_off1.png" 
 		width="50" height="50"
 		font-color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></img>
+	></viewer>
 	
-	<img  
+	<viewer  
 		id="star3" 
 		top="155" 
 		left="600" 
-		src="star_off1.png" 
+		texture="star_off1.png" 
 		width="50" 
 		height="50"
 		font-color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></img>
+	></viewer>
 	
-	<img  
+	<viewer  
 		id="star4" 
 		top="155" 
 		left="660" 
-		src="star_off1.png" 
+		texture="star_off1.png" 
 		width="50" height="50"
 		font-color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></img>
+	></viewer>
 	
-	<img  	
+	<viewer  	
 		id="star5" 
 		top="155" 
 		left="720" 
-		src="star_off1.png" 
+		texture="star_off1.png" 
 		width="50" height="50"
 		font-color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></img>
+	></viewer>
 
 	<textbox 
 		id="lbl_title" 

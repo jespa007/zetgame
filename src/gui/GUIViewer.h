@@ -9,7 +9,7 @@ struct GUIViewer{
 };
 
 GUIViewer *	GUIViewer_New(int x, int y, uint16_t width, uint16_t height);
-void		GUIViewer_SetImage(GUIViewer *_this, const char *_image);
+void		GUIViewer_SetTexture(GUIViewer *_this, const char *_texture_id);
 void 		GUIViewer_Delete(GUIViewer *_this);
 
 
