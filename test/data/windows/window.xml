@@ -1,7 +1,7 @@
 <!--  comment  -->
 <window background-color="#0F0F0F" window-style="none" caption="Test">
 
-<!--
+
 	<textbox 
 		id="lbl_score" 
 		left="0" 
@@ -124,7 +124,7 @@
 	    horizontal-alignment="center"
 	    font-file="half_bold_pixel-7.ttf"
 	></textbox>
--->
+	    
 	<textbox 
 		id="lbl_description" 
 		top="250" 
@@ -139,7 +139,7 @@
 	    line-height="0" 
 	    font-file="Trebuchet MS.ttf"
 	></textbox>	    
-	<!--
+	
 	<textbox 
 		id="lbl_start"  
 		left="312" 
@@ -199,5 +199,5 @@
 	    border-color="#FFFFFF"
 	    font-file="half_bold_pixel-7.ttf"
 	></textbox>
--->
+
 </window>

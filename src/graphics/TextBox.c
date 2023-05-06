@@ -233,11 +233,6 @@ void TextBox_RT_Build(TextBox *_this){
 			memset(word,0,word_len*inv_sizeof_char+sizeof_char);
 			memcpy(word,word_ini,word_len*inv_sizeof_char);
 
-			if(STRCMP(word,==,"pressing")){
-				int h=0;
-				h++;
-			}
-
 			// get length rendered word...
 			if(data->char_type==CHAR_TYPE_WCHAR){
 				bb_word=TTFont_WGetBoundingBoxN(data->font,word_ini,word_len);
@@ -250,10 +245,6 @@ void TextBox_RT_Build(TextBox *_this){
 			word_width=bb_word.maxx-bb_word.minx;
 
 			if((((tbrt_token_line->total_width+word_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
-
-				// If text-alignment = justify adds spaces to redistribute all words respectevely
-
-
 				// if line exceeds max dimension, create new line..
 				tbrt_token_line=TextBox_RT_NewLine(data);
 				first_line=true;
@@ -475,6 +466,8 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	Vector3f dim3d;
 	int ascender=0;
 	int space_width=0;
+	int min_render_x;
+	int max_render_y;
 
 	// TODO: pos is at center box by default, do a wat yo change render center
 	//Vector2i start_pos=Vector2i_New(0,0);
@@ -517,6 +510,69 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		);
 	}
 
+	TTFont_RenderTextBegin(color);
+
+	for(unsigned i=0; i < data->render_text.token_lines->count; i++){
+		int inc_x=1;
+		float space_per_word=space_width;
+		TBRT_TokenLine *token_line = data->render_text.token_lines->items[i];
+
+		 // set x as text_align left
+		x=-(data->dimensions.x>>1);
+
+		// if horizontal alignment is center ...
+		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER){
+			x=-(token_line->total_width>>1);
+		// if horizontal alignment is right ...
+		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
+			x=(data->dimensions.x>>1);
+			inc_x=-1;
+		// if horizontal alignment is justified and not last line ...
+		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_JUSTIFY && (i+1<data->render_text.token_lines->count)){
+			// ... redistruibute spaces along the box dimension.x
+			space_per_word=(float)(data->dimensions.x-(token_line->total_width-((token_line->tbrt_tokens->count-1)*space_width)))/token_line->tbrt_tokens->count;
+		}
+
+		for(unsigned w=0; w < token_line->tbrt_tokens->count; w++){
+
+			TBRT_Token *token=NULL;
+			if(inc_x > 0){
+				token=token_line->tbrt_tokens->items[w];
+			}
+			else{
+				token=token_line->tbrt_tokens->items[token_line->tbrt_tokens->count-w-1];
+			}
+
+			TBRT_TokenWord *token_word;
+			switch(token->tbrt_token_type){
+			default:
+				break;
+			case TBRT_TOKEN_TYPE_WORD:
+				token_word=((TBRT_TokenWord*)token->token_data);
+				if(w>0){ // render space
+					//TTFont_Print(data->font,x,y,COLOR4F_WHITE," ");
+					x+=(space_per_word)*inc_x;
+				}
+
+				x_draw=ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
+
+				if(data->char_type==CHAR_TYPE_WCHAR){
+					TTFont_WPrint(data->font,x_draw,y_draw,COLOR4F_WHITE,token_word->word);
+				}
+				else{ // char by default.
+					TTFont_Print(data->font,x_draw,y_draw,COLOR4F_WHITE,token_word->word);
+				}
+				x+=(token_word->word_width)*inc_x;
+				break;
+
+			}
+		}
+		y_draw+=y_draw_inc;
+	}
+
+	TTFont_RenderTextEnd();
+
+
 	if(ZetGame_IsDebugMode()){
 		/*Vector3f dim3d_render_font=ViewPort_ScreenToWorldDimension2i(
 				data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx
@@ -555,58 +611,6 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 			,2
 		);
 	}
-
-	TTFont_RenderTextBegin(color);
-
-	for(unsigned i=0; i < data->render_text.token_lines->count; i++){
-		int inc_x=1;
-		TBRT_TokenLine *token_line = data->render_text.token_lines->items[i];
-		x=-(data->dimensions.x>>1); // default text_align_right
-		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER){
-			x=-(token_line->total_width>>1);
-		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
-			x=(data->dimensions.x>>1);
-			inc_x=-1;
-		}
-
-		for(unsigned w=0; w < token_line->tbrt_tokens->count; w++){
-
-			TBRT_Token *token=NULL;
-			if(inc_x > 0){
-				token=token_line->tbrt_tokens->items[w];
-			}
-			else{
-				token=token_line->tbrt_tokens->items[token_line->tbrt_tokens->count-w-1];
-			}
-
-			TBRT_TokenWord *token_word;
-			switch(token->tbrt_token_type){
-			default:
-				break;
-			case TBRT_TOKEN_TYPE_WORD:
-				token_word=((TBRT_TokenWord*)token->token_data);
-				if(w>0){ // render space
-					//TTFont_Print(data->font,x,y,COLOR4F_WHITE," ");
-					x+=(space_width)*inc_x;
-				}
-
-				x_draw=ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
-
-				if(data->char_type==CHAR_TYPE_WCHAR){
-					TTFont_WPrint(data->font,x_draw,y_draw,COLOR4F_WHITE,token_word->word);
-				}
-				else{ // char by default.
-					TTFont_Print(data->font,x_draw,y_draw,COLOR4F_WHITE,token_word->word);
-				}
-				x+=(token_word->word_width)*inc_x;
-				break;
-
-			}
-		}
-		y_draw+=y_draw_inc;
-	}
-
-	TTFont_RenderTextEnd();
 
 	if(transform != NULL){
 		Transform_Restore(transform);
