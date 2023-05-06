@@ -279,10 +279,10 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 				 GUITextBox_SetFontFile(textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text")){
 				 GUITextBox_SetText(textbox,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"text-align")){
-				 GUITextBox_SetTextAlign(textbox,TextBox_ParseTextAlign(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"vertical-align")){
-				 GUITextBox_SetVerticalAlign(textbox,TextBox_ParseVerticalAlign(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
+				 GUITextBox_SetHorizontalAlignment(textbox,TextBox_ParseTextAlign(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
+				 GUITextBox_SetVerticalAlignment(textbox,TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"border-thickness")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
 					 GUITextBox_SetBorderThickness(textbox,int_value);

@@ -566,7 +566,7 @@ void CSprite2d::drawSGTextBox2d() {
 			GET_ACTIVE_RENDER->projection_to_pixelY(absolute_translation->y),
 			text,
 			m_appearance->getMaterial()->getColor(),
-			CFont::TEXT_ALIGN_CENTER
+			CFont::HORIZONTAL_ALIGNMENT_CENTER
 	);
 
 }

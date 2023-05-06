@@ -202,22 +202,18 @@ Vector3f ViewPort_ScreenToWorld(int x, int y){
 		,.y=ViewPort_ScreenToWorldPositionY(y)
 		,.z=0
 	};
-
 	return v3d;
 }
-
 
 Vector3f ViewPort_GetProjectionOrigin(void){
 	return g_viewport_vars->current_viewport.projection_origin;
 }
 
 float ViewPort_ScreenToWorldWidth(int  w){
-
 	return 2*(w)*(Graphics_GetAspectRatio()*g_viewport_vars->current_viewport.one_over_width);
 }
 
 float ViewPort_ScreenToWorldHeight(int h){
-
 	return 2*(h)*(g_viewport_vars->current_viewport.one_over_height);
 }
 
@@ -227,7 +223,6 @@ Vector3f ViewPort_ScreenToWorldDimension2i(int width, int height){
 		,.y=ViewPort_ScreenToWorldHeight(height)
 		,.z=0
 	};
-
 	return v3d;
 }
 
@@ -236,7 +231,6 @@ void 		ViewPort_DeInit(void){
 		Log_ErrorF("Viewport not init");
 		return;
 	}
-
 
 	ZG_FREE(g_viewport_vars);
 	g_viewport_vars=NULL;

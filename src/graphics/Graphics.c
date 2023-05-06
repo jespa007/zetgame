@@ -655,20 +655,22 @@ void Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size){
 }
 
 
-void Graphics_DrawRectangle4i(int _x, int _y, uint16_t _w, uint16_t _h, Color4f _color, uint8_t _thickness){
+void Graphics_DrawRectangle4i(int _x_center, int _y_center, int _width, int _height, Color4f _color, uint8_t _thickness){
 
-	Vector3f translate=ViewPort_ScreenToWorld(_x,_y);
-	Vector3f scale=ViewPort_ScreenToWorldDimension2i(_w,_h);
+
+	Vector3f translate=ViewPort_ScreenToWorld(_x_center,_y_center);
+	Vector3f scale=ViewPort_ScreenToWorldDimension2i(_width,_height);
 
 	Graphics_DrawRectangle4f(translate.x,translate.y,scale.x,scale.y,_color,_thickness);
 }
 
-void Graphics_DrawRectangle4f(float _tx, float _ty, float _sx, float _sy, Color4f _color, uint8_t _thickness){
+void Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, Color4f _color, uint8_t _thickness){
 	Transform t=Transform_New();
-	t.translate.x=_tx;
-	t.translate.y=_ty;
-	t.scale.x=_sx;
-	t.scale.y=_sy;
+	t.translate.x=_x_center;
+	t.translate.y=_y_center;
+	t.scale.x=_scale_x;
+	t.scale.y=_scale_y;
+
 
 	Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	Graphics_SetLineThickness(_thickness);

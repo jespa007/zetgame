@@ -9,7 +9,9 @@ int main(int argc, char *argv[]){
 	memset(&params,0,sizeof(params));
 	params.width=1024;
 	params.height=768;
+
 	ZetGame_Init(&params);
+	ZetGame_SetDebugMode(true);
 
 	TextureManager * texture_manager= TextureManager_New();
 	//TTFontManager * ttfont_manager= TTFontManager_New();

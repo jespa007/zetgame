@@ -1,12 +1,12 @@
 <!--  comment  -->
 <window background-color="#0F0F0F" window-style="none" caption="Test">
 
-
+<!--
 	<textbox 
 		id="lbl_score" 
 		left="0" 
 		top="0" 
-		text-align="left"
+		horizontal-alignment="left"
 		text-top="top"
 		height="35"
 		width="1000"  
@@ -51,7 +51,7 @@
 		height="45"
 		text="Level" 
 		font-size="45" 
-		text-align="right"
+		horizontal-alignment="right"
 		font-file="half_bold_pixel-7.ttf"
 	 ></textbox>
 	 
@@ -121,10 +121,10 @@
 	    font-size="120" 
 	    border-thickness="2"
 	    border-color="#FFFFFF"
-	    text-align="center"
+	    horizontal-alignment="center"
 	    font-file="half_bold_pixel-7.ttf"
 	></textbox>
-	    
+-->
 	<textbox 
 		id="lbl_description" 
 		top="250" 
@@ -133,13 +133,13 @@
 		height="10"
 	    text="Welcome to Bird game! To start the game touch click [ Start ] button or by pressing the space key. To train click [ Tutorial ] button or press T key."
 	    font-size="25" 
-	    text-align="justify" 
+	    horizontal-alignment="justify" 
 	    border-thickness="2"
 	    border-color="#ffffff"
 	    line-height="0" 
 	    font-file="Trebuchet MS.ttf"
 	></textbox>	    
-	
+	<!--
 	<textbox 
 		id="lbl_start"  
 		left="312" 
@@ -148,8 +148,8 @@
 		width="420"
 	    text="[SPC] Start" 
 	    font-size="25" 
-	    text-align="center" 
-	    vertical-align="center" 
+	    horizontal-alignment="center" 
+	    vertical-alignment="center" 
 	    border-thickness="2" 
 	    border-color="#FFFFFF"
 	    font-file="half_bold_pixel-7.ttf"
@@ -163,8 +163,8 @@
 		width="420"
 	    text="[T] Tutorial" 
 	    font-size="25" 
-	    text-align="center" 
-	    vertical-align="center" 
+	    horizontal-alignment="center" 
+	    vertical-alignment="center" 
 	    border-thickness="2" 
 	    border-color="#FFFFFF"
 	    font-file="half_bold_pixel-7.ttf"
@@ -178,8 +178,8 @@
 		width="420"
 	    text="[L] Level selection" 
 	    font-size="25" 
-	    text-align="center" 
-	    vertical-align="center" 
+	    horizontal-alignment="center" 
+	    vertical-alignment="center" 
 	    border-thickness="2" 
 	    border-color="#FFFFFF"
 	    font-file="half_bold_pixel-7.ttf"
@@ -193,11 +193,11 @@
 		width="420"
 	    text="[ESC] Exit"
 	    font-size="25" 
-	    text-align="center" 
-	    vertical-align="center" 
+	    horizontal-alignment="center" 
+	    vertical-alignment="center" 
 	    border-thickness="2"
 	    border-color="#FFFFFF"
 	    font-file="half_bold_pixel-7.ttf"
 	></textbox>
-
+-->
 </window>

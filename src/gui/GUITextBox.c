@@ -74,14 +74,14 @@ uint16_t			GUITextBox_GetFontSize(GUITextBox *_this){
 	return TextBox_GetFontSize(data->textbox);
 }
 
-void			GUITextBox_SetTextAlign(GUITextBox *_this,TextAlign _text_align){
+void			GUITextBox_SetHorizontalAlignment(GUITextBox *_this,HorizontalAlignment _text_align){
 	GUITextBoxData *data=_this->data;
-	TextBox_SetTextAlign(data->textbox,_text_align);
+	TextBox_SetHorizontalAlignment(data->textbox,_text_align);
 }
 
-void			GUITextBox_SetVerticalAlign(GUITextBox *_this,VerticalAlign _vertical_align){
+void			GUITextBox_SetVerticalAlignment(GUITextBox *_this,VerticalAlignment _vertical_align){
 	GUITextBoxData *data=_this->data;
-	TextBox_SetVerticalAlign(data->textbox,_vertical_align);
+	TextBox_SetVerticalAlignment(data->textbox,_vertical_align);
 }
 
 void GUITextBox_SetBorderThickness(GUITextBox *_this,int _thickness){

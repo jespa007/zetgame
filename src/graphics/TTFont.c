@@ -331,11 +331,6 @@ int				TTFont_GetSpaceWidth(TTFont *_this){
 }
 
 
-int TTFont_GetFontWidth(TTFont *_this){
-	TTFontData *data=_this->data;
-	return data->space_width;
-}
-
 void	 		TTFont_SetFontSize(TTFont *_this,uint16_t _font_size){
 
 	TTFontData *data=_this->data;

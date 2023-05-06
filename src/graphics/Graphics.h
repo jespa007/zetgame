@@ -74,14 +74,14 @@ void Graphics_DrawPoint2f(float _x, float _y, Color4f _color, uint8_t _point_siz
 void Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size);
 
 void Graphics_DrawRectangle2i(uint16_t width, uint16_t height, Color4f color, uint8_t thickness);
-void Graphics_DrawRectangle4i(int x, int y, uint16_t width, uint16_t height, Color4f color,  uint8_t thickness);
-void Graphics_DrawRectangle4f(float x1, float y1, float x2, float y2, Color4f color, uint8_t thickness);
+void Graphics_DrawRectangle4i(int _x_center, int _y_center, int _width, int _height, Color4f color,  uint8_t thickness);
+void Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scalex, float _scaley, Color4f color, uint8_t thickness);
 
 void Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, Color4f color);
 void Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color);
 
-void Graphics_DrawRectangleTextured4i(int x, int y, uint16_t width, uint16_t height,  Color4f color,Texture *text, TextureRect * text_crop);
-void Graphics_DrawRectangleTextured4f(float x1, float y1, float x2, float y2, Color4f color, Texture *text, TextureRect * text_crop);
+void Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t width, uint16_t height,  Color4f color,Texture *text, TextureRect * text_crop);
+void Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2, Color4f color, Texture *text, TextureRect * text_crop);
 
 void Graphics_DrawCircle3f(float _x, float _y, float _r, Color4f _color, uint8_t _thickness);
 void Graphics_DrawCircle3i(int _x, int _y, int _r, Color4f _color, uint8_t _thickness);

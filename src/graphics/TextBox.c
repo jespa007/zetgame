@@ -48,8 +48,8 @@ typedef struct{
 	TTFont 		*	font; // init font
 	void 		*	text; // text to show, from reserved memory
 	CharType		char_type;
-	VerticalAlign 	vertical_align;
-	TextAlign 		text_align;
+	VerticalAlignment 	vertical_alignment;
+	HorizontalAlignment 		horizontal_alignment;
 	Vector2i		dimensions;
 	TBRenderText	render_text;
 	Color4f			border_color;
@@ -173,7 +173,7 @@ void TextBox_RT_Build(TextBox *_this){
 
 	uint16_t word_width=0;
 	BoundingBox bb_word;//=TTFont_GetBoundingBox(data->font,);
-	uint16_t space_width=TTFont_GetFontWidth(data->font);
+	uint16_t space_width=TTFont_GetSpaceWidth(data->font);
 	int y=0;
 
 	// for each line
@@ -181,10 +181,10 @@ void TextBox_RT_Build(TextBox *_this){
 		void *text_line=lines->items[i];
 		tbrt_token_line=TextBox_RT_NewLine(data);
 		BoundingBox bb_line=BoundingBox_New4f(
-				 FLT_MAX
-				,FLT_MAX
-				,-FLT_MAX
-				,-FLT_MAX
+			 FLT_MAX
+			,FLT_MAX
+			,-FLT_MAX
+			,-FLT_MAX
 		);
 
 		bool first_line=true;
@@ -196,7 +196,6 @@ void TextBox_RT_Build(TextBox *_this){
 			void *word_end=text_line;
 			size_t word_len=0;
 			bool end_char=false;
-
 
 			// process word
 			do{
@@ -234,6 +233,11 @@ void TextBox_RT_Build(TextBox *_this){
 			memset(word,0,word_len*inv_sizeof_char+sizeof_char);
 			memcpy(word,word_ini,word_len*inv_sizeof_char);
 
+			if(STRCMP(word,==,"pressing")){
+				int h=0;
+				h++;
+			}
+
 			// get length rendered word...
 			if(data->char_type==CHAR_TYPE_WCHAR){
 				bb_word=TTFont_WGetBoundingBoxN(data->font,word_ini,word_len);
@@ -245,12 +249,22 @@ void TextBox_RT_Build(TextBox *_this){
 
 			word_width=bb_word.maxx-bb_word.minx;
 
-			if((((tbrt_token_line->total_width+space_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
+			if((((tbrt_token_line->total_width+word_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
+
+				// If text-alignment = justify adds spaces to redistribute all words respectevely
+
+
 				// if line exceeds max dimension, create new line..
 				tbrt_token_line=TextBox_RT_NewLine(data);
 				first_line=true;
 				y+=ascender;
+			}else{
+				if(ch!=0){
+					tbrt_token_line->total_width+=space_width;
+				}
 			}
+
+
 
 			if(first_line){
 				// init line
@@ -272,7 +286,8 @@ void TextBox_RT_Build(TextBox *_this){
 			// add word token...
 			List_Add(tbrt_token_line->tbrt_tokens,TextBox_RT_NewTokenWord(word,word_width));
 
-			tbrt_token_line->total_width+=(word_width+space_width);
+			// update line with
+			tbrt_token_line->total_width+=word_width;
 
 
 		}while(ch!=0); // not end line...
@@ -298,40 +313,40 @@ void TextBox_RT_Build(TextBox *_this){
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-TextAlign TextBox_ParseTextAlign(const char *_text_align){
-	TextAlign text_align=TEXT_ALIGN_LEFT; // by default
+HorizontalAlignment TextBox_ParseTextAlign(const char *_text_align){
+	HorizontalAlignment horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT; // by default
 	char *str_text_align=StrUtils_ToLower(_text_align);
 	if(STRCMP(str_text_align,==,"left")){
-		text_align=TEXT_ALIGN_LEFT;
+		horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT;
 	}else if(STRCMP(str_text_align,==,"center")){
-		text_align=TEXT_ALIGN_CENTER;
+		horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;
 	}else if(STRCMP(str_text_align,==,"right")){
-		text_align=TEXT_ALIGN_RIGHT;
+		horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;
 	}else if(STRCMP(str_text_align,==,"justify")){
-		text_align=TEXT_ALIGN_JUSTIFY;
+		horizontal_alignment=HORIZONTAL_ALIGNMENT_JUSTIFY;
 	}else{
 		Log_Error("Unknow align text '%s' ",_text_align);
 	}
 
 	ZG_FREE(str_text_align);
 
-	return text_align;
+	return horizontal_alignment;
 }
 
-VerticalAlign TextBox_ParseVerticalAlign(const char *_vertical_text){
-	VerticalAlign vertical_align=VERTICAL_ALIGN_TOP; // by default
+VerticalAlignment TextBox_ParseVerticalAlignment(const char *_vertical_text){
+	VerticalAlignment vertical_alignment=VERTICAL_ALIGNMENT_TOP; // by default
 	char *str_vertical_align=StrUtils_ToLower(_vertical_text);
 	if(STRCMP(str_vertical_align,==,"top")){
-		vertical_align=VERTICAL_ALIGN_TOP;
+		vertical_alignment=VERTICAL_ALIGNMENT_TOP;
 	}else if(STRCMP(str_vertical_align,==,"center")){
-		vertical_align=VERTICAL_ALIGN_CENTER;
+		vertical_alignment=VERTICAL_ALIGNMENT_CENTER;
 	}else{
 		Log_Error("Unknow vertical text '%s' ",_vertical_text);
 	}
 
 	ZG_FREE(str_vertical_align);
 
-	return vertical_align;
+	return vertical_alignment;
 }
 
 void	 		TextBox_SetBorderThickness(TextBox *_this, uint16_t _border_tickness){
@@ -413,14 +428,14 @@ TTFont *   TextBox_GetFont(TextBox *_this){
 	return data->font;
 }
 
-void	 TextBox_SetTextAlign(TextBox *_this, TextAlign text_align){
+void	 TextBox_SetHorizontalAlignment(TextBox *_this, HorizontalAlignment horizontal_alignment){
 	TextBoxData *data=_this->data;
-	data->text_align=text_align;
+	data->horizontal_alignment=horizontal_alignment;
 }
 
-void	 TextBox_SetVerticalAlign(TextBox *_this, VerticalAlign vertical_align){
+void	 TextBox_SetVerticalAlignment(TextBox *_this, VerticalAlignment vertical_alignment){
 	TextBoxData *data=_this->data;
-	data->vertical_align=vertical_align;
+	data->vertical_alignment=vertical_alignment;
 }
 
 
@@ -455,6 +470,7 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	float y_draw_inc=0;
 	int y=0;
 	int x=0;
+	uint16_t text_total_width=0;
 	uint16_t text_total_height=0;
 	Vector3f dim3d;
 	int ascender=0;
@@ -468,7 +484,9 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		//start_pos=Vector2i_New(ViewPort_CurrentWidth()>>1,ViewPort_CurrentHeight()>>1); // this offset needed because we applying second transformation takin on center screen
 	}
 
+	text_total_width=data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx;
 	text_total_height=data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny;
+
 	y=-(data->dimensions.y>>1)-data->render_text.bounding_box.miny; // default aligned top-left
 	x=0;
 
@@ -478,10 +496,10 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	//uint16_t text_total_height=data->render_text.token_lines->count*ascender;
 
 
-	if(data->vertical_align == VERTICAL_ALIGN_CENTER){
+	if(data->vertical_alignment == VERTICAL_ALIGNMENT_CENTER){
 		y=-(text_total_height>>1)-data->render_text.bounding_box.miny;
 	}
-	else if(data->vertical_align == VERTICAL_ALIGN_BOTTOM){
+	else if(data->vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM){
 		y=+(data->dimensions.y>>1)-text_total_height-data->render_text.bounding_box.miny;
 	}
 
@@ -490,8 +508,8 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 	if(data->border_tickness>0){
 		Graphics_DrawRectangle4f(
-				0 // x:0 translation keeps current translate
-				,0// y:0 translation keeps current translate
+				 0
+				,0
 				,dim3d.x
 				,dim3d.y
 				,data->border_color
@@ -500,17 +518,41 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	}
 
 	if(ZetGame_IsDebugMode()){
-		Vector3f dim3d_render_font=ViewPort_ScreenToWorldDimension2i(
+		/*Vector3f dim3d_render_font=ViewPort_ScreenToWorldDimension2i(
 				data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx
 				,data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny
-		);
+		);*/
+		// 1. First we have to translate to center rendered text
+		//float total_text_width=(data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx);
+		//float total_text_height=(data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny);
+		int x_center=0;// default text_align_center
+		int y_center=0;// default vertical_align_center
+
+
+		// 2. Displace x in function text align and
+		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT){
+			x_center=-(data->dimensions.x>>1)+(text_total_width>>1);
+		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
+			x_center=+(data->dimensions.x>>1)-(text_total_width>>1);
+		}
+
+		// 3. Displace y in function vertical align and
+		if(data->vertical_alignment == VERTICAL_ALIGNMENT_TOP){
+			y_center=+(data->dimensions.y>>1)-(text_total_height>>1);
+		}else if(data->vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM){
+			y_center=-(data->dimensions.y>>1)+(text_total_height>>1);
+		}
+
+		Vector3f pos3d_center_rendered_text=ViewPort_ScreenToWorldDimension2i(x_center,y_center);
+		Vector3f scale_rendered_text=ViewPort_ScreenToWorldDimension2i(text_total_width,text_total_height);
+
 		Graphics_DrawRectangle4f(
-				0 // x:0 translation keeps current translate
-				,0// y:0 translation keeps current translate
-				,dim3d_render_font.x
-				,dim3d_render_font.y
-				,Color4f_New4f(1,0,0,0)
-				,2
+			pos3d_center_rendered_text.x // x:0 translation keeps current translate
+			,pos3d_center_rendered_text.y// y:0 translation keeps current translate
+			,scale_rendered_text.x
+			,scale_rendered_text.y
+			,Color4f_New4f(1,0,0,0)
+			,2
 		);
 	}
 
@@ -520,9 +562,9 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		int inc_x=1;
 		TBRT_TokenLine *token_line = data->render_text.token_lines->items[i];
 		x=-(data->dimensions.x>>1); // default text_align_right
-		if(data->text_align == TEXT_ALIGN_CENTER){
+		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER){
 			x=-(token_line->total_width>>1);
-		}else if(data->text_align == TEXT_ALIGN_RIGHT){
+		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
 			x=(data->dimensions.x>>1);
 			inc_x=-1;
 		}
@@ -561,7 +603,6 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 			}
 		}
-
 		y_draw+=y_draw_inc;
 	}
 
