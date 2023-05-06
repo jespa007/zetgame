@@ -6,7 +6,6 @@ typedef struct{
 	GUIWidget *parent;
 	Vector2i position_local, position_world, position_screen;
 	Vector2i dimensions;
-	void				*gui_ptr;
 	Color4f				color,background_color;
 	float 				opacity;
 	bool 				is_enabled;
@@ -170,7 +169,7 @@ GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	if(_this->type == WIDGET_TYPE_WINDOW){
 		// THIS IS NOT CORRECT
-		return (GUIWindow 		*)data->gui_ptr;
+		return (GUIWindow 		*)_this->gui_ptr;
 	}
 
 	if(data->parent){
