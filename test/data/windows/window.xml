@@ -131,7 +131,7 @@
 		left="50" 
 		width="900" 
 		height="10"
-	    text="Welcome to Bird game! To start the game touch click [ Start ] button or by pressing the space key. To train click [ Tutorial ] button or press T key."
+	    text="Welcome to Bird game!    To    start    the game touch click [ Start ] button or by pressing the space key. To train click [ Tutorial ] button or press T key."
 	    font-size="25" 
 	    horizontal-alignment="justify" 
 	    border-thickness="2"

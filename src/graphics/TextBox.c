@@ -23,7 +23,8 @@ typedef struct{
 
 typedef struct{
 	List * tbrt_tokens; // list of word or format
-	uint16_t total_width;
+	uint16_t total_word_width;
+	float space_width;
 }TBRT_TokenLine;
 
 typedef struct{
@@ -44,16 +45,15 @@ typedef struct{
 
 
 typedef struct{
-	//Shape2d 	*	shape2d;
-	TTFont 		*	font; // init font
-	void 		*	text; // text to show, from reserved memory
-	CharType		char_type;
-	VerticalAlignment 	vertical_alignment;
+	TTFont 				*		font; // init font
+	void 				*		text; // text to show, from reserved memory
+	CharType					char_type;
+	VerticalAlignment 			vertical_alignment;
 	HorizontalAlignment 		horizontal_alignment;
-	Vector2i		dimensions;
-	TBRenderText	render_text;
-	Color4f			border_color;
-	int				border_tickness;
+	Vector2i					dimensions;
+	TBRenderText				render_text;
+	Color4f						border_color;
+	int							border_tickness;
 }TextBoxData;
 
 
@@ -65,13 +65,12 @@ TextBox *TextBox_New(void){
 	data->font=TTFont_New();
 	TextBox_SetText(textbox,"");
 	return textbox;
-
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 TBRT_Token *TextBox_RT_NewTokenWord(
-		char *word
-		,uint16_t word_width
+	char *word
+	,uint16_t word_width
 ){
 	TBRT_Token *token=ZG_NEW(TBRT_Token);
 	TBRT_TokenWord *token_word=ZG_NEW(TBRT_TokenWord);
@@ -89,6 +88,7 @@ TBRT_TokenLine *TextBox_RT_NewLine(TextBoxData *data){
 	tbrt_token_line->tbrt_tokens=List_New();
 
 	List_Add(data->render_text.token_lines,tbrt_token_line);
+	tbrt_token_line->space_width=TTFont_GetSpaceWidth(data->font);
 	return tbrt_token_line;
 }
 
@@ -116,18 +116,15 @@ void TextBox_RT_Delete(TextBoxData *data){
 
 		List_Delete(data->render_text.token_lines);
 		data->render_text.token_lines=NULL;
-
 	}
-
 }
-
 
 void TextBox_RT_Init(TextBoxData *data){
-
 	TextBox_RT_Delete(data);
-
 	data->render_text.token_lines=List_New();
 }
+
+
 
 void TextBox_RT_Build(TextBox *_this){
 	TextBoxData *data=_this->data;
@@ -145,6 +142,8 @@ void TextBox_RT_Build(TextBox *_this){
 		,-FLT_MAX
 		,-FLT_MAX
 	);
+
+	BoundingBox *bb_render=&data->render_text.bounding_box;
 
 	float inv_sizeof_char=1.0f/sizeof_char;
 
@@ -180,15 +179,17 @@ void TextBox_RT_Build(TextBox *_this){
 	for(unsigned i=0; i < lines->count; i++){
 		void *text_line=lines->items[i];
 		tbrt_token_line=TextBox_RT_NewLine(data);
-		BoundingBox bb_line=BoundingBox_New4f(
+		/*BoundingBox bb_line=BoundingBox_New4f(
 			 FLT_MAX
 			,FLT_MAX
 			,-FLT_MAX
 			,-FLT_MAX
-		);
+		);*/
 
 		bool first_line=true;
 		unsigned long ch=0;
+		uint16_t total_space_width=0;
+
 		do{
 
 			void *word=NULL;
@@ -209,9 +210,6 @@ void TextBox_RT_Build(TextBox *_this){
 			}while(!end_char);
 
 			word_end=text_line;
-
-			//TBRT_NEXT_CHAR(text_line,' ',data->char_type==CHAR_TYPE_WCHAR?wchar_t:char);
-			//word_end=text_line;
 
 			// skip chars...
 			if(ch!=0){
@@ -243,21 +241,38 @@ void TextBox_RT_Build(TextBox *_this){
 			}
 
 			word_width=bb_word.maxx-bb_word.minx;
+			bb_render->minx=MIN(bb_render->minx,bb_word.minx);
+			bb_render->miny=MIN(bb_render->miny,bb_word.miny);
+			bb_render->maxy=MAX(bb_render->maxy,y+bb_word.maxy);
 
-			if((((tbrt_token_line->total_width+word_width)>data->dimensions.x) && tbrt_token_line->total_width > 0)){
+			if(((tbrt_token_line->total_word_width+word_width+total_space_width)>data->dimensions.x) // if current word width + space width overpasses x bound...
+					&& (tbrt_token_line->total_word_width > 0) // ... and there's some word
+				){
+
 				// if line exceeds max dimension, create new line..
+				if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_JUSTIFY){// && (token_line->tbrt_tokens->count>2)){
+					tbrt_token_line->space_width=data->dimensions.x-tbrt_token_line->total_word_width;
+					if(tbrt_token_line->tbrt_tokens->count>2){
+						tbrt_token_line->space_width/=(tbrt_token_line->tbrt_tokens->count-1);
+					}
+
+					tbrt_token_line->space_width=MAX(tbrt_token_line->space_width,TTFont_GetSpaceWidth(data->font));
+
+					// update max x and y intervals
+					bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
+				}
+
 				tbrt_token_line=TextBox_RT_NewLine(data);
 				first_line=true;
+				total_space_width=0;
 				y+=ascender;
 			}else{
-				if(ch!=0){
-					tbrt_token_line->total_width+=space_width;
-				}
+				// update max x and y intervals
+				//bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
+				bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+word_width+total_space_width);
 			}
 
-
-
-			if(first_line){
+			/*if(first_line){
 				// init line
 				bb_line=BoundingBox_New4f(
 						bb_word.minx
@@ -270,22 +285,25 @@ void TextBox_RT_Build(TextBox *_this){
 			}else{
 				// update max x and y intervals
 				bb_line.miny=MIN(bb_line.miny,bb_word.miny);
-				bb_line.maxx=MAX(bb_line.maxx,tbrt_token_line->total_width);
+				bb_line.maxx=MAX(bb_line.maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
 				bb_line.maxy=MAX(bb_line.maxy,y+bb_word.maxy);
-			}
+			}*/
 
 			// add word token...
 			List_Add(tbrt_token_line->tbrt_tokens,TextBox_RT_NewTokenWord(word,word_width));
 
-			// update line with
-			tbrt_token_line->total_width+=word_width;
+			// update words width ...
+			tbrt_token_line->total_word_width+=word_width;
+
+			// ... and spaces width
+			total_space_width+=space_width;
 
 
 		}while(ch!=0); // not end line...
 
 		// update last word
-		bb_line.miny=MIN(bb_line.miny,bb_word.miny);
-		bb_line.maxx=MAX(bb_line.maxx,tbrt_token_line->total_width);
+		/*bb_line.miny=MIN(bb_line.miny,bb_word.miny);
+		bb_line.maxx=MAX(bb_line.maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
 		bb_line.maxy=MAX(bb_line.maxy,y+bb_word.maxy);
 		// update total rect
 
@@ -293,7 +311,7 @@ void TextBox_RT_Build(TextBox *_this){
 		data->render_text.bounding_box.miny=MIN(data->render_text.bounding_box.miny,bb_line.miny);
 		data->render_text.bounding_box.maxx=MAX(data->render_text.bounding_box.maxx,bb_line.maxx);
 		data->render_text.bounding_box.maxy=MAX(data->render_text.bounding_box.maxy,bb_line.maxy);
-
+*/
 		y+=ascender;
 
 
@@ -466,8 +484,6 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	Vector3f dim3d;
 	int ascender=0;
 	int space_width=0;
-	int min_render_x;
-	int max_render_y;
 
 	// TODO: pos is at center box by default, do a wat yo change render center
 	//Vector2i start_pos=Vector2i_New(0,0);
@@ -487,7 +503,6 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 	ascender=TTFont_GetAscender(data->font);
 	space_width=TTFont_GetSpaceWidth(data->font);
 	//uint16_t text_total_height=data->render_text.token_lines->count*ascender;
-
 
 	if(data->vertical_alignment == VERTICAL_ALIGNMENT_CENTER){
 		y=-(text_total_height>>1)-data->render_text.bounding_box.miny;
@@ -510,19 +525,51 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		);
 	}
 
+	if(ZetGame_IsDebugMode()){
+		int x_center=0;// default text_align_center
+		int y_center=0;// default vertical_align_center
+
+		// 2. Displace x in function text align and
+		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT){
+			x_center=-(data->dimensions.x>>1)+(text_total_width>>1);
+		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
+			x_center=+(data->dimensions.x>>1)-(text_total_width>>1);
+		}
+
+		// 3. Displace y in function vertical align and
+		if(data->vertical_alignment == VERTICAL_ALIGNMENT_TOP){
+			y_center=+(data->dimensions.y>>1)-(text_total_height>>1);
+		}else if(data->vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM){
+			y_center=-(data->dimensions.y>>1)+(text_total_height>>1);
+		}
+
+		Vector3f pos3d_center_rendered_text=ViewPort_ScreenToWorldDimension2i(x_center,y_center);
+		Vector3f scale_rendered_text=ViewPort_ScreenToWorldDimension2i(text_total_width,text_total_height);
+
+		Graphics_DrawRectangle4f(
+			pos3d_center_rendered_text.x // x:0 translation keeps current translate
+			,pos3d_center_rendered_text.y// y:0 translation keeps current translate
+			,scale_rendered_text.x
+			,scale_rendered_text.y
+			,Color4f_New4f(1,0,0,0)
+			,2
+		);
+	}
+
 	TTFont_RenderTextBegin(color);
 
 	for(unsigned i=0; i < data->render_text.token_lines->count; i++){
 		int inc_x=1;
 		float space_per_word=space_width;
 		TBRT_TokenLine *token_line = data->render_text.token_lines->items[i];
+		int total_line_width=token_line->total_word_width+(token_line->tbrt_tokens->count-1)*token_line->space_width;
 
 		 // set x as text_align left
 		x=-(data->dimensions.x>>1);
 
 		// if horizontal alignment is center ...
 		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER){
-			x=-(token_line->total_width>>1);
+			x=-(total_line_width>>1);
 		// if horizontal alignment is right ...
 		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
 			x=(data->dimensions.x>>1);
@@ -530,7 +577,7 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		// if horizontal alignment is justified and not last line ...
 		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_JUSTIFY && (i+1<data->render_text.token_lines->count)){
 			// ... redistruibute spaces along the box dimension.x
-			space_per_word=(float)(data->dimensions.x-(token_line->total_width-((token_line->tbrt_tokens->count-1)*space_width)))/token_line->tbrt_tokens->count;
+			space_per_word=token_line->space_width;//(float)(data->dimensions.x-(total_line_width-((token_line->tbrt_tokens->count-1)*space_width)))/token_line->tbrt_tokens->count;
 		}
 
 		for(unsigned w=0; w < token_line->tbrt_tokens->count; w++){
@@ -572,45 +619,6 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 
 	TTFont_RenderTextEnd();
 
-
-	if(ZetGame_IsDebugMode()){
-		/*Vector3f dim3d_render_font=ViewPort_ScreenToWorldDimension2i(
-				data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx
-				,data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny
-		);*/
-		// 1. First we have to translate to center rendered text
-		//float total_text_width=(data->render_text.bounding_box.maxx-data->render_text.bounding_box.minx);
-		//float total_text_height=(data->render_text.bounding_box.maxy-data->render_text.bounding_box.miny);
-		int x_center=0;// default text_align_center
-		int y_center=0;// default vertical_align_center
-
-
-		// 2. Displace x in function text align and
-		if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT){
-			x_center=-(data->dimensions.x>>1)+(text_total_width>>1);
-		}else if(data->horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT){
-			x_center=+(data->dimensions.x>>1)-(text_total_width>>1);
-		}
-
-		// 3. Displace y in function vertical align and
-		if(data->vertical_alignment == VERTICAL_ALIGNMENT_TOP){
-			y_center=+(data->dimensions.y>>1)-(text_total_height>>1);
-		}else if(data->vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM){
-			y_center=-(data->dimensions.y>>1)+(text_total_height>>1);
-		}
-
-		Vector3f pos3d_center_rendered_text=ViewPort_ScreenToWorldDimension2i(x_center,y_center);
-		Vector3f scale_rendered_text=ViewPort_ScreenToWorldDimension2i(text_total_width,text_total_height);
-
-		Graphics_DrawRectangle4f(
-			pos3d_center_rendered_text.x // x:0 translation keeps current translate
-			,pos3d_center_rendered_text.y// y:0 translation keeps current translate
-			,scale_rendered_text.x
-			,scale_rendered_text.y
-			,Color4f_New4f(1,0,0,0)
-			,2
-		);
-	}
 
 	if(transform != NULL){
 		Transform_Restore(transform);
