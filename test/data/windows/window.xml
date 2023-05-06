@@ -1,16 +1,14 @@
 <!--  comment  -->
 <window background-color="#0F0F0F" window-style="none" caption="Test">
 
-
 	<textbox 
 		id="lbl_score" 
-		left="0" 
-		top="0" 
+		left="10" 
+		top="15" 
 		horizontal-alignment="left"
-		text-top="top"
+		vertical-alignment="top"
 		height="35"
-		width="1000"  
-	    text="" 
+	    text="Score:" 
 	    font-size="20"
 	    font-file="half_bold_pixel-7.ttf" 
 	></textbox>	
@@ -57,12 +55,13 @@
 	 
 	<viewer  
 		id="star1" 
-		texture="star_on.png" 
+		texture="star_on.png"
+		text="1" 
 		left="480" 
 		top="155" 
 		width="50"
 		height="50"
-		font-color="#0"
+		color="#0"
 		font-file="half_bold_pixel-7.ttf"
 		font-size="25"
 	></viewer>
@@ -72,8 +71,10 @@
 		top="155" 
 		left="540" 
 		texture="star_off1.png" 
-		width="50" height="50"
-		font-color="#0"
+		text="2"
+		width="50" 
+		height="50"
+		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
 	></viewer>
@@ -83,9 +84,10 @@
 		top="155" 
 		left="600" 
 		texture="star_off1.png" 
+		text="3"
 		width="50" 
 		height="50"
-		font-color="#0"
+		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
 	></viewer>
@@ -95,8 +97,10 @@
 		top="155" 
 		left="660" 
 		texture="star_off1.png" 
-		width="50" height="50"
-		font-color="#0"
+		text="4"
+		width="50" 
+		height="50"
+		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
 	></viewer>
@@ -106,8 +110,10 @@
 		top="155" 
 		left="720" 
 		texture="star_off1.png" 
-		width="50" height="50"
-		font-color="#0"
+		text="5"
+		width="50" 
+		height="50"
+		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
 	></viewer>

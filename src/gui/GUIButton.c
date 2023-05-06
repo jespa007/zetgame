@@ -9,6 +9,8 @@ typedef struct{
 		Color4f	color;
 	}auto_click_on_over;
 	bool 	mouse_collide;
+	Texture 	*texture;
+	TextBox 	*textbox;
 
 }GUIButtonData;
 
@@ -43,7 +45,7 @@ GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
 	button->widget = GUIWidget_New( x,  y,  width,  height);
 	button->widget->type=WIDGET_TYPE_BUTTON;
 	button->widget->gui_ptr=button;
-	button->textbox=TextBox_New();
+
 	GUIWidget_SetDrawFunction(button->widget,(CallbackWidgetUpdate){
 		.ptr_function=GUIButton_Draw
 		,.calling_widget=button
@@ -57,6 +59,7 @@ GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
 
 	//SETUP BUTTON
 	GUIButtonData *data = ZG_NEW(GUIButtonData);
+	data->textbox=TextBox_New();
 	data->on_click_events=List_New();
 	button->data=data;
 
@@ -190,10 +193,18 @@ static void  GUIButton_Draw(void *gui_button){
 	}
 
 	Transform_SetPosition2i(&transform,position.x,position.y);
-	TextBox_Draw(_this->textbox,&transform,&result_font_color);
+	TextBox_Draw(data->textbox,&transform,&result_font_color);
 
 }
 
+void 			GUIButton_SetText(GUIButton *_this, const char *_text_in,...){
+	GUIButtonData *data = _this->data;
+	char text_out[STR_MAX];
+	STR_CAPTURE_VARGS(text_out,_text_in);
+
+	TextBox_SetText(data->textbox,text_out);
+
+}
 
 void GUIButton_SetIcon(GUIButton *_this, Icon icon){
 	GUIButtonData *data = _this->data;
@@ -213,8 +224,8 @@ void GUIButton_Delete(GUIButton *_this){
 
 	List_DeleteAndFreeAllItems(data->on_click_events);
 
-	TextBox_Delete(_this->textbox);
-	Texture_Delete(_this->texture);
+	TextBox_Delete(data->textbox);
+	Texture_Delete(data->texture);
 
 
 	GUIWidget_Delete(_this->widget);

@@ -171,7 +171,6 @@ void TextBox_RT_Build(TextBox *_this){
 		void *text_line=lines->items[i];
 		tbrt_token_line=TextBox_RT_NewLine(data);
 
-		bool first_line=true;
 		unsigned long ch=0;
 		uint16_t total_space_width=0;
 
@@ -248,7 +247,6 @@ void TextBox_RT_Build(TextBox *_this){
 				}
 
 				tbrt_token_line=TextBox_RT_NewLine(data);
-				first_line=true;
 				total_space_width=0;
 				y+=ascender;
 			}else{
@@ -553,10 +551,10 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 				x_draw=ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
 
 				if(data->char_type==CHAR_TYPE_WCHAR){
-					TTFont_WPrint(data->font,x_draw,y_draw,COLOR4F_WHITE,token_word->word);
+					TTFont_WPrint(data->font,x_draw,y_draw,*color,token_word->word);
 				}
 				else{ // char by default.
-					TTFont_Print(data->font,x_draw,y_draw,COLOR4F_WHITE,token_word->word);
+					TTFont_Print(data->font,x_draw,y_draw,*color,token_word->word);
 				}
 				x+=(token_word->word_width)*inc_x;
 				break;

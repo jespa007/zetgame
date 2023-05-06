@@ -8,30 +8,6 @@ typedef struct{
 	TextBox 	*textbox;
 }GUIViewerData;
 
-GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
-	GUIViewer *viewer = ZG_NEW(GUIViewer);
-
-	// SETUP WIDGET
-	viewer->widget=GUIWidget_New( x,  y,  width,  height);
-	viewer->widget->type=WIDGET_TYPE_VIEWER;
-	viewer->widget->gui_ptr=viewer;
-
-
-	// SETUP DATA
-	GUIViewerData *data = ZG_NEW(GUIViewerData);
-	data->texture = NULL;
-	data->textbox=TextBox_New();
-	viewer->data=data;
-
-	GUIWidget_SetDrawFunction(viewer->widget
-			,(CallbackWidgetUpdate){
-				.ptr_function=GUIViewer_DrawWidget
-				,.calling_widget=viewer
-			}
-	);
-
-	return viewer;
-}
 
 static void GUIViewer_DrawWidget(void *gui_texture){
 	GUIViewer *_this=gui_texture;
@@ -51,7 +27,49 @@ static void GUIViewer_DrawWidget(void *gui_texture){
 	TextBox_Draw(data->textbox,&transform,&color);
 }
 
-void		GUIViewer_SetTexture(GUIViewer *_this, const char *_texture_id){
+GUIViewer *GUIViewer_New(int x, int y, uint16_t width, uint16_t height){
+	GUIViewer *viewer = ZG_NEW(GUIViewer);
+
+	// SETUP WIDGET
+	viewer->widget=GUIWidget_New( x,  y,  width,  height);
+	viewer->widget->type=WIDGET_TYPE_VIEWER;
+	viewer->widget->gui_ptr=viewer;
+
+
+	// SETUP DATA
+	GUIViewerData *data = ZG_NEW(GUIViewerData);
+	data->texture = NULL;
+	data->textbox=TextBox_New();
+	viewer->data=data;
+
+	TextBox_SetHorizontalAlignment(data->textbox,HORIZONTAL_ALIGNMENT_CENTER);
+	TextBox_SetVerticalAlignment(data->textbox,VERTICAL_ALIGNMENT_CENTER);
+
+	GUIWidget_SetDrawFunction(viewer->widget
+			,(CallbackWidgetUpdate){
+				.ptr_function=GUIViewer_DrawWidget
+				,.calling_widget=viewer
+			}
+	);
+
+	return viewer;
+}
+
+void 			GUIViewer_SetHeight(GUIViewer *_this,uint16_t _height){
+	GUITextBoxData *data=_this->data;
+
+	GUIWidget_SetHeight(_this->widget,_height);
+	TextBox_SetHeight(data->textbox,_height);
+}
+
+void 			GUIViewer_SetWidth(GUIViewer *_this,uint16_t _width){
+	GUITextBoxData *data=_this->data;
+
+	GUIWidget_SetWidth(_this->widget,_width);
+	TextBox_SetWidth(data->textbox,_width);
+}
+
+void			GUIViewer_SetTexture(GUIViewer *_this, const char *_texture_id){
 	GUIViewerData *data=_this->data;
 	TextureManager *texture_manager=GUIWidget_GetTextureManager(_this->widget);
 	Texture *texture=TextureManager_Get(texture_manager,_texture_id);
@@ -59,6 +77,41 @@ void		GUIViewer_SetTexture(GUIViewer *_this, const char *_texture_id){
 		data->texture=texture;
 	}
 }
+
+void 			GUIViewer_SetText(GUIViewer *_this, const char *_text_in,...){
+	GUIViewerData *data=_this->data;
+	char text_out[STR_MAX];
+	STR_CAPTURE_VARGS(text_out,_text_in);
+
+	TextBox_SetText(data->textbox,text_out);
+}
+
+void 			GUIViewer_SetFontFile(GUIViewer *_this, const char *_font_file){
+	GUIViewerData *data=_this->data;
+	TextBox_SetFontFile(data->textbox,_font_file);
+}
+
+void 				GUIViewer_SetFontSize(GUIViewer *_this, uint8_t _font_size){
+	GUIViewerData *data=_this->data;
+	TextBox_SetFontSize(data->textbox,_font_size);
+}
+
+uint16_t			GUIViewer_GetFontSize(GUIViewer *_this){
+	GUIViewerData *data=_this->data;
+
+	return TextBox_GetFontSize(data->textbox);
+}
+
+void			GUIViewer_SetHorizontalAlignment(GUIViewer *_this,HorizontalAlignment _text_align){
+	GUIViewerData *data=_this->data;
+	TextBox_SetHorizontalAlignment(data->textbox,_text_align);
+}
+
+void			GUIViewer_SetVerticalAlignment(GUIViewer *_this,VerticalAlignment _vertical_align){
+	GUIViewerData *data=_this->data;
+	TextBox_SetVerticalAlignment(data->textbox,_vertical_align);
+}
+
 
 void GUIViewer_Delete(GUIViewer *_this){
 	if(_this == NULL) return;

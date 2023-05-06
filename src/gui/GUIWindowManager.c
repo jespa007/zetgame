@@ -153,17 +153,27 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetWidth(viewer->widget,int_value);
+					 GUIViewer_SetWidth(viewer,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetHeight(viewer->widget,int_value);
+					 GUIViewer_SetHeight(viewer,int_value);
 				 }
+			 }else if(STRCMP(attribute->name,==,"text")){
+				 GUIViewer_SetText(viewer,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
+				 GUIViewer_SetHorizontalAlignment(viewer,TextBox_ParseTextAlign(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
+				 GUIViewer_SetVerticalAlignment(viewer,TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"font-size")){
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
+					 GUIViewer_SetFontSize(viewer,int_value);
+				 }
 			 }else if(STRCMP(attribute->name,==,"font-file")){
-				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
+				 GUIViewer_SetFontFile(viewer,attribute->value);
+			 }else if(STRCMP(attribute->name,==,"color")){
+				 GUIWidget_SetColor4f(viewer->widget,Color4f_FromHtml(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"texture")){
 				 GUIViewer_SetTexture(viewer,attribute->value);
 			 }else{

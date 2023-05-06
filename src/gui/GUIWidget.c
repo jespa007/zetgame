@@ -2,10 +2,10 @@
 
 
 typedef struct{
-	List *widgets;
-	GUIWidget *parent;
-	Vector2i position_local, position_world, position_screen;
-	Vector2i dimensions;
+	List 				*widgets;
+	GUIWidget 			*parent;
+	Vector2i 			position_local, position_world, position_screen;
+	Vector2i 			dimensions;
 	Color4f				color,background_color;
 	float 				opacity;
 	bool 				is_enabled;
@@ -109,6 +109,12 @@ void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,Color4f _color){
 	data->background_color=_color;
 }
 
+void 		GUIWidget_SetColor4f(GUIWidget *_this,Color4f _color){
+	GUIWidgetData *data=_this->data;
+	data->color=_color;
+
+}
+
 Color4f 	GUIWidget_GetColor4f(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	return data->color;
@@ -124,6 +130,11 @@ void 		GUIWidget_SetOpacity(GUIWidget *_this,float  _opacity){
 	data->opacity=_opacity;
 }
 
+
+void 		GUIWidget_SetEnabled(GUIWidget *_this, bool _enabled){
+	GUIWidgetData *data=_this->data;
+	data->is_enabled=_enabled;
+}
 
 bool GUIWidget_IsEnabled(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;

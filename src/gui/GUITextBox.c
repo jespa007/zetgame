@@ -5,7 +5,6 @@ static void GUITextBox_Draw(void *gui_label);
 typedef struct{
 	TTFont *	font;
 	TextBox *	textbox;
-	char		font_name[50];
 }GUITextBoxData;
 
 GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
@@ -16,27 +15,18 @@ GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
 	label->widget->gui_ptr=label;
 
 	GUIWidget_SetDrawFunction(label->widget
-			,(CallbackWidgetUpdate){
-				.ptr_function=GUITextBox_Draw
-				,.calling_widget=label
-			}
+		,(CallbackWidgetUpdate){
+			.ptr_function=GUITextBox_Draw
+			,.calling_widget=label
+		}
 	);
 
 	// SETUP DATA
 	GUITextBoxData *data = ZG_NEW(GUITextBoxData);
-	//TTFontInfo font_info=TTFontManager_GetEmbeddedFontInfo();
 	data->textbox=TextBox_New();
 	label->data=data;
 
 	return label;
-}
-
-void 			GUITextBox_SetText(GUITextBox *_this, const char *_text_in,...){
-	GUITextBoxData *data=_this->data;
-	char text_out[STR_MAX];
-	STR_CAPTURE_VARGS(text_out,_text_in);
-
-	TextBox_SetText(data->textbox,text_out);
 }
 
 void 			GUITextBox_SetHeight(GUITextBox *_this,uint16_t _height){
@@ -53,14 +43,17 @@ void 			GUITextBox_SetWidth(GUITextBox *_this,uint16_t _width){
 	TextBox_SetWidth(data->textbox,_width);
 }
 
+void 			GUITextBox_SetText(GUITextBox *_this, const char *_text_in,...){
+	GUITextBoxData *data=_this->data;
+	char text_out[STR_MAX];
+	STR_CAPTURE_VARGS(text_out,_text_in);
+
+	TextBox_SetText(data->textbox,text_out);
+}
+
 void 			GUITextBox_SetFontFile(GUITextBox *_this, const char *_font_file){
 	GUITextBoxData *data=_this->data;
 	TextBox_SetFontFile(data->textbox,_font_file);
-}
-
-const char *	GUITextBox_GetFontName(GUITextBox *_this){
-	GUITextBoxData *data=_this->data;
-	return data->font_name;
 }
 
 void 			GUITextBox_SetFontSize(GUITextBox *_this, uint8_t _font_size){

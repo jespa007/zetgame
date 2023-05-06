@@ -68,10 +68,12 @@ void 		GUIWidget_SetHeight(GUIWidget *_this,uint16_t height);
 void 		GUIWidget_SetDimensions(GUIWidget *_this,uint16_t width, uint16_t height);
 Color4f 	GUIWidget_GetBackgroundColor4f(GUIWidget *_this);
 void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,Color4f _color);
+void 		GUIWidget_SetColor4f(GUIWidget *_this,Color4f _color);
 Color4f 	GUIWidget_GetColor4f(GUIWidget *_this);
 float 		GUIWidget_GetOpacity(GUIWidget *_this);
 void 		GUIWidget_SetOpacity(GUIWidget *_this,float  _opacity);
 
+void 		GUIWidget_SetEnabled(GUIWidget *_this, bool _enabled);
 bool 		GUIWidget_IsEnabled(GUIWidget *_this);
 Vector2i 	GUIWidget_GetDimensions(GUIWidget *_this);
 

@@ -60,7 +60,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 			,DEFAULT_WINDOW_CAPTION_HEIGHT*0.75
 			);
 
-	TextBox_SetText(data->button_close->textbox,"");
+	GUIButton_SetText(data->button_close,"");
 	GUIButton_SetIcon(data->button_close,IconManager_GetIconDefault(DEFAULT_ICON_CLOSE_BIG));
 
 
@@ -144,10 +144,12 @@ void GUIWindow_SetVisibleCaption(GUIWindow *_this, bool _v){
 	if(_v){
 		GUIWidget_SetPosition2i(_this->widget,0,DEFAULT_WINDOW_CAPTION_HEIGHT);
 		GUIWidget_SetHeight(_this->widget,dim_content.y+dim_caption.y);
+		GUIWidget_SetEnabled(data->button_close->widget,true);
 	}
 	else{
-		GUIWidget_SetPosition2i(_this->widget,0,0);
-		GUIWidget_SetHeight(_this->widget,dim_content.y);
+		GUIWidget_SetPosition2i(data->frame_content->widget,0,0);
+		GUIWidget_SetHeight(data->frame_content->widget,dim_content.y+DEFAULT_WINDOW_CAPTION_HEIGHT);
+		GUIWidget_SetEnabled(data->button_close->widget,false);
 	}
 }
 

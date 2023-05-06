@@ -10,9 +10,9 @@ struct GUITextBox{
 
 
 GUITextBox *	GUITextBox_New(int x, int y, uint16_t width, uint16_t height);
-void 			GUITextBox_SetText(GUITextBox *_this, const char *_text,...);
 void 			GUITextBox_SetWidth(GUITextBox *_this,uint16_t _width);
 void 			GUITextBox_SetHeight(GUITextBox *_this,uint16_t _height);
+void 			GUITextBox_SetText(GUITextBox *_this, const char *_text,...);
 void			GUITextBox_SetHorizontalAlignment(GUITextBox *_this,HorizontalAlignment _text_align);
 void			GUITextBox_SetVerticalAlignment(GUITextBox *_this,VerticalAlignment _vertical_align);
 void 			GUITextBox_SetBorderThickness(GUITextBox *_this,int _thickness);
