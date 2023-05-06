@@ -157,6 +157,10 @@ int main(int argc, char *argv[]){
 
 		Graphics_DrawRectangleFilled4i(10,10,100,100,Color4f_FromHex(0xFF));
 
+		if(K_T){
+			Graphics_ToggleFullscreen();
+		}
+
 		Graphics_EndRender();
 
 		Input_Update();

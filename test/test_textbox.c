@@ -73,7 +73,12 @@ int main(int argc, char * argv[]){
 			aux_ptr++;
 		}
 
-		Graphics_DrawRectangle4i(10,10,20,20,Color4f_New4f(0,1,0,1),2);
+		//Draw blue rectangle
+		//Graphics_DrawRectangle4i(10,10,20,20,Color4f_New4f(0,1,0,1),2);
+
+		if(K_T){
+			Graphics_ToggleFullscreen();
+		}
 
 		Graphics_EndRender();
 

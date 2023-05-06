@@ -356,7 +356,7 @@ target_link_libraries(${ZETGAME_LIB_NAME}${POST_NAME}
 # EXECUTABLES
 #
 
-if(false)
+#if(false)
 
 add_executable(test_mixer${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
@@ -425,7 +425,7 @@ add_executable(test_shader${POST_NAME}
 
 target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
 
-endif()
+#endif()
 
 #--- PARTICLE SYSTEM
 #add_executable(test_particle${POST_NAME} 

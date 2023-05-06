@@ -207,6 +207,10 @@ int main(int argc, char *argv[]){
 			&mouse_transform.scale
 		);
 
+		if(K_T){
+			Graphics_ToggleFullscreen();
+		}
+
 		Graphics_EndRender();
 
 		Input_Update();

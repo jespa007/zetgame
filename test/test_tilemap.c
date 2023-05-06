@@ -39,6 +39,10 @@ int main(int argc, char *argv[]){
 			Tilemap_Draw(tilemap);
 		}
 
+		if(K_T){
+			Graphics_ToggleFullscreen();
+		}
+
 	   Graphics_EndRender();
 
 		Input_Update();

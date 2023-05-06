@@ -422,9 +422,10 @@ void	 TextBox_SetHeight(TextBox *_this, uint16_t _height){
 	}
 }
 
-void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
+void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *_color){
 
 	TextBoxData *data=_this->data;
+	Color4f color=_color!=NULL?*_color:COLOR4F_WHITE;
 	float x_draw=0;
 	float y_draw=0;
 	float y_draw_inc=0;
@@ -503,7 +504,7 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 		);
 	}
 
-	TTFont_RenderTextBegin(color);
+	TTFont_RenderTextBegin(&color);
 
 	for(unsigned i=0; i < data->render_text.token_lines->count; i++){
 		int inc_x=1;
@@ -551,10 +552,10 @@ void	 TextBox_Draw(TextBox *_this, Transform *transform,Color4f *color){
 				x_draw=ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
 
 				if(data->char_type==CHAR_TYPE_WCHAR){
-					TTFont_WPrint(data->font,x_draw,y_draw,*color,token_word->word);
+					TTFont_WPrint(data->font,x_draw,y_draw,color,token_word->word);
 				}
 				else{ // char by default.
-					TTFont_Print(data->font,x_draw,y_draw,*color,token_word->word);
+					TTFont_Print(data->font,x_draw,y_draw,color,token_word->word);
 				}
 				x+=(token_word->word_width)*inc_x;
 				break;
