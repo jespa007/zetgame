@@ -263,7 +263,7 @@ EComponent *ESSystem_GenerateComponentRequirementList(EComponent *in_data, size_
 
 Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_t _entity_components_len){
 	ESSystemData *data=_this->data;
-	char _str_entity_manager[1024]="__@_comp";
+	char _entity_manager_id[1024]="__@_comp";
 	size_t entity_components_len;
 
 	// 1. check component requirements
@@ -272,30 +272,30 @@ Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_
 	// internal type that is generated according used components...
 	for(uint16_t i=0; i < entity_components_len; i++){
 		char *num=StrUtils_IntToStr(entity_components[i]);
-		strcat(_str_entity_manager,"_");
-		strcat(_str_entity_manager,num);
+		strcat(_entity_manager_id,"_");
+		strcat(_entity_manager_id,num);
 		free(num);
 	}
 
-	strcat(_str_entity_manager,"_@__");
+	strcat(_entity_manager_id,"_@__");
 
-	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_str_entity_manager,NULL);
+	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_entity_manager_id,NULL);
 
 	if(entity_manager_data == NULL){ // create ...
-		entity_manager_data=(EntityManagerData *)ESSystem_NewEntityManager(_this,_str_entity_manager ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
+		entity_manager_data=(EntityManagerData *)ESSystem_NewEntityManager(_this,_entity_manager_id ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
 	}
 
 	// Free because we don't need it anymore
 	ZG_FREE(entity_components);
-	return ESSystem_NewEntityFromManager(_this,_str_entity_manager);
+	return ESSystem_NewEntityFromManager(_this,_entity_manager_id);
 }
 
-Entity  *ESSystem_NewEntityFromManager(ESSystem *_this,const char *_str_entity_manager){
+Entity  *ESSystem_NewEntityFromManager(ESSystem *_this,const char *_id){
 	ESSystemData *data=_this->data;
-	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_str_entity_manager,NULL);
+	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_id,NULL);
 
 	if(entity_manager_data == NULL){
-		Log_Error("Entity type %s not exist",_str_entity_manager);
+		Log_Error("Entity manager '%s' not exist",_id);
 		return NULL;
 	}
 
@@ -383,12 +383,13 @@ void ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_d
 	entity_manager_data->n_entities=total_extend;
 }
 
-void * ESSystem_NewEntityManager(ESSystem *_this
-		, const char *_str_entity_manager
-		, uint16_t max_entities
-		, EComponent *entity_components
-		, size_t entity_components_len
-	){
+void * ESSystem_NewEntityManager(
+	ESSystem *_this
+	, const char *_str_entity_manager
+	, uint16_t max_entities
+	, EComponent *entity_components
+	, size_t entity_components_len
+){
 	ESSystemData *data=_this->data;
 	EntityManagerData *entity_manager_data=ZG_NEW(EntityManagerData);
 

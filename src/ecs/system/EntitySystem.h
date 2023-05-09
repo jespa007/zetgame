@@ -29,12 +29,12 @@ void 				ESSystem_DeInit(void);
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ESSystem 		*	ESSystem_New(void);
-void 			*	ESSystem_NewEntityManager(ESSystem *_this, const char *_str_entity_manager,uint16_t max_entities, EComponent * entity_components, size_t entity_components_len);
-Entity  	*		ESSystem_NewEntityFromManager(ESSystem *_this,const char *_str_entity_manager);
+ESSystem 		*		ESSystem_New(void);
+EntityManager 	*		ESSystem_NewEntityManager(ESSystem *_this, const char *_id,uint16_t max_entities, EComponent * entity_components, size_t entity_components_len);
+Entity  		*		ESSystem_NewEntityFromManager(ESSystem *_this,const char *_id);
 
-Entity  	*		ESSystem_NewEntity(ESSystem *_this,EComponent * entity_components, size_t entity_components_len);
-void				ESSystem_Update(ESSystem *_this);
+Entity  		*		ESSystem_NewEntity(ESSystem *_this,EComponent * entity_components, size_t entity_components_len);
+void					ESSystem_Update(ESSystem *_this);
 //uint8_t *ESSystem_NewComponent(ESSystem *_this,int idx_component);
 /*void  			ESSystem_RemoveEntity(ESSystem * _this, Entity entity);
 

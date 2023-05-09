@@ -32,7 +32,7 @@
 //#include "component/ECTweenTransform.h"
 //#include "component/ECViewer2d.h"
 //#include "entity/EntityManager.h"
-#include "system/ESSystem.h"
+#include "system/EntitySystem.h"
 
 bool ECS_Init(void);
 void ECS_DeInit(void);

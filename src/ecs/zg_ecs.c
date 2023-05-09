@@ -20,7 +20,7 @@
 //#include "component/ECTweenTransform.c"
 //#include "component/ECViewer2d.c"
 //#include "entity/EntityManager.c"
-#include "system/ESSystem.c"
+#include "system/EntitySystem.c"
 
 bool ECS_Init(void){
 	if(!ESSystem_Init()){

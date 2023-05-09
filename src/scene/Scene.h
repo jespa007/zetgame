@@ -28,7 +28,7 @@ void Scene_Clean(void);
 //void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player);
 //void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter);
 
-void 	Scene_NewEntityManager(Scene *_this, const char *_str_entity_manager,uint16_t max_entities,unsigned * entity_components, size_t entity_components_len);
+void 	Scene_NewEntityManager(Scene *_this, const char *_id,uint16_t max_entities,unsigned * entity_components, size_t entity_components_len);
 Entity* Scene_NewEntity(Scene *_this,EComponent * entity_components, size_t entity_components_len);
 Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);
 
