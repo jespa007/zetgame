@@ -5,6 +5,10 @@ typedef enum{
 	SCENE_STATUS_RUNNING
 }SceneStatus;
 
+#define MAX_SG_NODES		100
+#define MAX_SG_VIEWERS_2D	100
+#define MAX_SG_TEXTS_2D		100
+
 
 typedef struct{
 
@@ -19,10 +23,12 @@ typedef struct{
 	EntitySystem	*	entity_system;
 
 	List			* 	sg_nodes;
-	List			* 	sg_viewers2d;
+	List			* 	sg_viewers_2d;
+	List			* 	sg_texts_2d;
 
 	EntityManager	* 	em_sg_nodes;
-	EntityManager	* 	em_sg_viewers2d;
+	EntityManager	* 	em_sg_viewers_2d;
+	EntityManager	* 	em_sg_texts_2d;
 	List			* 	entity_managers2d;
 
 /*	List * appearances;
@@ -40,7 +46,8 @@ Scene * Scene_New(void){
 
 	data->entity_system=EntitySystem_New();
 	data->sg_nodes=List_New();
-	data->sg_viewers2d=List_New();
+	data->sg_viewers_2d=List_New();
+	data->sg_texts_2d=List_New();
 	//scene->sg_render=SGRender_New();
 	//data->node_root=SGNode_New();
 
@@ -55,16 +62,42 @@ Scene * Scene_New(void){
 			EC_TRANSFORM_ANIMATION
 	};
 
-	data->em_sg_nodes=EntitySystem_NewEntityManager(data->entity_system,"sg_nodes",sg_node_entity_components,ARRAY_SIZE(sg_node_entity_components));//SGViewer2d_New());
+	data->em_sg_nodes=EntitySystem_NewEntityManager(
+		data->entity_system
+		,"sg_nodes"
+		,MAX_SG_NODES
+		,sg_node_entity_components
+		,ARRAY_SIZE(sg_node_entity_components)
+	);//SGViewer2d_New());
 
-	EComponent sg_viewers2d_entity_components[]={
+	EComponent sg_viewers_2d_entity_components[]={
 			EC_SPRITE_RENDERER
 			,EC_TRANSFORM_ANIMATION
 			,EC_MATERIAL_ANIMATION
 			,EC_TRANSFORM
 	};
 
-	data->em_sg_viewers2d=EntitySystem_NewEntityManager(data->entity_system,"sg_viewers2d",sg_viewers2d_entity_components,ARRAY_SIZE(sg_viewers2d_entity_components));//SGViewer2d_New());
+	data->em_sg_viewers_2d=EntitySystem_NewEntityManager(
+		data->entity_system,"sg_viewers_2d"
+		,MAX_SG_VIEWERS_2D
+		,sg_viewers_2d_entity_components
+		,ARRAY_SIZE(sg_viewers_2d_entity_components)
+	);//SGViewer2d_New());
+
+
+	EComponent sg_texts_2d_entity_components[]={
+			EC_TEXTBOX_RENDERER
+			,EC_TRANSFORM_ANIMATION
+			,EC_MATERIAL_ANIMATION
+			,EC_TRANSFORM
+	};
+
+	data->em_sg_texts_2d=EntitySystem_NewEntityManager(
+		data->entity_system,"sg_tests_2d"
+		,MAX_SG_TEXTS_2D
+		,sg_texts_2d_entity_components
+		,ARRAY_SIZE(sg_texts_2d_entity_components)
+	);//SGViewer2d_New());
 
 
 /*	data->sgnodes=List_New();
@@ -156,14 +189,23 @@ EntityManager * Scene_NewEntityManager(
 
 SGNode *Scene_NewSGNode(Scene *_this){
 	SceneData *data=_this->data;
-	SGNode *sg_node=SGNode_New(_this,EntityManager_NewEntity(data->sg_nodes));
+	SGNode *sg_node=SGNode_New(_this,EntityManager_NewEntity(data->em_sg_nodes));
+	List_Add(data->sg_nodes,sg_node);
 	return sg_node;
 }
 
 SGViewer2d *Scene_NewSGViewer2d(Scene *_this){
 	SceneData *data=_this->data;
-	SGViewer2d *sg_viewer2d=Viewer2d_New(_this,EntityManager_NewEntity(data->sg_viewers2d));
-	return sg_viewer2d;
+	SGViewer2d *sg_viewer_2d=SGViewer2d_New(_this,EntityManager_NewEntity(data->em_sg_viewers_2d));
+	List_Add(data->sg_viewers_2d,sg_viewer_2d);
+	return sg_viewer_2d;
+}
+
+SGText2d *Scene_NewSGText2d(Scene *_this){
+	SceneData *data=_this->data;
+	SGText2d *sg_text_2d=SGText2d_New(_this,EntityManager_NewEntity(data->em_sg_texts_2d));
+	List_Add(data->sg_texts_2d,sg_text_2d);
+	return sg_text_2d;
 }
 /*
 Entity * Scene_NewEntity(Scene *_this, EComponent * entity_components, size_t entity_components_len){
@@ -283,7 +325,8 @@ void Scene_Delete(Scene *_this){
 	EntitySystem_Delete(data->entity_system);
 
 	List_Delete(data->sg_nodes);
-	List_Delete(data->sg_viewers2d);
+	List_Delete(data->sg_viewers_2d);
+	List_Delete(data->sg_texts_2d);
 	List_Delete(data->animations);
 	List_Delete(data->movie_players);
 	List_Delete(data->sprite2d_emitters);

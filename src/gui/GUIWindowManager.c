@@ -161,17 +161,17 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 					 GUIViewer_SetHeight(viewer,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 GUIViewer_SetText(viewer,attribute->value);
+				 TextBox_SetText(viewer->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
-				 GUIViewer_SetHorizontalAlignment(viewer,TextBox_ParseTextAlign(attribute->value));
+				 TextBox_SetHorizontalAlignment(viewer->textbox,TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
-				 GUIViewer_SetVerticalAlignment(viewer,TextBox_ParseVerticalAlignment(attribute->value));
+				 TextBox_SetVerticalAlignment(viewer->textbox,TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIViewer_SetFontSize(viewer,int_value);
+					 TextBox_SetFontSize(viewer->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-file")){
-				 GUIViewer_SetFontFile(viewer,attribute->value);
+				 TextBox_SetFontFile(viewer->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"color")){
 				 GUIWidget_SetColor4f(viewer->widget,Color4f_FromHtml(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"texture")){
@@ -252,11 +252,11 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 	bool ok=true;
 	int int_value=0;
 	XmlAttribute *attribute=e->attributes;
-	GUITextBox *textbox=GUITextBox_New(0,0,10,10);
+	GUITextBox *gui_textbox=GUITextBox_New(0,0,10,10);
 
 
 	if(_parent != NULL){
-		GUIWidget_AttachWidget(_parent,textbox->widget);
+		GUIWidget_AttachWidget(_parent,gui_textbox->widget);
 	}
 
 	 if(attribute != NULL){
@@ -267,38 +267,38 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 				 // set id
 			 }else if(STRCMP(attribute->name,==,"left")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionX(textbox->widget,int_value);
+					 GUIWidget_SetPositionX(gui_textbox->widget,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"top")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionY(textbox->widget,int_value);
+					 GUIWidget_SetPositionY(gui_textbox->widget,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUITextBox_SetWidth(textbox,int_value);
+					 GUITextBox_SetWidth(gui_textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUITextBox_SetHeight(textbox,int_value);
+					 GUITextBox_SetHeight(gui_textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUITextBox_SetFontSize(textbox,int_value);
+					 TextBox_SetFontSize(gui_textbox->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-file")){
-				 GUITextBox_SetFontFile(textbox,attribute->value);
+				 TextBox_SetFontFile(gui_textbox->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 GUITextBox_SetText(textbox,attribute->value);
+				 TextBox_SetText(gui_textbox->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
-				 GUITextBox_SetHorizontalAlignment(textbox,TextBox_ParseTextAlign(attribute->value));
+				 TextBox_SetHorizontalAlignment(gui_textbox->textbox,TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
-				 GUITextBox_SetVerticalAlignment(textbox,TextBox_ParseVerticalAlignment(attribute->value));
+				 TextBox_SetVerticalAlignment(gui_textbox->textbox,TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"border-thickness")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUITextBox_SetBorderThickness(textbox,int_value);
+					 TextBox_SetBorderThickness(gui_textbox->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"border-color")){
-				 GUITextBox_SetBorderColorHtml(textbox,attribute->value);
+				 TextBox_SetBorderColor4f(gui_textbox->textbox,Color4f_FromHtml(attribute->value));
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -309,7 +309,7 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 		// process attributes
 	}
 
-	 List_Add(_window_data->textboxes,textbox);
+	 List_Add(_window_data->textboxes,gui_textbox);
 
 	return ok;
 }

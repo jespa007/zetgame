@@ -50,7 +50,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 	GUIWidget_SetBackgroundColor4f(data->frame_caption->widget,Color4f_FromRGB(0,128,255));
 
 	data->textbox_caption=GUITextBox_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	GUITextBox_SetText(data->textbox_caption,"Window");
+	TextBox_SetText(data->textbox_caption->textbox,"Window");
 
 
 	data->button_close=GUIButton_New(
@@ -165,7 +165,7 @@ void 		GUIWindow_SetBackgroundColor4f(GUIWindow * _this, Color4f color){
 
 void 		GUIWindow_SetCaptionTitle(GUIWindow * _this, const char *_caption){
 	GUIWindowData *data=_this->data;
-	GUITextBox_SetText(data->textbox_caption,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
+	TextBox_SetText(data->textbox_caption->textbox,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
 }
 
 TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){

@@ -22,8 +22,8 @@ struct TextBox{
 };
 
 // STATIC
-HorizontalAlignment 		TextBox_ParseTextAlign(const char *_text);
-VerticalAlignment 	TextBox_ParseVerticalAlignment(const char *_text);
+HorizontalAlignment 	TextBox_ParseTextAlign(const char *_text);
+VerticalAlignment 		TextBox_ParseVerticalAlignment(const char *_text);
 
 
 TextBox 	*	TextBox_New(void);

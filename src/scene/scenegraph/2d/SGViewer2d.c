@@ -2,15 +2,15 @@
 
 
 typedef struct{
-	EComponent 	*	ec_texture;
-	EComponent 	*	ec_sprite_renderer;
+	ECTexture 			*	ec_texture;
+	ECSpriteRenderer 	*	ec_sprite_renderer;
 }SGViewer2dData;
 
 
-SGViewer2d * SGViewer2d_New(Entity *_entity){
+SGViewer2d * SGViewer2d_New(Scene *_scene, Entity *_entity){
 	SGViewer2d *sg_image = ZG_NEW(SGViewer2d);
 
-	sg_image->sg_node=SGNode_New(_entity);
+	sg_image->sg_node=SGNode_New(_scene,_entity);
 	if(sg_image->sg_node==NULL){
 		return NULL;
 	}

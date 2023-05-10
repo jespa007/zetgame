@@ -1,8 +1,10 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
-typedef struct Scene Scene;
-//typedef struct SGNode SGNode;
+typedef struct Scene 		Scene;
+typedef struct SGNode 		SGNode;
+typedef struct SGViewer2d 	SGViewer2d;
+typedef struct SGText2d  	SGText2d;
 
 struct Scene{
 	uint32_t 			current_time;
@@ -32,7 +34,7 @@ EntitySystem 	*Scene_GetEntitySystem(
 		Scene *_this
 );
 
-SGNode 		*	Scene_NewDGNode(Scene *_this);
+SGNode 		*	Scene_NewSGNode(Scene *_this);
 SGViewer2d 	*	Scene_NewSGViewer2d(Scene *_this);
 //Entity* Scene_NewEntity(Scene *_this,EComponent * entity_components, size_t entity_components_len);
 //Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);

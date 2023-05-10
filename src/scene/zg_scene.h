@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "scenegraph/SGNode.h"
 #include "scenegraph/2d/SGViewer2d.h"
+#include "scenegraph/2d/SGText2d.h"
 //#include "scenegraph/SGNode.h"
 //#include "scenegraph/SGCamera.h"
 //#include "scenegraph/SGRender.h"

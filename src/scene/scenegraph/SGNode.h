@@ -1,16 +1,13 @@
 #ifndef __SGNODE_H__
 #define __SGNODE_H__
 
-
-typedef struct SGNode SGNode;
-typedef struct Scene  Scene;
-
 struct SGNode{
 	Entity  *entity;
+	Scene	*scene;
 	void	*data;
 };
 
-SGNode *	SGNode_New(Entity *_entity);
+SGNode *	SGNode_New(Scene *_scene,Entity *_entity);
 Entity *	SGNode_GetEntity(SGNode *_this);
 bool		SGNode_AttachNode(SGNode *_this, SGNode *node);
 bool		SGNode_DetachNode(SGNode *_this, SGNode *node);

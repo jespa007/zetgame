@@ -4,26 +4,22 @@ void MS_OnDeleteTexture(void *text){
 	Texture_Delete(text);
 }
 
-Entity *NewNode(EntityManager *_entity_manager_nodes, int posx, int posy, bool set_displacement){
-	EComponent entity_components[]={
-			EC_TRANSFORM,
-			EC_TRANSFORM_ANIMATION
-	};
 
-	Entity *entity=EntityManager_NewNode(_entity_manager);//,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+Entity *NewNode(Scene *_scene, int posx, int posy, bool set_displacement){
+
+	SGNode *node=Scene_NewSGNode(_scene);
 
 	if(set_displacement){
-		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
+		SGNode_SetDisplacement2i(node,posx,posy);
 	}else{
-		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+		SGNode_SetPosition2i(node,posx,posy);
 	}
 
-	return entity;
+	return node;
 }
 
-Entity *NewViewer2d(
-	EntityManager *_entity_manager_viewers2d
-	,nodes
+SGViewer2d *NewViewer2d(
+	Scene *_scene
 	,int posx
 	, int posy
 	, uint16_t width
@@ -31,54 +27,42 @@ Entity *NewViewer2d(
 	, Texture *texture
 	, bool set_displacement
 ){
-	EComponent entity_components[]={
-			EC_SPRITE_RENDERER
-			,EC_TRANSFORM_ANIMATION
-			,EC_MATERIAL_ANIMATION
-			,EC_TRANSFORM
-	};
-
-	Entity *entity=EntityManager_NewViewer2d(_entity_manager);//scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
-
-	ECTexture_SetTexture(entity->components[EC_TEXTURE],texture);
-	ECSpriteRenderer_SetDimensions(entity->components[EC_SPRITE_RENDERER],width, height);
+	SGViewer2d *viewer_2d=Scene_NewSGViewer2d(_scene);
 
 	if(set_displacement){
-		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
+		SGNode_SetDisplacement2i(viewer_2d->sg_node,posx,posy);
 	}else{
-		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+		SGNode_SetPosition2i(viewer_2d->sg_node,posx,posy);
 	}
-	return entity;
+
+	SGViewer2d_SetTexture(viewer_2d,texture);
+	SGViewer2d_SetDimensions(viewer_2d,width, height);
+
+	return viewer_2d;
 }
 
-Entity *NewText2d(
-	EntityManager *_entity_manager_viewers2d
-	,nodes
-	,int posx
-	, int posy
-	, uint16_t width
-	, uint16_t height
-	, Texture *texture
+SGText2d *NewText2d(
+	Scene *_scene
+	,int _posx
+	, int _posy
+	, uint16_t _width
+	, uint16_t _height
+	, const char *_text
 	, bool set_displacement
 ){
-	EComponent entity_components[]={
-			EC_SPRITE_RENDERER
-			,EC_TRANSFORM_ANIMATION
-			,EC_MATERIAL_ANIMATION
-			,EC_TRANSFORM
-	};
 
-	Entity *entity=EntityManager_NewViewer2d(_entity_manager);//scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
-
-	ECTexture_SetTexture(entity->components[EC_TEXTURE],texture);
-	ECSpriteRenderer_SetDimensions(entity->components[EC_SPRITE_RENDERER],width, height);
+	SGText2d *text_2d=EntityManager_NewText2d(_scene);//scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
 	if(set_displacement){
-		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
+		SGNode_SetDisplacement2i(text_2d->sg_node,_posx,_posy);
 	}else{
-		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+		SGNode_SetPosition2i(text_2d->sg_node,_posx,_posy);
 	}
-	return entity;
+
+	TextBox_SetText(text_2d->textbox,_text);
+	TextBox_SetDimensions(text_2d->textbox,_width,_height);
+
+	return text_2d;
 }
 
 int main(int argc, char * argv[]){
@@ -223,7 +207,7 @@ int main(int argc, char * argv[]){
 
 	Scene * scene = Scene_New();
 
-	EComponent entity_components_node[]={
+	/*EComponent entity_components_node[]={
 			EC_TRANSFORM,
 			EC_TRANSFORM_ANIMATION
 	};
@@ -238,17 +222,17 @@ int main(int argc, char * argv[]){
 
 	EntityManager *em_nodes=Scene_NewEntityManager(scene,"nodes",entity_components_node,ARRAY_SIZE(entity_components_node));//SGViewer2d_New());
 	EntityManager *em_viewers=Scene_NewEntityManager(scene,"viewer2d",entity_components_viewer2d,ARRAY_SIZE(entity_components_viewer2d));//SGViewer2d_New());
-
+*/
 
 	TextureManager *tm=TextureManager_New();
 	//TTFontManager *ttfm=TTFontManager_New();
-	Entity
+	SGViewer2d
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
 				,*spr_image_car_part2=NULL
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
-	Entity *spr_base_car=NULL,*spr_track_car=NULL;
+	SGNode *spr_base_car=NULL,*spr_track_car=NULL;
 
 
 	TTFont_SetFontResourcePath("../../../test/data/fonts");
@@ -277,8 +261,8 @@ int main(int argc, char * argv[]){
 	// SETUP FAN...
 	for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		Entity *spr_image_fan_base=NULL;
-		Entity *spr_base_van=NULL;
+		SGViewer2d *spr_image_fan_base=NULL;
+		SGNode *spr_base_van=NULL;
 
 		spr_image_fan_base=NewViewer2d(
 				scene
@@ -298,13 +282,13 @@ int main(int argc, char * argv[]){
 							,true
 							);
 
-		ECTransform_Attach(
-			spr_image_fan_base->components[EC_TRANSFORM]
-			,spr_base_van->components[EC_TRANSFORM]
+		SGNode_Attach(
+			spr_image_fan_base->sg_node
+			,spr_base_van
 		);
 
-		ECTransformAnimation_StartTween(
-					spr_base_van->components[EC_TRANSFORM_ANIMATION]
+		SGNode_StartTween(
+					spr_base_van
 					,TRANSFORM_COMPONENT_ROTATE_Z
 					, EASE_LINEAR
 					, 0
@@ -314,7 +298,7 @@ int main(int argc, char * argv[]){
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
-			Entity *spr_image_van=NewViewer2d(scene
+			SGViewer2d *spr_image_van=NewViewer2d(scene
 						,info->vane_disp.info_vane[j].x
 						,info->vane_disp.info_vane[j].y
 						,62
@@ -322,8 +306,8 @@ int main(int argc, char * argv[]){
 						,text_vane
 						,true);
 
-			ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
-			ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
+			SGNode_SetRotate3f(spr_image_van,0,0,info->vane_disp.info_vane[j].rot);
+			SGNode_Attach(spr_base_van,spr_image_van->sg_node);
 
 		}
 	}
@@ -338,14 +322,14 @@ int main(int argc, char * argv[]){
 	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
 	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
 
-	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_track_car->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);
+	SGNode_Attach(spr_base_car,spr_track_car);
+	SGNode_Attach(spr_track_car,spr_image_car_part1->sg_node);
+	SGNode_Attach(spr_track_car,spr_image_car_part2->sg_node);
+	SGNode_Attach(spr_track_car,spr_image_car_left_wheel->sg_node);
+	SGNode_Attach(spr_track_car,spr_image_car_right_wheel->sg_node);
 
-	ECTransformAnimation_StartTween(
-		spr_base_car->components[EC_TRANSFORM_ANIMATION]
+	SGNode_StartTween(
+		spr_base_car
 		,TRANSFORM_COMPONENT_TRANSLATE_X
 		,EASE_OUT_SINE
 		,-2
@@ -354,8 +338,8 @@ int main(int argc, char * argv[]){
 		,0
 	);
 
-	ECTransformAnimation_StartTween(
-		spr_base_car->components[EC_TRANSFORM_ANIMATION]
+	SGNode_StartTween(
+		spr_base_car
 		,TRANSFORM_COMPONENT_TRANSLATE_Y
 		,EASE_OUT_SINE
 		,-0.24-0.1
@@ -367,12 +351,11 @@ int main(int argc, char * argv[]){
 	//----
 	// SUN
 	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun,false);
-	ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ALPHA_VALUE_TRANSPARENT);
+	SGViewer2d_SetAlpha(spr_image_sun,ALPHA_VALUE_TRANSPARENT);
 
 	// ani
-	Action_SetKeyframesTrack(
+	MaterialAction_SetKeyframesTrack(
 			 mat_act_fade_in_out
-			,MATERIAL_COMPONENT_COLOR_A
 			,EASE_IN_OUT_SINE
 			,alpha_fade_in_out_keyframes
 			,ARRAY_SIZE(alpha_fade_in_out_keyframes)
@@ -388,8 +371,8 @@ int main(int argc, char * argv[]){
 
 		if(K_SPACE){
 			// todo start action from SGViewer2d_StartMaterialAction
-			ECMaterialAnimation_StartAction(
-					spr_image_sun->components[EC_MATERIAL_ANIMATION]
+			SGViewer2d_StartMaterialAction(
+					spr_image_sun
 					,mat_act_fade_in_out
 					,0);
 		}

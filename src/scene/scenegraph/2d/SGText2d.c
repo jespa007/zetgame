@@ -2,44 +2,29 @@
 
 
 typedef struct{
-	EComponent 	*	ec_texture;
-	EComponent 	*	ec_sprite_renderer;
-}SGViewer2dData;
+		void *data;
+}SGText2dData;
 
 
-SGViewer2d * SGViewer2d_New(Entity *_entity){
-	SGViewer2d *sg_image = ZG_NEW(SGViewer2d);
+SGText2d * SGText2d_New(Scene *_scene, Entity *_entity){
+	SGText2d *sg_text_2d = ZG_NEW(SGText2d);
 
-	sg_image->sg_node=SGNode_New(_entity);
-	if(sg_image->sg_node==NULL){
+	sg_text_2d->sg_node=SGNode_New(_scene,_entity);
+	if(sg_text_2d->sg_node==NULL){
 		return NULL;
 	}
 
-	SGViewer2dData *data = ZG_NEW(SGViewer2dData);
-	data->ec_texture=_entity->components[EC_TEXTURE];
-	data->ec_sprite_renderer=_entity->components[EC_SPRITE_RENDERER];
-	sg_image->data=data;
-	SGViewer2d_SetDimensions(sg_image,100,100);
+	SGText2dData *data = ZG_NEW(SGText2dData);
+	sg_text_2d->data=data;
+	sg_text_2d->textbox=((ECTextBoxRenderer *)_entity->components[EC_TEXTURE])->textbox;
 
-	return sg_image;
+	return sg_text_2d;
 
 }
 
-void SGViewer2d_SetDimensions(SGViewer2d *_this,uint16_t width, uint16_t height){
-	SGViewer2dData * data=_this->data;
-
-	ECSpriteRenderer_SetDimensions(data->ec_sprite_renderer,width, height);
-}
-
-void		SGViewer2d_SetTexture(SGViewer2d *_this,Texture *texture){
-	SGViewer2dData * data=_this->data;
-	ECTexture_SetTexture(data->ec_texture,texture);
-}
-
-
-void	   SGViewer2d_Delete(SGViewer2d *_this){
+void	   SGText2d_Delete(SGText2d *_this){
 	if(_this == NULL) return;
-	SGViewer2dData * data=_this->data;
+	SGText2dData * data=_this->data;
 
 	SGNode_Delete(_this->sg_node);
 
