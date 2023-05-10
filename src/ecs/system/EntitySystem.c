@@ -135,6 +135,15 @@ bool EntitySystem_Init(void){
 	});
 
 
+	// text box renderer (1)
+	EntitySystem_RegisterComponentBuiltin(EC_TEXTBOX_RENDERER,(EntitySystemRegisterEComponent){
+		.size_data				=sizeof(ECTextBoxRenderer)
+		,.required_components	=ECTextBoxRenderer_RequiredComponents()
+		,.EComponent_Setup		=ECTextBoxRenderer_Setup
+		,.EComponent_Update		=ECTextBoxRenderer_Update
+		,.EComponent_Destroy	=ECTextBoxRenderer_Destroy
+	});
+
 
 	// check component consistency
 	 min_iter=MIN(g_es_system_registered_components->count,EC_MAX_COMPONENTS);

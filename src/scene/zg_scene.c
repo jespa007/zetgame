@@ -4,7 +4,8 @@
 
 
 #include "Scene.c"
-
+#include "scenegraph/SGNode.c"
+#include "scenegraph/2d/SGViewer2d.c"
 
 //#include "scenegraph/2d/SGTextBox2d.c"
 //#include "scenegraph/2d/SGViewer2d.c"

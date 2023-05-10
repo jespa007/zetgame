@@ -32,8 +32,8 @@ EntitySystem 	*Scene_GetEntitySystem(
 		Scene *_this
 );
 
-SGNode 		*	Scene_NewNode(Scene *_this);
-SGViewer2d 	*	Scene_NewViewer2d(Scene *_this);
+SGNode 		*	Scene_NewDGNode(Scene *_this);
+SGViewer2d 	*	Scene_NewSGViewer2d(Scene *_this);
 //Entity* Scene_NewEntity(Scene *_this,EComponent * entity_components, size_t entity_components_len);
 //Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);
 

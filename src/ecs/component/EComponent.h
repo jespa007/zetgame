@@ -13,10 +13,10 @@ typedef enum{
 	EC_MATERIAL_ANIMATION,
 	EC_TEXTURE,			// entity sprite render
 	EC_SPRITE_RENDERER,	// entity sprite render2D
-
 	// later register
 	EC_TEXTURE_ANIMATION,
 	EC_GEOMETRY_ANIMATION,
+	EC_TEXTBOX_RENDERER,	// entity sprite render2D
 
 
 	// animations...

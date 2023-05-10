@@ -17,6 +17,7 @@
 #include "component/ECMaterialAnimation.h"
 #include "component/ECTexture.h"
 #include "component/ECSpriteRenderer.h"
+#include "component/ECTextBoxRenderer.h"
 
 #include "entity/EntityManager.h"
 //#include "component/ECCamera.h"

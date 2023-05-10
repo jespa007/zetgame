@@ -259,8 +259,8 @@ int main(int argc, char * argv[]){
 	Texture * text_vane=TextureManager_Get(tm,"vane.png");
 	Texture * text_wheel=TextureManager_Get(tm,"wheel.png");
 
-	// setup animations/actions...
-	Action 	  	 			*mat_act_fade_in_out=Action_New(MATERIAL_COMPONENT_MAX);
+	// setup animations/actions (update material action function)...
+	MaterialAction 	  	 			*mat_act_fade_in_out=MaterialAction_New();//MATERIAL_COMPONENT_MAX);
 
 	//---
 	// ground
@@ -387,6 +387,7 @@ int main(int argc, char * argv[]){
 		Graphics_BeginRender();
 
 		if(K_SPACE){
+			// todo start action from SGViewer2d_StartMaterialAction
 			ECMaterialAnimation_StartAction(
 					spr_image_sun->components[EC_MATERIAL_ANIMATION]
 					,mat_act_fade_in_out

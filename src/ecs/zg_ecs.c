@@ -6,6 +6,7 @@
 #include "component/ECMaterialAnimation.c"
 #include "component/ECTexture.c"
 #include "component/ECSpriteRenderer.c"
+#include "component/ECTextBoxRenderer.c"
 
 
 

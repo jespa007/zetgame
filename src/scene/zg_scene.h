@@ -3,6 +3,8 @@
 #include "mmedia/zg_mmedia.h"
 #include "ecs/zg_ecs.h"
 #include "Scene.h"
+#include "scenegraph/SGNode.h"
+#include "scenegraph/2d/SGViewer2d.h"
 //#include "scenegraph/SGNode.h"
 //#include "scenegraph/SGCamera.h"
 //#include "scenegraph/SGRender.h"
