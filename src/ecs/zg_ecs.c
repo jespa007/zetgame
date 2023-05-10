@@ -10,6 +10,7 @@
 
 
 #include "entity/Entity.c"
+#include "entity/EntityManager.c"
 
 
 
@@ -23,7 +24,7 @@
 #include "system/EntitySystem.c"
 
 bool ECS_Init(void){
-	if(!ESSystem_Init()){
+	if(!EntitySystem_Init()){
 		return false;
 	}
 
@@ -31,5 +32,5 @@ bool ECS_Init(void){
 }
 
 void ECS_DeInit(void){
-	ESSystem_DeInit();
+	EntitySystem_DeInit();
 }

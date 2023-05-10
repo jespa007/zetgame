@@ -4,13 +4,13 @@ void MS_OnDeleteTexture(void *text){
 	Texture_Delete(text);
 }
 
-Entity *NewNode(Scene *scene, int posx, int posy, bool set_displacement){
+Entity *NewNode(EntityManager *_entity_manager_nodes, int posx, int posy, bool set_displacement){
 	EComponent entity_components[]={
 			EC_TRANSFORM,
 			EC_TRANSFORM_ANIMATION
 	};
 
-	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+	Entity *entity=EntityManager_NewNode(_entity_manager);//,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
 	if(set_displacement){
 		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
@@ -21,7 +21,16 @@ Entity *NewNode(Scene *scene, int posx, int posy, bool set_displacement){
 	return entity;
 }
 
-Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t height, Texture *texture, bool set_displacement){
+Entity *NewViewer2d(
+	EntityManager *_entity_manager_viewers2d
+	,nodes
+	,int posx
+	, int posy
+	, uint16_t width
+	, uint16_t height
+	, Texture *texture
+	, bool set_displacement
+){
 	EComponent entity_components[]={
 			EC_SPRITE_RENDERER
 			,EC_TRANSFORM_ANIMATION
@@ -29,7 +38,37 @@ Entity *NewViewer2d(Scene *scene,int posx, int posy, uint16_t width, uint16_t he
 			,EC_TRANSFORM
 	};
 
-	Entity *entity=Scene_NewEntity(scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+	Entity *entity=EntityManager_NewViewer2d(_entity_manager);//scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+
+	ECTexture_SetTexture(entity->components[EC_TEXTURE],texture);
+	ECSpriteRenderer_SetDimensions(entity->components[EC_SPRITE_RENDERER],width, height);
+
+	if(set_displacement){
+		ECTransform_SetDisplacement2i(entity->components[EC_TRANSFORM],posx,posy);
+	}else{
+		ECTransform_SetPosition2i(entity->components[EC_TRANSFORM],posx,posy);
+	}
+	return entity;
+}
+
+Entity *NewText2d(
+	EntityManager *_entity_manager_viewers2d
+	,nodes
+	,int posx
+	, int posy
+	, uint16_t width
+	, uint16_t height
+	, Texture *texture
+	, bool set_displacement
+){
+	EComponent entity_components[]={
+			EC_SPRITE_RENDERER
+			,EC_TRANSFORM_ANIMATION
+			,EC_MATERIAL_ANIMATION
+			,EC_TRANSFORM
+	};
+
+	Entity *entity=EntityManager_NewViewer2d(_entity_manager);//scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
 
 	ECTexture_SetTexture(entity->components[EC_TEXTURE],texture);
 	ECSpriteRenderer_SetDimensions(entity->components[EC_SPRITE_RENDERER],width, height);
@@ -183,6 +222,24 @@ int main(int argc, char * argv[]){
 	ZetGame_Init(NULL);
 
 	Scene * scene = Scene_New();
+
+	EComponent entity_components_node[]={
+			EC_TRANSFORM,
+			EC_TRANSFORM_ANIMATION
+	};
+
+
+	EComponent entity_components_viewer2d[]={
+			EC_SPRITE_RENDERER
+			,EC_TRANSFORM_ANIMATION
+			,EC_MATERIAL_ANIMATION
+			,EC_TRANSFORM
+	};
+
+	EntityManager *em_nodes=Scene_NewEntityManager(scene,"nodes",entity_components_node,ARRAY_SIZE(entity_components_node));//SGViewer2d_New());
+	EntityManager *em_viewers=Scene_NewEntityManager(scene,"viewer2d",entity_components_viewer2d,ARRAY_SIZE(entity_components_viewer2d));//SGViewer2d_New());
+
+
 	TextureManager *tm=TextureManager_New();
 	//TTFontManager *ttfm=TTFontManager_New();
 	Entity

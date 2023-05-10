@@ -1,10 +1,7 @@
-#ifndef __ES_SYSTEM_H__
-#define __ES_SYSTEM_H__
+#ifndef __ENTITY_SYSTEM_H__
+#define __ENTITY_SYSTEM_H__
 
 #define UNLIMITIED_ENTITIES	-1
-
-
-typedef struct ESSystem ESSystem;
 
 
 typedef struct{
@@ -15,38 +12,44 @@ typedef struct{
 	//void   (*EComponent_Init)(void *, Entity *); // function to Ini component
 	void   (*EComponent_Update)(void *); // function to update component
 	void   (*EComponent_Destroy)(void *); // function to destroy
-}ESSystemRegisterEComponent;
+}EntitySystemRegisterEComponent;
 
-struct ESSystem{
+struct EntitySystem{
 	void *data;
 };
 //---------------------------------------------------
 // STATIC FUNCTIONS
-bool				ESSystem_Init(void);
-EComponent			ESSystem_RegisterComponent(ESSystemRegisterEComponent es_component_register);
-size_t				ESSystem_NumComponents(void);
-void 				ESSystem_DeInit(void);
+bool				EntitySystem_Init(void);
+int					EntitySystem_RegisterComponent(EntitySystemRegisterEComponent es_component_register);
+size_t				EntitySystem_NumComponents(void);
+void 				EntitySystem_DeInit(void);
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ESSystem 		*		ESSystem_New(void);
-EntityManager 	*		ESSystem_NewEntityManager(ESSystem *_this, const char *_id,uint16_t max_entities, EComponent * entity_components, size_t entity_components_len);
-Entity  		*		ESSystem_NewEntityFromManager(ESSystem *_this,const char *_id);
+EntitySystem 	*		EntitySystem_New(void);
+EntityManager 	*		EntitySystem_NewEntityManager(
+		EntitySystem *_this
+		, const char *_id
+		,uint16_t max_entities
+		, EComponent * entity_components
+		, size_t entity_components_len
+);
 
-Entity  		*		ESSystem_NewEntity(ESSystem *_this,EComponent * entity_components, size_t entity_components_len);
-void					ESSystem_Update(ESSystem *_this);
-//uint8_t *ESSystem_NewComponent(ESSystem *_this,int idx_component);
-/*void  			ESSystem_RemoveEntity(ESSystem * _this, Entity entity);
+
+//Entity  		*		EntitySystem_NewEntity(EntitySystem *_this,EComponent * entity_components, size_t entity_components_len);
+void					EntitySystem_Update(EntitySystem *_this);
+//uint8_t *EntitySystem_NewComponent(EntitySystem *_this,int idx_component);
+/*void  			EntitySystem_RemoveEntity(EntitySystem * _this, Entity entity);
 
 // Channels
-Transform 	*		ESSystem_GetComponentTransform(ESSystem * _this, Entity entity);
-SGNode 		*		ESSystem_GetComponentSGNode(ESSystem * _this, Entity entity);
-Appearance 	*		ESSystem_GetComponentAppearance(ESSystem * _this, Entity entity);
-Geometry 	*		ESSystem_GetComponentGeometry(ESSystem * _this, Entity entity);
-Camera 		*		ESSystem_GetComponentCamera(ESSystem * _this, Entity entity);
+Transform 	*		EntitySystem_GetComponentTransform(EntitySystem * _this, Entity entity);
+SGNode 		*		EntitySystem_GetComponentSGNode(EntitySystem * _this, Entity entity);
+Appearance 	*		EntitySystem_GetComponentAppearance(EntitySystem * _this, Entity entity);
+Geometry 	*		EntitySystem_GetComponentGeometry(EntitySystem * _this, Entity entity);
+Camera 		*		EntitySystem_GetComponentCamera(EntitySystem * _this, Entity entity);
 
 */
-void				ESSystem_Delete(ESSystem * _this);
+void				EntitySystem_Delete(EntitySystem * _this);
 
 
 

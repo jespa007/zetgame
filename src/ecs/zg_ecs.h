@@ -8,6 +8,7 @@
 
 #include "entity/Entity.h"
 
+
 #include "component/EComponent.h"
 #include "component/ECTransform.h"
 #include "component/ECTransformAnimation.h"
@@ -17,14 +18,7 @@
 #include "component/ECTexture.h"
 #include "component/ECSpriteRenderer.h"
 
-
-
-
-
-
-
-
-
+#include "entity/EntityManager.h"
 //#include "component/ECCamera.h"
 //#include "component/ECText2d.h"
 
@@ -33,6 +27,7 @@
 //#include "component/ECViewer2d.h"
 //#include "entity/EntityManager.h"
 #include "system/EntitySystem.h"
+#include "system/ColliderSystem.h"
 
 bool ECS_Init(void);
 void ECS_DeInit(void);

@@ -9,14 +9,18 @@ typedef enum{
 typedef struct{
 
 	uint32_t			start_time;
-	List 		* 	animations;
-	List 		* 	movie_players;
-	List 		* 	sprite2d_emitters;
+	List 			* 	animations;
+	List 			* 	movie_players;
+	List 			* 	sprite2d_emitters;
 	//SGNode		*	node_root;
-	//SceneState  * 	current_state;
-	//List		*	scene_states;
-	SceneStatus 	scene_status;
-	ESSystem		*es_system;
+	//SceneState  	* 	current_state;
+	//List			*	scene_states;
+	SceneStatus 		scene_status;
+	EntitySystem	*	es_system;
+
+	List			* 	nodes;
+	List			* 	viewers2d;
+	List			* 	entity_managers2d;
 
 /*	List * appearances;
 	List * transforms3d;
@@ -31,7 +35,7 @@ Scene * Scene_New(void){
 	SceneData *data=ZG_NEW(SceneData);
 	scene->data=data;
 
-	data->es_system=ESSystem_New();
+	data->es_system=EntitySystem_New();
 	//scene->sg_render=SGRender_New();
 	//data->node_root=SGNode_New();
 
@@ -116,22 +120,29 @@ void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player){
 	List_Add(data->movie_players,movie_player);
 }*/
 
-void Scene_NewEntityManager(Scene *_this, const char *_id,uint16_t max_entities, unsigned * entity_components, size_t entity_components_len){
-	SceneData *data=_this->data;
-	ESSystem_NewEntityManager(data->es_system,_id,max_entities,entity_components,entity_components_len);
-}
 
+EntityManager * Scene_NewEntityManager(
+		Scene *_this
+		, const char *_id
+		,uint16_t max_entities
+		, unsigned * entity_components
+		, size_t entity_components_len
+){
+	SceneData *data=_this->data;
+	return EntitySystem_NewEntityManager(data->es_system,_id,max_entities,entity_components,entity_components_len);
+}
+/*
 Entity * Scene_NewEntity(Scene *_this, EComponent * entity_components, size_t entity_components_len){
 	SceneData *data=_this->data;
 
-	return ESSystem_NewEntity(data->es_system,entity_components,entity_components_len);
+	return EntitySystem_NewEntity(data->es_system,entity_components,entity_components_len);
 }
 
 Entity * Scene_NewEntityFromManager(Scene *_this, const char *_str_entity_manager){
 	SceneData *data=_this->data;
-	return ESSystem_NewEntityFromManager(data->es_system,_str_entity_manager);
+	return EntitySystem_NewEntityFromManager(data->es_system,_str_entity_manager);
 }
-
+*/
 
 /*
 void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter){
@@ -206,7 +217,7 @@ void Scene_Update(Scene *_this){
 		Animation_Update(data->animations->items[i],_this->current_time);
 	}
 
-	ESSystem_Update(data->es_system);
+	EntitySystem_Update(data->es_system);
 	//SGNode_Update(data->node_root);
 
 	/*if(data->current_state != NULL){
@@ -235,7 +246,7 @@ void Scene_Delete(Scene *_this){
 	}
 
 	List_Delete(_data->scene_states);*/
-	ESSystem_Delete(data->es_system);
+	EntitySystem_Delete(data->es_system);
 
 	List_Delete(data->animations);
 	List_Delete(data->movie_players);

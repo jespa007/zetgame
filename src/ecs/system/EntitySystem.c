@@ -5,15 +5,15 @@ bool  g_user_can_register_components=true;
 
 typedef struct{
 	EComponent id;
-	ESSystemRegisterEComponent data;
-}ESSystemRegisteredEComponentData;
+	EntitySystemRegisterEComponent data;
+}EntitySystemRegisteredEComponentData;
 
 typedef struct{
 	void 	**ptr_data; // we want to keep pointer in order to support future reallocs
 	size_t 	n_elements;
-}ESSystemEComponentData;
+}EntitySystemEComponentData;
 
-typedef struct {
+/*typedef struct {
 	char 		*name; // name entity type
 	EComponent *entity_components;// it says the components it has this entity
 	size_t 		n_components; // available components
@@ -23,19 +23,19 @@ typedef struct {
 	uint16_t 	active_entities;
 	Entity 		**entities;
 
-}EntityManagerData;
+}EntityManagerData;*/
+
 
 typedef struct{
 	MapString *map_entity_managers;
 	List *lst_entity_managers;
-	ESSystemEComponentData **components;//[ENTITY_COMPONENT_MAX];
-}ESSystemData;
+	EntitySystemEComponentData **components;//[ENTITY_COMPONENT_MAX];
+}EntitySystemData;
 
 //---------------------------------------------------
 // PRIVATE FUNCTIONS
-void 	ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_data, size_t extend_entities);
 
-bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegisterEComponent es_component_register){
+bool	EntitySystem_RegisterComponentBuiltin(EComponent _idx_component,EntitySystemRegisterEComponent es_component_register){
 
 	if(g_user_can_register_components==false){
 		Log_ErrorF("Components should registered before create any Entity-System");
@@ -47,7 +47,7 @@ bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegiste
 	}
 
 	EComponent idx_component=_idx_component;//g_es_system_registered_components->count;
-	ESSystemRegisteredEComponentData *new_component_register=ZG_NEW(ESSystemRegisteredEComponentData);
+	EntitySystemRegisteredEComponentData *new_component_register=ZG_NEW(EntitySystemRegisteredEComponentData);
 	new_component_register->data=es_component_register;
 	new_component_register->id=idx_component;
 	List_Add(g_es_system_registered_components,new_component_register);
@@ -58,12 +58,12 @@ bool	ESSystem_RegisterComponentBuiltin(EComponent _idx_component,ESSystemRegiste
 
 //---------------------------------------------------
 // STATIC FUNCTIONS
-bool ESSystem_Init(void){
+bool EntitySystem_Init(void){
 
 	unsigned min_iter=0;
 
 	// invalid (0)
-	ESSystem_RegisterComponentBuiltin(EC_INVALID,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_INVALID,(EntitySystemRegisterEComponent){
 		.size_data				=0
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=NULL
@@ -72,7 +72,7 @@ bool ESSystem_Init(void){
 	});
 
 	// transform
-	ESSystem_RegisterComponentBuiltin(EC_TRANSFORM,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECTransform)
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECTransform_Setup
@@ -81,7 +81,7 @@ bool ESSystem_Init(void){
 	});
 
 	// Animation transform
-	ESSystem_RegisterComponentBuiltin(EC_TRANSFORM_ANIMATION,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM_ANIMATION,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECTransformAnimation)
 		,.required_components	=ECTransformAnimation_RequiredComponents()
 		,.EComponent_Setup		=ECTransformAnimation_Setup
@@ -90,7 +90,7 @@ bool ESSystem_Init(void){
 	});
 
 	// geometry
-	ESSystem_RegisterComponentBuiltin(EC_GEOMETRY,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_GEOMETRY,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECGeometry)
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECGeometry_Setup
@@ -99,7 +99,7 @@ bool ESSystem_Init(void){
 	});
 
 	// material
-	ESSystem_RegisterComponentBuiltin(EC_MATERIAL,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_MATERIAL,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECMaterial)
 		,.required_components	= (EComponentList){0,0}
 		,.EComponent_Setup		=ECMaterial_Setup
@@ -108,7 +108,7 @@ bool ESSystem_Init(void){
 	});
 
 	// material animation
-	ESSystem_RegisterComponentBuiltin(EC_MATERIAL_ANIMATION,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_MATERIAL_ANIMATION,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECMaterialAnimation)
 		,.required_components	= (EComponentList){0,0}
 		,.EComponent_Setup		=ECMaterialAnimation_Setup
@@ -117,7 +117,7 @@ bool ESSystem_Init(void){
 	});
 
 	// texture
-	ESSystem_RegisterComponentBuiltin(EC_TEXTURE,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_TEXTURE,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECTexture)
 		,.required_components	=(EComponentList){0,0}
 		,.EComponent_Setup		=ECTexture_Setup
@@ -126,7 +126,7 @@ bool ESSystem_Init(void){
 	});
 
 	// sprite renderer (1)
-	ESSystem_RegisterComponentBuiltin(EC_SPRITE_RENDERER,(ESSystemRegisterEComponent){
+	EntitySystem_RegisterComponentBuiltin(EC_SPRITE_RENDERER,(EntitySystemRegisterEComponent){
 		.size_data				=sizeof(ECSpriteRenderer)
 		,.required_components	=ECSpriteRenderer_RequiredComponents()
 		,.EComponent_Setup		=ECSpriteRenderer_Setup
@@ -139,7 +139,7 @@ bool ESSystem_Init(void){
 	// check component consistency
 	 min_iter=MIN(g_es_system_registered_components->count,EC_MAX_COMPONENTS);
 	for(unsigned i=0; i < min_iter; i++){
-		ESSystemRegisteredEComponentData *component=g_es_system_registered_components->items[i];
+		EntitySystemRegisteredEComponentData *component=g_es_system_registered_components->items[i];
 		if(component->id != i){
 			Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
 			return false;
@@ -150,43 +150,43 @@ bool ESSystem_Init(void){
 	return true;
 }
 
-EComponent	ESSystem_RegisterComponent(ESSystemRegisterEComponent es_component_register){
-	EComponent idx_component=0;
+int	EntitySystem_RegisterComponent(EntitySystemRegisterEComponent es_component_register){
+	int idx_component=0;
 
 	if(g_es_system_registered_components != NULL){
 		idx_component=g_es_system_registered_components->count;
 	}
 
-	if(ESSystem_RegisterComponentBuiltin(idx_component,es_component_register)==false){
+	if(EntitySystem_RegisterComponentBuiltin(idx_component,es_component_register)==false){
 		return EC_INVALID;
 	}
 	return idx_component;
 }
 
-size_t					ESSystem_NumComponents(void){
+size_t					EntitySystem_NumComponents(void){
 	if(g_es_system_registered_components != NULL){
 		return g_es_system_registered_components->count;
 	}
 	return 0;
 }
 
-void ESSystem_DeInit(void){
+void EntitySystem_DeInit(void){
 	List_DeleteAndFreeAllItems(g_es_system_registered_components);
 }
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ESSystem *ESSystem_New(void){
-	ESSystem *system=ZG_NEW(ESSystem);
-	ESSystemData *data=ZG_NEW(ESSystemData);
+EntitySystem *EntitySystem_New(void){
+	EntitySystem *system=ZG_NEW(EntitySystem);
+	EntitySystemData *data=ZG_NEW(EntitySystemData);
 	data->lst_entity_managers=List_New();
 	data->map_entity_managers=MapString_New();
 
-	data->components=malloc(sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
-	memset(data->components,0,sizeof(ESSystemEComponentData)*g_es_system_registered_components->count);
+	data->components=malloc(sizeof(EntitySystemEComponentData)*g_es_system_registered_components->count);
+	memset(data->components,0,sizeof(EntitySystemEComponentData)*g_es_system_registered_components->count);
 
 	for(unsigned i=0; i < g_es_system_registered_components->count;i++){
-		data->components[i]=ZG_NEW(ESSystemEComponentData);
+		data->components[i]=ZG_NEW(EntitySystemEComponentData);
 	}
 
 	system->data=data;
@@ -197,20 +197,20 @@ ESSystem *ESSystem_New(void){
 	return system;
 }
 
-int ESSystem_OrderComponents(const void *_a, const void *_b){
+int EntitySystem_OrderComponents(const void *_a, const void *_b){
 	EComponent *a, *b;
 	a = (EComponent *) _a;
 	b = (EComponent *) _b;
 	return (*a - *b);
 }
 
-EComponent *ESSystem_GenerateComponentRequirementList(EComponent *in_data, size_t in_len, size_t *out_len){
+EComponent *EntitySystem_GenerateComponentRequirementList(EComponent *in_data, size_t in_len, size_t *out_len){
 	// check number of whether there's no component
 	List *list=List_New();
 
 	for(unsigned i=0; i < in_len;i++){
 		EComponent entity_component=in_data[i];
-		ESSystemRegisteredEComponentData *registered_component=g_es_system_registered_components->items[entity_component];
+		EntitySystemRegisteredEComponentData *registered_component=g_es_system_registered_components->items[entity_component];
 		EComponentList req_com=registered_component->data.required_components;
 		bool found=false;
 		for(uint16_t j=0; j < req_com.n_components;j++){
@@ -254,20 +254,20 @@ EComponent *ESSystem_GenerateComponentRequirementList(EComponent *in_data, size_
 
 	*out_len=list->count;
 
-	qsort(new_data,list->count,sizeof(EComponent),ESSystem_OrderComponents);
+	qsort(new_data,list->count,sizeof(EComponent),EntitySystem_OrderComponents);
 
 	List_Delete(list);
 
 	return new_data;
 }
-
-Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_t _entity_components_len){
-	ESSystemData *data=_this->data;
+/*
+Entity *EntitySystem_NewEntity(EntitySystem *_this,EComponent *_entity_components, size_t _entity_components_len){
+	EntitySystemData *data=_this->data;
 	char _entity_manager_id[1024]="__@_comp";
 	size_t entity_components_len;
 
 	// 1. check component requirements
-	EComponent *entity_components=ESSystem_GenerateComponentRequirementList(_entity_components,_entity_components_len,&entity_components_len);
+	EComponent *entity_components=EntitySystem_GenerateComponentRequirementList(_entity_components,_entity_components_len,&entity_components_len);
 
 	// internal type that is generated according used components...
 	for(uint16_t i=0; i < entity_components_len; i++){
@@ -282,16 +282,16 @@ Entity *ESSystem_NewEntity(ESSystem *_this,EComponent *_entity_components, size_
 	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_entity_manager_id,NULL);
 
 	if(entity_manager_data == NULL){ // create ...
-		entity_manager_data=(EntityManagerData *)ESSystem_NewEntityManager(_this,_entity_manager_id ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
+		entity_manager_data=(EntityManagerData *)EntitySystem_NewEntityManager(_this,_entity_manager_id ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
 	}
 
 	// Free because we don't need it anymore
 	ZG_FREE(entity_components);
-	return ESSystem_NewEntityFromManager(_this,_entity_manager_id);
-}
-
-Entity  *ESSystem_NewEntityFromManager(ESSystem *_this,const char *_id){
-	ESSystemData *data=_this->data;
+	return EntitySystem_NewEntityFromManager(_this,_entity_manager_id);
+}*/
+/*
+Entity  *EntitySystem_NewEntityFromManager(EntitySystem *_this,const char *_id){
+	EntitySystemData *data=_this->data;
 	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_id,NULL);
 
 	if(entity_manager_data == NULL){
@@ -300,8 +300,12 @@ Entity  *ESSystem_NewEntityFromManager(ESSystem *_this,const char *_id){
 	}
 
 	Entity *entity=NULL;
-	if(entity_manager_data->active_entities>=entity_manager_data->n_entities && entity_manager_data->active_entities<entity_manager_data->max_entities){ // extend entity
-		ESSystem_ExtendEntities(_this,entity_manager_data,1);
+	if(
+			entity_manager_data->active_entities>=entity_manager_data->n_entities
+								&&
+			entity_manager_data->active_entities<entity_manager_data->max_entities
+	){ // extend entity
+		EntitySystem_ExtendEntities(_this,entity_manager_data,1);
 	}else{
 		return NULL;
 	}
@@ -312,17 +316,17 @@ Entity  *ESSystem_NewEntityFromManager(ESSystem *_this,const char *_id){
 	entity->active=true;
 
 	return entity;
-}
+}*/
 
-void ESSystem_ExtendComponent(ESSystem *_this,EComponent idx_component, Entity ** entities, size_t extend){
+void EntitySystem_ExtendComponent(EntitySystem *_this,EComponent idx_component, Entity ** entities, size_t extend){
 
 	if(idx_component >= g_es_system_registered_components->count){
 		return;
 	}
 
-	ESSystemData *data=_this->data;
-	ESSystemEComponentData *component_data=data->components[idx_component];
-	ESSystemRegisterEComponent  registered_component_data=((ESSystemRegisteredEComponentData *)g_es_system_registered_components->items[idx_component])->data;
+	EntitySystemData *data=_this->data;
+	EntitySystemEComponentData *component_data=data->components[idx_component];
+	EntitySystemRegisterEComponent  registered_component_data=((EntitySystemRegisteredEComponentData *)g_es_system_registered_components->items[idx_component])->data;
 	int current_component_data_len=component_data->n_elements;
 	size_t n_new_elements=current_component_data_len+extend;
 	void **old_ptr=component_data->ptr_data;
@@ -349,7 +353,8 @@ void ESSystem_ExtendComponent(ESSystem *_this,EComponent idx_component, Entity *
 
 }
 
-void ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_data, size_t extend_entities){
+void EntitySystem_ExtendEntities(EntitySystem *_this, EntityManagerData *entity_manager_data, size_t extend_entities){
+
 	size_t total_extend=entity_manager_data->n_entities+extend_entities;
 
 	if(total_extend >= entity_manager_data->max_entities){
@@ -376,23 +381,29 @@ void ESSystem_ExtendEntities(ESSystem *_this,EntityManagerData *entity_manager_d
 	for(unsigned i=0; i < entity_manager_data->n_components;i++){
 		EComponent idx_ec=entity_manager_data->entity_components[i];
 		// extend components this type will have
-		ESSystem_ExtendComponent(_this,idx_ec,entity_manager_data->entities+entity_manager_data->n_entities,extend_entities);
+		EntitySystem_ExtendComponent(
+			_this
+			,idx_ec
+			,entity_manager_data->entities+entity_manager_data->n_entities
+			,extend_entities
+		);
 	};
 
 	// realloc set all entity types as this type
 	entity_manager_data->n_entities=total_extend;
 }
 
-void * ESSystem_NewEntityManager(
-	ESSystem *_this
+EntityManager * EntitySystem_NewEntityManager(
+	EntitySystem *_this
 	, const char *_str_entity_manager
 	, uint16_t max_entities
 	, EComponent *entity_components
 	, size_t entity_components_len
 ){
-	ESSystemData *data=_this->data;
+	EntitySystemData *data=_this->data;
 	EntityManagerData *entity_manager_data=ZG_NEW(EntityManagerData);
-
+	EntityManager *entity_manager=ZG_NEW(EntityManager);
+	entity_manager->data=entity_manager_data;
 	if(entity_components_len == 0){
 		return NULL;
 	}
@@ -420,25 +431,25 @@ void * ESSystem_NewEntityManager(
 		*dst_ptr++=*src_ptr++;
 	}
 
-	List_Add(data->lst_entity_managers,entity_manager_data);
-	MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager_data);
+	List_Add(data->lst_entity_managers,entity_manager);
+	MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager);
 
 	// extend entities
 	entity_manager_data->max_entities=max_entities;
 	if(max_entities != (uint16_t)UNLIMITIED_ENTITIES){
-		ESSystem_ExtendEntities(
+		EntitySystem_ExtendEntities(
 			_this
 			,entity_manager_data
 			,max_entities
 		);
 	}
-	return entity_manager_data;
+	return entity_manager;
 }
 
-void ESSystem_Update(ESSystem * _this){
-	ESSystemData *data=(ESSystemData *)_this->data;
-	ESSystemRegisteredEComponentData  **ptr_registered_component_data=(ESSystemRegisteredEComponentData  **)g_es_system_registered_components->items;
-	ESSystemEComponentData **component_data=data->components;
+void EntitySystem_Update(EntitySystem * _this){
+	EntitySystemData *data=(EntitySystemData *)_this->data;
+	EntitySystemRegisteredEComponentData  **ptr_registered_component_data=(EntitySystemRegisteredEComponentData  **)g_es_system_registered_components->items;
+	EntitySystemEComponentData **component_data=data->components;
 
 	for(unsigned i=0; i < g_es_system_registered_components->count; i++){
 		void (*EComponent_Update)(void *) =(*ptr_registered_component_data)->data.EComponent_Update;
@@ -457,15 +468,16 @@ void ESSystem_Update(ESSystem * _this){
 	}
 }
 
-void ESSystem_Delete(ESSystem *_this){
-	ESSystemData *data=(ESSystemData *)_this->data;
-	ESSystemRegisteredEComponentData  **ptr_registered_component_data=(ESSystemRegisteredEComponentData  **)g_es_system_registered_components->items;
-	ESSystemEComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
+void EntitySystem_Delete(EntitySystem *_this){
+	EntitySystemData *data=(EntitySystemData *)_this->data;
+	EntitySystemRegisteredEComponentData  **ptr_registered_component_data=(EntitySystemRegisteredEComponentData  **)g_es_system_registered_components->items;
+	EntitySystemEComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
 	MapStringIterator *iterator=MapStringIterator_New(data->map_entity_managers);
 
 	for(; !MapStringIterator_End(iterator);MapStringIterator_Next(iterator)){
 		//const char *key=MapStringIterator_GetKey(iterator);
-		EntityManagerData *entity_manager_data=MapStringIterator_GetValue(iterator);
+		EntityManager *entity_manager=MapStringIterator_GetValue(iterator);
+		EntityManagerData *entity_manager_data=entity_manager->data;
 
 		for(unsigned i=0; i < entity_manager_data->n_entities; i++){
 			Entity_Delete(entity_manager_data->entities[i]);
@@ -475,6 +487,7 @@ void ESSystem_Delete(ESSystem *_this){
 		ZG_FREE(entity_manager_data->entity_components);
 		ZG_FREE(entity_manager_data->name);
 		ZG_FREE(entity_manager_data);
+		ZG_FREE(entity_manager);
 	}
 
 	MapStringIterator_Delete(iterator);

@@ -8,7 +8,7 @@ Entity *Entity_New(void){
 	Entity *entity=ZG_NEW(Entity);
 	//EntityData *data=ZG_NEW(EntityData);
 	//memset(data,0,sizeof(EntityData));
-	entity->components=malloc(sizeof(void *)*ESSystem_NumComponents());
+	entity->components=malloc(sizeof(void *)*EntitySystem_NumComponents());
 	entity->active=false;
 	//entity->data=data;
 	return entity;
