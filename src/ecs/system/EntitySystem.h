@@ -43,7 +43,7 @@ void					EntitySystem_Update(EntitySystem *_this);
 
 // Channels
 Transform 	*		EntitySystem_GetComponentTransform(EntitySystem * _this, Entity entity);
-SGNode 		*		EntitySystem_GetComponentSGNode(EntitySystem * _this, Entity entity);
+TransformNode 		*		EntitySystem_GetComponentTransformNode(EntitySystem * _this, Entity entity);
 Appearance 	*		EntitySystem_GetComponentAppearance(EntitySystem * _this, Entity entity);
 Geometry 	*		EntitySystem_GetComponentGeometry(EntitySystem * _this, Entity entity);
 Camera 		*		EntitySystem_GetComponentCamera(EntitySystem * _this, Entity entity);

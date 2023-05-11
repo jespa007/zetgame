@@ -2,7 +2,7 @@
 #include "GUIFrame.c"
 #include "GUIButton.c"
 #include "GUITextBox.c"
-#include "GUIViewer.c"
+#include "GUITexture.c"
 #include "GUIWindow.c"
 #include "GUIWindowManager.c"
 

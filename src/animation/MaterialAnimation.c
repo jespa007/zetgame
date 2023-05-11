@@ -42,7 +42,7 @@ void					MaterialAnimation_StartAction(
 void MaterialAnimation_StartTween(
 		MaterialAnimation *_this
 		, uint32_t _start_time
-		, uint8_t _idx_channel
+		, MaterialComponent _material_component
 		, Ease _ease
 		, float _from
 		, float _to
@@ -53,7 +53,7 @@ void MaterialAnimation_StartTween(
 	Animation_StartTween(
 		data->animation
 		, _start_time
-		, _idx_channel
+		, _material_component
 		, _ease
 		, _from
 		, _to

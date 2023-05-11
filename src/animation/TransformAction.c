@@ -21,7 +21,7 @@ TransformAction 	*	TransformAction_New(void){
 }
 void					TransformAction_SetKeyframesTrack(
 		TransformAction *_this
-		, uint8_t _idx_channel
+		, TransformComponent _transform_component
 		, Ease _ease
 		,float *_keyframe_points
 		, size_t _keyframe_points_count
@@ -29,7 +29,7 @@ void					TransformAction_SetKeyframesTrack(
 	TransformActionData *data=_this->data;
 	Action_SetKeyframesTrack(
 		data->action
-		,_idx_channel
+		,_transform_component
 		,_ease
 		,_keyframe_points
 		,_keyframe_points_count

@@ -5,20 +5,20 @@ void MS_OnDeleteTexture(void *text){
 }
 
 
-Entity *NewNode(Scene *_scene, int posx, int posy, bool set_displacement){
+TransformNode *NewTransformNode(Scene *_scene, int posx, int posy, bool set_displacement){
 
-	SGNode *node=Scene_NewSGNode(_scene);
+	TransformNode *sg_node=Scene_NewTransformNode(_scene);
 
 	if(set_displacement){
-		SGNode_SetDisplacement2i(node,posx,posy);
+		TransformNode_SetDisplacement2i(sg_node,posx,posy);
 	}else{
-		SGNode_SetPosition2i(node,posx,posy);
+		TransformNode_SetPosition2i(sg_node,posx,posy);
 	}
 
-	return node;
+	return sg_node;
 }
 
-SGViewer2d *NewViewer2d(
+TextureNode *NewTextureNode(
 	Scene *_scene
 	,int posx
 	, int posy
@@ -27,21 +27,21 @@ SGViewer2d *NewViewer2d(
 	, Texture *texture
 	, bool set_displacement
 ){
-	SGViewer2d *viewer_2d=Scene_NewSGViewer2d(_scene);
+	TextureNode *sg_texture=Scene_NewTextureNode(_scene);
 
 	if(set_displacement){
-		SGNode_SetDisplacement2i(viewer_2d->sg_node,posx,posy);
+		TransformNode_SetDisplacement2i(sg_texture->sg_node,posx,posy);
 	}else{
-		SGNode_SetPosition2i(viewer_2d->sg_node,posx,posy);
+		TransformNode_SetPosition2i(sg_texture->sg_node,posx,posy);
 	}
 
-	SGViewer2d_SetTexture(viewer_2d,texture);
-	SGViewer2d_SetDimensions(viewer_2d,width, height);
+	TextureNode_SetTexture(sg_texture,texture);
+	TextureNode_SetDimensions(sg_texture,width, height);
 
-	return viewer_2d;
+	return sg_texture;
 }
 
-SGText2d *NewText2d(
+TextBoxNode *NewText2d(
 	Scene *_scene
 	,int _posx
 	, int _posy
@@ -51,18 +51,18 @@ SGText2d *NewText2d(
 	, bool set_displacement
 ){
 
-	SGText2d *text_2d=EntityManager_NewText2d(_scene);//scene,entity_components,ARRAY_SIZE(entity_components));//SGViewer2d_New());
+	TextBoxNode *textbox=Scene_NewTextBoxNode(_scene);//scene,entity_components,ARRAY_SIZE(entity_components));//TextureNode_New());
 
 	if(set_displacement){
-		SGNode_SetDisplacement2i(text_2d->sg_node,_posx,_posy);
+		TransformNode_SetDisplacement2i(textbox->sg_node,_posx,_posy);
 	}else{
-		SGNode_SetPosition2i(text_2d->sg_node,_posx,_posy);
+		TransformNode_SetPosition2i(textbox->sg_node,_posx,_posy);
 	}
 
-	TextBox_SetText(text_2d->textbox,_text);
-	TextBox_SetDimensions(text_2d->textbox,_width,_height);
+	TextBox_SetText(textbox->textbox,_text);
+	TextBox_SetDimensions(textbox->textbox,_width,_height);
 
-	return text_2d;
+	return textbox;
 }
 
 int main(int argc, char * argv[]){
@@ -220,19 +220,19 @@ int main(int argc, char * argv[]){
 			,EC_TRANSFORM
 	};
 
-	EntityManager *em_nodes=Scene_NewEntityManager(scene,"nodes",entity_components_node,ARRAY_SIZE(entity_components_node));//SGViewer2d_New());
-	EntityManager *em_viewers=Scene_NewEntityManager(scene,"viewer2d",entity_components_viewer2d,ARRAY_SIZE(entity_components_viewer2d));//SGViewer2d_New());
+	EntityManager *em_nodes=Scene_NewEntityManager(scene,"nodes",entity_components_node,ARRAY_SIZE(entity_components_node));//TextureNode_New());
+	EntityManager *em_viewers=Scene_NewEntityManager(scene,"viewer2d",entity_components_viewer2d,ARRAY_SIZE(entity_components_viewer2d));//TextureNode_New());
 */
 
 	TextureManager *tm=TextureManager_New();
 	//TTFontManager *ttfm=TTFontManager_New();
-	SGViewer2d
+	TextureNode
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
 				,*spr_image_car_part2=NULL
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
-	SGNode *spr_base_car=NULL,*spr_track_car=NULL;
+	TransformNode *spr_base_car=NULL,*spr_track_car=NULL;
 
 
 	TTFont_SetFontResourcePath("../../../test/data/fonts");
@@ -248,7 +248,7 @@ int main(int argc, char * argv[]){
 
 	//---
 	// ground
-	NewViewer2d(scene
+	NewTextureNode(scene
 		,Graphics_GetWidth()>>1
 		,Graphics_GetHeight()>>1
 		,Graphics_GetWidth()
@@ -261,10 +261,10 @@ int main(int argc, char * argv[]){
 	// SETUP FAN...
 	for(unsigned i=0; i < ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		SGViewer2d *spr_image_fan_base=NULL;
-		SGNode *spr_base_van=NULL;
+		TextureNode *spr_image_fan_base=NULL;
+		TransformNode *spr_base_van=NULL;
 
-		spr_image_fan_base=NewViewer2d(
+		spr_image_fan_base=NewTextureNode(
 				scene
 				,info->x
 				,info->y
@@ -276,29 +276,30 @@ int main(int argc, char * argv[]){
 
 
 		// van base
-		spr_base_van=NewNode(scene
+		spr_base_van=NewTransformNode(scene
 							,info->vane_disp.x
 							,info->vane_disp.y
 							,true
 							);
 
-		SGNode_Attach(
+		TransformNode_Attach(
 			spr_image_fan_base->sg_node
 			,spr_base_van
 		);
 
-		SGNode_StartTween(
-					spr_base_van
-					,TRANSFORM_COMPONENT_ROTATE_Z
-					, EASE_LINEAR
-					, 0
-					, 360
-					, 1000
-					, ANIMATION_LOOP_REPEAT_INFINITE);
+		TransformNode_StartTween(
+			spr_base_van
+			,TRANSFORM_COMPONENT_ROTATE_Z
+			, EASE_LINEAR
+			, 0
+			, 360
+			, 1000
+			, ANIMATION_LOOP_REPEAT_INFINITE
+		);
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
-			SGViewer2d *spr_image_van=NewViewer2d(scene
+			TextureNode *spr_image_van=NewTextureNode(scene
 						,info->vane_disp.info_vane[j].x
 						,info->vane_disp.info_vane[j].y
 						,62
@@ -306,8 +307,8 @@ int main(int argc, char * argv[]){
 						,text_vane
 						,true);
 
-			SGNode_SetRotate3f(spr_image_van,0,0,info->vane_disp.info_vane[j].rot);
-			SGNode_Attach(spr_base_van,spr_image_van->sg_node);
+			TransformNode_SetRotate3f(spr_image_van,0,0,info->vane_disp.info_vane[j].rot);
+			TransformNode_Attach(spr_base_van,spr_image_van->sg_node);
 
 		}
 	}
@@ -317,18 +318,18 @@ int main(int argc, char * argv[]){
 	// SETUP CAR
 	spr_base_car=NewNode(scene,Graphics_GetWidth()>>1,Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
 	spr_track_car=NewNode(scene,0,0,true);
-	spr_image_car_part1=NewViewer2d(scene,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
-	spr_image_car_part2=NewViewer2d(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
-	spr_image_car_left_wheel=NewViewer2d(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
-	spr_image_car_right_wheel=NewViewer2d(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
+	spr_image_car_part1=NewTextureNode(scene,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
+	spr_image_car_part2=NewTextureNode(scene,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
+	spr_image_car_left_wheel=NewTextureNode(scene,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
+	spr_image_car_right_wheel=NewTextureNode(scene,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
 
-	SGNode_Attach(spr_base_car,spr_track_car);
-	SGNode_Attach(spr_track_car,spr_image_car_part1->sg_node);
-	SGNode_Attach(spr_track_car,spr_image_car_part2->sg_node);
-	SGNode_Attach(spr_track_car,spr_image_car_left_wheel->sg_node);
-	SGNode_Attach(spr_track_car,spr_image_car_right_wheel->sg_node);
+	TransformNode_Attach(spr_base_car,spr_track_car);
+	TransformNode_Attach(spr_track_car,spr_image_car_part1->sg_node);
+	TransformNode_Attach(spr_track_car,spr_image_car_part2->sg_node);
+	TransformNode_Attach(spr_track_car,spr_image_car_left_wheel->sg_node);
+	TransformNode_Attach(spr_track_car,spr_image_car_right_wheel->sg_node);
 
-	SGNode_StartTween(
+	TransformNode_StartTween(
 		spr_base_car
 		,TRANSFORM_COMPONENT_TRANSLATE_X
 		,EASE_OUT_SINE
@@ -338,7 +339,7 @@ int main(int argc, char * argv[]){
 		,0
 	);
 
-	SGNode_StartTween(
+	TransformNode_StartTween(
 		spr_base_car
 		,TRANSFORM_COMPONENT_TRANSLATE_Y
 		,EASE_OUT_SINE
@@ -350,8 +351,8 @@ int main(int argc, char * argv[]){
 
 	//----
 	// SUN
-	spr_image_sun=NewViewer2d(scene,Graphics_GetWidth()-200,100,100,100,text_sun,false);
-	SGViewer2d_SetAlpha(spr_image_sun,ALPHA_VALUE_TRANSPARENT);
+	spr_image_sun=NewTextureNode(scene,Graphics_GetWidth()-200,100,100,100,text_sun,false);
+	TextureNode_SetAlpha(spr_image_sun,ALPHA_VALUE_TRANSPARENT);
 
 	// ani
 	MaterialAction_SetKeyframesTrack(
@@ -370,8 +371,8 @@ int main(int argc, char * argv[]){
 		Graphics_BeginRender();
 
 		if(K_SPACE){
-			// todo start action from SGViewer2d_StartMaterialAction
-			SGViewer2d_StartMaterialAction(
+			// todo start action from TextureNode_StartMaterialAction
+			TextureNode_StartMaterialAction(
 					spr_image_sun
 					,mat_act_fade_in_out
 					,0);

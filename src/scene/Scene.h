@@ -2,9 +2,9 @@
 #define __SCENE_H__
 
 typedef struct Scene 		Scene;
-typedef struct SGNode 		SGNode;
-typedef struct SGViewer2d 	SGViewer2d;
-typedef struct SGText2d  	SGText2d;
+typedef struct TransformNode 		TransformNode;
+typedef struct TextureNode 	TextureNode;
+typedef struct TextBoxNode  	TextBoxNode;
 
 struct Scene{
 	uint32_t 			current_time;
@@ -25,7 +25,7 @@ void Scene_Clean(void);
 		, Callback init
 		, Callback update);*/
 
-/*void Scene_AttachNode(Scene *_this,SGNode *node);*/
+/*void Scene_AttachNode(Scene *_this,TransformNode *node);*/
 //void Scene_AttachAnimation(Scene *_this,Animation *animation);
 //void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player);
 //void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter);
@@ -34,8 +34,9 @@ EntitySystem 	*Scene_GetEntitySystem(
 		Scene *_this
 );
 
-SGNode 		*	Scene_NewSGNode(Scene *_this);
-SGViewer2d 	*	Scene_NewSGViewer2d(Scene *_this);
+TransformNode 		*	Scene_NewTransformNode(Scene *_this);
+TextureNode 	*	Scene_NewTextureNode(Scene *_this);
+TextBoxNode 	*	Scene_NewTextBoxNode(Scene *_this);
 //Entity* Scene_NewEntity(Scene *_this,EComponent * entity_components, size_t entity_components_len);
 //Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);
 

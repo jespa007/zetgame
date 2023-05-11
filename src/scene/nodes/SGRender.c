@@ -82,7 +82,7 @@ void SGRender_SetBackgroundColor3i(SGRender *_this, uint8_t r, uint8_t g, uint8_
 	data->background_color.b=b*ONE_OVER_256;
 }
 
-void SGRender_AddNodeToDraw(SGRender *_this, SGNode *sg_node){
+void SGRender_AddNodeToDraw(SGRender *_this, TransformNode *sg_node){
 	int idx_z =0;
 	Transform *transform_camera,*transform_node;
 	Vector3f origin,camera_space;
@@ -104,8 +104,8 @@ void SGRender_AddNodeToDraw(SGRender *_this, SGNode *sg_node){
 
 
 
-	transform_camera=SGNode_GetTransform(sg_camera->node,SGNODE_TRANSFORM_TYPE_WORLD);
-	transform_node=SGNode_GetTransform(sg_node,SGNODE_TRANSFORM_TYPE_WORLD);
+	transform_camera=TransformNode_GetTransform(sg_camera->node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
+	transform_node=TransformNode_GetTransform(sg_node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
 	origin = Vector3f_Sub(transform_node->translate,transform_camera->translate);
 	camera_space=Quaternion_InverseTransformV3f(transform_camera->quaternion,origin);
 	// get z with resolution 10
@@ -133,8 +133,8 @@ void SGRender_End(SGRender *_this){
 
 		for(int n=0; n < sg_nodes->count ;n++)
 		{
-			SGNode *node=sg_nodes->items[n];
-			Transform *transform_node=SGNode_GetTransform(node,SGNODE_TRANSFORM_TYPE_WORLD);
+			TransformNode *node=sg_nodes->items[n];
+			Transform *transform_node=TransformNode_GetTransform(node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
 
 			Graphics_Draw(transform_node, node->geometry, node->appearance);
 		}

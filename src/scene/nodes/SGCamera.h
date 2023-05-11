@@ -5,7 +5,7 @@ typedef struct SGCamera SGCamera;
 
 struct SGCamera{
 	PROJECTION_MODE projection_mode;
-	SGNode			*node;
+	TransformNode			*node;
 };
 
 SGCamera * 	SGCamera_New(void);

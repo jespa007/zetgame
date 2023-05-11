@@ -4,14 +4,14 @@
 
 
 #include "Scene.c"
-#include "scenegraph/SGNode.c"
-#include "scenegraph/2d/SGViewer2d.c"
-#include "scenegraph/2d/SGText2d.c"
+#include "scenegraph/TextureNode.c"
+#include "scenegraph/TextBoxNode.c"
+#include "scenegraph/TransformNode.c"
 
-//#include "scenegraph/2d/SGTextBox2d.c"
+//#include "scenegraph/2d/TextBoxNode2d.c"
 //#include "scenegraph/2d/SGViewer2d.c"
 //#include "scenegraph/2d/Sprite2dEmitter.c"
-//#include "scenegraph/SGNode.c"
+//#include "scenegraph/TransformNode.c"
 //#include "scenegraph/SGCamera.c"
 //#include "scenegraph/SGRender.c"
 //#include "Scene.c"

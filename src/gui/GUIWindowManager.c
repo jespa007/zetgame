@@ -26,7 +26,7 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 		}widget_deallocate_collections[]={
 				{window_data->buttons,(void (*)(void *))GUIButton_Delete}
 				,{window_data->textboxes,(void (*)(void *))GUITextBox_Delete}
-				,{window_data->viewers,(void (*)(void *))GUIViewer_Delete}
+				,{window_data->viewers,(void (*)(void *))GUITexture_Delete}
 				,{window_data->frames,(void (*)(void *))GUIFrame_Delete}
 		};
 
@@ -125,15 +125,15 @@ bool GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,GUIWidget *_parent,
 	return ok;
 }
 
-bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent, const XmlElement *e ){
+bool GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,GUIWidget *_parent, const XmlElement *e ){
 	bool ok=true;
 	int int_value=0;
 	XmlAttribute *attribute=e->attributes;
-	GUIViewer *viewer=GUIViewer_New(0,0,10,10);
+	GUITexture *gui_texture=GUITexture_New(0,0,10,10);
 
 
 	if(_parent != NULL){
-		GUIWidget_AttachWidget(_parent,viewer->widget);
+		GUIWidget_AttachWidget(_parent,gui_texture->widget);
 	}
 
 	 if(attribute != NULL){
@@ -143,39 +143,41 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 				 // set id
 			 }else if(STRCMP(attribute->name,==,"left")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionX(viewer->widget,int_value);
+					 GUIWidget_SetPositionX(gui_texture->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"top")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIWidget_SetPositionY(viewer->widget,int_value);
+					 GUIWidget_SetPositionY(gui_texture->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIViewer_SetWidth(viewer,int_value);
+					 GUIWidget_SetWidth(gui_texture->widget,int_value);
+					 TextBox_SetWidth(gui_texture->textbox,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUIViewer_SetHeight(viewer,int_value);
+					 GUIWidget_SetHeight(gui_texture->widget,int_value);
+					 TextBox_SetHeight(gui_texture->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 TextBox_SetText(viewer->textbox,attribute->value);
+				 TextBox_SetText(gui_texture->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
-				 TextBox_SetHorizontalAlignment(viewer->textbox,TextBox_ParseTextAlign(attribute->value));
+				 TextBox_SetHorizontalAlignment(gui_texture->textbox,TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
-				 TextBox_SetVerticalAlignment(viewer->textbox,TextBox_ParseVerticalAlignment(attribute->value));
+				 TextBox_SetVerticalAlignment(gui_texture->textbox,TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 TextBox_SetFontSize(viewer->textbox,int_value);
+					 TextBox_SetFontSize(gui_texture->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-file")){
-				 TextBox_SetFontFile(viewer->textbox,attribute->value);
+				 TextBox_SetFontFile(gui_texture->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"color")){
-				 GUIWidget_SetColor4f(viewer->widget,Color4f_FromHtml(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"texture")){
-				 GUIViewer_SetTexture(viewer,attribute->value);
+				 GUIWidget_SetColor4f(gui_texture->widget,Color4f_FromHtml(attribute->value));
+			 }else if(STRCMP(attribute->name,==,"source")){
+				 GUITexture_SetTexture(gui_texture,attribute->value);
 			 }else{
 				 Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -186,7 +188,7 @@ bool GUIWindowManager_NewViewer(GUIWMWindowData *_window_data,GUIWidget *_parent
 		// process attributes
 	}
 
-	 List_Add(_window_data->viewers,viewer);
+	 List_Add(_window_data->viewers,gui_texture);
 
 	return ok;
 }
@@ -275,11 +277,14 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 				 }
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUITextBox_SetWidth(gui_textbox,int_value);
+					 GUIWidget_SetWidth(gui_textbox->widget,int_value);
+					 TextBox_SetWidth(gui_textbox->textbox,int_value);
+
 				 }
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
-					 GUITextBox_SetHeight(gui_textbox,int_value);
+					 GUIWidget_SetHeight(gui_textbox->widget,int_value);
+					 TextBox_SetHeight(gui_textbox->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(StrUtils_StrToInt(&int_value,attribute->value,10)){
@@ -344,8 +349,8 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"button")){
 		 return GUIWindowManager_NewButton(_window_data,_parent,e);
-	 }else if(STRCMP(e->name,==,"viewer")){
-		 return GUIWindowManager_NewViewer(_window_data,_parent,e);
+	 }else if(STRCMP(e->name,==,"texture")){
+		 return GUIWindowManager_NewTexture(_window_data,_parent,e);
 	 }else if(STRCMP(e->name,==,"textbox")){
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else{

@@ -24,7 +24,7 @@ SGRender * SGRender_New(void);
 
 void SGRender_Start(SGRender *_this,SGCamera * camera);
 void SGRender_SetBackground3i(SGRender *_this,uint8_t r,uint8_t g,uint8_t b);
-void SGRender_AddNodeToDraw(SGRender *_this, SGNode *node);
+void SGRender_AddNodeToDraw(SGRender *_this, TransformNode *node);
 void SGRender_End(SGRender *_this);
 void SGRender_Delete(SGRender *_this);
 

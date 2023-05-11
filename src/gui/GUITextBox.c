@@ -28,15 +28,6 @@ GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
 	return label;
 }
 
-void 			GUITextBox_SetHeight(GUITextBox *_this,uint16_t _height){
-	GUIWidget_SetHeight(_this->widget,_height);
-	TextBox_SetHeight(_this->textbox,_height);
-}
-
-void 			GUITextBox_SetWidth(GUITextBox *_this,uint16_t _width){
-	GUIWidget_SetWidth(_this->widget,_width);
-	TextBox_SetWidth(_this->textbox,_width);
-}
 
 static void GUITextBox_Draw(void *gui_label){
 	GUITextBox *_this=gui_label;

@@ -21,7 +21,7 @@ MaterialAction 	*	MaterialAction_New(void){
 
 void					MaterialAction_SetKeyframesTrack(
 		MaterialAction *_this
-		, uint8_t _idx_channel
+		, MaterialComponent _material_component
 		, Ease _ease
 		,float *_keyframe_points
 		, size_t _keyframe_points_count
@@ -29,7 +29,7 @@ void					MaterialAction_SetKeyframesTrack(
 	MaterialActionData *data=_this->data;
 	Action_SetKeyframesTrack(
 		data->action
-		,_idx_channel
+		,_material_component
 		,_ease
 		,_keyframe_points
 		,_keyframe_points_count

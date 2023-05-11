@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 
 
 	//window=GUIWindow_New(10,10,200,100);
-	//GUIViewer * gui_viewer=GUIViewer_New(10,10,42,42);
+	//GUITexture * gui_viewer=GUITexture_New(10,10,42,42);
 
 	if(window){
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
 		}while(!K_ESC);
 	}
 
-	//GUIViewer_Delete(gui_viewer);
+	//GUITexture_Delete(gui_viewer);
 	//GUIWindow_Delete(window);
 	TextureManager_Delete(texture_manager);
 //	TTFontManager_Delete(ttfont_manager);

@@ -6,7 +6,7 @@ void SGRender_GL_SetSGCamera(SGCamera *sg_camera){
 	Quaternion q_inv;
 	Matrix4f m_inv;
 
-	Transform *transform=SGNode_GetTransform(sg_camera->node,SGNODE_TRANSFORM_TYPE_WORLD);
+	Transform *transform=TransformNode_GetTransform(sg_camera->node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
 
 
 	translate = transform->translate;

@@ -405,7 +405,7 @@ void CSprite2d::update(){
 
 	//--------------------------------------------------------------------------------------------v
 	// 2. update scene graph to get right absolute coordinates
-	CSGNode::updateSceneGraph();
+	CTransformNode::updateSceneGraph();
 
 
 	if(life==0){
@@ -542,7 +542,7 @@ void CSprite2d::update(){
 
 	//--------------------------------------------------------------------------------------------v
 	// 5. Finally update draw elements...
-	CSGNode::putSGNodeToDraw();
+	CTransformNode::putTransformNodeToDraw();
 
 }
 
@@ -554,12 +554,12 @@ void CSprite2d::draw(){
 		break;
 
 	case  SPRITE2D_TYPES::TEXT2D:
-		drawSGTextBox2d();
+		drawTextBoxNode2d();
 		break;
 	}
 }
 
-void CSprite2d::drawSGTextBox2d() {
+void CSprite2d::drawTextBoxNode2d() {
 
 	font->renderText(
 			GET_ACTIVE_RENDER->projection_to_pixelX(absolute_translation->x),

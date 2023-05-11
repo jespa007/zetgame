@@ -16,19 +16,19 @@ typedef struct{
 	List 			* 	animations;
 	List 			* 	movie_players;
 	List 			* 	sprite2d_emitters;
-	//SGNode		*	node_root;
+	//TransformNode		*	node_root;
 	//SceneState  	* 	current_state;
 	//List			*	scene_states;
 	SceneStatus 		scene_status;
 	EntitySystem	*	entity_system;
 
 	List			* 	sg_nodes;
-	List			* 	sg_viewers_2d;
-	List			* 	sg_texts_2d;
+	List			* 	sg_textures;
+	List			* 	sg_textboxes;
 
 	EntityManager	* 	em_sg_nodes;
-	EntityManager	* 	em_sg_viewers_2d;
-	EntityManager	* 	em_sg_texts_2d;
+	EntityManager	* 	em_sg_textures;
+	EntityManager	* 	em_sg_textboxes;
 	List			* 	entity_managers2d;
 
 /*	List * appearances;
@@ -46,12 +46,12 @@ Scene * Scene_New(void){
 
 	data->entity_system=EntitySystem_New();
 	data->sg_nodes=List_New();
-	data->sg_viewers_2d=List_New();
-	data->sg_texts_2d=List_New();
+	data->sg_textures=List_New();
+	data->sg_textboxes=List_New();
 	//scene->sg_render=SGRender_New();
-	//data->node_root=SGNode_New();
+	//data->node_root=TransformNode_New();
 
-	//SGNode_SetScene(data->node_root,scene);
+	//TransformNode_SetScene(data->node_root,scene);
 
 	data->animations=List_New();
 	//data->scene_states=List_New();
@@ -68,36 +68,36 @@ Scene * Scene_New(void){
 		,MAX_SG_NODES
 		,sg_node_entity_components
 		,ARRAY_SIZE(sg_node_entity_components)
-	);//SGViewer2d_New());
+	);//TextureNode_New());
 
-	EComponent sg_viewers_2d_entity_components[]={
+	EComponent sg_textures_entity_components[]={
 			EC_SPRITE_RENDERER
 			,EC_TRANSFORM_ANIMATION
 			,EC_MATERIAL_ANIMATION
 			,EC_TRANSFORM
 	};
 
-	data->em_sg_viewers_2d=EntitySystem_NewEntityManager(
-		data->entity_system,"sg_viewers_2d"
+	data->em_sg_textures=EntitySystem_NewEntityManager(
+		data->entity_system,"sg_textures"
 		,MAX_SG_VIEWERS_2D
-		,sg_viewers_2d_entity_components
-		,ARRAY_SIZE(sg_viewers_2d_entity_components)
-	);//SGViewer2d_New());
+		,sg_textures_entity_components
+		,ARRAY_SIZE(sg_textures_entity_components)
+	);//TextureNode_New());
 
 
-	EComponent sg_texts_2d_entity_components[]={
+	EComponent sg_textboxes_entity_components[]={
 			EC_TEXTBOX_RENDERER
 			,EC_TRANSFORM_ANIMATION
 			,EC_MATERIAL_ANIMATION
 			,EC_TRANSFORM
 	};
 
-	data->em_sg_texts_2d=EntitySystem_NewEntityManager(
-		data->entity_system,"sg_tests_2d"
+	data->em_sg_textboxes=EntitySystem_NewEntityManager(
+		data->entity_system,"sg_textboxes"
 		,MAX_SG_TEXTS_2D
-		,sg_texts_2d_entity_components
-		,ARRAY_SIZE(sg_texts_2d_entity_components)
-	);//SGViewer2d_New());
+		,sg_textboxes_entity_components
+		,ARRAY_SIZE(sg_textboxes_entity_components)
+	);//TextureNode_New());
 
 
 /*	data->sgnodes=List_New();
@@ -125,10 +125,10 @@ void Scene_AddSceneState(Scene *_this
 }
 
 
-void Scene_AttachNode(Scene *_this,SGNode *node){
+void Scene_AttachNode(Scene *_this,TransformNode *node){
 
 	SceneData *data = _this->data;
-	SGNode_AttachNode(data->node_root,node);
+	TransformNode_AttachNode(data->node_root,node);
 }
 */
 
@@ -187,25 +187,25 @@ EntityManager * Scene_NewEntityManager(
 	return EntitySystem_NewEntityManager(data->entity_system,_id,max_entities,entity_components,entity_components_len);
 }
 
-SGNode *Scene_NewSGNode(Scene *_this){
+TransformNode *Scene_NewTransformNode(Scene *_this){
 	SceneData *data=_this->data;
-	SGNode *sg_node=SGNode_New(_this,EntityManager_NewEntity(data->em_sg_nodes));
+	TransformNode *sg_node=TransformNode_New(_this,EntityManager_NewEntity(data->em_sg_nodes));
 	List_Add(data->sg_nodes,sg_node);
 	return sg_node;
 }
 
-SGViewer2d *Scene_NewSGViewer2d(Scene *_this){
+TextureNode *Scene_NewTextureNode(Scene *_this){
 	SceneData *data=_this->data;
-	SGViewer2d *sg_viewer_2d=SGViewer2d_New(_this,EntityManager_NewEntity(data->em_sg_viewers_2d));
-	List_Add(data->sg_viewers_2d,sg_viewer_2d);
-	return sg_viewer_2d;
+	TextureNode *sg_texture=TextureNode_New(_this,EntityManager_NewEntity(data->em_sg_textures));
+	List_Add(data->sg_textures,sg_texture);
+	return sg_texture;
 }
 
-SGText2d *Scene_NewSGText2d(Scene *_this){
+TextBoxNode *Scene_NewTextBoxNode(Scene *_this){
 	SceneData *data=_this->data;
-	SGText2d *sg_text_2d=SGText2d_New(_this,EntityManager_NewEntity(data->em_sg_texts_2d));
-	List_Add(data->sg_texts_2d,sg_text_2d);
-	return sg_text_2d;
+	TextBoxNode *sg_textbox=TextBoxNode_New(_this,EntityManager_NewEntity(data->em_sg_textboxes));
+	List_Add(data->sg_textboxes,sg_textbox);
+	return sg_textbox;
 }
 /*
 Entity * Scene_NewEntity(Scene *_this, EComponent * entity_components, size_t entity_components_len){
@@ -294,7 +294,7 @@ void Scene_Update(Scene *_this){
 	}
 
 	EntitySystem_Update(data->entity_system);
-	//SGNode_Update(data->node_root);
+	//TransformNode_Update(data->node_root);
 
 	/*if(data->current_state != NULL){
 		SceneState_Update(data->current_state);
@@ -314,7 +314,7 @@ void Scene_Delete(Scene *_this){
 	SceneData *data = _this->data;
 
 	//SGRender_Delete(_this->sg_render);
-	//SGNode_Delete(_data->node_root);
+	//TransformNode_Delete(_data->node_root);
 
 
 	/*for(unsigned i=0; i < _data->scene_states->count; i++){
@@ -325,8 +325,8 @@ void Scene_Delete(Scene *_this){
 	EntitySystem_Delete(data->entity_system);
 
 	List_Delete(data->sg_nodes);
-	List_Delete(data->sg_viewers_2d);
-	List_Delete(data->sg_texts_2d);
+	List_Delete(data->sg_textures);
+	List_Delete(data->sg_textboxes);
 	List_Delete(data->animations);
 	List_Delete(data->movie_players);
 	List_Delete(data->sprite2d_emitters);
