@@ -6,16 +6,13 @@
 typedef enum{
 	EC_INVALID=0,			// reserver for invalid component
 	EC_TRANSFORM,			// entity transform
-	EC_TRANSFORM_ANIMATION,
+
 	// to render...
 	EC_GEOMETRY,			// entity sprite render
 	EC_MATERIAL,			// entity sprite render
-	EC_MATERIAL_ANIMATION,
 	EC_TEXTURE,			// entity sprite render
 	EC_SPRITE_RENDERER,	// entity sprite render2D
 	// later register
-	EC_TEXTURE_ANIMATION,
-	EC_GEOMETRY_ANIMATION,
 	EC_TEXTBOX_RENDERER,	// entity sprite render2D
 
 

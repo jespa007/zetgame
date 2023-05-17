@@ -1,4 +1,4 @@
-#include "ecs/zg_ecs.h"
+#include "system/zg_system.h"
 
 
 void ECTexture_Setup(void *_this, Entity *_entity){

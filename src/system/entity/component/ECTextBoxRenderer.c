@@ -1,5 +1,4 @@
-
-#include "ecs/zg_ecs.h"
+#include "system/zg_system.h"
 
 typedef struct{
 	void *void_data;

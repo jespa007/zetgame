@@ -1,4 +1,4 @@
-#include "ecs/zg_ecs.h"
+#include "system/zg_system.h"
 
 List *g_es_system_registered_components=NULL;
 bool  g_user_can_register_components=true;
