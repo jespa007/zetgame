@@ -338,7 +338,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- System --
 	system/zg_system.c
 	
-	#-- Core --
+	#-- Zetgame --
 	zetgame.c		
 )
 
