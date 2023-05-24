@@ -1,10 +1,10 @@
 #include "scene/zg_scene.h"
 
 typedef struct{
-	void *data;
+	Scene *scene;
 }TransformNodeData;
 
-TransformNode *	TransformNode_New(Entity *_entity){
+TransformNode *	TransformNode_New(Scene *_scene,Entity *_entity){
 
 	if(_entity == NULL){
 		Log_ErrorF("TransformNode_New : Cannot create transform_node. Entity == NULL");
@@ -13,10 +13,10 @@ TransformNode *	TransformNode_New(Entity *_entity){
 
 	TransformNode *transform_node = ZG_NEW(TransformNode);
 	transform_node->ec_transform=_entity->components[EC_TRANSFORM];
-	transform_node->ec_transform_animation=_entity->components[EC_TRANSFORM_ANIMATION];
 
 	TransformNodeData *data = ZG_NEW(TransformNodeData);
 	transform_node->data=data;
+	data->scene=_scene;
 	return transform_node;
 }
 

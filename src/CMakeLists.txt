@@ -336,7 +336,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	tilemap/zg_tilemap.c
 	
 	#-- System --
-	system/zg_system.c
+	component_system/zg_component_system.c
 	
 	#-- Zetgame --
 	zetgame.c		

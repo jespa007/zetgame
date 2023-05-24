@@ -30,13 +30,13 @@ TextureNode *NewTextureNode(
 	TextureNode *sg_texture=Scene_NewTextureNode(_scene);
 
 	if(set_displacement){
-		TransformNode_SetDisplacement2i(sg_texture->sg_node,posx,posy);
+		ECTransform_SetDisplacement2i(sg_texture->ec_transform,posx,posy);
 	}else{
-		TransformNode_SetPosition2i(sg_texture->sg_node,posx,posy);
+		ECTransform_SetPosition2i(sg_texture->ec_transform,posx,posy);
 	}
 
-	TextureNode_SetTexture(sg_texture,texture);
-	TextureNode_SetDimensions(sg_texture,width, height);
+	ECTexture_SetTexture(sg_texture->ec_texture,texture);
+	ECSpriteRenderer_SetDimensions(sg_texture->ec_sprite_renderer,width, height);
 
 	return sg_texture;
 }

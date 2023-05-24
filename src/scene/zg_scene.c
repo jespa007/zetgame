@@ -4,9 +4,9 @@
 
 
 #include "Scene.c"
-#include "scenegraph/TextureNode.c"
-#include "scenegraph/TextBoxNode.c"
-#include "scenegraph/TransformNode.c"
+#include "nodes/TextureNode.c"
+#include "nodes/TextBoxNode.c"
+#include "nodes/TransformNode.c"
 
 //#include "scenegraph/2d/TextBoxNode2d.c"
 //#include "scenegraph/2d/SGViewer2d.c"

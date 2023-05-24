@@ -3,11 +3,10 @@
 
 struct TransformNode{
 	ECTransform	*ec_transform;
-	ECTransform	*ec_transform_animation;
 	void	*data;
 };
 
-TransformNode *	TransformNode_New(Entity *_entity);
+TransformNode *	TransformNode_New(Scene *_scene,Entity *_entity);
 void 	 		TransformNode_Delete(TransformNode *_this);
 
 

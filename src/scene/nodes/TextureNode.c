@@ -2,24 +2,22 @@
 
 
 typedef struct{
-	void *data;
+	Scene *scene;
 }TextureNodeData;
 
 
-TextureNode * TextureNode_New(Entity *_entity){
+TextureNode * TextureNode_New(Scene *_scene, Entity *_entity){
 	TextureNode *texture_node = ZG_NEW(TextureNode);
 
 	texture_node->ec_transform=_entity->components[EC_TRANSFORM];
-	texture_node->ec_transform_animation=_entity->components[EC_TRANSFORM_ANIMATION];
 	texture_node->ec_transform=_entity->components[EC_MATERIAL];
-	texture_node->ec_transform_animation=_entity->components[EC_MATERIAL_ANIMATION];
 
 	texture_node->ec_texture=_entity->components[EC_TEXTURE];
 	texture_node->ec_sprite_renderer=_entity->components[EC_SPRITE_RENDERER];
 
 	TextureNodeData *data = ZG_NEW(TextureNodeData);
 	texture_node->data=data;
-
+	data->scene=_scene;
 
 	return texture_node;
 

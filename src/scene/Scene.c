@@ -21,6 +21,8 @@ typedef struct{
 	//List			*	scene_states;
 	SceneStatus 		scene_status;
 	EntitySystem	*	entity_system;
+	AnimationSystem *	animation_system;
+	CollisionSystem *	collision_system;
 
 	List			* 	sg_nodes;
 	List			* 	sg_textures;
@@ -45,6 +47,8 @@ Scene * Scene_New(void){
 	scene->data=data;
 
 	data->entity_system=EntitySystem_New();
+	data->animation_system=AnimationSystem_New(data->entity_system);
+	data->collision_system=CollisionSystem_New(data->entity_system);
 	data->sg_nodes=List_New();
 	data->sg_textures=List_New();
 	data->sg_textboxes=List_New();
@@ -59,7 +63,6 @@ Scene * Scene_New(void){
 
 	EComponent sg_node_entity_components[]={
 			EC_TRANSFORM,
-			EC_TRANSFORM_ANIMATION
 	};
 
 	data->em_sg_nodes=EntitySystem_NewEntityManager(
@@ -72,8 +75,6 @@ Scene * Scene_New(void){
 
 	EComponent sg_textures_entity_components[]={
 			EC_SPRITE_RENDERER
-			,EC_TRANSFORM_ANIMATION
-			,EC_MATERIAL_ANIMATION
 			,EC_TRANSFORM
 	};
 
@@ -87,8 +88,6 @@ Scene * Scene_New(void){
 
 	EComponent sg_textboxes_entity_components[]={
 			EC_TEXTBOX_RENDERER
-			,EC_TRANSFORM_ANIMATION
-			,EC_MATERIAL_ANIMATION
 			,EC_TRANSFORM
 	};
 
@@ -323,6 +322,8 @@ void Scene_Delete(Scene *_this){
 
 	List_Delete(_data->scene_states);*/
 	EntitySystem_Delete(data->entity_system);
+	AnimationSystem_Delete(data->animation_system);
+	CollisionSystem_Delete(data->collision_system);
 
 	List_Delete(data->sg_nodes);
 	List_Delete(data->sg_textures);
