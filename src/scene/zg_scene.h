@@ -1,7 +1,7 @@
+#include "../ecs/zg_ecs.h"
 #include "graphics/zg_graphics.h"
 #include "animation/zg_animation.h"
 #include "mmedia/zg_mmedia.h"
-#include "component_system/zg_component_system.h"
 #include "Scene.h"
 #include "nodes/TextureNode.h"
 #include "nodes/TextBoxNode.h"

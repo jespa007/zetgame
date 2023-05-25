@@ -335,8 +335,8 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- Tilemap --
 	tilemap/zg_tilemap.c
 	
-	#-- System --
-	component_system/zg_component_system.c
+	#-- Entity Component System --
+	ecs/zg_ecs.c
 	
 	#-- Zetgame --
 	zetgame.c		
