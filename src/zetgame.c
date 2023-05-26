@@ -50,7 +50,7 @@ void ZetGame_Init(ZetGameSetupParams * info){
 	}
 
 	Input_Init();
-	if(!CS_Init()){
+	if(!ECS_Init()){
 		exit(EXIT_FAILURE);
 	}
 	//SGRender_Init();
@@ -74,7 +74,7 @@ void ZetGame_DeInit(void){
 	Mixer_DeInit();
 	Input_DeInit();
 	Graphics_DeInit();
-	CS_DeInit();
+	ECS_DeInit();
 
 	SDL_DestroyResources();
 

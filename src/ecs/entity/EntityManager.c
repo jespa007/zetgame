@@ -14,7 +14,7 @@ typedef struct {
 
 
 
-Entity  *EntityManager_CreateEntity(EntityManager *_this){
+Entity  *EntityManager_NewEntity(EntityManager *_this){
 	EntityManagerData *entity_manager_data=_this->data;
 	Entity *entity=NULL;
 	if(

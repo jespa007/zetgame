@@ -37,6 +37,10 @@ EntitySystem 	*Scene_GetEntitySystem(
 TransformNode 		*	Scene_NewTransformNode(Scene *_this);
 TextureNode 	*	Scene_NewTextureNode(Scene *_this);
 TextBoxNode 	*	Scene_NewTextBoxNode(Scene *_this);
+
+void Scene_StartTweenTransform(
+
+);
 //Entity* Scene_NewEntity(Scene *_this,EComponent * entity_components, size_t entity_components_len);
 //Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);
 

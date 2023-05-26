@@ -7,10 +7,11 @@
 #include "physics/zg_physics.h"
 #include "input/zg_input.h"
 #include "graphics/zg_graphics.h"
-#include "scene/zg_scene.h"
+//#include "scene/zg_scene.h"
 #include "gui/zg_gui.h"
 #include "sprite/zg_sprite.h"
 #include "tilemap/zg_tilemap.h"
+#include "ecs/zg_ecs.h"
 
 
 #define ZETGAME_VERSION_MAJOR	1

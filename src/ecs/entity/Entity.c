@@ -7,8 +7,9 @@ typedef struct{
 Entity *Entity_New(EntitySystem *_entity_system){
 	Entity *entity=ZG_NEW(Entity);
 	EntityData *data=ZG_NEW(EntityData);
-	//memset(data,0,sizeof(EntityData));
-	entity->components=malloc(sizeof(void *)*EntitySystem_NumComponents());
+	size_t components_length=sizeof(void *)*EntitySystem_NumComponents();
+	entity->components=malloc(components_length);
+	memset(entity->components,0,components_length);
 	entity->active=false;
 
 	entity->data=data;

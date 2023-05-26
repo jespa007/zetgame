@@ -25,7 +25,7 @@
 //#include "component/ECViewer2d.c"
 //#include "entity/EntityManager.c"
 
-bool CS_Init(void){
+bool ECS_Init(void){
 	if(!EntitySystem_Init()){
 		return false;
 	}
@@ -39,7 +39,7 @@ bool CS_Init(void){
 	return true;
 }
 
-void CS_DeInit(void){
+void ECS_DeInit(void){
 	EntitySystem_DeInit();
 
 	AnimationSystem_DeInit();

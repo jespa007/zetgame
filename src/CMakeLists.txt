@@ -321,7 +321,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	graphics/zg_graphics.c
 	
 	#-- Scene --
-	scene/zg_scene.c
+	#scene/zg_scene.c
 	
 	#-- Physics --
 	physics/zg_physics.c

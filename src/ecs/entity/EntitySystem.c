@@ -311,32 +311,34 @@ void EntitySystem_ExtendComponent(EntitySystem *_this,EComponent idx_component, 
 	size_t n_new_elements=current_component_data_len+extend;
 	void *old_ptr=component_data->ptr_data;
 	uint8_t *ptr_com=NULL;
-	Entity *ptr_entities=NULL;
+	Entity **ptr_entities=NULL;
 	size_t size_component_data=registered_component_data.size_data;
 
 	// do a realloc...
 	component_data->ptr_data=malloc(n_new_elements*registered_component_data.size_data);
+	memset(component_data->ptr_data,0,n_new_elements*registered_component_data.size_data);
 
 	if(old_ptr != NULL){
 		memcpy(component_data->ptr_data,old_ptr,component_data->n_elements*registered_component_data.size_data);
 
 		// update new pointers
-		ptr_entities=*entities;
+		ptr_entities=entities;
 		ptr_com=component_data->ptr_data;
 		for(unsigned i=0; i < component_data->n_elements; i++){
-			ptr_entities->components[idx_component]=ptr_com;
+			(*ptr_entities)->components[idx_component]=ptr_com;
 			ptr_com+=size_component_data;
+			ptr_entities++;
 		}
 		ZG_FREE(old_ptr);
 	}
 
 	// initialize new components
-	ptr_com=component_data->ptr_data + component_data->n_elements;
-	ptr_entities=*entities;
+	ptr_entities=entities+component_data->n_elements;
 	ptr_com=component_data->ptr_data+component_data->n_elements*size_component_data;
 	for(unsigned i=component_data->n_elements; i < n_new_elements; i++){
-		registered_component_data.EComponent_Setup(ptr_com,i,ptr_entities);
+		registered_component_data.EComponent_Setup(ptr_com,i,*ptr_entities);
 		ptr_com+=size_component_data;
+		ptr_entities++;
 	}
 
 	// update new elements
@@ -387,22 +389,29 @@ void EntitySystem_ExtendEntities(EntitySystem *_this, EntityManagerData *entity_
 EntityManager * EntitySystem_NewEntityManager(
 	EntitySystem *_this
 	, const char *_str_entity_manager
-	, uint16_t max_entities
-	, EComponent *entity_components
-	, size_t entity_components_len
+	, uint16_t _max_entities
+	, EComponent *_entity_components
+	, size_t _entity_components_len
 ){
 	EntitySystemData *data=_this->data;
 	EntityManagerData *entity_manager_data=ZG_NEW(EntityManagerData);
 	EntityManager *entity_manager=ZG_NEW(EntityManager);
 	entity_manager->data=entity_manager_data;
-	if(entity_components_len == 0){
+	size_t	req_entity_components_len=0;
+
+	if(_entity_components_len == 0){
 		return NULL;
 	}
+	// get required components (it has to free after use)
+	EComponent *req_entity_components=EntitySystem_GenerateComponentRequirementList(
+			_entity_components
+			,_entity_components_len
+			,&req_entity_components_len);
 
 	// check and extend required components if needed ...
-	entity_manager_data->entity_components=malloc(sizeof(EComponent)*entity_components_len);
-	memset(entity_manager_data->entity_components,0,sizeof(EComponent)*entity_components_len);
-	entity_manager_data->n_components=entity_components_len;
+	entity_manager_data->entity_components=malloc(sizeof(EComponent)*req_entity_components_len);
+	memset(entity_manager_data->entity_components,0,sizeof(EComponent)*req_entity_components_len);
+	entity_manager_data->n_components=req_entity_components_len;
 
 	//entity_manager_data->es_system=_this;
 	entity_manager_data->n_entities=0;
@@ -414,10 +423,10 @@ EntityManager * EntitySystem_NewEntityManager(
 	strcpy(entity_manager_data->name,_str_entity_manager);
 
 	EComponent *dst_ptr=entity_manager_data->entity_components;
-	EComponent *src_ptr=entity_components;
+	EComponent *src_ptr=req_entity_components;
 
 	// add components neededs for the type...
-	for(unsigned i=0; i < entity_components_len;i++){
+	for(unsigned i=0; i < req_entity_components_len;i++){
 		// register the components this type will have
 		*dst_ptr++=*src_ptr++;
 	}
@@ -426,14 +435,16 @@ EntityManager * EntitySystem_NewEntityManager(
 	MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager);
 
 	// extend entities
-	entity_manager_data->max_entities=max_entities;
-	if(max_entities != (uint16_t)UNLIMITIED_ENTITIES){
+	entity_manager_data->max_entities=_max_entities;
+	if(_max_entities != (uint16_t)UNLIMITIED_ENTITIES){
 		EntitySystem_ExtendEntities(
 			_this
 			,entity_manager_data
-			,max_entities
+			,_max_entities
 		);
 	}
+
+	ZG_FREE(req_entity_components);
 	return entity_manager;
 }
 
@@ -444,7 +455,7 @@ void EntitySystem_Update(EntitySystem * _this){
 	EntitySystemEComponentData *component=NULL;
 	uint8_t *ptr_component_data=NULL;
 	size_t size_data=0;
-	EComponentHeader * component_data=NULL;
+	//EComponentHeader * component_data=NULL;
 
 
 	for(unsigned i=0; i < g_entity_system_registered_components->count; i++){
