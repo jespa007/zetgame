@@ -10,7 +10,7 @@ struct ECTextBoxRenderer{
 };
 
 EComponentList ECTextBoxRenderer_RequiredComponents(void);
-void ECTextBoxRenderer_Setup(void *_this,ComponentId _id,  Entity *_entity);
+void ECTextBoxRenderer_Setup(void *_this,ComponentId _id);
 void ECTextBoxRenderer_Update(void *_this);
 void ECTextBoxRenderer_Destroy(void *_this);
 

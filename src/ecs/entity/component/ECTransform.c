@@ -22,7 +22,7 @@ void ECTransform_ClearChilds(ECTransform * node){
 }
 //------------------------------------------------------------------------------------
 
-void ECTransform_Setup(void *_this, ComponentId _id, Entity *_entity){
+void ECTransform_Setup(void *_this, ComponentId _id){
 
 	ECTransform * ec_transform = _this;
 	ec_transform->header.entity=_entity;

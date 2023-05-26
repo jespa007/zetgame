@@ -1,12 +1,10 @@
 #include "ecs/zg_ecs.h"
 
 
-void ECGeometry_Setup(void *_this, ComponentId _id, Entity *_entity){
+void ECGeometry_Setup(void *_this, ComponentId _id){
 	ECGeometry *ec_geometry = _this;
 	ec_geometry->header.entity=_entity;
 	ec_geometry->header.id=_id;
-	_entity->components[EC_GEOMETRY]=_this;
-
 	ec_geometry->geometry=NULL;//Geometry_New();
 }
 

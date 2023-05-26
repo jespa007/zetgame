@@ -9,7 +9,7 @@ struct ECMaterial{
 	void			*data;
 };
 
-void ECMaterial_Setup(void *_this, ComponentId _id, Entity *_entity);
+void ECMaterial_Setup(void *_this, ComponentId _id);
 void ECMaterial_SetAlpha(void *_this, float alpha);
 void ECMaterial_SetMaterialAnimation(ECMaterial *_this, ACMaterialAnimation * _material_animation_component);
 ACMaterialAnimation * ECMaterial_GetMaterialAnimation(ECMaterial *_this);

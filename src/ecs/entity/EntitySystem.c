@@ -320,15 +320,6 @@ void EntitySystem_ExtendComponent(EntitySystem *_this,EComponent idx_component, 
 
 	if(old_ptr != NULL){
 		memcpy(component_data->ptr_data,old_ptr,component_data->n_elements*registered_component_data.size_data);
-
-		// update new pointers
-		ptr_entities=entities;
-		ptr_com=component_data->ptr_data;
-		for(unsigned i=0; i < component_data->n_elements; i++){
-			(*ptr_entities)->components[idx_component]=ptr_com;
-			ptr_com+=size_component_data;
-			ptr_entities++;
-		}
 		ZG_FREE(old_ptr);
 	}
 
@@ -377,7 +368,7 @@ void EntitySystem_ExtendEntities(EntitySystem *_this, EntityManagerData *entity_
 		EntitySystem_ExtendComponent(
 			_this
 			,idx_ec
-			,entity_manager_data->entities+entity_manager_data->n_entities
+			//,entity_manager_data->entities+entity_manager_data->n_entities
 			,extend_entities
 		);
 	};

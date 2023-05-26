@@ -7,7 +7,7 @@ typedef struct{
 	EComponent id;
 	size_t 	size_data; // len data component
 	EComponentList required_components;
-	void   (*EComponent_Setup)(void *, ComponentId _id, Entity *_entity); // function to Setup component
+	void   (*EComponent_Setup)(void *, ComponentId _id); // function to Setup component
 	//void   (*EComponent_Init)(void *, Entity *); // function to Ini component
 	void   (*EComponent_Update)(void *); // function to update component
 	void   (*EComponent_Destroy)(void *); // function to destroy

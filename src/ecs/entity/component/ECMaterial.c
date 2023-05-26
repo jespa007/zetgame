@@ -4,14 +4,10 @@ typedef struct{
 	ACMaterialAnimation 	*	material_animation_component; // in case entity it has associated material animation component
 }ECMaterialData;
 
-void ECMaterial_Setup(void *_this,ComponentId _id,  Entity *_entity){
+void ECMaterial_Setup(void *_this,ComponentId _id){
 	ECMaterial *ec_material=_this;
 	ec_material->header.entity=_entity;
 	ec_material->header.id=_id;
-	_entity->components[EC_MATERIAL]=_this;
-
-
-	_entity->components[EC_MATERIAL]=_this;
 	ec_material->material=NULL;//Material_New();
 }
 

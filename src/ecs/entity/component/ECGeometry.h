@@ -8,7 +8,7 @@ struct ECGeometry{
 	Geometry 		*geometry;
 };
 
-void ECGeometry_Setup(void *_this, ComponentId _id, Entity *_entity);
+void ECGeometry_Setup(void *_this, ComponentId _id);
 void ECGeometry_Destroy(void *_this);
 
 #endif

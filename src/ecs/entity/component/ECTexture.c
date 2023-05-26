@@ -1,7 +1,7 @@
 #include "ecs/zg_ecs.h"
 
 
-void ECTexture_Setup(void *_this, ComponentId _id, Entity *_entity){
+void ECTexture_Setup(void *_this, ComponentId _id){
 	ECTexture *ec_texture=_this;
 	ec_texture->header.entity=_entity;
 	ec_texture->header.id=_id;

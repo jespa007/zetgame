@@ -9,7 +9,7 @@ struct ECTexture{
 };
 
 
-void ECTexture_Setup(void *_this,ComponentId _id, Entity *entity);
+void ECTexture_Setup(void *_this,ComponentId _id);
 void ECTexture_SetTexture(ECTexture *_this,Texture *_texture);
 
 

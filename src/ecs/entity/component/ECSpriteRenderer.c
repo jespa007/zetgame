@@ -23,7 +23,7 @@ EComponentList ECSpriteRenderer_RequiredComponents(void){
 	return cl;
 }
 
-void ECSpriteRenderer_Setup(void *_this,ComponentId _id, Entity *_entity){
+void ECSpriteRenderer_Setup(void *_this,ComponentId _id){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 	ec_sprite_renderer->header.entity=_entity;
 	ec_sprite_renderer->header.id=_id;

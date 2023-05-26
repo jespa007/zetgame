@@ -21,7 +21,7 @@ struct ECTransform{
 	void 					*data;
 };
 
-void			ECTransform_Setup(void *_this, ComponentId _id, Entity *_entity);
+void			ECTransform_Setup(void *_this, ComponentId _id);
 
 bool			ECTransform_Attach(ECTransform *_this, ECTransform *node);
 bool			ECTransform_Detach(ECTransform *_this, ECTransform *node);

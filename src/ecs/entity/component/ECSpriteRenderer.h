@@ -9,7 +9,7 @@ struct ECSpriteRenderer{
 };
 
 EComponentList ECSpriteRenderer_RequiredComponents(void);
-void ECSpriteRenderer_Setup(void *_this,ComponentId _id,  Entity *_entity);
+void ECSpriteRenderer_Setup(void *_this,ComponentId _id);
 
 //void ECSpriteRenderer_SetQuadPixels(uint16 width, uint16 height);
 void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height);
