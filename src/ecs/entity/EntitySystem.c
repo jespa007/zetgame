@@ -50,6 +50,8 @@ bool EntitySystem_Init(void){
 
 	unsigned min_iter=0;
 
+	ECS_ADD_COMPONENT(ECTransform,ECTransform_Update);
+
 	// invalid (0)
 	EntitySystem_RegisterComponentBuiltin(EC_INVALID,(EntitySystemRegisterEComponent){
 		.size_data				=0

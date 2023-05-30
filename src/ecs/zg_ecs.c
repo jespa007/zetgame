@@ -1,18 +1,18 @@
 
 // Entity
-#include "../ecs/animation/AnimationSystem.c"
-#include "../ecs/animation/component/ACMaterialAnimation.c"
-#include "../ecs/animation/component/ACTransformAnimation.c"
-#include "../ecs/collision/CollisionSystem.c"
-#include "../ecs/entity/component/ECGeometry.c"
-#include "../ecs/entity/component/ECMaterial.c"
-#include "../ecs/entity/component/ECSpriteRenderer.c"
-#include "../ecs/entity/component/ECTextBoxRenderer.c"
-#include "../ecs/entity/component/ECTexture.c"
-#include "../ecs/entity/component/ECTransform.c"
-#include "../ecs/entity/Entity.c"
-#include "../ecs/entity/EntityManager.c"
-#include "../ecs/entity/EntitySystem.c"
+#include "ecs/animation/AnimationSystem.c"
+#include "ecs/animation/component/ACMaterialAnimation.c"
+#include "ecs/animation/component/ACTransformAnimation.c"
+#include "ecs/collision/CollisionSystem.c"
+#include "ecs/entity/component/ECGeometry.c"
+#include "ecs/entity/component/ECMaterial.c"
+#include "ecs/entity/component/ECSpriteRenderer.c"
+#include "ecs/entity/component/ECTextBoxRenderer.c"
+#include "ecs/entity/component/ECTexture.c"
+#include "ecs/entity/component/ECTransform.c"
+#include "ecs/entity/Entity.c"
+#include "ecs/entity/EntityManager.c"
+#include "ecs/entity/EntitySystem.c"
 
 
 

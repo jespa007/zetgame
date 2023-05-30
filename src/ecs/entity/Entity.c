@@ -1,7 +1,7 @@
 #include "../zg_ecs.h"
 
 typedef struct{
-	EntitySystem *entity_system;
+	EntityManager *entity_manager;
 }EntityData;
 
 Entity *Entity_New(EntitySystem *_entity_system){

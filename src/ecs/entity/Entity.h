@@ -1,5 +1,5 @@
-#ifndef __CS_ENTITY_H__
-#define __CS_ENTITY_H__
+#ifndef __ENTITY_H__
+#define __ENTITY_H__
 
 // entityid it has lower 16 as the number of entity and upper 16 bits the type of entity
 //typedef uint32_t EntityId;
@@ -9,13 +9,13 @@
 #define ASSERT_ENTITY_BELONGS_TO_SYSTEM(_e,_es) assert(Entity_GetEntitySystem(_e)==_es)
 
 struct Entity{
-	void 		**components;//[ENTITY_COMPONENT_MAX];
-	bool		active;
+//EntityManager 		*entity_manager;//[ENTITY_COMPONENT_MAX];
+//	bool		active;
 	void 		*data;
 
 };
 
-Entity *Entity_New(EntitySystem *_entity_system);
+Entity *Entity_New(EntityManager *_entity_manager);
 void Entity_Start(Entity *_this);
 void Entity_Die(Entity *_this);
 void Entity_Reset(Entity *_this);

@@ -18,5 +18,6 @@ EntityManager 	*		EntityManager_New(
 );
 
 Entity  		*		EntityManager_NewEntity(EntityManager *_this);
+EntitySystem	* 		EntityManager_GetEntitySystem(EntityManager *_this);
 
 #endif

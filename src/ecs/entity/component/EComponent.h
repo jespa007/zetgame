@@ -1,8 +1,9 @@
 #ifndef _ECOMPONENT_H__
 #define _ECOMPONENT_H__
 
+
 // Builtin components
-typedef enum{
+/*typedef enum{
 	EC_INVALID=0,			// reserver for invalid component
 	EC_TRANSFORM,			// entity transform
 
@@ -16,16 +17,16 @@ typedef enum{
 
 
 	// animations...
-	/*ENTITY_COMPONENT_CAMERA, 			// entity has camera
+	ENTITY_COMPONENT_CAMERA, 			// entity has camera
 	ENTITY_COMPONENT_VIEWER2D, 			// entity has viewer2d (support texture/video)
-	ENTITY_COMPONENT_TEXT2D, 			// entity dimension + texture + appearance*/
+	ENTITY_COMPONENT_TEXT2D, 			// entity dimension + texture + appearance
 
 	EC_MAX_COMPONENTS
-}EComponent;
+}EComponent;*/
 
 typedef struct{
 	ComponentId		id;
-	Entity			*entity;
+	EntityManager	*entity_manager;
 }EComponentHeader;
 
 
@@ -33,6 +34,8 @@ typedef struct{
 	EComponent *	components;
 	size_t			n_components;
 }EComponentList;
+
+extern unsigned int __g_zg_ecs_n_component;
 
 /*
 int EntityComponent_Register(const char *_name);

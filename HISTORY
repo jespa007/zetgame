@@ -32,6 +32,11 @@ Zetgame 1.0.0
 > #25 Implement TilemapCollider 
 #26 restruct project 
 > #27 replace giflib by gifdec 
-> #28 adapt xml.c 
+#28 adapt xml.c 
+> #30 Fast component iteration
+#31 Improve toggle Fullscreen 
+> #32 Implement register components 
+> #33 New component allocation behaviour on extend entities 
+ 
 
 

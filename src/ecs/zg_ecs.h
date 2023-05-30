@@ -16,36 +16,36 @@ typedef struct Entity Entity;
 
 
 // base
-#include "../ecs/entity/component/EComponent.h"
-#include "../ecs/animation/component/AComponent.h"
+#include "ecs/entity/component/EComponent.h"
+#include "ecs/animation/component/AComponent.h"
 
 // entity
-#include "../ecs/entity/EntitySystem.h"
-#include "../ecs/entity/EntityManager.h"
-#include "../ecs/entity/Entity.h"
+#include "ecs/entity/EntitySystem.h"
+#include "ecs/entity/EntityManager.h"
+#include "ecs/entity/Entity.h"
 
 
 
 // Entity Component
-#include "../ecs/entity/component/ECTransform.h"
-#include "../ecs/entity/component/ECGeometry.h"
-#include "../ecs/entity/component/ECMaterial.h"
-#include "../ecs/entity/component/ECTexture.h"
-#include "../ecs/entity/component/ECSpriteRenderer.h"
-#include "../ecs/entity/component/ECTextBoxRenderer.h"
+#include "ecs/entity/component/ECTransform.h"
+#include "ecs/entity/component/ECGeometry.h"
+#include "ecs/entity/component/ECMaterial.h"
+#include "ecs/entity/component/ECTexture.h"
+#include "ecs/entity/component/ECSpriteRenderer.h"
+#include "ecs/entity/component/ECTextBoxRenderer.h"
 
 
 // Animation
-#include "../ecs/animation/AnimationSystem.h"
+#include "ecs/animation/AnimationSystem.h"
 
 // Animation Component
-#include "../ecs/animation/component/ACTransformAnimation.h"
-#include "../ecs/animation/component/ACMaterialAnimation.h"
+#include "ecs/animation/component/ACTransformAnimation.h"
+#include "ecs/animation/component/ACMaterialAnimation.h"
 
 
 
 // Collision
-#include "../ecs/collision/CollisionSystem.h"
+#include "ecs/collision/CollisionSystem.h"
 
 
 //#include "component/ECCamera.h"
