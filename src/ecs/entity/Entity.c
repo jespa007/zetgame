@@ -32,7 +32,17 @@ void Entity_Die(Entity *_this){
 
 EntitySystem *Entity_GetEntitySystem(Entity *_this){
  EntityData *data=(EntityData *)_this->data;
- return data->entity_system;
+ return EntityManager_GetEntitySystem(data->entity_system);
+}
+
+EntityManager *Entity_GetEntityManager(Entity *_this){
+	EntityData *data=(EntityData *)_this->data;
+	return data->entity_manager;
+}
+
+void *Entity_GetComponent(Entity *_this, ComponentId _component_id){
+	EntityData *data=(EntityData *)_this->data;
+	return EntityManager_GetComponent(data->entity_manager,_this, _component_id);
 }
 /*
 void Entity_Reset(Entity *_this){

@@ -3,9 +3,9 @@
 
 #define UNLIMITIED_ENTITIES	-1
 
-#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _data, _extra_options) \
-ComponentId __g_entity_system_component#_data=__g_entity_system_component++;\
-EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_data,(EntitySystemRegisterEComponent){\
+#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _type_data, _extra_options) \
+ComponentId __g_entity_system_component#_type_data=__g_entity_system_component++;\
+EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_type_data,(EntitySystemRegisterEComponent){\
 		.size_data				=sizeof(_data)\
 		,.required_components	=_extra_options!=NULL?_extra_options->_required_components:NULL\
 		,.EComponent_OnCreate	=_extra_options!=NULL?_extra_options->on_create:NULL\
@@ -13,8 +13,16 @@ EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_data,(EntityS
 		,.EComponent_OnDestroy	=_extra_options!=NULL?_extra_options->on_destroy:NULL\
 	}
 
-#define ZG_ECS_GET_COMPONENT(_entity_system, _entity_id, _data) \
-EntitySystem_GetComponent(_entity_system, _entity_id, __g_entity_system_component#_data);\
+#define ZG_ECS_COMPONENT_GET_COMPONENT(_entity_system, _type_data) \
+ComponentId __g_entity_system_component#_type_data=__g_entity_system_component++;\
+EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_type_data,(EntitySystemRegisterEComponent){\
+		.size_data				=sizeof(_data)\
+		,.required_components	=_extra_options!=NULL?_extra_options->_required_components:NULL\
+		,.EComponent_OnCreate	=_extra_options!=NULL?_extra_options->on_create:NULL\
+		,.EComponent_OnUpdate	=_extra_options!=NULL?_extra_options->on_update:NULL\
+		,.EComponent_OnDestroy	=_extra_options!=NULL?_extra_options->on_destroy:NULL\
+	}
+
 
 
 typedef struct{
@@ -52,6 +60,7 @@ EntityManager 	*		EntitySystem_NewEntityManager(
 
 //Entity  		*		EntitySystem_NewEntity(EntitySystem *_this,EComponent * entity_components, size_t entity_components_len);
 void					EntitySystem_Update(EntitySystem *_this);
+void 					EntitySystem_GetComponent(EntitySystem *_this, Entity * _entity, ComponentId _component_id);
 //uint8_t *EntitySystem_NewComponent(EntitySystem *_this,int idx_component);
 /*void  			EntitySystem_RemoveEntity(EntitySystem * _this, Entity entity);
 

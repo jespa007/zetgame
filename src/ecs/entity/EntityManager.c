@@ -1,16 +1,24 @@
 #include "../zg_ecs.h"
 
+//------------------------------------------------------------
+// entities are simply a pointer that hides its entity manager.
+// each entity knows its component offset by doing entity - entities
+
+
 typedef struct {
-	char 		*name; // name entity type
-	EComponent *entity_components;// it says the components it has this entity
-	size_t 		n_components; // available components
+	char 		*name; // entity manager name
+	void 		**entity_components;// The pointer of component giving its component idx
+	size_t 		n_entity_components; // available components per entity
 
 	uint16_t 	max_entities; // max entitites of this type (default 1)
 	uint16_t 	n_entities;
 	uint16_t 	active_entities;
-	Entity 		**entities;
+
+	Entity 		*entities;			// entity reference
+	ComponentId	*entity_component_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
 
 }EntityManagerData;
+
 
 
 
@@ -26,11 +34,23 @@ Entity  *EntityManager_NewEntity(EntityManager *_this){
 	entity=entity_manager_data->entities[entity_manager_data->active_entities];
 	entity_manager_data->active_entities++;
 
-	entity->active=true;
 
 	return entity;
 }
 
+void 	*EntityManager_GetComponent(EntityManager *_this,Entity *_entity, ComponentId _component_id){
+	EntityManagerData *data=_this->data;
 
+	ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_this,_entity);
+
+	size_t entity_idx=_entity-data->entities;
+	size_t entity_component_idx=data->entity_component_ref[entity_idx];
+	void *component_data=data->entity_components[entity_component_idx];
+
+	asset(component_data!=NULL);
+
+	return component_data;
+
+}
 
 

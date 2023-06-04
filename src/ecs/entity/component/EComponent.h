@@ -24,8 +24,12 @@
 	EC_MAX_COMPONENTS
 }EComponent;*/
 
+#define EC_INVALID -1
+
+typedef int EComponent;
+
 typedef struct{
-	ComponentId		id;
+	ComponentId		entity_components_id; //
 	EntityManager	*entity_manager;
 }EComponentHeader;
 
@@ -35,7 +39,7 @@ typedef struct{
 	size_t			n_components;
 }EComponentList;
 
-extern unsigned int __g_zg_ecs_n_component;
+extern unsigned int __zg_ecs_n_component__;
 
 /*
 int EntityComponent_Register(const char *_name);

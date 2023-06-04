@@ -6,7 +6,12 @@
 
 #define ZG_INVALID_ENTITY_ID 0
 
+#define ZG_ENTITY_GET_COMPONENT(_entity, _type_data) \
+(_type_data)Entity_GetComponent(Entity_GetEntitySystem(_entity_id, __g_entity_system_component#_type_data);\
+
+
 #define ASSERT_ENTITY_BELONGS_TO_SYSTEM(_e,_es) assert(Entity_GetEntitySystem(_e)==_es)
+#define ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_e,_es) assert(Entity_GetEntityManager(_e)==_es)
 
 struct Entity{
 //EntityManager 		*entity_manager;//[ENTITY_COMPONENT_MAX];
@@ -20,6 +25,9 @@ void Entity_Start(Entity *_this);
 void Entity_Die(Entity *_this);
 void Entity_Reset(Entity *_this);
 EntitySystem *Entity_GetEntitySystem(Entity *_this);
+EntityManager *Entity_GetEntityManager(Entity *_this);
+void *Entity_GetComponent(Entity *_this, ComponentId _component_id);
+
 //void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_component);
 //void Entity_DeAttachComponent(Entity *_this, uint16_t idx_component);
 // Helper functions

@@ -1,4 +1,4 @@
 #include "ecs/zg_ecs.h"
 
 
-unsigned int __g_zg_ecs_n_component=0;
+unsigned int __zg_ecs_n_component__=0;

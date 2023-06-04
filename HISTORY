@@ -36,7 +36,8 @@ Zetgame 1.0.0
 > #30 Fast component iteration
 #31 Improve toggle Fullscreen 
 > #32 Implement register components 
-> #33 New component allocation behaviour on extend entities 
+> #33 New component allocation behaviour on extend entities
+> #34 Prefix all types and macros with ZG_  
  
 
 

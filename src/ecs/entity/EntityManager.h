@@ -19,5 +19,6 @@ EntityManager 	*		EntityManager_New(
 
 Entity  		*		EntityManager_NewEntity(EntityManager *_this);
 EntitySystem	* 		EntityManager_GetEntitySystem(EntityManager *_this);
+void 			*		EntityManager_GetComponent(EntityManager *_this,Entity *_entity, ComponentId _component_id);
 
 #endif
