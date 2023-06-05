@@ -23,7 +23,17 @@ typedef struct{
 //---------------------------------------------------
 // PRIVATE FUNCTIONS
 
-bool	EntitySystem_RegisterComponentBuiltin(EComponent _idx_component,EntitySystemRegisterEComponent es_component_register){
+bool	EntitySystem_RegisterComponent(
+		EComponent _idx_component
+		//,EntitySystemRegisterEComponent es_component_register
+		//EComponent id;
+		,size_t 	_size_data; // len data component
+		,EComponentList _required_components
+		//void   (*EComponent_Setup)(void *, ComponentId _id); // function to Setup component
+		,void   (* _on_update)(void *_component_data) // function component
+		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
+		,void   (* _on_destroy)(void *_component_data)
+){
 
 	if(g_entity_system_user_can_register_components==false){
 		Log_ErrorF("Components should registered before create any Entity-System");
@@ -131,7 +141,7 @@ bool EntitySystem_Init(void){
 	g_entity_system_user_can_register_components=true;
 	return true;
 }
-
+/*
 int	EntitySystem_RegisterComponent(EntitySystemRegisterEComponent es_component_register){
 	int idx_component=0;
 
@@ -143,7 +153,7 @@ int	EntitySystem_RegisterComponent(EntitySystemRegisterEComponent es_component_r
 		return EC_INVALID;
 	}
 	return idx_component;
-}
+}*/
 
 size_t					EntitySystem_NumComponents(void){
 	if(g_entity_system_registered_components != NULL){

@@ -212,8 +212,8 @@ void				AnimationSystem_StartTweenTransform(
 
 	// Check whether entity has transform animation
 	ACTransformAnimation *transform_animation=ECTransform_GetTransformAnimation(
-			ZS_ECS_GET_COMPONENT(
-					data->entity_system,_entity,ECTransform)
+			ZG_ENTITY_GET_COMPONENT(
+				_entity,ECTransform
 			)
 	);//->components[EC_TRANSFORM]);
 

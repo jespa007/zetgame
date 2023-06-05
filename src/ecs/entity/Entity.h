@@ -7,11 +7,11 @@
 #define ZG_INVALID_ENTITY_ID 0
 
 #define ZG_ENTITY_GET_COMPONENT(_entity, _type_data) \
-(_type_data)Entity_GetComponent(Entity_GetEntitySystem(_entity_id, __g_entity_system_component#_type_data);\
+(_type_data *)Entity_GetComponent(Entity_GetEntitySystem(_entity, __g_entity_system_component#_type_data);\
 
 
-#define ASSERT_ENTITY_BELONGS_TO_SYSTEM(_e,_es) assert(Entity_GetEntitySystem(_e)==_es)
-#define ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_e,_es) assert(Entity_GetEntityManager(_e)==_es)
+#define ASSERT_ENTITY_BELONGS_TO_SYSTEM(_entity,_entity_system) assert(Entity_GetEntitySystem(_entity)==_entity_system)
+#define ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_entity,_entity_manager) assert(Entity_GetEntityManager(_entity)==_entity_manager)
 
 struct Entity{
 //EntityManager 		*entity_manager;//[ENTITY_COMPONENT_MAX];

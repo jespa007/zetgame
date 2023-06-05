@@ -3,38 +3,32 @@
 
 #define UNLIMITIED_ENTITIES	-1
 
-#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _type_data, _extra_options) \
+#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _type_data, _required_components,_update_function,_on_create,_on_destroy) \
 ComponentId __g_entity_system_component#_type_data=__g_entity_system_component++;\
-EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_type_data,(EntitySystemRegisterEComponent){\
-		.size_data				=sizeof(_data)\
-		,.required_components	=_extra_options!=NULL?_extra_options->_required_components:NULL\
-		,.EComponent_OnCreate	=_extra_options!=NULL?_extra_options->on_create:NULL\
-		,.EComponent_OnUpdate	=_extra_options!=NULL?_extra_options->on_update:NULL\
-		,.EComponent_OnDestroy	=_extra_options!=NULL?_extra_options->on_destroy:NULL\
-	}
+EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_type_data,\
+		sizeof(_type_data)\
+		,_required_components\
+		,_update\
+		,_on_create\
+		,_on_destroy\
+);
+
+
 
 #define ZG_ECS_COMPONENT_GET_COMPONENT(_entity_system, _type_data) \
-ComponentId __g_entity_system_component#_type_data=__g_entity_system_component++;\
-EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_type_data,(EntitySystemRegisterEComponent){\
-		.size_data				=sizeof(_data)\
-		,.required_components	=_extra_options!=NULL?_extra_options->_required_components:NULL\
-		,.EComponent_OnCreate	=_extra_options!=NULL?_extra_options->on_create:NULL\
-		,.EComponent_OnUpdate	=_extra_options!=NULL?_extra_options->on_update:NULL\
-		,.EComponent_OnDestroy	=_extra_options!=NULL?_extra_options->on_destroy:NULL\
-	}
 
-
+/*
 
 typedef struct{
 	EComponent id;
 	size_t 	size_data; // len data component
 	EComponentList required_components;
 	//void   (*EComponent_Setup)(void *, ComponentId _id); // function to Setup component
-	void   (*EComponent_OnCreate)(void *); // function to Ini component
-	void   (*EComponent_OnUpdate)(void *); // function to update component
-	void   (*EComponent_OnDestroy)(void *);
+	void   (*EComponent_OnCreate)(void *_component_data); // set it up if component need to init or allocate resources on its creation
+	void   (*EComponent_OnUpdate)(void *_component_data); // function component
+	void   (*EComponent_OnDestroy)(void *_component_data);// set it up if component need to deinit or deallocate resources on its creation
 	//void   (*EComponent_Destroy)(void *); // function to destroy
-}EntitySystemRegisterEComponent;
+}EntitySystemRegisterEComponent;*/
 
 struct EntitySystem{
 	void *data;
@@ -42,7 +36,17 @@ struct EntitySystem{
 //---------------------------------------------------
 // STATIC FUNCTIONS
 bool				EntitySystem_Init(void);
-int					EntitySystem_RegisterComponent(EntitySystemRegisterEComponent es_component_register);
+/*void					EntitySystem_RegisterComponent(
+		EComponent _idx_component
+		//,EntitySystemRegisterEComponent es_component_register
+		//EComponent id;
+		,size_t 	_size_data // len data component
+		,EComponentList required_components
+		,void   (*EComponent_OnCreate)(void *_component_data) // set it up if component need to init or allocate resources on its creation
+		,void   (*EComponent_OnUpdate)(void *_component_data) // function component
+		,void   (*EComponent_OnDestroy)(void *_component_data)
+);*/
+
 size_t				EntitySystem_NumComponents(void);
 void 				EntitySystem_DeInit(void);
 
