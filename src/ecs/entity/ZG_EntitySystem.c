@@ -36,19 +36,19 @@ bool	EntitySystem_RegisterComponent(
 ){
 
 	if(g_entity_system_user_can_register_components==false){
-		Log_ErrorF("Components should registered before create any Entity-System");
+		ZG_Log_ErrorF("Components should registered before create any Entity-System");
 		return false; //
 	}
 
 	if(g_entity_system_registered_components == NULL){
-		g_entity_system_registered_components=List_New();
+		g_entity_system_registered_components=ZG_List_New();
 	}
 
 	EComponent idx_component=_idx_component;//g_entity_system_registered_components->count;
 	EntitySystemRegisteredEComponentData *new_component_register=ZG_NEW(EntitySystemRegisteredEComponentData);
 	new_component_register->data=es_component_register;
 	new_component_register->id=idx_component;
-	List_Add(g_entity_system_registered_components,new_component_register);
+	ZG_List_Add(g_entity_system_registered_components,new_component_register);
 
 	return true;
 }
@@ -133,7 +133,7 @@ bool EntitySystem_Init(void){
 	for(unsigned i=0; i < min_iter; i++){
 		EntitySystemRegisteredEComponentData *component=g_entity_system_registered_components->items[i];
 		if(component->id != i){
-			Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
+			ZG_Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
 			return false;
 		}
 	}
@@ -163,7 +163,7 @@ size_t					EntitySystem_NumComponents(void){
 }
 
 void EntitySystem_DeInit(void){
-	List_DeleteAndFreeAllItems(g_entity_system_registered_components);
+	ZG_List_DeleteAndFreeAllItems(g_entity_system_registered_components);
 }
 
 //---------------------------------------------------
@@ -171,7 +171,7 @@ void EntitySystem_DeInit(void){
 EntitySystem *EntitySystem_New(void){
 	EntitySystem *system=ZG_NEW(EntitySystem);
 	EntitySystemData *data=ZG_NEW(EntitySystemData);
-	data->lst_entity_managers=List_New();
+	data->lst_entity_managers=ZG_List_New();
 	data->map_entity_managers=MapString_New();
 
 	data->components=malloc(sizeof(EntitySystemEComponentData)*g_entity_system_registered_components->count);
@@ -198,7 +198,7 @@ int EntitySystem_OrderComponents(const void *_a, const void *_b){
 
 EComponent *EntitySystem_GenerateComponentRequirementList(EComponent *in_data, size_t in_len, size_t *out_len){
 	// check number of whether there's no component
-	ZG_List *list=List_New();
+	ZG_List *list=ZG_List_New();
 
 	for(unsigned i=0; i < in_len;i++){
 		EComponent entity_component=in_data[i];
@@ -219,7 +219,7 @@ EComponent *EntitySystem_GenerateComponentRequirementList(EComponent *in_data, s
 			}
 
 			if(found==false){
-				List_Add(list,(void *)((intptr_t)idx_component_req_to_find));
+				ZG_List_Add(list,(void *)((intptr_t)idx_component_req_to_find));
 			}
 		}
 
@@ -234,7 +234,7 @@ EComponent *EntitySystem_GenerateComponentRequirementList(EComponent *in_data, s
 			}
 
 			if(found==false){
-				List_Add(list,(void *)((intptr_t)entity_component));
+				ZG_List_Add(list,(void *)((intptr_t)entity_component));
 			}
 		}
 	}
@@ -248,7 +248,7 @@ EComponent *EntitySystem_GenerateComponentRequirementList(EComponent *in_data, s
 
 	qsort(new_data,list->count,sizeof(EComponent),EntitySystem_OrderComponents);
 
-	List_Delete(list);
+	ZG_List_Delete(list);
 
 	return new_data;
 }
@@ -271,7 +271,7 @@ Entity *EntitySystem_NewEntity(EntitySystem *_this,EComponent *_entity_component
 
 	strcat(_entity_manager_id,"_@__");
 
-	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_entity_manager_id,NULL);
+	EntityManagerData *entity_manager_data=ZG_MapString_GetValue(data->map_entity_managers,_entity_manager_id,NULL);
 
 	if(entity_manager_data == NULL){ // create ...
 		entity_manager_data=(EntityManagerData *)EntitySystem_NewEntityManager(_this,_entity_manager_id ,UNLIMITIED_ENTITIES, entity_components, entity_components_len);
@@ -284,10 +284,10 @@ Entity *EntitySystem_NewEntity(EntitySystem *_this,EComponent *_entity_component
 /*
 Entity  *EntitySystem_NewEntityFromManager(EntitySystem *_this,const char *_id){
 	EntitySystemData *data=_this->data;
-	EntityManagerData *entity_manager_data=MapString_GetValue(data->map_entity_managers,_id,NULL);
+	EntityManagerData *entity_manager_data=ZG_MapString_GetValue(data->map_entity_managers,_id,NULL);
 
 	if(entity_manager_data == NULL){
-		Log_Error("Entity manager '%s' not exist",_id);
+		ZG_Log_Error("Entity manager '%s' not exist",_id);
 		return NULL;
 	}
 
@@ -354,7 +354,7 @@ void EntitySystem_ExtendEntities(EntitySystem *_this, EntityManagerData *entity_
 	size_t total_extend=entity_manager_data->n_entities+extend_entities;
 
 	if(total_extend >= entity_manager_data->max_entities){
-		Log_Error("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_manager_data->name,extend_entities,entity_manager_data->max_entities);
+		ZG_Log_Error("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_manager_data->name,extend_entities,entity_manager_data->max_entities);
 	}
 
 	Entity **old_ptr=entity_manager_data->entities;
@@ -434,8 +434,8 @@ EntityManager * EntitySystem_NewEntityManager(
 		*dst_ptr++=*src_ptr++;
 	}
 
-	List_Add(data->lst_entity_managers,entity_manager);
-	MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager);
+	ZG_List_Add(data->lst_entity_managers,entity_manager);
+	ZG_MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager);
 
 	// extend entities
 	entity_manager_data->max_entities=_max_entities;
@@ -521,8 +521,8 @@ void EntitySystem_Delete(EntitySystem *_this){
 		component_data++;
 	}
 
-	List_Delete(data->lst_entity_managers);
-	MapString_Delete(data->map_entity_managers);
+	ZG_List_Delete(data->lst_entity_managers);
+	ZG_MapString_Delete(data->map_entity_managers);
 
 	for(unsigned i=0; i < g_entity_system_registered_components->count;i++){
 		ZG_FREE(data->components[i]);

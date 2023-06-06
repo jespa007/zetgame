@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]){
 
 	ZetGameSetupParams default_setup={
-			.graphics_api=GRAPHICS_API_GL
+			.graphics_api=ZG_GRAPHICS_API_GL
 			,.width=ZG_DEFAULT_SCREEN_WIDTH
 			,.height=ZG_DEFAULT_SCREEN_HEIGHT
 			,.wcaption_title="test_mixer"
@@ -27,22 +27,22 @@ int main(int argc, char *argv[]){
 
 	if(argc == 2 && !strcmp(argv[1],"from_mem")){
 
-		Log_InfoF("Load from memory");
+		ZG_Log_InfoF("Load from memory");
 
-		ZG_BufferByte *bb_effect = File_Read("../../../test/data/samples/sample.wav");
-		ZG_BufferByte *bb_wav = File_Read("../../../test/data/musics/music.wav");
-		ZG_BufferByte *bb_ogg = File_Read("../../../test/data/musics/music.ogg");
-		ZG_BufferByte *bb_xm = File_Read("../../../test/data/musics/music.xm");
+		ZG_BufferByte *bb_effect = ZG_File_Read("../../../test/data/samples/sample.wav");
+		ZG_BufferByte *bb_wav = ZG_File_Read("../../../test/data/musics/music.wav");
+		ZG_BufferByte *bb_ogg = ZG_File_Read("../../../test/data/musics/music.ogg");
+		ZG_BufferByte *bb_xm = ZG_File_Read("../../../test/data/musics/music.xm");
 
 		id_effect = Sample_LoadFromMemory(bb_effect->ptr, bb_effect->len);
 		id_wav = Music_LoadFromMemory(bb_wav->ptr, bb_wav->len);
 		id_ogg = Music_LoadFromMemory(bb_ogg->ptr, bb_ogg->len);
 		id_xm = Music_LoadFromMemory(bb_xm->ptr, bb_xm->len);
 
-		if(bb_effect!=NULL)BufferByte_Delete(bb_effect);
-		if(bb_wav!=NULL)BufferByte_Delete(bb_wav);
-		if(bb_ogg!=NULL)BufferByte_Delete(bb_ogg);
-		if(bb_xm!=NULL)BufferByte_Delete(bb_xm);
+		if(bb_effect!=NULL)ZG_BufferByte_Delete(bb_effect);
+		if(bb_wav!=NULL)ZG_BufferByte_Delete(bb_wav);
+		if(bb_ogg!=NULL)ZG_BufferByte_Delete(bb_ogg);
+		if(bb_xm!=NULL)ZG_BufferByte_Delete(bb_xm);
 
 	}else{
 		id_effect = Sample_Load("../../../test/data/samples/sample.wav");
@@ -52,10 +52,10 @@ int main(int argc, char *argv[]){
 
 	}
 
-	Log_Info("duration 0: %2i:%02i s",Sample_GetDuration(id_effect)/60000		,(int)(((float)(Sample_GetDuration(id_effect))/60000.0f)*60.0f));
-	Log_Info("duration 1: %2i:%02i s",Music_GetDuration(id_wav)/60000		,(int)(((float)(Music_GetDuration(id_wav))/60000.0f)*60.0f));
-	Log_Info("duration 2: %2i:%02i s",Music_GetDuration(id_xm)/60000		,(int)(((float)(Music_GetDuration(id_xm))/60000.0f)*60.0f));
-	Log_Info("duration 3: %2i:%02i s",Music_GetDuration(id_ogg)/60000	,(int)(((float)(Music_GetDuration(id_ogg))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 0: %2i:%02i s",Sample_GetDuration(id_effect)/60000		,(int)(((float)(Sample_GetDuration(id_effect))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 1: %2i:%02i s",Music_GetDuration(id_wav)/60000		,(int)(((float)(Music_GetDuration(id_wav))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 2: %2i:%02i s",Music_GetDuration(id_xm)/60000		,(int)(((float)(Music_GetDuration(id_xm))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 3: %2i:%02i s",Music_GetDuration(id_ogg)/60000	,(int)(((float)(Music_GetDuration(id_ogg))/60000.0f)*60.0f));
 
 	do{
 		Graphics_BeginRender();
@@ -64,52 +64,52 @@ int main(int argc, char *argv[]){
 		request_backward_seek=0;
 
 		if(K_0){
-			Log_InfoF("play effect");
+			ZG_Log_InfoF("play effect");
 			Sample_Play(id_effect);
 
 		}
 		if(K_1){
 
 			if(Music_IsPlaying(id_wav)&& !Music_IsPaused(id_wav)){
-				Log_InfoF("Pause wav");
+				ZG_Log_InfoF("Pause wav");
 				Music_Pause(id_wav);
 			}else{
 				if(Music_IsPaused(id_wav)){
 					Music_Resume(id_wav);
-					Log_InfoF("Resume wav");
+					ZG_Log_InfoF("Resume wav");
 				}
 				else{
-					Log_InfoF("Play wav");
+					ZG_Log_InfoF("Play wav");
 					Music_Play(id_wav);
 				}
 			}
 		}
 		if(K_2){
 			if(Music_IsPlaying(id_xm)&& !Music_IsPaused(id_xm)){
-				Log_InfoF("Pause xm");
+				ZG_Log_InfoF("Pause xm");
 				Music_Pause(id_xm);
 			}else{
 				if(Music_IsPaused(id_xm)){
 					Music_Resume(id_xm);
-					Log_InfoF("Resume xm");
+					ZG_Log_InfoF("Resume xm");
 				}
 				else{
-					Log_InfoF("Play xm");
+					ZG_Log_InfoF("Play xm");
 					Music_Play(id_xm);
 				}
 			}
 		}
 		if(K_3){
 			if(Music_IsPlaying(id_ogg)&& !Music_IsPaused(id_ogg)){
-				Log_InfoF("Pause ogg");
+				ZG_Log_InfoF("Pause ogg");
 				Music_Stop(id_ogg);
 			}else{
 				if(Music_IsPaused(id_ogg)){
 					Music_Resume(id_ogg);
-					Log_InfoF("Resume ogg");
+					ZG_Log_InfoF("Resume ogg");
 				}
 				else{
-					Log_InfoF("Play ogg");
+					ZG_Log_InfoF("Play ogg");
 					Music_Play(id_ogg);
 				}
 			}

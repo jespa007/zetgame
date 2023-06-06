@@ -1,15 +1,15 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 typedef struct{
 	GLuint texture;
 	GLuint internal_format;
-}TextureDataGL;
+}ZG_TextureDataGL;
 
-GLuint Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel);
+GLuint ZG_Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel);
 
-void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel ){
+void ZG_Texture_GL_New(ZG_Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel ){
 
-	TextureDataGL* texture_data=ZG_NEW(TextureDataGL);
+	ZG_TextureDataGL* texture_data=ZG_NEW(ZG_TextureDataGL);
 	texture_data->internal_format=GL_INVALID_VALUE;
 	texture_data->texture=GL_INVALID_VALUE;
 	text->texture_data=texture_data;
@@ -18,7 +18,7 @@ void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _he
 
 
 	if(_width == 0 || _height == 0){
-		Log_ErrorF("height=0 width=0 texture cannot be rebuilt");
+		ZG_Log_ErrorF("height=0 width=0 texture cannot be rebuilt");
 		return;
 	}
 
@@ -38,7 +38,7 @@ void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _he
 	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-	 texture_data->internal_format = Texture_GL_BytesPerPixelToGLInternalFormat(_bytes_per_pixel);
+	 texture_data->internal_format = ZG_Texture_GL_BytesPerPixelToGLInternalFormat(_bytes_per_pixel);
 
 
 	// Edit the texture object's image data using the information SDL_Surface gives us
@@ -61,12 +61,12 @@ void Texture_GL_New(Texture *text,GLvoid *_pixels, uint16_t _width, uint16_t _he
 }
 
 
-void Texture_GL_Bind(Texture *text){
+void ZG_Texture_GL_Bind(ZG_Texture *text){
 
 	if(text ==NULL) return;
 
-	TextureDataGL * texture_data = text->texture_data;
-	if(text->texture_type==TEXTURE_TYPE_CUBEMAP) {
+	ZG_TextureDataGL * texture_data = text->texture_data;
+	if(text->texture_type==ZG_TEXTURE_TYPE_CUBEMAP) {
 		glEnable(GL_TEXTURE_CUBE_MAP);
 		glBindTexture (GL_TEXTURE_CUBE_MAP, texture_data->texture);
 	}
@@ -77,14 +77,14 @@ void Texture_GL_Bind(Texture *text){
 	}
 }
 
-GLuint Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel){
+GLuint ZG_Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel){
 
 	GLuint internal_format = GL_INVALID_VALUE;
 
 	switch(bytes_per_pixel)
 	{
 		default:
-			Log_Error("Unknown bytes per pixel depth format %i",bytes_per_pixel);
+			ZG_Log_Error("Unknown bytes per pixel depth format %i",bytes_per_pixel);
 			return GL_INVALID_VALUE;
 			break;
 		case 1:
@@ -118,11 +118,11 @@ GLuint Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel){
 	return internal_format;
 }
 
-void Texture_GL_Unload(Texture * text) {
+void ZG_Texture_GL_Unload(ZG_Texture * text) {
 	if(text==NULL){
 		return;
 	}
-	TextureDataGL *texture_data=(TextureDataGL *)text->texture_data;
+	ZG_TextureDataGL *texture_data=(ZG_TextureDataGL *)text->texture_data;
 
 	if(texture_data->texture != GL_INVALID_VALUE)
 		glDeleteTextures(1, &texture_data->texture);
@@ -131,14 +131,14 @@ void Texture_GL_Unload(Texture * text) {
 }
 
 
-int	Texture_GL_GetHandle(Texture * _this){
-	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
+int	ZG_Texture_GL_GetHandle(ZG_Texture * _this){
+	ZG_TextureDataGL *texture_data=(ZG_TextureDataGL *)_this->texture_data;
 	return texture_data->texture;
 }
 
-void	Texture_GL_SetRepeatUV(Texture * _this, bool _repeat_uv){
+void	ZG_Texture_GL_SetRepeatUV(ZG_Texture * _this, bool _repeat_uv){
 
-	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
+	ZG_TextureDataGL *texture_data=(ZG_TextureDataGL *)_this->texture_data;
 	glBindTexture( GL_TEXTURE_2D,  texture_data->texture);
 
 	GLuint clamp_method=GL_CLAMP_TO_BORDER;
@@ -151,19 +151,19 @@ void	Texture_GL_SetRepeatUV(Texture * _this, bool _repeat_uv){
 
 }
 
-void		Texture_GL_SetFilter(Texture *_this, TextureFilter _filter){
-	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
+void		ZG_Texture_GL_SetFilter(ZG_Texture *_this, ZG_TextureFilter _filter){
+	ZG_TextureDataGL *texture_data=(ZG_TextureDataGL *)_this->texture_data;
 	glBindTexture( GL_TEXTURE_2D,  texture_data->texture);
 
 
 	switch(_filter){
 	default:
 		break;
-	case TEXTURE_FILTER_LINEAR:
+	case ZG_TEXTURE_FILTER_LINEAR:
 		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		break;
-	case TEXTURE_FILTER_NEAREST:
+	case ZG_TEXTURE_FILTER_NEAREST:
 		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 		 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 		break;
@@ -171,12 +171,12 @@ void		Texture_GL_SetFilter(Texture *_this, TextureFilter _filter){
 }
 
 
-bool Texture_GL_Update(Texture * _this,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
+bool ZG_Texture_GL_Update(ZG_Texture * _this,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
 	if(_this==NULL){
 		return false;
 	}
 
-	TextureDataGL *texture_data=(TextureDataGL *)_this->texture_data;
+	ZG_TextureDataGL *texture_data=(ZG_TextureDataGL *)_this->texture_data;
 
 	// TODO: Create a texture with width/height
 	// update
@@ -214,10 +214,10 @@ bool Texture_GL_Update(Texture * _this,uint16_t _x, uint16_t _y,uint16_t _width,
 
 }
 
-void Texture_GL_Delete(Texture *texture){
-	TextureDataGL *texture_data=(TextureDataGL *)texture->texture_data;
+void ZG_Texture_GL_Delete(ZG_Texture *texture){
+	ZG_TextureDataGL *texture_data=(ZG_TextureDataGL *)texture->texture_data;
 
-	Texture_GL_Unload(texture);
+	ZG_Texture_GL_Unload(texture);
 
 	ZG_FREE(texture_data);
 }

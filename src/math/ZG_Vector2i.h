@@ -3,16 +3,16 @@
 
 
 //typedef struct Vector2f Vector2f;
-typedef struct Vector2i Vector2i;
-struct Vector2i{
+typedef struct ZG_Vector2i ZG_Vector2i;
+struct ZG_Vector2i{
 	int x,y;
 };
 
-Vector2i Vector2i_Zeros(void);
-Vector2i Vector2i_New(int x, int y);
-Vector2i Vector2i_Add(Vector2i p1, Vector2i p2);
-Vector2i Vector2i_Sub(Vector2i p1, Vector2i p2);
-Vector2i Vector2i_Mulv2f(Vector2i p1, Vector2f p2);
-bool	 Vector2i_PointRectCollision(Vector2i point, Vector2i ini, Vector2i end);
+ZG_Vector2i Vector2i_Zeros(void);
+ZG_Vector2i Vector2i_New(int x, int y);
+ZG_Vector2i Vector2i_Add(ZG_Vector2i p1, ZG_Vector2i p2);
+ZG_Vector2i Vector2i_Sub(ZG_Vector2i p1, ZG_Vector2i p2);
+ZG_Vector2i Vector2i_Mulv2f(ZG_Vector2i p1, Vector2f p2);
+bool	 Vector2i_PointRectCollision(ZG_Vector2i point, ZG_Vector2i ini, ZG_Vector2i end);
 
 #endif

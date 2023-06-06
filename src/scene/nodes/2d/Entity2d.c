@@ -195,7 +195,7 @@ void  CSprite2d::start(int x,int y, double _angle_dir, double _speed,  tInfoSpri
 	info_group=_info_group;
 
 	this->setColor3i(255,255,255);
-	this->setOpacity(CMaterial::ALPHA_VALUE_SOLID);
+	this->setOpacity(CMaterial::ZG_ALPHA_VALUE_SOLID);
 
 	DISPATCH_FUNCTION_SPRITE2D_CALLBACK_1P(SPRITE_EMITTER_NAME,"onIni",on_ini_callback,this);
 
@@ -566,7 +566,7 @@ void CSprite2d::drawTextBoxNode2d() {
 			GET_ACTIVE_RENDER->projection_to_pixelY(absolute_translation->y),
 			text,
 			m_appearance->getMaterial()->getColor(),
-			CFont::HORIZONTAL_ALIGNMENT_CENTER
+			CFont::ZG_HORIZONTAL_ALIGNMENT_CENTER
 	);
 
 }

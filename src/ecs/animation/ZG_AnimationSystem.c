@@ -30,19 +30,19 @@ typedef struct{
 bool	AnimationSystem_RegisterComponentBuiltin(AComponent _idx_component,AnimationSystemRegisterAComponent as_component_register){
 
 	if(__g_acs_system_user_can_register_components==false){
-		Log_ErrorF("Components should registered before create any Entity-System");
+		ZG_Log_ErrorF("Components should registered before create any Entity-System");
 		return false; //
 	}
 
 	if(__g_acs_system_registered_components == NULL){
-		__g_acs_system_registered_components=List_New();
+		__g_acs_system_registered_components=ZG_List_New();
 	}
 
 	AComponent idx_component=_idx_component;//__g_acs_system_registered_components->count;
 	AnimationSystemRegisteredAComponentData *new_component_register=ZG_NEW(AnimationSystemRegisteredAComponentData);
 	new_component_register->data=as_component_register;
 	new_component_register->id=idx_component;
-	List_Add(__g_acs_system_registered_components,new_component_register);
+	ZG_List_Add(__g_acs_system_registered_components,new_component_register);
 
 	return true;
 }
@@ -83,7 +83,7 @@ bool AnimationSystem_Init(void){
 	for(unsigned i=0; i < min_iter; i++){
 		AnimationSystemRegisteredAComponentData *component=__g_acs_system_registered_components->items[i];
 		if(component->id != i){
-			Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
+			ZG_Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
 			return false;
 		}
 	}
@@ -113,7 +113,7 @@ size_t					AnimationSystem_NumComponents(void){
 }
 
 void AnimationSystem_DeInit(void){
-	List_DeleteAndFreeAllItems(__g_acs_system_registered_components);
+	ZG_List_DeleteAndFreeAllItems(__g_acs_system_registered_components);
 }
 
 //---------------------------------------------------
@@ -227,7 +227,7 @@ void				AnimationSystem_StartTweenTransform(
 			transform_animation->header.entity=_entity;
 
 		}else{
-			Log_ErrorF("Reached max animations");
+			ZG_Log_ErrorF("Reached max animations");
 			return;
 		}
 

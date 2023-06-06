@@ -94,7 +94,7 @@
 #include 	"zetnet.h"
 
 #include	"common.h"
-#include	"zg_memory.h"
+#include	"ZG_Memory.h"
 
 
 #include	"ZG_Term.h"

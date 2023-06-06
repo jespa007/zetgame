@@ -1,8 +1,8 @@
 
 #include "zg_math.h"
 
-BoundingBox  BoundingBox_New(void){
-	return (BoundingBox){
+ZG_BoundingBox  BoundingBox_New(void){
+	return (ZG_BoundingBox){
 		 .minx=0
 		,.miny=0
 		,.maxx=0
@@ -10,13 +10,13 @@ BoundingBox  BoundingBox_New(void){
 	};
 }
 
-BoundingBox  BoundingBox_New4f(
+ZG_BoundingBox  ZG_BoundingBox_New4f(
 		float _minx
 		,float _miny
 		,float _maxx
 		,float _maxy
 ){
-	return (BoundingBox){
+	return (ZG_BoundingBox){
 		 .minx=_minx
 		,.miny=_miny
 		,.maxx=_maxx

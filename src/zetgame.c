@@ -1,7 +1,7 @@
 #include "zetgame.h"
 
 static ZetGameSetupParams default_setup={
-		.graphics_api=GRAPHICS_API_GL
+		.graphics_api=ZG_GRAPHICS_API_GL
 		,.width=ZG_DEFAULT_SCREEN_WIDTH
 		,.height=ZG_DEFAULT_SCREEN_HEIGHT
 		,.wcaption_title="Zetgine"

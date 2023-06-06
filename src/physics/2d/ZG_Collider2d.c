@@ -7,16 +7,16 @@ typedef struct{
 
 
 bool Collider2d_TestIntersectionPointPoint(
-							  Vector3f _p1
-							, Vector3f _p2
+							  ZG_Vector3f _p1
+							, ZG_Vector3f _p2
 							){
 	return _p1.x==_p2.x && _p1.y == _p2.y;
 }
 
 
 bool Collider2d_TestIntersectionPointRectangle(
-							  Vector3f _p1
-							, Vector3f _p2
+							  ZG_Vector3f _p1
+							, ZG_Vector3f _p2
 							, float _w2, float _h2
 							){
 	float w2_med=_w2*0.5;
@@ -39,8 +39,8 @@ bool Collider2d_TestIntersectionPointRectangle(
 }
 
 bool Collider2d_TestIntersectionPointCircle(
-							  Vector3f _p1
-							, Vector3f _p2
+							  ZG_Vector3f _p1
+							, ZG_Vector3f _p2
 							, float _r2
 							){
 	float xdiff=fabs(_p1.x-_p2.x);
@@ -53,9 +53,9 @@ bool Collider2d_TestIntersectionPointCircle(
 }
 
 bool Collider2d_TestIntersectionRectangleRectangle(
-	  Vector3f _p1
+	  ZG_Vector3f _p1
 		, float _w1, float _h1
-		, Vector3f _p2
+		, ZG_Vector3f _p2
 		, float _w2, float _h2
 ){
 
@@ -80,10 +80,10 @@ bool Collider2d_TestIntersectionRectangleRectangle(
 }
 
 bool Collider2d_TestIntersectionRectangleCircle(
-	 Vector3f _p1
+	 ZG_Vector3f _p1
 	, float _w1
 	, float _h1
-	, Vector3f _p2
+	, ZG_Vector3f _p2
 	, float _r2){
 	float w1_med=_w1*0.5;
 	float h1_med=_h1*0.5;
@@ -107,9 +107,9 @@ bool Collider2d_TestIntersectionRectangleCircle(
 }
 
 bool Collider2d_TestIntersectionCircleCircle(
-	Vector3f _p1
+	ZG_Vector3f _p1
 	, float _r1
-	, Vector3f _p2
+	, ZG_Vector3f _p2
 	, float _r2){
 
 	float xdiff=fabs(_p1.x-_p2.x);
@@ -123,14 +123,14 @@ bool Collider2d_TestIntersectionCircleCircle(
 
 }
 
-void Collider2d_Draw(Transform _t3d, Collider2dType _collider_type, Color4f _color){
+void Collider2d_Draw(ZG_Transform _t3d, Collider2dType _collider_type, ZG_Color4f _color){
 	Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
 	switch(_collider_type){
 	case COLLIDER2D_TYPE_POINT:
 		Graphics_DrawPoint2f(_t3d.translate.x,_t3d.translate.y,_color,1);
 		break;
 	case COLLIDER2D_TYPE_RECTANGLE:
-		Graphics_DrawRectangle4f(
+		ZG_Graphics_DrawRectangle4f(
 				_t3d.translate.x
 				,_t3d.translate.y
 				,_t3d.scale.x
@@ -147,7 +147,7 @@ void Collider2d_Draw(Transform _t3d, Collider2dType _collider_type, Color4f _col
 	}
 }
 
-bool Collider2d_Test(Transform _t1, Collider2dType _c1, Transform _t2, Collider2dType _c2){
+bool Collider2d_Test(ZG_Transform _t1, Collider2dType _c1, ZG_Transform _t2, Collider2dType _c2){
 	bool test=false;
 	// check collision and set line red if collides
 	switch(_c1){

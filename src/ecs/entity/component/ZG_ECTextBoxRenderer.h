@@ -5,7 +5,7 @@ typedef struct ECTextBoxRenderer ECTextBoxRenderer;
 
 struct ECTextBoxRenderer{
 	EComponentHeader header;
-	TextBox 		*	textbox;
+	ZG_TextBox 		*	textbox;
 	void 			*	data;
 };
 

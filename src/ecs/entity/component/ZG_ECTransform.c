@@ -3,8 +3,8 @@
 typedef struct{
 	ECTransform				*	parent;
 	ZG_List					*	child_nodes;
-	//Transform 	transform_default;
-	Transform 					transform_local;
+	//ZG_Transform 	transform_default;
+	ZG_Transform 					transform_local;
 	uint16_t					transform_attributes;
 	ACTransformAnimation 	*	transform_animation_component; // in case entity it has associated transform animation component
 }ECTransformData;
@@ -35,10 +35,10 @@ void ECTransform_Setup(void *_this, ComponentId _id){
 	ECTransformData *data= ZG_NEW(ECTransformData);
 	ec_transform->data=data;
 
-	ec_transform->transform=Transform_DefaultValues();
-	data->transform_local=Transform_DefaultValues();
+	ec_transform->transform=ZG_Transform_DefaultValues();
+	data->transform_local=ZG_Transform_DefaultValues();
 
-	data->child_nodes=List_New();
+	data->child_nodes=ZG_List_New();
 
 
 	// by default...
@@ -67,7 +67,7 @@ void ECTransform_ClearNodes(ECTransform *_this){
 
 void ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetTranslate3f(&data->transform_local,x,y,z);
+	ZG_Transform_SetTranslate3f(&data->transform_local,x,y,z);
 
 	// erase relative flags flags...
 	//data->transform_attributes&=~EC_TRANSFORM_POSITION_RELATIVE_X;
@@ -90,44 +90,44 @@ bool ECTransform_IsParentNodeRoot(ECTransform *_this){
 */
 void ECTransform_SetPosition2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
-	//Transform_SetPosition2i(&data->transform_local,x,y);
+	//ZG_Vector3f v=ZG_ViewPort_ScreenToWorldDimension2i(x,y);
+	//ZG_Transform_SetPosition2i(&data->transform_local,x,y);
 
-	Transform_SetPosition2i(&data->transform_local, x,y);
+	ZG_Transform_SetPosition2i(&data->transform_local, x,y);
 
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
-	//=ViewPort_ScreenToWorldDimension2i(x,y);
+	//=ZG_ViewPort_ScreenToWorldDimension2i(x,y);
 }
 
 void ECTransform_SetDisplacement2i(ECTransform *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	//Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
-	//Transform_SetPosition2i(&data->transform_local,x,y);
-	Transform_SetDisplacement2i(&data->transform_local, x,y);
+	//ZG_Vector3f v=ZG_ViewPort_ScreenToWorldDimension2i(x,y);
+	//ZG_Transform_SetPosition2i(&data->transform_local,x,y);
+	ZG_Transform_SetDisplacement2i(&data->transform_local, x,y);
 
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_X;
 	//data->transform_attributes|=EC_TRANSFORM_POSITION_RELATIVE_Y;
-	//=ViewPort_ScreenToWorldDimension2i(x,y);
+	//=ZG_ViewPort_ScreenToWorldDimension2i(x,y);
 }
 
-Vector2i	ECTransform_GetPosition2i(ECTransform *_this){
-	return Transform_GetPosition2i(&_this->transform);
+ZG_Vector2i	ECTransform_GetPosition2i(ECTransform *_this){
+	return ZG_Transform_GetPosition2i(&_this->transform);
 }
 
 void ECTransform_SetRotateZ(ECTransform *_this,float z){
 	ECTransformData *data=_this->data;
-	Transform_SetRotateZ(&data->transform_local,z);
+	ZG_Transform_SetRotateZ(&data->transform_local,z);
 }
 
 void ECTransform_SetRotate3f(ECTransform *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetRotate3f(&data->transform_local,x,y,z);
+	ZG_Transform_SetRotate3f(&data->transform_local,x,y,z);
 }
 
 void ECTransform_SetScale3f(ECTransform *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetScale3f(&data->transform_local,x,y,z);
+	ZG_Transform_SetScale3f(&data->transform_local,x,y,z);
 }
 
 void	ECTransform_SetParent(ECTransform *_this, ECTransform *parent_node){
@@ -149,7 +149,7 @@ bool ECTransform_Detach(ECTransform *_this,ECTransform * obj) {
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
 		ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
-			Log_ErrorF("Cannot add node child because cannot deattach from parent");
+			ZG_Log_ErrorF("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
@@ -173,7 +173,7 @@ bool ECTransform_Attach(ECTransform *_this,ECTransform * obj) {
 	}
 
 	ECTransform_SetParent(obj,_this);
-	List_Add(data->child_nodes,obj);
+	ZG_List_Add(data->child_nodes,obj);
 
 	return true;
 }
@@ -208,7 +208,7 @@ void ECTransform_PostUpdate(ECTransform *_this){
 
 
 /**
- * Transform animation
+ * ZG_Transform animation
  */
 void ECTransform_SetTransformAnimation(ECTransform *_this, ACTransformAnimation * _transform_animation_component){
 	ECTransformData *data=_this->data;
@@ -227,29 +227,29 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 
 	ECTransformData *data = _this->data;
 
-	Quaternion local_quaternion;
-	Quaternion world_quaternion;
-	//Transform *transform_world=&_this->transform;
-	//Transform *transform_local=&data->transform_local;
+	ZG_Quaternion local_quaternion;
+	ZG_Quaternion world_quaternion;
+	//ZG_Transform *transform_world=&_this->transform;
+	//ZG_Transform *transform_local=&data->transform_local;
 
 	// transfer local -> absolute ...
 	_this->transform=data->transform_local;
 
 	// todo: quaternions
-	_this->quaternion = world_quaternion= local_quaternion = Quaternion_FromEulerV3f(data->transform_local.rotate);
+	_this->quaternion = world_quaternion= local_quaternion = ZG_Quaternion_FromEulerV3f(data->transform_local.rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
 	if(data->parent != NULL) { // it's not root node....
 
 		ECTransform *parent=data->parent;
 		//ECTransformData *parent_data = parent->data;
-		Transform parent_transform=parent->transform;
+		ZG_Transform parent_transform=parent->transform;
 
 		// todo: quaternions
-		//Quaternion parent_quaternion_world=parent->quaternion;//getTransform()getActualRotateMatrix());
+		//ZG_Quaternion parent_quaternion_world=parent->quaternion;//getTransform()getActualRotateMatrix());
 
 		// ok. Let's to transform position child from rotation m_scrParent value ...
-		Vector3f translate_from_parent=data->transform_local.translate;
+		ZG_Vector3f translate_from_parent=data->transform_local.translate;
 
 		// the is propagated ...
 		if(data->transform_attributes & EC_TRANSFORM_SCALE) {
@@ -276,7 +276,7 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 	}
 	else { // Is the root, then add origin on their initial values ...
 
-		//Vector3f origin=ViewPort_GetProjectionOrigin();
+		//ZG_Vector3f origin=ZG_ViewPort_GetProjectionOrigin();
 		//if(data->transform_attributes & EC_TRANSFORM_POSITION_RELATIVE_X){ //  add x offset origin according opengl
 		//	transform_world->translate.x+=origin.x;
 		//}
@@ -316,7 +316,7 @@ void ECTransform_Update(void *_this) {
 
 }
 
-Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_transform_type){
+ZG_Transform *ECTransform_GetTransform(ECTransform *_this, ECTransformType ec_transform_type){
 	ECTransformData *data=_this->data;
 	if(ec_transform_type == EC_TRANSFORM_TYPE_WORLD){
 		return &_this->transform;
@@ -332,7 +332,7 @@ void 	 ECTransform_Destroy(void *_this){
 	ECTransformData *_data = ((ECTransform *)_this)->data;
 
 	ECTransform_ClearNodes(_this);
-	List_Delete(_data->child_nodes);
+	ZG_List_Delete(_data->child_nodes);
 
 	ZG_FREE(_data);
 }

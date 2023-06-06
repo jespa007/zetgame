@@ -69,10 +69,10 @@ void 					EntitySystem_GetComponent(EntitySystem *_this, Entity * _entity, Compo
 /*void  			EntitySystem_RemoveEntity(EntitySystem * _this, Entity entity);
 
 // Channels
-Transform 	*		EntitySystem_GetComponentTransform(EntitySystem * _this, Entity entity);
+ZG_Transform 	*		EntitySystem_GetComponentTransform(EntitySystem * _this, Entity entity);
 TransformNode 		*		EntitySystem_GetComponentTransformNode(EntitySystem * _this, Entity entity);
-Appearance 	*		EntitySystem_GetComponentAppearance(EntitySystem * _this, Entity entity);
-Geometry 	*		EntitySystem_GetComponentGeometry(EntitySystem * _this, Entity entity);
+ZG_Appearance 	*		EntitySystem_GetComponentAppearance(EntitySystem * _this, Entity entity);
+ZG_Geometry 	*		EntitySystem_GetComponentGeometry(EntitySystem * _this, Entity entity);
 Camera 		*		EntitySystem_GetComponentCamera(EntitySystem * _this, Entity entity);
 
 */

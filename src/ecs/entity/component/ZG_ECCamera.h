@@ -6,7 +6,7 @@ typedef struct Entity Entity;
 
 struct ECCamera{
 	EComponentHeader;
-	PROJECTION_MODE projection_mode;
+	ZG_ProjectionMode projection_mode;
 	void 			*data;
 };
 

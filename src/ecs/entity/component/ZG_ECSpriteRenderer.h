@@ -13,7 +13,7 @@ void ECSpriteRenderer_Setup(void *_this,ComponentId _id);
 
 //void ECSpriteRenderer_SetQuadPixels(uint16 width, uint16 height);
 void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height);
-void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,Texture *texture);
+void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,ZG_Texture *texture);
 void ECSpriteRenderer_SetAlpha(ECSpriteRenderer *_this, float _alpha);
 
 void ECSpriteRenderer_Update(void *_this);

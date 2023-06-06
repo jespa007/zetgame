@@ -71,8 +71,8 @@ Matrix3f Matrix3f_Mul3x3(const Matrix3f * _m1, const Matrix3f * _m2){
 	return m;
 }
 
-Vector3f Matrix3f_TransformV3f(const Matrix3f *_this, Vector3f v){
-	Vector3f transform;
+ZG_Vector3f Matrix3f_TransformV3f(const Matrix3f *_this, ZG_Vector3f v){
+	ZG_Vector3f transform;
 	float *m=(float *)&_this->e11;
 
 	transform.x=v.x*m[M3_E11]+v.y*m[M3_E12]+v.z*m[M3_E13];

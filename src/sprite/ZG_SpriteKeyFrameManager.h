@@ -7,7 +7,7 @@ struct SpriteKeyFrameManager{
 	void *data;
 };
 
-SpriteKeyFrameManager *SpriteKeyFrameManager_New(TextureManager	* _texture_manager);
+SpriteKeyFrameManager *SpriteKeyFrameManager_New(ZG_TextureManager	* _texture_manager);
 
 bool SpriteKeyFrameManager_LoadFromMemory(
 		SpriteKeyFrameManager *_this

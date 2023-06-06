@@ -1,6 +1,6 @@
 
 
-void ViewPort_SetView_GL(ViewPort * viewport){
+void ZG_ViewPort_GL_SetView(ZG_ViewPort * viewport){
 
 	// transform gl normalized y origin on the on top...
 	int yn=Graphics_GetHeight()-viewport->y-viewport->height;
@@ -13,11 +13,11 @@ void ViewPort_SetView_GL(ViewPort * viewport){
 	glLoadIdentity();
 }
 
-void ViewPort_RestoreView_GL(ViewPort * viewport){
+void ZG_ViewPort_GL_RestoreView(ZG_ViewPort * viewport){
 	// disable gl scissors and reenable if not null?
 	glDisable(GL_SCISSOR_TEST);
 	if(viewport!=NULL){
-		ViewPort_SetView_GL(viewport);
+		ZG_ViewPort_GL_SetView(viewport);
 	}
 }
 

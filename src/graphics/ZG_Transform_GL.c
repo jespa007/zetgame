@@ -1,4 +1,4 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 //
 //  Directions based in opengl
@@ -30,11 +30,11 @@
 //        |                          |
 //        -------------------------- (ar,-1)
 
-void Transform_GL_Apply(Transform *_this){
+void ZG_Transform_GL_Apply(ZG_Transform *_this){
 
 	glPushMatrix();
 
-	Matrix4f m=Transform_GetRotationMatrix(_this);
+	ZG_Matrix4f m=ZG_Transform_GetRotationMatrix(_this);
 
 
 	glTranslatef(_this->translate.x
@@ -48,7 +48,7 @@ void Transform_GL_Apply(Transform *_this){
 }
 
 
-void Transform_GL_Restore(Transform *transform){
+void ZG_Transform_GL_Restore(ZG_Transform *transform){
 	UNUSUED_PARAM(transform);
 	glPopMatrix();
 }

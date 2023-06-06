@@ -3,15 +3,15 @@
 
 typedef struct{
 	MapString 			* 	particle_emitters;	// it saves its layers
-	TextureManager   	*   texture_manager;
+	ZG_TextureManager   	*   texture_manager;
 }ParticleEmitterManagerData;
 
 // MEMBERS
-ParticleEmitterManager *ParticleEmitterManager_New(TextureManager	* _texture_manager){
+ParticleEmitterManager *ParticleEmitterManager_New(ZG_TextureManager	* _texture_manager){
 	ParticleEmitterManager *tmm=ZG_NEW(ParticleEmitterManager);
 	ParticleEmitterManagerData *data=ZG_NEW(ParticleEmitterManagerData);
 
-	data->particle_emitters = MapString_New();//new std::map<std::string,TTFont *>();
+	data->particle_emitters = MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
 
 	data->particle_emitters->on_delete=ParticleEmitterManager_OnDeleteParticleEmitter;
@@ -32,7 +32,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 	char filename[MAX_PATH]={0};
 	bool ok=false;
 
-	Texture *texture;
+	ZG_Texture *texture;
 	ParticleEmitterManagerData *data=_this->data;
 
 	cJSON * root = cJSON_ParseWithLength((char *)_json_buf,_json_buf_len);
@@ -109,9 +109,9 @@ bool ParticleEmitterManager_LoadFromMemory(
 	};
 
 	// get values
-	for(unsigned i=0; i < ARRAY_SIZE(particle_emitter_attr); i++){
+	for(unsigned i=0; i < ZG_ARRAY_SIZE(particle_emitter_attr); i++){
 		if((*particle_emitter_attr[i].value = cJSON_GetObjectItem(root,particle_emitter_attr[i].name))== NULL){
-			Log_Error("JsonParse: Cannot get '%s'",particle_emitter_attr[i].name);
+			ZG_Log_Error("JsonParse: Cannot get '%s'",particle_emitter_attr[i].name);
 			return false;
 		}
 	}
@@ -126,7 +126,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 	size_t tileset_data_len=cJSON_GetArraySize(tilesets);
 
 	if(tileset_data_len == 0){
-		Log_ErrorF("JsonParse: there's no tilesets");
+		ZG_Log_ErrorF("JsonParse: there's no tilesets");
 		return false;
 	}
 
@@ -134,15 +134,15 @@ bool ParticleEmitterManager_LoadFromMemory(
 
 		bool tileset_found=false;
 
-		for(unsigned i=0; i < ARRAY_SIZE(tilemap_attr); i++){
+		for(unsigned i=0; i < ZG_ARRAY_SIZE(tilemap_attr); i++){
 			if((*layer_attr[i].value = cJSON_GetObjectItem(layer,layer_attr[i].name)) == NULL){
-				Log_Error("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
+				ZG_Log_Error("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
 				return false;
 			}
 		}
 
-		if(MapString_GetValue(data->particle_emitters,layer_name->valuestring,NULL)!=NULL){
-			Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
+		if(ZG_MapString_GetValue(data->particle_emitters,layer_name->valuestring,NULL)!=NULL){
+			ZG_Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
 			continue;
 		}
 
@@ -155,7 +155,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 		}
 
 		if(tilemap_data_len != tilemap_dim){
-			Log_Error("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
+			ZG_Log_Error("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
 			return false;
 		}
 
@@ -163,9 +163,9 @@ bool ParticleEmitterManager_LoadFromMemory(
 
 		// search tileset...
 		cJSON_ArrayForEach(tileset, tilesets) {
-			for(unsigned i=0; i < ARRAY_SIZE(tileset_attr); i++){
+			for(unsigned i=0; i < ZG_ARRAY_SIZE(tileset_attr); i++){
 				if((*tileset_attr[i].value = cJSON_GetObjectItem(tileset,tileset_attr[i].name))== NULL){
-					Log_Error("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
+					ZG_Log_Error("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
 					return false;
 				}
 			}
@@ -178,12 +178,12 @@ bool ParticleEmitterManager_LoadFromMemory(
 		}
 
 		if(tileset_found == false){
-			Log_Error("JsonParse layer '%s': tileset not found",layer_name->valuestring);
+			ZG_Log_Error("JsonParse layer '%s': tileset not found",layer_name->valuestring);
 			return false;
 		}
 
 		if(tileset_found == false){
-			Log_Error("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
+			ZG_Log_Error("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
 			return false;
 		}
 
@@ -199,7 +199,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 			if(firstgid->valueint <= idx_tile_block && idx_tile_block <= tilecount->valueint){
 				*(tiles+idx_tile)=idx_tile_block;
 			}else{
-				Log_Error("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
+				ZG_Log_Error("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
 						,layer_name->valuestring
 						,idx_tile_block
 						,firstgid->valueint
@@ -211,7 +211,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 		}
 
 		sprintf(filename,"%s/%s",_path,image->valuestring);
-		if((texture=TextureManager_Get(data->texture_manager,filename)) == NULL){
+		if((texture=ZG_TextureManager_Get(data->texture_manager,filename)) == NULL){
 			goto tmm_load_error;
 		}
 
@@ -244,7 +244,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 			//int pitch=image->w; // texture scanline //(tm_tilesets->tile_height+tm_tilesets->tile_spacing)*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 			tm_tilesets->tile_images=malloc( tilecount->valueint*sizeof(SDL_Surface *));
-			tm_tilesets->animations=List_New();
+			tm_tilesets->animations=ZG_List_New();
 
 			cJSON_ArrayForEach(tilesets_tile, tilesets_tiles) {
 
@@ -256,14 +256,14 @@ bool ParticleEmitterManager_LoadFromMemory(
 				}
 
 				TileAnimation *tile_animation=ZG_NEW(TileAnimation);
-				List_Add(tm_tilesets->animations,tile_animation);
+				ZG_List_Add(tm_tilesets->animations,tile_animation);
 
 				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*image->w;
 				int u1=tm_tilesets->tile_margin+(tileid->valueint%(tilemap_width->valueint))*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 				tile_animation->u1=u1;
 				tile_animation->v1=v1;
-				tile_animation->frames=List_New();
+				tile_animation->frames=ZG_List_New();
 
 				size_t tilesets_tiles_animation_len=cJSON_GetArraySize(tilesets_tile_animations);
 				// resrve
@@ -271,12 +271,12 @@ bool ParticleEmitterManager_LoadFromMemory(
 
 					cJSON_ArrayForEach(tilesets_tile_animation, tilesets_tile_animations) {
 						if((tilesets_tile_animation_duration = cJSON_GetObjectItem(tilesets_tile_animation,"duration")) == NULL){
-							Log_ErrorF("JsonParse data tilesets->animation->duration not found");
+							ZG_Log_ErrorF("JsonParse data tilesets->animation->duration not found");
 							continue;
 						}
 
 						if((tilesets_tile_animation_tileid = cJSON_GetObjectItem(tilesets_tile_animation,"tileid")) == NULL){
-							Log_ErrorF("JsonParse data tilesets->animation->tileid not found");
+							ZG_Log_ErrorF("JsonParse data tilesets->animation->tileid not found");
 							continue;
 						}
 
@@ -299,9 +299,9 @@ bool ParticleEmitterManager_LoadFromMemory(
 
 						}
 
-						Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
+						ZG_Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
 
-						List_Add(tile_animation->frames,tileset_animation_frame);
+						ZG_List_Add(tile_animation->frames,tileset_animation_frame);
 					}
 				}
 			}
@@ -320,7 +320,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 				,tm_tilesets);
 
 		if(tm != NULL){
-			MapString_SetValue(data->particle_emitters,layer_name->valuestring,tm);
+			ZG_MapString_SetValue(data->particle_emitters,layer_name->valuestring,tm);
 			ok=true;
 		}*/
 	}
@@ -337,7 +337,7 @@ tmm_load_error:
 /**
  * Load a set of ParticleEmitter from exported files from Aseprite
  * @_this: ParticleEmitterManager object
- * @_texture_filename: Texture filename (it can be .png,jpg,etc)
+ * @_texture_filename: ZG_Texture filename (it can be .png,jpg,etc)
  * @_json_filename: Json file generated by Aseprite
  * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
  */
@@ -347,7 +347,7 @@ bool ParticleEmitterManager_Load(ParticleEmitterManager *_this,const char *_json
 	char *_path=NULL;
 
 
-	if((_json_buf=File_Read(_json_file))!=NULL){
+	if((_json_buf=ZG_File_Read(_json_file))!=NULL){
 		ok=ParticleEmitterManager_LoadFromMemory(
 				_this
 				,_path=Path_GetDirectoryName(_json_file)
@@ -357,7 +357,7 @@ bool ParticleEmitterManager_Load(ParticleEmitterManager *_this,const char *_json
 	}
 
 
-	if(_json_buf) BufferByte_Delete(_json_buf);
+	if(_json_buf) ZG_BufferByte_Delete(_json_buf);
 	if(_path) free(_path);
 
 
@@ -368,7 +368,7 @@ bool ParticleEmitterManager_Load(ParticleEmitterManager *_this,const char *_json
 ParticleEmitter *ParticleEmitterManager_Get(ParticleEmitterManager *_this, const char *key){
 	ParticleEmitterManagerData *data=_this->data;
 
-	return MapString_GetValue(data->particle_emitters,key,NULL);
+	return ZG_MapString_GetValue(data->particle_emitters,key,NULL);
 }
 */
 
@@ -376,8 +376,8 @@ ParticleEmitter *ParticleEmitterManager_Get(ParticleEmitterManager *_this, const
 void  ParticleEmitterManager_Delete(ParticleEmitterManager *_this){
 	ParticleEmitterManagerData 	*data=_this->data;
 
-	MapString_Delete(data->particle_emitters);
-	//MapString_Delete(data->textures);
+	ZG_MapString_Delete(data->particle_emitters);
+	//ZG_MapString_Delete(data->textures);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

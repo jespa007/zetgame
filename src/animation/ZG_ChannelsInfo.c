@@ -39,7 +39,7 @@ ZG_ChannelsInfo * ZG_ChannelsInfo_New(uint8_t n_channels){
 	ZG_ChannelsInfo * c = NULL;
 
 	if(n_channels==0){
-		Log_ErrorF("Invalid num components");
+		ZG_Log_ErrorF("Invalid num components");
 		return NULL;
 	}
 

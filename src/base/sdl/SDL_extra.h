@@ -62,7 +62,7 @@ SDL_Surface *	SDL_Crop(SDL_Surface *_src,SDL_Rect _rect);
 bool 		 	SDL_SavePNG(const char * filename , SDL_Surface * srf);
 bool			SDL_SaveJPG(const char * filename , SDL_Surface * srf);
 void 			SDL_FlipY(SDL_Surface *surface);
-uint32_t 			SDL_Color2Html(SDL_Color c);
+uint32_t 		SDL_Color2Html(SDL_Color c);
 SDL_Color 		SDL_Html2Color(uint32_t html);
 
 

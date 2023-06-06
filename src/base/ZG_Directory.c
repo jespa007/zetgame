@@ -7,7 +7,7 @@ bool ZG_Directory_Exists(const char * path){
 
 	status = stat (path, &st_buf);
 	if (status != 0) {
-		//Log_Error ("Error, errno = %d\n", errno);
+		//ZG_Log_Error ("Error, errno = %d\n", errno);
 		return false;
 	}
 

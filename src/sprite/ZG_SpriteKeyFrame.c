@@ -2,7 +2,7 @@
 
 
 
-/*SpriteKeyFrame *	SpriteKeyFrame_New(Texture *_texture, SpriteKeyFrameInfo *_frames, size_t _frames_len){
+/*SpriteKeyFrame *	SpriteKeyFrame_New(ZG_Texture *_texture, SpriteKeyFrameInfo *_frames, size_t _frames_len){
 	SpriteKeyFrame *skf=ZG_NEW(SpriteKeyFrame);
 
 
@@ -16,7 +16,7 @@
 
 void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame){
 	if(idx_frame>= _this->frames_len){
-		Log_ErrorF("idx_frame out of bounds");
+		ZG_Log_ErrorF("idx_frame out of bounds");
 		return;
 	}
 

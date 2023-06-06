@@ -25,14 +25,14 @@ if(n>=(int)max_len || n==-1){\
 va_end(ap);}
 
 #define 	ZG_STR_CAPTURE_VARGS(_str_out, _str_in)\
-STR_CAPTURE_BASE(_str_out,_str_in,_str_in)\
+ZG_STR_CAPTURE_BASE(_str_out,_str_in,_str_in)\
 
 
 char *			ZG_String_Clone(const char *in_str);
 char *			ZG_String_CloneN(const char *in, size_t len);
 char * 			ZG_String_ToLower(const char *input);
-ZG_List * 			ZG_String_SplitString(const char * s, const char *str_delim);
-ZG_List * 			ZG_String_SplitChar(const char * s, char delim);
+ZG_List * 		ZG_String_SplitString(const char * s, const char *str_delim);
+ZG_List * 		ZG_String_SplitChar(const char * s, char delim);
 void			ZG_String_Replace(const char * str_input, char old_char,char new_char);
 
 ZG_List * 			ZG_String_WSplitChar(const wchar_t * s, wchar_t delim);

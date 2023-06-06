@@ -1,30 +1,30 @@
-#include "Color4f.c"
-#include "IconManager.c"
-#include "Image.c"
-#include "ImageManager.c"
-#include "Texture.c"
-#include "TextureManager.c"
-#include "Shader.c"
-#include "Geometry.c"
-#include "TTFont.c"
-//#include "TTFontManager.c"
+#include "ZG_Color4f.c"
+#include "ZG_IconManager.c"
+#include "ZG_Image.c"
+#include "ZG_ImageManager.c"
+#include "ZG_Texture.c"
+#include "ZG_TextureManager.c"
+#include "ZG_Shader.c"
+#include "ZG_Geometry.c"
+#include "ZG_TTFont.c"
+//#include "ZG_TTFontManager.c"
 
-#include "Appearance.c"
+#include "ZG_Appearance.c"
 
-#include "Transform.c"
-#include "Material.c"
+#include "ZG_Transform.c"
+#include "ZG_Material.c"
 
-#include "Shape.c"
-#include "ViewPort.c"
-#include "Graphics.c"
+#include "ZG_Shape.c"
+#include "ZG_ViewPort.c"
+#include "ZG_Graphics.c"
 
 //--- objects
-#include "Light.c"
+#include "ZG_Light.c"
 
 
 
-#include "stream/JpegMPS.c"
-#include "TextBox.c"
+#include "stream/ZG_JpegMPS.c"
+#include "ZG_TextBox.c"
 
 
 

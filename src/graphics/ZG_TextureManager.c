@@ -1,33 +1,33 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 typedef struct{
 	MapString 	* 	textures;
 	const char 	*	texture_resource_path;
-	Texture		* 	texture_embedded;
-}TextureManagerData;
+	ZG_Texture		* 	texture_embedded;
+}ZG_TextureManagerData;
 
-static Texture		* 	g_default_texture=NULL;
+static ZG_Texture		* 	g_default_texture=NULL;
 
 //-------------
 // STATIC
 
-Texture * 	TextureManager_GetDefaultTexture(void){
+ZG_Texture * 	ZG_TextureManager_GetDefaultTexture(void){
 	if(g_default_texture==NULL){
-		g_default_texture=Texture_NewFromSurface(SDL_GetDefaultImage());
+		g_default_texture=ZG_Texture_NewFromSurface(SDL_GetDefaultImage());
 	}
 	return g_default_texture;
 }
 
-void	TextureManager_OnDeleteNode(MapStringNode *node){
-	Texture * texture = node->val;
+void	ZG_TextureManager_OnDeleteNode(ZG_MapStringNode *node){
+	ZG_Texture * texture = node->val;
 	if(texture!=NULL){
-		Texture_Delete(texture);
+		ZG_Texture_Delete(texture);
 	}
 }
 
-void	 	TextureManager_DeInit(){
+void	 	ZG_TextureManager_DeInit(){
 	if(g_default_texture != NULL){
-		Texture_Delete(g_default_texture);
+		ZG_Texture_Delete(g_default_texture);
 		g_default_texture = NULL;
 	}
 }
@@ -35,38 +35,38 @@ void	 	TextureManager_DeInit(){
 //----------------
 // PUBLIC MEMBERS
 
-TextureManager *TextureManager_New(void){
-	TextureManager 		*tm=ZG_NEW(TextureManager);
-	TextureManagerData 	*data=ZG_NEW(TextureManagerData);
+ZG_TextureManager *ZG_TextureManager_New(void){
+	ZG_TextureManager 		*tm=ZG_NEW(ZG_TextureManager);
+	ZG_TextureManagerData 	*data=ZG_NEW(ZG_TextureManagerData);
 
 	data->texture_resource_path=".";
-	data->textures = MapString_New();//new std::map<std::string,TTFont *>();
-	data->textures->on_delete=TextureManager_OnDeleteNode;
+	data->textures = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->textures->on_delete=ZG_TextureManager_OnDeleteNode;
 
 	tm->data=data;
 
 	return tm;
 }
 
-void 		TextureManager_SetTextureResourcePath(TextureManager *_this,const char * path){
-	TextureManagerData *data=_this->data;
+void 		ZG_TextureManager_SetTextureResourcePath(ZG_TextureManager *_this,const char * path){
+	ZG_TextureManagerData *data=_this->data;
 	data->texture_resource_path=path;
 }
 
-Texture * 		TextureManager_Get(TextureManager *_this,const char * _filename){
+ZG_Texture * 		ZG_TextureManager_Get(ZG_TextureManager *_this,const char * _filename){
 
 	if(_this==NULL){
 		return NULL;
 	}
 
-	TextureManagerData *data=_this->data;
+	ZG_TextureManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
-	Texture * texture=NULL;
+	ZG_Texture * texture=NULL;
 	//char filename[MAX_PATH];
 	char *texture_file_to_lower=NULL;
 
-	id_tmp=Path_GetFilenameWithoutExtension(_filename);
+	id_tmp=ZG_Path_GetFilenameWithoutExtension(_filename);
 
 	if(id_tmp == NULL) { return NULL;}
 
@@ -83,41 +83,41 @@ Texture * 		TextureManager_Get(TextureManager *_this,const char * _filename){
 	free(texture_file_to_lower);
 
 	// if texture not set yet, try to load
-	if((texture=MapString_GetValue(data->textures,id,NULL)) == NULL){
+	if((texture=ZG_MapString_GetValue(data->textures,id,NULL)) == NULL){
 		char filename[ZG_PATH_MAX]={0};
 
 		strcpy(filename,_filename);
 
-		if(File_Exists(filename) == false){
+		if(ZG_File_Exists(filename) == false){
 			sprintf(filename,"%s/%s",data->texture_resource_path,_filename);
 		}
 
-		if(File_Exists(filename) == false){
-			Log_Error("File '%s' not exist either in the given path or in the resource path",_filename);
+		if(ZG_File_Exists(filename) == false){
+			ZG_Log_Error("File '%s' not exist either in the given path or in the resource path",_filename);
 			return NULL;
 		}
 
-		if((texture=Texture_NewFromFile(filename))!=NULL){
-			MapString_SetValue(data->textures,id,texture);
+		if((texture=ZG_Texture_NewFromFile(filename))!=NULL){
+			ZG_MapString_SetValue(data->textures,id,texture);
 		}
 		else{
-			texture=TextureManager_GetDefaultTexture();
+			texture=ZG_TextureManager_GetDefaultTexture();
 		}
 	}
 	return texture;
 }
 
-void			TextureManager_Delete(TextureManager *_this){
+void			ZG_TextureManager_Delete(ZG_TextureManager *_this){
 
-	TextureManagerData 	*data=_this->data;
+	ZG_TextureManagerData 	*data=_this->data;
 
 	if(data->textures!=NULL){
-		MapString_Delete(data->textures);
+		ZG_MapString_Delete(data->textures);
 		data->textures=NULL;
 	}
 
 
-	MapString_Delete(data->textures);
+	ZG_MapString_Delete(data->textures);
 	ZG_FREE(data);
 	ZG_FREE(_this);
 }

@@ -5,7 +5,7 @@ SGCamera * SGCamera_New(void){
 	// Shape3d it stores transform3d and it can render for debbuging.
 	sg_camera->node = TransformNode_New();
 
-	sg_camera->projection_mode=PROJECTION_MODE_PERSPECTIVE;
+	sg_camera->projection_mode=ZG_PROJECTION_MODE_PERSPECTIVE;
 	return sg_camera;
 }
 

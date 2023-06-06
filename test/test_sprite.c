@@ -6,7 +6,7 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
-	TextureManager *texture_manager = TextureManager_New();
+	ZG_TextureManager *texture_manager = ZG_TextureManager_New();
 	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New(texture_manager);
 	SpriteKeyFrame *skf_current=NULL;
 	Uint32 next_time=0;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 				,32
 				,64
 				,64
-				,COLOR4F_WHITE
+				,ZG_COLOR4F_WHITE
 				,skf_current->texture
 				,&skf_current->frames[idx_frame].frame
 			);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
 
 
 	SpriteKeyFrameManager_Delete(skfm);
-	TextureManager_Delete(texture_manager);
+	ZG_TextureManager_Delete(texture_manager);
 
 
 	ZetGame_DeInit();

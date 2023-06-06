@@ -14,7 +14,7 @@ typedef struct{
 
 	bool				visible_caption;
 	bool				start_dragging;
-	Vector2i 			start_mouse_position;
+	ZG_Vector2i 			start_mouse_position;
 
 	WindowStyle			window_style;
 
@@ -47,10 +47,10 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 
 	// CAPTION
 	data->frame_caption=GUIFrame_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	GUIWidget_SetBackgroundColor4f(data->frame_caption->widget,Color4f_FromRGB(0,128,255));
+	GUIWidget_SetBackgroundColor4f(data->frame_caption->widget,ZG_Color4f_FromRGB(0,128,255));
 
 	data->textbox_caption=GUITextBox_New(0,0,_width,DEFAULT_WINDOW_CAPTION_HEIGHT);
-	TextBox_SetText(data->textbox_caption->textbox,"Window");
+	ZG_TextBox_SetText(data->textbox_caption->textbox,"Window");
 
 
 	data->button_close=GUIButton_New(
@@ -61,7 +61,7 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 			);
 
 	GUIButton_SetText(data->button_close,"");
-	GUIButton_SetIcon(data->button_close,IconManager_GetIconDefault(DEFAULT_ICON_CLOSE_BIG));
+	GUIButton_SetIcon(data->button_close,ZG_IconManager_GetIconDefault(DEFAULT_ICON_CLOSE_BIG));
 
 
 	// CONTENT
@@ -137,8 +137,8 @@ void GUIWindow_SetVisibleCaption(GUIWindow *_this, bool _v){
 	GUIWindowData *data= _this->data;
 	data->visible_caption=_v;
 
-	Vector2i dim_content=GUIWidget_GetDimensions(data->frame_content->widget);
-	Vector2i dim_caption=GUIWidget_GetDimensions(data->frame_caption->widget);
+	ZG_Vector2i dim_content=GUIWidget_GetDimensions(data->frame_content->widget);
+	ZG_Vector2i dim_caption=GUIWidget_GetDimensions(data->frame_caption->widget);
 
 
 	if(_v){
@@ -155,20 +155,20 @@ void GUIWindow_SetVisibleCaption(GUIWindow *_this, bool _v){
 
 void GUIWindow_SetBackgroundColor3i(GUIWindow * _this, uint8_t r, uint8_t g, uint8_t b){
 	GUIWindowData *data=_this->data;
-	GUIWidget_SetBackgroundColor4f(data->frame_content->widget,Color4f_FromRGB(r,g,b));
+	GUIWidget_SetBackgroundColor4f(data->frame_content->widget,ZG_Color4f_FromRGB(r,g,b));
 }
 
-void 		GUIWindow_SetBackgroundColor4f(GUIWindow * _this, Color4f color){
+void 		GUIWindow_SetBackgroundColor4f(GUIWindow * _this, ZG_Color4f color){
 	GUIWindowData *data=_this->data;
 	GUIWidget_SetBackgroundColor4f(data->frame_content->widget,color);
 }
 
 void 		GUIWindow_SetCaptionTitle(GUIWindow * _this, const char *_caption){
 	GUIWindowData *data=_this->data;
-	TextBox_SetText(data->textbox_caption->textbox,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
+	ZG_TextBox_SetText(data->textbox_caption->textbox,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
 }
 
-TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
+ZG_TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
 
 	if(_this == NULL){
 		return NULL;
@@ -181,7 +181,7 @@ TextureManager 		*GUIWindow_GetTextureManager(GUIWindow * _this){
 	return NULL;
 }
 /*
-TTFontManager 		*GUIWindow_GetTTFontManager(GUIWindow * _this){
+ZG_TTFontManager 		*GUIWindow_GetTTFontManager(GUIWindow * _this){
 	GUIWindowData *data=_this->data;
 	if(data->window_manager){
 		return GUIWindowManager_GetTTFontManager(data->window_manager);//data->ttfont_manager;
@@ -209,8 +209,8 @@ void GUIWindow_OnSetWidth(void *gui_window, uint16_t width){
 	GUIWindow *_this=gui_window;
 	GUIWindowData *data=_this->data;
 
-	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
-	Vector2i caption_dimensions=GUIWidget_GetDimensions(data->frame_caption->widget);
+	ZG_Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
+	ZG_Vector2i caption_dimensions=GUIWidget_GetDimensions(data->frame_caption->widget);
 
 
 	GUIWidget_SetWidth(data->frame_caption->widget,dimensions.x);
@@ -249,7 +249,7 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 
 	if(GUIWidget_IsPointCollision(data->button_close->widget,mouse_event->position))
 	{
-	//	Log_Info("button collision");
+	//	ZG_Log_Info("button collision");
 		// collision with button (ignore it!)
 		return;
 	}
@@ -257,7 +257,7 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 	if(GUIWidget_IsPointCollision(data->frame_caption->widget,mouse_event->position))
 	{
 		if(Input_IsLeftButtonPressed()) {
-			Log_InfoF("start dragging");
+			ZG_Log_InfoF("start dragging");
 			data->start_dragging = true;
 			data->start_mouse_position=Input_GetMousePosition();
 		}
@@ -278,9 +278,9 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 
 	if(data->start_dragging) {
 
-		//Log_Info("moving !");
+		//ZG_Log_Info("moving !");
 
-		Vector2i position = Vector2i_Add(
+		ZG_Vector2i position = Vector2i_Add(
 			GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_LOCAL)
 			,Vector2i_Sub(Input_GetMousePosition(),data->start_mouse_position)
 		);
@@ -301,7 +301,7 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 	 GUIWindow *_this=gui_window;
 	 GUIWindowData *data=_this->data;
 
-	// Log_Info("mouse up");
+	// ZG_Log_Info("mouse up");
 
 	if(!data->visible_caption){
 		return;

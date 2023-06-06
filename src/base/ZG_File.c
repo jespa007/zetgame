@@ -1,6 +1,6 @@
 #include "_zg_base_.h"
 
-ZG_BufferByte * File_Read(const char *filename){
+ZG_BufferByte * ZG_File_Read(const char *filename){
 	long int  file_length=0;
 	size_t  readed_elements=0;
 	ZG_BufferByte *buffer=NULL;
@@ -87,7 +87,7 @@ long int  File_Length(const char * filename)
 }
 
 
-bool File_Exists(const char *filename) {
+bool ZG_File_Exists(const char *filename) {
 
 #ifdef _WIN32
 	FILE *fp = fopen(filename,"r");

@@ -1,14 +1,14 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
-Light * Light_New(void){
-	Light * light = ZG_NEW(Light);
+ZG_Light * ZG_Light_New(void){
+	ZG_Light * light = ZG_NEW(ZG_Light);
 	// Shape3d it stores transform3d and it can render for debbuging.
 	light->shape = Shape_New();
 
 	return light;
 }
 
-void Light_Delete(Light *_this){
+void ZG_Light_Delete(ZG_Light *_this){
 	if(_this==NULL) return;
 
 

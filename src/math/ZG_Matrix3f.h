@@ -22,7 +22,7 @@ struct Matrix3f{
 
 Matrix3f Matrix3f_New(void);
 Matrix3f Matrix3f_Identity(void);
-Vector3f Matrix3f_TransformV3f(const Matrix3f *_this, Vector3f v);
+ZG_Vector3f Matrix3f_TransformV3f(const Matrix3f *_this, ZG_Vector3f v);
 Matrix3f Matrix3f_Mul(const Matrix3f * m1, const Matrix3f * m2);
 
 #endif

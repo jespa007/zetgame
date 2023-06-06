@@ -4,18 +4,18 @@
  * http://lazyfoo.net/tutorials/OpenGL/23_freetype_fonts/index.php
  */
 
-#include "zg_graphics.h"
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
+
 
 typedef struct {
     GLuint texture;   // ID handle of the glyph texture
-}CharacterDataGL;
+}ZG_CharacterDataGL;
 
-void TTFont_GL_Init(void){
+void ZG_TTFont_GL_Init(void){
 	// PRE: OpenGL context is already initialized!
 }
 
-void TTFont_GL_BuildChar(TTFontCharacter *_font_character, FT_Face _face){
+void ZG_TTFont_GL_BuildChar(TTFontCharacter *_font_character, FT_Face _face){
 
 	GLuint texture=GL_INVALID_VALUE;
 
@@ -44,27 +44,27 @@ void TTFont_GL_BuildChar(TTFontCharacter *_font_character, FT_Face _face){
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    CharacterDataGL *character_data=ZG_NEW(CharacterDataGL);
+    ZG_CharacterDataGL *character_data=ZG_NEW(ZG_CharacterDataGL);
     character_data->texture=texture;
 
     _font_character->data=character_data;
 
 }
 
-void TTFont_GL_DrawCharacter(TTFontCharacter *_font_character){
-	CharacterDataGL *ch_data=_font_character->data;
-	glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be Texture and Bind according
+void ZG_TTFont_GL_DrawCharacter(TTFontCharacter *_font_character){
+	ZG_CharacterDataGL *ch_data=_font_character->data;
+	glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be ZG_Texture and Bind according
 }
 
 
 
-void TTFont_GL_DeleteChar(TTFontCharacter *_font_character){
-	CharacterDataGL *ch_data=_font_character->data;
+void ZG_TTFont_GL_DeleteChar(TTFontCharacter *_font_character){
+	ZG_CharacterDataGL *ch_data=_font_character->data;
 	glDeleteTextures(1,&ch_data->texture);
 	ZG_FREE(ch_data);
 }
 
-void TTFont_GL_RenderTextBegin(Color4f *color){
+void ZG_TTFont_GL_RenderTextBegin(ZG_Color4f *color){
 
 	glPushAttrib(GL_CURRENT_BIT |GL_TEXTURE_BIT | GL_LIGHTING_BIT | GL_COLOR_BUFFER_BIT);
 	glEnable(GL_TEXTURE_2D);
@@ -80,12 +80,12 @@ void TTFont_GL_RenderTextBegin(Color4f *color){
 }
 
 
-void TTFont_GL_RenderTextEnd(void){
+void ZG_TTFont_GL_RenderTextEnd(void){
 	glPopAttrib();
 }
 
 
-void TTFont_GL_DeInit(void){
+void ZG_TTFont_GL_DeInit(void){
 
 }
 

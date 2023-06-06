@@ -259,7 +259,7 @@ void CParticleSystem::draw() {
 		CParticleEmitter *pe;
 		pe = dynamic_cast<CParticleEmitter *>(m_child[i]);
 		if(pe != NULL){
-			//Log_Info("-");
+			//ZG_Log_Info("-");
 			pe->updateAndDraw();
 		}
 	}

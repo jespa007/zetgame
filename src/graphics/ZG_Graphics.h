@@ -29,7 +29,7 @@ void 	ZG_Graphics_SetResolutionDesign(int _width, int _height);
 
 Vector2f ZG_Graphics_GetScale(void);
 
-GraphicsApi ZG_Graphics_GetGraphicsApi(void);
+ZG_GraphicsApi ZG_Graphics_GetGraphicsApi(void);
 unsigned ZG_Graphics_GetNumMonitors(void);
 bool ZG_Graphics_GetScreenBounds(int num_display, SDL_Rect * rect );
 bool ZG_Graphics_IsFullscreen(void);
@@ -75,10 +75,10 @@ void ZG_Graphics_DrawPoint2i(int _x, int _y, ZG_Color4f _color, uint8_t _point_s
 
 void ZG_Graphics_DrawRectangle2i(uint16_t width, uint16_t height, ZG_Color4f color, uint8_t thickness);
 void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, int _width, int _height, ZG_Color4f color,  uint8_t thickness);
-void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scalex, float _scaley, Color4f color, uint8_t thickness);
+void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scalex, float _scaley, ZG_Color4f color, uint8_t thickness);
 
-void ZG_Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, Color4f color);
-void ZG_Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, Color4f color);
+void ZG_Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, ZG_Color4f color);
+void ZG_Graphics_DrawRectangleFilled4f(float x1, float y1, float x2, float y2, ZG_Color4f color);
 
 void ZG_Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t width, uint16_t height,  ZG_Color4f color,ZG_Texture *text, ZG_TextureRect * text_crop);
 void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2, ZG_Color4f color, ZG_Texture *text, ZG_TextureRect * text_crop);
@@ -87,15 +87,15 @@ void ZG_Graphics_DrawCircle3f(float _x, float _y, float _r, ZG_Color4f _color, u
 void ZG_Graphics_DrawCircle3i(int _x, int _y, int _r, ZG_Color4f _color, uint8_t _thickness);
 
 
-//void ZG_Graphics_DrawShape(Shape *shape, Transform *transform);
+//void ZG_Graphics_DrawShape(Shape *shape, ZG_Transform *transform);
 //void ZG_Graphics_DrawShape2d(Shape2d *shape);
 void ZG_Graphics_Print(int x, int y,ZG_Color4f color, const char *in,...);
 void ZG_Graphics_WPrint(int x, int y,ZG_Color4f color, const wchar_t *in,...);
 
 
-void ZG_Graphics_AddCaptureScreenCallback(Callback fun);
+void ZG_Graphics_AddCaptureScreenCallback(ZG_Callback fun);
 
-//void  ZG_Graphics_RenderText(float x, float y, Color4f color, const char *str, ...);
+//void  ZG_Graphics_RenderText(float x, float y, ZG_Color4f color, const char *str, ...);
 float ZG_Graphics_GetFPS(void);
 
 void ZG_Graphics_DeInit(void);

@@ -2,10 +2,10 @@
 #define ZG_VAR_LOG(l) ((l) == ZG_LOG_LEVEL_ERROR?"ERR": (l)==ZG_LOG_LEVEL_WARNING?"WRN": (l) == ZG_LOG_LEVEL_INFO ? "INF" : (l) == ZG_LOG_LEVEL_DEBUG ? "DBG" : "NAN" )
 #define ZG_MAX_LOGOUT_STRING 1024
 	
-static bool _g_zg_ansi_escape_=true;
+static bool g_ansi_escape=true;
 
 void  ZG_Log_SetAnsiEscape(bool _use){
-	_g_zg_ansi_escape_=_use;
+	g_ansi_escape=_use;
 }
 
 void  ZG_Log_Print(const  char  *file,  int  line, ZG_LogLevel level, const  char  *text_in,...) {
@@ -35,7 +35,7 @@ void  ZG_Log_Print(const  char  *file,  int  line, ZG_LogLevel level, const  cha
 
 	}
 
-	if(!_g_zg_ansi_escape_){
+	if(!g_ansi_escape){
 		#ifdef _WIN32
 		  int colors[7];
 		  colors[0] = FOREGROUND_RED   | FOREGROUND_INTENSITY;//FOREGROUND_BLUE  | FOREGROUND_RED   | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
@@ -70,7 +70,7 @@ void  ZG_Log_Print(const  char  *file,  int  line, ZG_LogLevel level, const  cha
 		//fprintf(stderr,"[ %30s:%04i - %3s]=%s",filename.c_str(),line,VAR_LOG(level),text);
 	}
 
-	 if(!_g_zg_ansi_escape_){
+	 if(!g_ansi_escape){
 	#ifdef _WIN32
 		// restore ...
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE  | FOREGROUND_GREEN | FOREGROUND_RED );

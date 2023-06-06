@@ -16,7 +16,7 @@ typedef struct TransformNode TransformNode;
 
 
 struct TransformNode{
-	Transform  		transform; // world coordinates
+	ZG_Transform  		transform; // world coordinates
 	void 			*data;
 };
 
@@ -27,11 +27,11 @@ void 		TransformNode_SetTranslate3f(TransformNode *_this,float x, float y, float
 
 // 2D Stuff
 void 		TransformNode_SetPosition2i(TransformNode *_this,int x, int y);
-Vector2i	TransformNode_GetPosition2i(TransformNode *_this);
+ZG_Vector2i	TransformNode_GetPosition2i(TransformNode *_this);
 
 TransformNode	*	TransformNode_GetParent(TransformNode *_this);
 
-Transform *TransformNode_GetTransform(TransformNode *node, TransformNodeType sgtransform);
+ZG_Transform *TransformNode_GetTransform(TransformNode *node, TransformNodeType sgtransform);
 
 void 		TransformNode_SetRotate3f(TransformNode *_this,float x, float y, float z);
 void 		TransformNode_SetScale3f(TransformNode *_this,float x, float y, float z);

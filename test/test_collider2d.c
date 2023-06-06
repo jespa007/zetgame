@@ -15,10 +15,10 @@ typedef enum{
 void update_options(
 		SelectCollider *_selected_collider
 		, Collider2dType *_mouse_collider_type
-		, Vector3f		*_mouse_scale
+		, ZG_Vector3f		*_mouse_scale
 
 	){
-	Vector2i m=Input_GetMousePosition();
+	ZG_Vector2i m=Input_GetMousePosition();
 	bool is_pressed=Input_IsLeftButtonPressed();
 	int x=BUTTON_GROUP_OFFSET_X-(BUTTON_GROUP_SIZE>>1); // because draws are centered we have to start at -middle
 	int y=BUTTON_GROUP_OFFSET_Y-(BUTTON_GROUP_SIZE>>1); // because draws are centered we have to start at -middle
@@ -53,8 +53,8 @@ void update_options(
 					break;
 				}
 
-				_mouse_scale->x=ViewPort_ScreenToWorldWidth(_mouse_w);
-				_mouse_scale->y=ViewPort_ScreenToWorldHeight(_mouse_h);
+				_mouse_scale->x=ZG_ViewPort_ScreenToWorldWidth(_mouse_w);
+				_mouse_scale->y=ZG_ViewPort_ScreenToWorldHeight(_mouse_h);
 
 				return;
 			}
@@ -69,13 +69,13 @@ void update_options(
 
 void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 
-	Graphics_Print(10,30,COLOR4F_WHITE,"Selected collider:");
+	Graphics_Print(10,30,ZG_COLOR4F_WHITE,"Selected collider:");
 	// draw background rectangles as deactivated
 	for(unsigned i=0; i < MAX_SELECT_COLLIDERS; i++){
-		Color4f color=COLOR4F_GRAY;
+		ZG_Color4f color=ZG_COLOR4F_GRAY;
 		int thickness=1;
 		if(i==_selected_collider){
-			color=COLOR4F_WHITE;
+			color=ZG_COLOR4F_WHITE;
 			thickness=2;
 		}
 
@@ -98,7 +98,7 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 		}
 	}
 
-	Graphics_Print(10,70,COLOR4F_WHITE,"Colliding: %s",_colliding);
+	Graphics_Print(10,70,ZG_COLOR4F_WHITE,"Colliding: %s",_colliding);
 
 }
 
@@ -111,57 +111,57 @@ int main(int argc, char *argv[]){
 
 	const char *colliding="none";
 	struct{
-		Transform transform;
+		ZG_Transform transform;
 		Collider2dType collider_type;
 	}colliders[]={
 		{
-				Transform_New()
+				ZG_Transform_New()
 				,COLLIDER2D_TYPE_POINT
 		}
 		,{
-				Transform_New()
+				ZG_Transform_New()
 				,COLLIDER2D_TYPE_RECTANGLE
 		}
 		,{
-				Transform_New()
+				ZG_Transform_New()
 				,COLLIDER2D_TYPE_CIRCLE
 		}
 	};
 
 	// init colliders
 	// Point
-	colliders[0].transform.translate.x=ViewPort_ScreenToWorldPositionX(100);
-	colliders[0].transform.translate.y=ViewPort_ScreenToWorldPositionY(300);
+	colliders[0].transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(100);
+	colliders[0].transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(300);
 
 	// Quad
-	colliders[1].transform.translate.x=ViewPort_ScreenToWorldPositionX(250);
-	colliders[1].transform.translate.y=ViewPort_ScreenToWorldPositionY(300);
-	colliders[1].transform.scale.x=ViewPort_ScreenToWorldWidth(100);
-	colliders[1].transform.scale.y=ViewPort_ScreenToWorldHeight(100);
+	colliders[1].transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(250);
+	colliders[1].transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(300);
+	colliders[1].transform.scale.x=ZG_ViewPort_ScreenToWorldWidth(100);
+	colliders[1].transform.scale.y=ZG_ViewPort_ScreenToWorldHeight(100);
 
 
 	// Circle
-	colliders[2].transform.translate.x=ViewPort_ScreenToWorldPositionX(500);
-	colliders[2].transform.translate.y=ViewPort_ScreenToWorldPositionY(300);
-	colliders[2].transform.scale.x=ViewPort_ScreenToWorldWidth(100);
+	colliders[2].transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(500);
+	colliders[2].transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(300);
+	colliders[2].transform.scale.x=ZG_ViewPort_ScreenToWorldWidth(100);
 
 
 	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_POINT;
 	SelectCollider select_collider=SELECT_COLLIDER_POINT;
 
-	Transform mouse_transform=Transform_New();
+	ZG_Transform mouse_transform=ZG_Transform_New();
 
 
 	do{
 		Graphics_BeginRender();
 
-		Vector2i m=Input_GetMousePosition();
-		mouse_transform.translate.x=ViewPort_ScreenToWorldPositionX(m.x);
-		mouse_transform.translate.y=ViewPort_ScreenToWorldPositionY(m.y);
+		ZG_Vector2i m=Input_GetMousePosition();
+		mouse_transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(m.x);
+		mouse_transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(m.y);
 		colliding="None";
 
-		for(unsigned i=0; i < ARRAY_SIZE(colliders); i++){
-			Color4f color=COLOR4F_WHITE;
+		for(unsigned i=0; i < ZG_ARRAY_SIZE(colliders); i++){
+			ZG_Color4f color=ZG_COLOR4F_WHITE;
 
 			if(Collider2d_Test(mouse_transform
 					,mouse_collider_type
@@ -170,15 +170,15 @@ int main(int argc, char *argv[]){
 					)){
 				switch(colliders[i].collider_type){
 				case COLLIDER2D_TYPE_POINT:
-					color=COLOR4F_RED;
+					color=ZG_COLOR4F_RED;
 					colliding="Point";
 					break;
 				case COLLIDER2D_TYPE_RECTANGLE:
-					color=COLOR4F_RED;
+					color=ZG_COLOR4F_RED;
 					colliding="Rectangle";
 					break;
 				case COLLIDER2D_TYPE_CIRCLE:
-					color=COLOR4F_RED;
+					color=ZG_COLOR4F_RED;
 					colliding="Circle";
 					break;
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]){
 		Collider2d_Draw(
 			mouse_transform
 			,mouse_collider_type
-			,COLOR4F_WHITE
+			,ZG_COLOR4F_WHITE
 		);
 
 

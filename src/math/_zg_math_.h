@@ -1,23 +1,23 @@
 #ifndef __ZG_MATH_H__
 #define __ZG_MATH_H__
 
-#include "base/zg_base.h"
+#include "base/_zg_base_.h"
 
-#include "Luts.h"
-#include "Vector2f.h"
-#include "Vector2i.h"
-#include "Vector3i.h"
-#include "Vector3f.h"
-#include "Vector4i.h"
-#include "Vector4f.h"
-#include "Rectangle4f.h"
-#include "Rectangle4i.h"
-#include "BoundingBox.h"
+#include "ZG_Luts.h"
+#include "ZG_Vector2f.h"
+#include "ZG_Vector2i.h"
+#include "ZG_Vector3i.h"
+#include "ZG_Vector3f.h"
+#include "ZG_Vector4i.h"
+#include "ZG_Vector4f.h"
+#include "ZG_Rectangle4f.h"
+#include "ZG_Rectangle4i.h"
+#include "ZG_BoundingBox.h"
 
-#include "Matrix3f.h"
-#include "Matrix4f.h"
+#include "ZG_Matrix3f.h"
+#include "ZG_Matrix4f.h"
 
-#include "Quaternion.h"
+#include "ZG_Quaternion.h"
 
 
 

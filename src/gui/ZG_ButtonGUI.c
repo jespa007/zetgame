@@ -6,15 +6,15 @@ typedef struct{
 	Icon	icon;
 	struct{
 		uint32_t  relative_time,total_time;
-		Color4f	color;
+		ZG_Color4f	color;
 	}auto_click_on_over;
 	bool 	mouse_collide;
-	Texture 	*texture;
-	TextBox 	*textbox;
+	ZG_Texture 	*texture;
+	ZG_TextBox 	*textbox;
 
 }GUIButtonData;
 
-Texture *g_default_texture_button = NULL;
+ZG_Texture *g_default_texture_button = NULL;
 
 static void GUIButton_Draw(void *gui_button);
 static void GUIButton_PostUpdate( void *gui_button);
@@ -26,7 +26,7 @@ void GUIButton_Init(void){
 		return;
 	}
 
-	g_default_texture_button=Texture_NewFromMemory(button1_png,button1_png_len);
+	g_default_texture_button=ZG_Texture_NewFromMemory(button1_png,button1_png_len);
 }
 
 void GUIButton_DeInit(void){
@@ -36,7 +36,7 @@ void GUIButton_DeInit(void){
 		return;
 	}
 
-	Texture_Delete(g_default_texture_button);
+	ZG_Texture_Delete(g_default_texture_button);
 }
 
 GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
@@ -59,8 +59,8 @@ GUIButton * GUIButton_New(int x, int y, uint16_t width, uint16_t height){
 
 	//SETUP BUTTON
 	GUIButtonData *data = ZG_NEW(GUIButtonData);
-	data->textbox=TextBox_New();
-	data->on_click_events=List_New();
+	data->textbox=ZG_TextBox_New();
+	data->on_click_events=ZG_List_New();
 	button->data=data;
 
 
@@ -73,20 +73,20 @@ static void  GUIButton_PostUpdateWidget(void *unused, void *gui_button){
 
 	GUIButton *button=gui_button;
 	GUIButtonData *data = button->data;
-	Vector2i ini_pos=GUIWidget_GetPosition(button->widget,WIDGET_POSITION_WORLD);
-	Vector2i dimensions=GUIWidget_GetDimensions(button->widget);
+	ZG_Vector2i ini_pos=GUIWidget_GetPosition(button->widget,WIDGET_POSITION_WORLD);
+	ZG_Vector2i dimensions=GUIWidget_GetDimensions(button->widget);
 
-	Vector2i end_pos=Vector2i_New(
+	ZG_Vector2i end_pos=Vector2i_New(
 			 ini_pos.x+dimensions.x
 			,ini_pos.y+dimensions.y
 			);
-	Vector2i mouse_pos=Input_GetMousePosition();
+	ZG_Vector2i mouse_pos=Input_GetMousePosition();
 
 	if(Input_IsLeftButtonPressed() && Vector2i_PointRectCollision(mouse_pos,ini_pos,end_pos)){
-		Log_Info("clicked");
+		ZG_Log_Info("clicked");
 		// handle on even click
 		for(unsigned i=0; i < data->on_click_events->count; i++){
-			Callback *cf=data->on_click_events->items[i];
+			ZG_Callback *cf=data->on_click_events->items[i];
 			cf->ptr_function(NULL,cf->user_data);
 		}
 	}
@@ -99,7 +99,7 @@ void GUIButton_Reset(GUIButton *_this){
 }
 
 
-void GUIButton_SetupClickOnOver(GUIButton *_this, uint32_t time_ms, Color4f color){
+void GUIButton_SetupClickOnOver(GUIButton *_this, uint32_t time_ms, ZG_Color4f color){
 	GUIButtonData *data = _this->data;
 	data->auto_click_on_over.relative_time=time_ms;
 	data->auto_click_on_over.color=color;
@@ -135,7 +135,7 @@ void GUIButton_PostUpdate(void *gui_button){
 	}
 
 	if((Input_IsLeftButtonPressed() && data->mouse_collide) || auto_click_on_over){
-		Log_InfoF("clicked");
+		ZG_Log_InfoF("clicked");
 		// handle on even click
 		MouseEvent mouse_event={0};
 
@@ -153,15 +153,15 @@ void GUIButton_PostUpdate(void *gui_button){
 static void  GUIButton_Draw(void *gui_button){
 	GUIButton *_this=gui_button;
 	GUIButtonData *data = _this->data;
-	Transform transform=Transform_DefaultValues();
-	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
-	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
+	ZG_Transform transform=ZG_Transform_DefaultValues();
+	ZG_Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
+	ZG_Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
 
 	position.x+=dimensions.x>>1;
 	position.y+=dimensions.y>>1;
 
-	Color4f result_font_color = GUIWidget_GetColor4f(_this->widget);
-	//Color4f background_result=_this->widget->background_color;
+	ZG_Color4f result_font_color = GUIWidget_GetColor4f(_this->widget);
+	//ZG_Color4f background_result=_this->widget->background_color;
 
 	float alpha=1*GUIWidget_GetOpacity(_this->widget);
 	if(!GUIWidget_IsEnabled(_this->widget)){
@@ -173,7 +173,7 @@ static void  GUIButton_Draw(void *gui_button){
 	result_font_color.a=alpha;
 	//background_result.a=alpha;
 
-	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE,g_default_texture_button,NULL);
+	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,g_default_texture_button,NULL);
 
 
 	if(data->mouse_collide){
@@ -189,11 +189,11 @@ static void  GUIButton_Draw(void *gui_button){
 	}
 
 	if(data->icon.texture!=NULL){ // draw icon
-		Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
+		Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
 	}
 
-	Transform_SetPosition2i(&transform,position.x,position.y);
-	TextBox_Draw(data->textbox,&transform,&result_font_color);
+	ZG_Transform_SetPosition2i(&transform,position.x,position.y);
+	ZG_TextBox_Draw(data->textbox,&transform,&result_font_color);
 
 }
 
@@ -202,7 +202,7 @@ void 			GUIButton_SetText(GUIButton *_this, const char *_text_in,...){
 	char text_out[STR_MAX];
 	STR_CAPTURE_VARGS(text_out,_text_in);
 
-	TextBox_SetText(data->textbox,text_out);
+	ZG_TextBox_SetText(data->textbox,text_out);
 
 }
 
@@ -215,17 +215,17 @@ void GUIButton_AddEventOnClick(GUIButton *_this,CallbackMouseEvent on_click){
 	GUIButtonData *data=_this->data;
 	CallbackMouseEvent *_cf=ZG_NEW(CallbackMouseEvent);
 	*_cf=on_click;
-	List_Add(data->on_click_events,_cf);
+	ZG_List_Add(data->on_click_events,_cf);
 }
 
 void GUIButton_Delete(GUIButton *_this){
 	if(_this == NULL) return;
 	GUIButtonData *data=_this->data;
 
-	List_DeleteAndFreeAllItems(data->on_click_events);
+	ZG_List_DeleteAndFreeAllItems(data->on_click_events);
 
-	TextBox_Delete(data->textbox);
-	Texture_Delete(data->texture);
+	ZG_TextBox_Delete(data->textbox);
+	ZG_Texture_Delete(data->texture);
 
 
 	GUIWidget_Delete(_this->widget);

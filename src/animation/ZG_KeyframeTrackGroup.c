@@ -27,7 +27,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 
 	ZG_KeyframeTrackGroup ***di_dst_ptr = di_dst;
 
-	for(unsigned i=0; i < ARRAY_SIZE(di_src);i++){
+	for(unsigned i=0; i < ZG_ARRAY_SIZE(di_src);i++){
 		if(di_src[i] != NULL){ // assign
 			**di_dst_ptr++=di_src[i];
 		}
@@ -42,7 +42,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=2;
 
 		if((v_input_len % packed_channels)!=0){
-			Log_ErrorF("Error invalid dimension 1!");
+			ZG_Log_ErrorF("Error invalid dimension 1!");
 			return false;
 		}
 
@@ -69,7 +69,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=3;
 
 		if((v_input_len % packed_channels)!=0){
-			Log_ErrorF("Error invalid dimension 2!");
+			ZG_Log_ErrorF("Error invalid dimension 2!");
 			return false;
 		}
 
@@ -106,7 +106,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=4;
 
 		if((v_input_len % packed_channels)!=0){
-			Log_ErrorF("Error invalid dimension 3!");
+			ZG_Log_ErrorF("Error invalid dimension 3!");
 			return false;
 		}
 
@@ -146,7 +146,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=5;
 
 		if((v_input_len % packed_channels)!=0){
-			Log_ErrorF("Error invalid dimension 5!");
+			ZG_Log_ErrorF("Error invalid dimension 5!");
 			return false;
 		}
 
@@ -202,7 +202,7 @@ void ZG_KeyframeTrackGroup_FreeXYZW(ZG_KeyframeTrackGroup ** vx
 			vx,vy,vz,vw
 	};
 
-	for(unsigned i = 0; i < ARRAY_SIZE(lst_decompose_info); i++){
+	for(unsigned i = 0; i < ZG_ARRAY_SIZE(lst_decompose_info); i++){
 		 ZG_KeyframeTrackGroup ** v=lst_decompose_info[i];
 
 		if(v!=NULL && *v !=NULL){

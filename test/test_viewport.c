@@ -5,12 +5,12 @@ int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argv);
 
 	ZetGame_Init(NULL);
-	//ViewPort *v1;
-	//TextureManager_SetTextureResourcePath("data/images");
+	//ZG_ViewPort *v1;
+	//ZG_TextureManager_SetTextureResourcePath("data/images");
 
-	Texture * text_png = Texture_NewFromFile("data/images/test.png");
-	TextBox *textbox	=TextBox_New();
-	Transform transform=Transform_DefaultValues();
+	ZG_Texture * text_png = ZG_Texture_NewFromFile("data/images/test.png");
+	ZG_TextBox *textbox	=ZG_TextBox_New();
+	ZG_Transform transform=ZG_Transform_DefaultValues();
 
 	do{
 		Graphics_BeginRender();
@@ -25,16 +25,16 @@ int main(int argc, char *argv[]){
 			int x=(i%n_view_port_row)*w;
 			int y=(i/n_view_port_row)*h;
 
-			ViewPort_Push(x,y,w,h,PROJECTION_MODE_ORTHO);
+			ZG_ViewPort_Push(x,y,w,h,ZG_PROJECTION_MODE_ORTHO);
 
-			Transform_SetPosition2i(&transform,10,10);
+			ZG_Transform_SetPosition2i(&transform,10,10);
 
-			Graphics_ClearScreen(Color4f_FromRGB(32+i*10,32+i*10,32+i*10));
-			Graphics_DrawRectangleTextured4i(0,0,100,100,Color4f_FromRGB(0,200,0),text_png,NULL);
-			Graphics_DrawRectangleFilled4i(0,0,10,10,COLOR4F_WHITE);
-			TextBox_Draw(textbox,&transform,NULL);
+			Graphics_ClearScreen(ZG_Color4f_FromRGB(32+i*10,32+i*10,32+i*10));
+			Graphics_DrawRectangleTextured4i(0,0,100,100,ZG_Color4f_FromRGB(0,200,0),text_png,NULL);
+			Graphics_DrawRectangleFilled4i(0,0,10,10,ZG_COLOR4F_WHITE);
+			ZG_TextBox_Draw(textbox,&transform,NULL);
 
-			ViewPort_Pop();
+			ZG_ViewPort_Pop();
 		}
 
 
@@ -43,8 +43,8 @@ int main(int argc, char *argv[]){
 		Input_Update();
 	}while(!K_ESC);
 
-	Texture_Delete(text_png);
-	TextBox_Delete(textbox);
+	ZG_Texture_Delete(text_png);
+	ZG_TextBox_Delete(textbox);
 
 	ZetGame_DeInit();
 

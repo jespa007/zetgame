@@ -7,7 +7,7 @@ typedef struct{
 TransformNode *	TransformNode_New(Scene *_scene,Entity *_entity){
 
 	if(_entity == NULL){
-		Log_ErrorF("TransformNode_New : Cannot create transform_node. Entity == NULL");
+		ZG_Log_ErrorF("TransformNode_New : Cannot create transform_node. Entity == NULL");
 		return NULL;
 	}
 

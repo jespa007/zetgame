@@ -12,7 +12,7 @@ ZG_TransformAction 	*	ZG_TransformAction_New(void){
 	ZG_TransformAction *transform_action=ZG_NEW(ZG_TransformAction);
 	ZG_TransformActionData *data=ZG_NEW(ZG_TransformActionData);
 
-	Action *action=Action_New(TRANSFORM_COMPONENT_MAX);
+	Action *action=Action_New(ZG_TRANSFORM_COMPONENT_MAX);
 	data->action=action;
 
 	transform_action->data=data;

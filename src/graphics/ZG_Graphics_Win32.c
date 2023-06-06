@@ -1,7 +1,7 @@
-#include "Graphics.h"
+#include "_zg_graphics_.h"
 
 #ifdef _WIN32
-BOOL CGraphics_Win32_GetMonitorDevice( TCHAR* adapterName, DISPLAY_DEVICE * ddMon )
+BOOL ZG_Graphics_Win32_GetMonitorDevice( TCHAR* adapterName, DISPLAY_DEVICE * ddMon )
 {
     DWORD devMon = 0;
 
@@ -24,7 +24,7 @@ BOOL CGraphics_Win32_GetMonitorDevice( TCHAR* adapterName, DISPLAY_DEVICE * ddMo
     return ddMon->DeviceID[0] != '\0';
 }
 
-BOOL CGraphics_Win32_GetMonitorSizeFromEDID(TCHAR* adapterName, TCHAR *monitorModel, DWORD * Width, DWORD * Height)
+BOOL ZG_Graphics_Win32_GetMonitorSizeFromEDID(TCHAR* adapterName, TCHAR *monitorModel, DWORD * Width, DWORD * Height)
 {
     DISPLAY_DEVICE ddMon;
     ZeroMemory(&ddMon, sizeof(ddMon));
@@ -34,7 +34,7 @@ BOOL CGraphics_Win32_GetMonitorSizeFromEDID(TCHAR* adapterName, TCHAR *monitorMo
     bool result = false;
     *Width = 0;
     *Height = 0;
-    if (CGraphics_Win32_GetMonitorDevice(adapterName, &ddMon))
+    if (ZG_Graphics_Win32_GetMonitorDevice(adapterName, &ddMon))
     {
         TCHAR model[8];
         TCHAR* s = _tcschr(ddMon.DeviceID, '\\') + 1;
@@ -106,7 +106,7 @@ BOOL CGraphics_Win32_GetMonitorSizeFromEDID(TCHAR* adapterName, TCHAR *monitorMo
     return result;
 }
 
-BOOL CGraphics_Win32_GetMonitorInfo(int nDeviceIndex, LPSTR lpszMonitorInfo) {
+BOOL ZG_Graphics_Win32_GetMonitorInfo(int nDeviceIndex, LPSTR lpszMonitorInfo) {
     BOOL bResult = TRUE;
     //FARPROC EnumDisplayDevices;
     //HINSTANCE  hInstUserLib;
@@ -134,7 +134,7 @@ BOOL CGraphics_Win32_GetMonitorInfo(int nDeviceIndex, LPSTR lpszMonitorInfo) {
      return bResult;
 }
 
-BOOL CALLBACK CGraphics_Win32_MonitorEnumProc(LPARAM dwData)
+BOOL CALLBACK ZG_Graphics_Win32_MonitorEnumProc(LPARAM dwData)
 {
 
 
@@ -143,7 +143,7 @@ BOOL CALLBACK CGraphics_Win32_MonitorEnumProc(LPARAM dwData)
     return TRUE;
 }
 
-void CGraphics_Win32_ShowInTaskBar(HWND hWnd, BOOL _show){
+void ZG_Graphics_Win32_ShowInTaskBar(HWND hWnd, BOOL _show){
 
 
 	ShowWindow(hWnd, SW_HIDE);
@@ -157,8 +157,8 @@ void CGraphics_Win32_ShowInTaskBar(HWND hWnd, BOOL _show){
 
 }
 
-ZG_List * Graphics_Win32_GetListAdapters(void){
-	ZG_List * lst_monitor_info=List_New();
+ZG_List * ZG_Graphics_Win32_GetListAdapters(void){
+	ZG_List * lst_monitor_info=ZG_List_New();
     DISPLAY_DEVICE dd;
     char device_name[32]; // 32 for the null-terminator
     dd.cb = sizeof(dd);
@@ -176,7 +176,7 @@ ZG_List * Graphics_Win32_GetListAdapters(void){
         	DWORD width, height;
         	//CHAR monitor_model[1024];
 
-            CGraphics_Win32_GetMonitorSizeFromEDID(device_name,mei->monitor_model, &width, &height);
+            ZG_Graphics_Win32_GetMonitorSizeFromEDID(device_name,mei->monitor_model, &width, &height);
 
             //std::cout << mei.MonitorModel << ":" << width <<"x" << height << "." << idx_device << "\n";
 
@@ -188,7 +188,7 @@ ZG_List * Graphics_Win32_GetListAdapters(void){
             mei->physical_width=width;
             mei->physical_height=height;
            // strcpy(mei.MonitorModel,monitor_model);
-            List_Add(lst_monitor_info,mei);
+            ZG_List_Add(lst_monitor_info,mei);
 
             ++idx_monitor;
 

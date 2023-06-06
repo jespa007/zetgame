@@ -6,7 +6,7 @@ int main(int argc, char *argv[]){
 	UNUSUED_PARAM(argc);
 	UNUSUED_PARAM(argv);
 	ZetGameSetupParams setup=(ZetGameSetupParams){
-		.graphics_api=GRAPHICS_API_GL
+		.graphics_api=ZG_GRAPHICS_API_GL
 		,.width=224
 		,.height=144
 		,.wcaption_title="Tilemap"
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 	};
 	ZetGame_Init(&setup);
 
-	TextureManager * texture_manager= TextureManager_New();
+	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
 	TilemapManager *tilemap_manager=TilemapManager_New(texture_manager);
 	Tilemap *tilemap=NULL;
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
 		)){
 
 		if((tilemap=TilemapManager_Get(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
-			Log_Error("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
+			ZG_Log_Error("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
 		}
 	}
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
 
 
 	TilemapManager_Delete(tilemap_manager);
-	TextureManager_Delete(texture_manager);
+	ZG_TextureManager_Delete(texture_manager);
 
 
 	ZetGame_DeInit();

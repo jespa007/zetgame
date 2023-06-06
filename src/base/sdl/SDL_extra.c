@@ -1,6 +1,6 @@
 #include "assets/image/default.png.c"
 #include "base/_zg_base_.h"
-#include "graphics/zg_graphics.h"
+#include "graphics/_zg_graphics_.h"
 
 /*{
  * signature
@@ -79,7 +79,7 @@ bool SDL_SaveJPG(const char * filename, SDL_Surface * srf){
 			ok=File_Write(filename,&bb);
 		}
 		else{
-			Log_Error("Error saving %s",filename);
+			ZG_Log_Error("Error saving %s",filename);
 		}
 
 
@@ -136,7 +136,7 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 			ZG_BufferByte bb=(ZG_BufferByte){.ptr=out,.len=outsize};
 			ok=File_Write(filename,&bb);
 		}else{
-			Log_Error("Error saving %s",filename);
+			ZG_Log_Error("Error saving %s",filename);
 		}
 
 		if(aux != NULL){
@@ -150,10 +150,10 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 SDL_Surface *SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, uint32_t properties, uint8_t convert_to_bpp) {
 	SDL_Surface *new_image_surface = NULL;
 
-	size_t size_image_load_info=ARRAY_SIZE(image_load_info);
+	size_t size_image_load_info=ZG_ARRAY_SIZE(image_load_info);
 
 	if(length < 10){
-		Log_ErrorF("Cannot load from memory. Insuficient buffer");
+		ZG_Log_ErrorF("Cannot load from memory. Insuficient buffer");
 		return NULL;
 	}
 
@@ -178,7 +178,7 @@ SDL_Surface	*	SDL_LoadImageFromFile(const char * filename, uint32_t properties, 
 	if(!buf){return NULL;}
 
 	new_image_surface = SDL_LoadImageFromMemory(buf->ptr,buf->len,properties,convert_to_bpp);
-	BufferByte_Delete(buf);
+	ZG_BufferByte_Delete(buf);
 
 	if(new_image_surface!=NULL){
 		SDL_Surface *aux = SDL_ConvertSurfaceExt(new_image_surface, properties, convert_to_bpp);
@@ -200,7 +200,7 @@ SDL_Surface * SDL_CreateSurfaceFrom(
 
 	switch (bytes_per_pixel) {
 	default:
-		Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
+		ZG_Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
 		return NULL;
 		break;
 	case COLOR_RGB16:
@@ -220,7 +220,7 @@ SDL_Surface * SDL_CreateSurfaceFrom(
 			bytes_per_pixel * 8, rmask, gmask, bmask, amask);
 
 	if(srf_info==NULL){
-		Log_Error("Cannot create SDL Surface %s", SDL_GetError());
+		ZG_Log_Error("Cannot create SDL Surface %s", SDL_GetError());
 		return NULL;
 	}
 
@@ -378,7 +378,7 @@ void SDL_FillCircle(SDL_Surface *surface, int cx, int cy, int radius, uint32_t p
 SDL_Surface * SDL_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t width_border, uint32_t border_color){
 	int r1 = radius*2;
 	int r2 = radius*2-width_border*2;
-	uint8_t bytes_per_pixel=Graphics_GetBytesPerPixel();
+	uint8_t bytes_per_pixel=ZG_Graphics_GetBytesPerPixel();
 
 	if((r1 > 0 && r2 > 0)){
 
@@ -555,7 +555,7 @@ SDL_Surface *	SDL_ConvertSurfaceExt(SDL_Surface *src_surface, uint32_t propertie
 					   NULL,
 					   new_surface,
 					   NULL)!=0){
-			Log_Error("SDL_BlitScaled:%s",SDL_GetError());
+			ZG_Log_Error("SDL_BlitScaled:%s",SDL_GetError());
 		}
 
 	}

@@ -11,7 +11,7 @@ typedef struct{
 	ZG_List *info_actions;
 	Tween  *tween;
 	ChannelsInfo 	*channels_info;
-	Callback on_after_set_components;
+	ZG_Callback on_after_set_components;
 
 }ZG_AnimationData;
 
@@ -61,8 +61,8 @@ ZG_Animation *ZG_Animation_New(uint8_t n_channels){
 	//memset(data,0,sizeof(ZG_AnimationData));
 
 	data->channels_info=ChannelsInfo_New(n_channels);
-	//ani->ani_controlled_objects=List_New();
-	data->info_actions=List_New();
+	//ani->ani_controlled_objects=ZG_List_New();
+	data->info_actions=ZG_List_New();
 	data->tween=Tween_New(n_channels);//(Tween *)malloc(sizeof(Tween)*n_channels);
 	//memset(data->tweens,0,sizeof(Tween)*n_channels);
 
@@ -77,13 +77,13 @@ ZG_Animation *ZG_Animation_New(uint8_t n_channels){
 void ZG_Animation_StartAction(ZG_Animation *_this, Action *_action,uint32_t _start_time, int _repeat){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
 	if(data->channels_info->n_channels != _action->channels_info->n_channels){
-		Log_Error("Internal error animation components (%i) != action components (%i)"
+		ZG_Log_Error("Internal error animation components (%i) != action components (%i)"
 				,data->channels_info->n_channels
 				,data->channels_info->n_channels);
 		return;
 	}
 
-	List_Add(data->info_actions,InfoAniAction_New(
+	ZG_List_Add(data->info_actions,InfoAniAction_New(
 			_action
 			,_start_time
 			,_repeat
@@ -195,7 +195,7 @@ void ZG_Animation_Delete(ZG_Animation * _this){
 
 	ZG_Animation_Clear(_this);
 
-	List_Delete(_data->info_actions);
+	ZG_List_Delete(_data->info_actions);
 	ChannelsInfo_Delete(_data->channels_info);
 	Tween_Delete(_data->tween);
 

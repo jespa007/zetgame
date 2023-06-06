@@ -1,13 +1,13 @@
 #ifndef __LIGHT_H__
 #define __LIGHT_H__
 
-typedef struct Light Light;
+typedef struct ZG_Light ZG_Light;
 
-struct Light{
+struct ZG_Light{
 	Shape 			*shape;
 };
 
-Light * Light_New(void);
-void Light_Delete(Light *_this);
+ZG_Light * ZG_Light_New(void);
+void ZG_Light_Delete(ZG_Light *_this);
 
 #endif

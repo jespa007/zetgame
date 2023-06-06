@@ -365,7 +365,7 @@ void 	__glPixelStorei__(const char *file, int line,	GLenum pname, 	GLint param){
 	glPrintError(file,line);
 }
 //------------------------------------------------------------------------------------------------------------------------------
-// Texture
+// ZG_Texture
 void 	__glGenTextures__(const char *file, int line,	GLsizei n, 	GLuint * textures){
 	glGenTextures(n,textures);
 	glPrintError(file,line);

@@ -21,7 +21,7 @@ typedef struct{
 }KeyEvent,EventRepeatKey;
 
 typedef struct{
-	Vector2i position;
+	ZG_Vector2i position;
 	bool  left_press;
 	bool  right_press;
 }MouseEvent;
@@ -34,7 +34,7 @@ typedef struct
 } DropEvent;
 
 typedef struct{
-	Vector2i   	position,position_previous,position_diff;
+	ZG_Vector2i   	position,position_previous,position_diff;
 	Vector2f    factor;
 	bool    	motion,left_press,left_hold;
 }MouseInfo;
@@ -69,8 +69,8 @@ typedef struct{
 
 void 		Input_Init(void);
 MouseInfo	Input_GetMouseInfo(void);
-Vector2i  	Input_GetMousePosition(void);
-Vector2i  *	Input_GetMousePositionPtr(void);
+ZG_Vector2i  	Input_GetMousePosition(void);
+ZG_Vector2i  *	Input_GetMousePositionPtr(void);
 uint32_t 		Input_GetSecondMouseMotionType(void);
 void		Input_EnableMouseEvents(bool _enable);
 void 		Input_ShowCursor(bool _show_cursor);

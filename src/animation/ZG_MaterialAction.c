@@ -11,7 +11,7 @@ ZG_MaterialAction 	*	ZG_MaterialAction_New(void){
 	ZG_MaterialAction *transform_action=ZG_NEW(ZG_MaterialAction);
 	ZG_MaterialActionData *data=ZG_NEW(ZG_MaterialActionData);
 
-	Action *action=Action_New(TRANSFORM_COMPONENT_MAX);
+	Action *action=Action_New(ZG_TRANSFORM_COMPONENT_MAX);
 	data->action=action;
 
 	transform_action->data=data;

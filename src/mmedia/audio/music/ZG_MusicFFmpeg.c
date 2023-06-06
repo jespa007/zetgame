@@ -70,13 +70,13 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 
 	// Open video file
 	if(avformat_open_input(&pFormatCtx, file, NULL,NULL)!=0){
-		Log_Error( "Cannot open file",file);
+		ZG_Log_Error( "Cannot open file",file);
 		return false; // Couldn't open file
 	}
 
 	// Retrieve stream information
 	if(avformat_find_stream_info(pFormatCtx, NULL)<0){
-		Log_Error( "Cannot finst stream information",file);
+		ZG_Log_Error( "Cannot finst stream information",file);
 		return false; // Couldn't find stream information
 	}
 
@@ -106,12 +106,12 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 
 		sffmpeg->aCodec = avcodec_find_decoder(sffmpeg->aCodecCtx->codec_id);
 		if(!sffmpeg->aCodec) {
-			Log_Error( "Unsupported codec!");
+			ZG_Log_Error( "Unsupported codec!");
 			return false;
 		}
 
 		if(avcodec_open2(sffmpeg->aCodecCtx, sffmpeg->aCodec, &sffmpeg->audioOptionsDict)<0){
-			Log_Error( "can open codec!");
+			ZG_Log_Error( "can open codec!");
 			return false;
 
 		}
@@ -119,7 +119,7 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 		/* create resampler context */
 		sffmpeg->swr_ctx = swr_alloc();
 		if (!sffmpeg->swr_ctx) {
-			Log_Error("Could not allocate resampler context");
+			ZG_Log_Error("Could not allocate resampler context");
 			//return -1;
 		}
 		//av_samples_alloc(&output, avFrame->linesize, AV_CH_LAYOUT_STEREO, 32768, AV_SAMPLE_FMT_S16, 0);
@@ -132,7 +132,7 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 		av_opt_set_sample_fmt(sffmpeg->swr_ctx, "out_sample_fmt", GetFFMPEGFormat(), 0);
 
 		if(swr_init(sffmpeg->swr_ctx) < 0){
-			Log_Error("can't init swr");
+			ZG_Log_Error("can't init swr");
 			//return 0;
 		}
 
@@ -202,13 +202,13 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 		avformat_free_context(pFormatCtx);
 		av_free(pBufferIO);
 
-		Log_Error("Couldn't get file info");
+		ZG_Log_Error("Couldn't get file info");
 		return false;
 	 }
 
 	// Retrieve stream information
 	if(avformat_find_stream_info(pFormatCtx, NULL)<0){
-		Log_Error( "Cannot finst stream information");
+		ZG_Log_Error( "Cannot finst stream information");
 		delete pInStream;
 		avformat_free_context(pFormatCtx);
 		av_free(pBufferIO);
@@ -245,12 +245,12 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 
 		sffmpeg->aCodec = avcodec_find_decoder(sffmpeg->aCodecCtx->codec_id);
 		if(!sffmpeg->aCodec) {
-			Log_Error( "Unsupported codec!");
+			ZG_Log_Error( "Unsupported codec!");
 			return false;
 		}
 
 		if(avcodec_open2(sffmpeg->aCodecCtx, sffmpeg->aCodec, &sffmpeg->audioOptionsDict)<0){
-			Log_Error( "can open codec!");
+			ZG_Log_Error( "can open codec!");
 			return false;
 
 		}
@@ -258,7 +258,7 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 		/* create resampler context */
 		sffmpeg->swr_ctx = swr_alloc();
 		if (!sffmpeg->swr_ctx) {
-			Log_Error("Could not allocate resampler context");
+			ZG_Log_Error("Could not allocate resampler context");
 			//return -1;
 		}
 		//av_samples_alloc(&output, avFrame->linesize, AV_CH_LAYOUT_STEREO, 32768, AV_SAMPLE_FMT_S16, 0);
@@ -271,7 +271,7 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 		av_opt_set_sample_fmt(sffmpeg->swr_ctx, "out_sample_fmt", GetFFMPEGFormat(), 0);
 
 		if(swr_init(sffmpeg->swr_ctx) < 0){
-			Log_Error("can't init swr");
+			ZG_Log_Error("can't init swr");
 			//return 0;
 		}
 
@@ -335,7 +335,7 @@ void MusicFFmpeg_Update(MixerSound *sp_info){
 		if (avformat_seek_file(sffmpeg->pFormatCtx, sffmpeg->audioStreamIndex, INT64_MIN, request_seek, INT64_MAX, 0) < 0) {
 			av_log(NULL, AV_LOG_ERROR, "ERROR av_seek_frame: %lu", (long unsigned int)request_seek);
 		} else {
-			//Log_Info("a");
+			//ZG_Log_Info("a");
 			//av_log(NULL, AV_LOG_VERBOSE, "SUCCEEDED av_seek_frame: %lu newPos:%d", (uint32_t unsigned int)request_seek, pFormatCtx->pb->pos);
 			avcodec_flush_buffers(sffmpeg->aCodecCtx);
 		}

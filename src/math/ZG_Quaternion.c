@@ -1,7 +1,7 @@
 #include "zg_math.h"
 
-Quaternion Quaternion_New(){
-	Quaternion q;
+ZG_Quaternion Quaternion_New(){
+	ZG_Quaternion q;
 
 	q.x=0;
 	q.y=0;
@@ -10,8 +10,8 @@ Quaternion Quaternion_New(){
 
 	return q;
 }
-Quaternion Quaternion_Identity(void){
-	Quaternion q;
+ZG_Quaternion Quaternion_Identity(void){
+	ZG_Quaternion q;
 
 	q.w=1;
 	q.x=0;
@@ -21,20 +21,20 @@ Quaternion Quaternion_Identity(void){
 	return q;
 }
 
-float 	Quaternion_Magnitude(Quaternion q){
+float 	Quaternion_Magnitude(ZG_Quaternion q){
 	return sqrtf(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
 }
 
-Quaternion Quaternion_Inverse(Quaternion q){
+ZG_Quaternion Quaternion_Inverse(ZG_Quaternion q){
 	// q inverse is   		    q*
 	//                q^-1 = -------
 	//                        |q|^2
 
-	Quaternion qc;
+	ZG_Quaternion qc;
 	float m=Quaternion_Magnitude(q);
 	float inv_m2=1.0f/(m*m);
 	qc=Quaternion_Conjugate(q);
-	return (Quaternion){
+	return (ZG_Quaternion){
 		 .x=qc.x*inv_m2
 		,.y=qc.y*inv_m2
 		,.z=qc.z*inv_m2
@@ -43,7 +43,7 @@ Quaternion Quaternion_Inverse(Quaternion q){
 
 }
 
-Matrix3f  Quaternion_ToMatrix3f(Quaternion q){
+Matrix3f  Quaternion_ToMatrix3f(ZG_Quaternion q){
 
 	// Covert a quaternion into a full three-dimensional rotation matrix.
     //
@@ -83,12 +83,12 @@ Matrix3f  Quaternion_ToMatrix3f(Quaternion q){
 	return matrix;
 }
 
-Matrix4f  Quaternion_ToMatrix4f(Quaternion q){
+ZG_Matrix4f  ZG_Quaternion_ToMatrix4f(ZG_Quaternion q){
 	Matrix3f m3=Quaternion_ToMatrix3f(q);
 	return Matrix4f_FromMatrix3f(&m3);
 }
 
-Quaternion Quaternion_FromEulerV3f(Vector3f v){
+ZG_Quaternion ZG_Quaternion_FromEulerV3f(ZG_Vector3f v){
 	// X,Y,Z are angles
 	//x *= 0.0174532925f; // x*(180/PI) To radians!
 	//y *= 0.0174532925f; // y*(180/PI) To radians!
@@ -97,7 +97,7 @@ Quaternion Quaternion_FromEulerV3f(Vector3f v){
 	//x *= 0.5f;
 	//y *= 0.5f;
 	//z *= 0.5f;
-	Quaternion q;
+	ZG_Quaternion q;
 
 	// divide by 1 because quaternions works between -PI -- 0 -- PI or -180 -- 0 -- 180º
 	unsigned angle_x=(LUTS_DEGREES_2_FIXED(v.x)>>1)&(LUTS_SIZE_MASK>>1); // put mask to avoid overflow on negative numbers
@@ -136,9 +136,9 @@ Quaternion Quaternion_FromEulerV3f(Vector3f v){
 
 }
 
-Quaternion Quaternion_FromAngleAxis(float angle, Vector3f axis) {
-	Vector3f vn = Vector3f_Normalize(axis);
-	Quaternion q;
+ZG_Quaternion Quaternion_FromAngleAxis(float angle, ZG_Vector3f axis) {
+	ZG_Vector3f vn = Vector3f_Normalize(axis);
+	ZG_Quaternion q;
 
 	float sinAngle = Luts_Sin[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>1];
 	float cosAngle = Luts_Cos[(LUTS_DEGREES_2_FIXED(angle)&LUTS_SIZE_MASK)>>1];
@@ -151,12 +151,12 @@ Quaternion Quaternion_FromAngleAxis(float angle, Vector3f axis) {
 	return q;
 }
 
-Vector3f  Quaternion_TransformV3f(Quaternion q,Vector3f v){
-	Quaternion po;
+ZG_Vector3f  Quaternion_TransformV3f(ZG_Quaternion q,ZG_Vector3f v){
+	ZG_Quaternion po;
 
 	// po = q * qv * conj(q)
-	Quaternion qn=Quaternion_Normalize(q);
-	Quaternion qv=(Quaternion){
+	ZG_Quaternion qn=Quaternion_Normalize(q);
+	ZG_Quaternion qv=(ZG_Quaternion){
 		.x=v.x
 		,.y=v.y
 		,.z=v.z
@@ -166,20 +166,20 @@ Vector3f  Quaternion_TransformV3f(Quaternion q,Vector3f v){
 	po=Quaternion_Mul(Quaternion_Mul(qn,qv),Quaternion_Conjugate(qn));
 
 
-	return (Vector3f){
+	return (ZG_Vector3f){
 		.x=po.x
 		,.y=po.y
 		,.z=po.z
 	};
 }
 
-Vector3f  Quaternion_InverseTransformV3f(Quaternion q,Vector3f v){
+ZG_Vector3f  Quaternion_InverseTransformV3f(ZG_Quaternion q,ZG_Vector3f v){
 
-	Quaternion po;
+	ZG_Quaternion po;
 
 	// po = q * qv * conj(q)
-	Quaternion qn=Quaternion_Normalize(Quaternion_Inverse(q));
-	Quaternion qv=(Quaternion){
+	ZG_Quaternion qn=Quaternion_Normalize(Quaternion_Inverse(q));
+	ZG_Quaternion qv=(ZG_Quaternion){
 		.x=v.x
 		,.y=v.y
 		,.z=v.z
@@ -189,7 +189,7 @@ Vector3f  Quaternion_InverseTransformV3f(Quaternion q,Vector3f v){
 	po=Quaternion_Mul(Quaternion_Mul(qn,qv),Quaternion_Conjugate(qn));
 
 
-	return (Vector3f){
+	return (ZG_Vector3f){
 		.x=po.x
 		,.y=po.y
 		,.z=po.z
@@ -197,12 +197,12 @@ Vector3f  Quaternion_InverseTransformV3f(Quaternion q,Vector3f v){
 }
 
 /*
-Vector2f  Quaternion_TransformV2f(Quaternion q,float x, float y){
+Vector2f  Quaternion_TransformV2f(ZG_Quaternion q,float x, float y){
 	Vector2f v;
 	return v;
 }*/
 
-Quaternion Quaternion_Normalize(Quaternion q) {
+ZG_Quaternion Quaternion_Normalize(ZG_Quaternion q) {
 	float mag = 1.0f/Quaternion_Magnitude(q);
 	q.w*=mag;
 	q.x*=mag;
@@ -212,7 +212,7 @@ Quaternion Quaternion_Normalize(Quaternion q) {
 	return q;
 }
 
-Quaternion Quaternion_Conjugate(Quaternion q) {
+ZG_Quaternion Quaternion_Conjugate(ZG_Quaternion q) {
 	// only change sign imaginary components
 	q.x*=-1;
 	q.y*=-1;
@@ -220,8 +220,8 @@ Quaternion Quaternion_Conjugate(Quaternion q) {
 	return q;
 }
 
-Quaternion Quaternion_Mul(Quaternion q1, Quaternion q2){
-	Quaternion qr;
+ZG_Quaternion Quaternion_Mul(ZG_Quaternion q1, ZG_Quaternion q2){
+	ZG_Quaternion qr;
 
 	qr.x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
 	qr.y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
@@ -231,7 +231,7 @@ Quaternion Quaternion_Mul(Quaternion q1, Quaternion q2){
 	return qr;
 }
 
-Quaternion Quaternion_Add(Quaternion q1, Quaternion q2){
+ZG_Quaternion Quaternion_Add(ZG_Quaternion q1, ZG_Quaternion q2){
 	q1.w += q2.w;
 	q1.x += q2.x;
 	q1.y += q2.y;
@@ -240,7 +240,7 @@ Quaternion Quaternion_Add(Quaternion q1, Quaternion q2){
 	return q1;
 }
 
-Quaternion Quaternion_Scale(Quaternion q, float s){
+ZG_Quaternion Quaternion_Scale(ZG_Quaternion q, float s){
 
 	q.w *=s;
 	q.x *=s;
@@ -250,21 +250,21 @@ Quaternion Quaternion_Scale(Quaternion q, float s){
 	return q;
 }
 
-float Quaternion_Dot(Quaternion q1, Quaternion q2){
+float Quaternion_Dot(ZG_Quaternion q1, ZG_Quaternion q2){
 	return (q1.w * q2.w + q1.x * q2.x * q1.y * q2.y + q1.z * q2.z);
 }
 
-Quaternion Quaternion_Lerp(Quaternion from, Quaternion to, float t) {
-	Quaternion src = Quaternion_Scale(from, (1.0f - t));
-	Quaternion dst = Quaternion_Scale(to, t);
+ZG_Quaternion Quaternion_Lerp(ZG_Quaternion from, ZG_Quaternion to, float t) {
+	ZG_Quaternion src = Quaternion_Scale(from, (1.0f - t));
+	ZG_Quaternion dst = Quaternion_Scale(to, t);
 
-	Quaternion q = Quaternion_Add(src,dst);
+	ZG_Quaternion q = Quaternion_Add(src,dst);
 	return q;
 }
 
-Quaternion Quaternion_Slerp(Quaternion from, Quaternion to, float t) {
+ZG_Quaternion Quaternion_Slerp(ZG_Quaternion from, ZG_Quaternion to, float t) {
 	float cosTheta = Quaternion_Dot(from, to);
-	Quaternion temp=to;
+	ZG_Quaternion temp=to;
 
 	if (cosTheta < 0.0f) {
 		cosTheta *= -1.0f;
@@ -293,12 +293,12 @@ Quaternion Quaternion_Slerp(Quaternion from, Quaternion to, float t) {
 #define m21 up.z
 #define m22 forward.z
 
-Quaternion Quaternion_LookRotation(Vector3f lookAt, Vector3f upDirection) {
-	Vector3f forward = lookAt; Vector3f up = upDirection;
+ZG_Quaternion Quaternion_LookRotation(ZG_Vector3f lookAt, ZG_Vector3f upDirection) {
+	ZG_Vector3f forward = lookAt; ZG_Vector3f up = upDirection;
 	Vector3f_OrthoNormalize(forward, up);
-	Vector3f right = Vector_Cross(up, forward);
+	ZG_Vector3f right = Vector_Cross(up, forward);
 
-	Quaternion ret;
+	ZG_Quaternion ret;
 	ret.w = sqrtf(1.0f + m00 + m11 + m22) * 0.5f;
 	float w4_recip = 1.0f / (4.0f * ret.w);
 	ret.x = (m21 - m12) * w4_recip;
@@ -308,13 +308,13 @@ Quaternion Quaternion_LookRotation(Vector3f lookAt, Vector3f upDirection) {
 	return ret;
 }
 
-Quaternion Quaternion_LookRotation(Vector3f lookAt) {
-	Vector3f up = Vector3f_up;
-	Vector3f forward = lookAt;
+ZG_Quaternion Quaternion_LookRotation(ZG_Vector3f lookAt) {
+	ZG_Vector3f up = Vector3f_up;
+	ZG_Vector3f forward = lookAt;
 	Vector3f_OrthoNormalize(forward, up);
-	Vector3f right = Vector3f_Cross(up, forward);
+	ZG_Vector3f right = Vector3f_Cross(up, forward);
 
-	Quaternion ret;
+	ZG_Quaternion ret;
 	ret.w = sqrtf(1.0f + m00 + m11 + m22) * 0.5f;
 	float w4_recip = 1.0f / (4.0f * ret.w);
 	ret.x = (m21 - m12) * w4_recip;
@@ -324,11 +324,11 @@ Quaternion Quaternion_LookRotation(Vector3f lookAt) {
 	return ret;
 }
 
-void Quaternion_SetLookRotation(Vector3f lookAt) {
-	Vector3f up = (Vector)Vector_up;
-	Vector3f forward = lookAt;
+void Quaternion_SetLookRotation(ZG_Vector3f lookAt) {
+	ZG_Vector3f up = (Vector)Vector_up;
+	ZG_Vector3f forward = lookAt;
 	Vector3f_OrthoNormalize(forward, up);
-	Vector3f right = Vector3f_Cross(up, forward);
+	ZG_Vector3f right = Vector3f_Cross(up, forward);
 
 	w = sqrtf(1.0f + m00 + m11 + m22) * 0.5f;
 	float w4_recip = 1.0f / (4.0f * w);
@@ -337,10 +337,10 @@ void Quaternion_SetLookRotation(Vector3f lookAt) {
 	z = (m10 - m01) * w4_recip;
 }
 
-void Quaternion_SetLookRotation(Vector3f lookAt, Vector3f upDirection) {
-	Vector3f forward = lookAt; Vector3f up = upDirection;
+void Quaternion_SetLookRotation(ZG_Vector3f lookAt, ZG_Vector3f upDirection) {
+	ZG_Vector3f forward = lookAt; ZG_Vector3f up = upDirection;
 	Vector3f_OrthoNormalize(&forward, &up);
-	Vector3f right = Vector3f_Cross(up, forward);
+	ZG_Vector3f right = Vector3f_Cross(up, forward);
 
 	w = sqrtf(1.0f + m00 + m11 + m22) * 0.5f;
 	float w4_recip = 1.0f / (4.0f * w);

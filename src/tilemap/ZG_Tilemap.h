@@ -43,7 +43,7 @@ Tilemap *Tilemap_New(short *_tiles
 		, size_t _height
 		, size_t _tile_width
 		, size_t _tile_height
-		, Texture *_texture
+		, ZG_Texture *_texture
 		, Tilesets *_tilesets
 );
 void Tilemap_Update(Tilemap *_this);

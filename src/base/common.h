@@ -45,7 +45,7 @@ typedef unsigned int uint_t;
 typedef struct {
 	CallbackType  		ptr_function;
 	void 				* user_data;
-}Callback;
+}ZG_Callback;
 
 typedef struct{
 	const char *name;

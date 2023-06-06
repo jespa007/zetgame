@@ -17,13 +17,13 @@ bool MusicWav_LoadFromMemory(MixerSound *sp_info,uint8_t *ptr, size_t size){
 	uint8_t *wav_buffer;
 
 	if(strncmp((char *)ptr+0, "RIFF",4) != 0){
-		Log_ErrorF( "No valid wave format!");
+		ZG_Log_ErrorF( "No valid wave format!");
 		return false;
 	}
 
 	/* Load the WAV */
 	if (SDL_LoadWAV_RW(SDL_RWFromMem((void *)ptr,size), 1,&wav_spec, &wav_buffer, &wav_length) == NULL) {
-		Log_Error( "Could not open effect from memory: %s", SDL_GetError());
+		ZG_Log_Error( "Could not open effect from memory: %s", SDL_GetError());
 		return false;
 	} else {
 		//printf(" loaded wav from memory - %iHz %ich  ",wav_spec.freq, wav_spec.keyframe_tracks);
@@ -60,7 +60,7 @@ bool MusicWav_Load(MixerSound *sp_info,const char *file){
 	if(buffer!=NULL){
 		bool res=MusicWav_LoadFromMemory(sp_info, buffer->ptr, buffer->len);
 
-		BufferByte_Delete(buffer);
+		ZG_BufferByte_Delete(buffer);
 
 		return res;
 	}

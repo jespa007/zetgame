@@ -95,7 +95,7 @@ void Input_Win32_CheckKey(unsigned int code){
 		}
 
 		for(unsigned i = 0; i < g_input_vars->on_key_up->list->count; i++){
-			Callback * e=(Callback *)g_input_vars->on_key_up->list->items[i];
+			ZG_Callback * e=(ZG_Callback *)g_input_vars->on_key_up->list->items[i];
 			e->ptr_function(&key_event,e->user_data);
 		}
 

@@ -8,16 +8,16 @@ void ECMaterial_Setup(void *_this,ComponentId _id){
 	ECMaterial *ec_material=_this;
 	ec_material->header.entity=_entity;
 	ec_material->header.id=_id;
-	ec_material->material=NULL;//Material_New();
+	ec_material->material=NULL;//ZG_Material_New();
 }
 
 void ECMaterial_SetAlpha(void *_this, float alpha){
 	ECMaterial *ec_material=_this;
-	Material_SetAlpha(ec_material->material,alpha);
+	ZG_Material_SetAlpha(ec_material->material,alpha);
 }
 
 /**
- * Material animation
+ * ZG_Material animation
  */
 void ECMaterial_SetMaterialAnimation(ECMaterial *_this, ACMaterialAnimation * _material_animation_component){
 	ECMaterialData *data=_this->data;
@@ -34,6 +34,6 @@ ACMaterialAnimation * ECMaterial_GetMaterialAnimation(ECMaterial *_this){
 void ECMaterial_Destroy(void *_this){
 	ECMaterial *ec_material=_this;
 	if(ec_material->material!=NULL){
-		Material_Delete(ec_material->material);
+		ZG_Material_Delete(ec_material->material);
 	}
 }

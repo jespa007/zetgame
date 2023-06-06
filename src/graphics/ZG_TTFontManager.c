@@ -1,60 +1,60 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 typedef struct{
 	ZG_List 		* 	fonts;
-	TTFont 		* 	default_font;
-	const char 	*	font_resource_path;
-	TTFont 		* 	font_embedded;
-	char 			default_font_name[MAX_FONT_NAME];
+	ZG_TTFont 		* 	default_font;
+	const char 		*	font_resource_path;
+	ZG_TTFont 		* 	font_embedded;
+	char 				default_font_name[ZG_MAX_FONT_NAME];
 
-}TTFontManagerData;
+}ZG_TTFontManagerData;
 
-static TTFont 		*g_font_embedded=NULL;
-static FT_Library	g_ft_handler=NULL;
+static ZG_TTFont 	*	g_font_embedded=NULL;
+static FT_Library		g_ft_handler=NULL;
 
 
 
 // STATIC
-void	TTFontManager_Init(void){
+void	ZG_TTFontManager_Init(void){
 	if(g_ft_handler == NULL){
 		// All functions return a value different than 0 whenever an error occurred
 		if (FT_Init_FreeType(&g_ft_handler)){
-			Log_ErrorF("FREETYPE: Could not init FreeType Library");
+			ZG_Log_ErrorF("FREETYPE: Could not init FreeType Library");
 		}
 	}
 }
 
-FT_Library TTFontManager_GetFreeTypeHandler(void){
+FT_Library ZG_TTFontManager_GetFreeTypeHandler(void){
 	return g_ft_handler;
 }
 
-TTFontInfo TTFontManager_GetEmbeddedFontInfo(void){
-	return (TTFontInfo){
-		.font_name=DEFAULT_FONT_FAMILY
-		,.font_size=DEFAULT_FONT_SIZE
+ZG_TTFontInfo ZG_TTFontManager_GetEmbeddedFontInfo(void){
+	return (ZG_TTFontInfo){
+		.font_name=ZG_DEFAULT_FONT_FAMILY
+		,.font_size=ZG_DEFAULT_FONT_SIZE
 	};
 }
 
-TTFont * 		TTFontManager_GetEmbeddedFont(void){
+ZG_TTFont * 		ZG_TTFontManager_GetEmbeddedFont(void){
 	if(g_font_embedded == NULL){
-		g_font_embedded=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,DEFAULT_FONT_SIZE);
+		g_font_embedded=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,ZG_DEFAULT_FONT_SIZE);
 	}
 	return g_font_embedded;
 }
 
-void	 TTFontManager_OnDeleteNode(MapStringNode *node){
-	TTFont * font = node->val;
+void	 ZG_TTFontManager_OnDeleteNode(ZG_MapStringNode *node){
+	ZG_TTFont * font = node->val;
 	if(font!=NULL){
-		TTFont_Delete(font);
+		ZG_TTFont_Delete(font);
 	}
 }
 
 
-void	TTFontManager_DeInit(void){
+void	ZG_TTFontManager_DeInit(void){
 
 	// erase all loaded fonts...
 	if(g_font_embedded != NULL){
-		TTFont_Delete(g_font_embedded);
+		ZG_TTFont_Delete(g_font_embedded);
 		g_font_embedded = NULL;
 	}
 
@@ -65,38 +65,38 @@ void	TTFontManager_DeInit(void){
 }
 
 // MEMBERS
-TTFontManager *	TTFontManager_New(void){
-	TTFontManager *tfm=ZG_NEW(TTFontManager);
-	TTFontManagerData *data=ZG_NEW(TTFontManagerData);
+ZG_TTFontManager *	ZG_TTFontManager_New(void){
+	ZG_TTFontManager *tfm=ZG_NEW(ZG_TTFontManager);
+	ZG_TTFontManagerData *data=ZG_NEW(ZG_TTFontManagerData);
 
 	data->fonts=NULL;
 	data->default_font=NULL;
 	data->font_resource_path=".";
 	g_font_embedded=NULL;
-	strcpy(data->default_font_name,DEFAULT_FONT_FAMILY);
+	strcpy(data->default_font_name,ZG_DEFAULT_FONT_FAMILY);
 
-	data->fonts = MapString_New();//new std::map<std::string,TTFont *>();
+	data->fonts = MapString_New();//new std::map<std::string,ZG_TTFont *>();
 
-	data->fonts->on_delete=TTFontManager_OnDeleteNode;
+	data->fonts->on_delete=ZG_TTFontManager_OnDeleteNode;
 
 	tfm->data=data;
 
 	return tfm;
 }
 
-TTFont * 		TTFontManager_GetFontFromFontInfo(TTFontManager *_this, TTFontInfo * font_info){
+ZG_TTFont * 		ZG_TTFontManager_GetFontFromFontInfo(ZG_TTFontManager *_this, ZG_TTFontInfo * font_info){
 	if(font_info==NULL){
-		return TTFontManager_GetEmbeddedFont();
+		return ZG_TTFontManager_GetEmbeddedFont();
 	}
 
 	return TTFontManager_GetFont(_this,font_info->font_name, font_info->font_size);
 }
 
 
-TTFontInfo 		TTFontManager_GetDefaultFontInfo(TTFontManager *_this){
-	TTFontManagerData *data=_this->data;
-	TTFontInfo font_info;
-	TTFont *font=TTFontManager_GetDefaultFont(_this);
+ZG_TTFontInfo 		ZG_TTFontManager_GetDefaultFontInfo(ZG_TTFontManager *_this){
+	ZG_TTFontManagerData *data=_this->data;
+	ZG_TTFontInfo font_info;
+	ZG_TTFont *font=ZG_TTFontManager_GetDefaultFont(_this);
 
 	font_info.font_name=data->default_font_name;
 	font_info.font_size=font->font_size;
@@ -104,103 +104,103 @@ TTFontInfo 		TTFontManager_GetDefaultFontInfo(TTFontManager *_this){
 	return font_info;
 }
 
-TTFont * 		TTFontManager_GetDefaultFont(TTFontManager *_this){
-	TTFontManagerData *data=_this->data;
+ZG_TTFont * 		ZG_TTFontManager_GetDefaultFont(ZG_TTFontManager *_this){
+	ZG_TTFontManagerData *data=_this->data;
 	if(data->default_font == NULL){
-		return TTFontManager_GetEmbeddedFont();
+		return ZG_TTFontManager_GetEmbeddedFont();
 	}
 	return data->default_font;
 }
 
-void 			TTFontManager_SetDefaultFont(TTFontManager *_this,TTFont * _font){
-	TTFontManagerData *data=_this->data;
+void 			ZG_TTFontManager_SetDefaultFont(ZG_TTFontManager *_this,ZG_TTFont * _font){
+	ZG_TTFontManagerData *data=_this->data;
 	if(_font!=NULL){
 		data->default_font=_font;
 	}
 }
 
 
-void 			TTFontManager_SetDefaultFontName(TTFontManager *_this,const char * _default_font_name){
-	TTFontManagerData *data=_this->data;
+void 			ZG_TTFontManager_SetDefaultFontName(ZG_TTFontManager *_this,const char * _default_font_name){
+	ZG_TTFontManagerData *data=_this->data;
 	if(_default_font_name!=NULL){
 		strcpy(data->default_font_name,_default_font_name);
 	}
 }
 
-const char *	TTFontManager_GetDefaultFontName(TTFontManager *_this){
-	TTFontManagerData *data=_this->data;
+const char *	ZG_TTFontManager_GetDefaultFontName(ZG_TTFontManager *_this){
+	ZG_TTFontManagerData *data=_this->data;
 	return data->default_font_name;
 }
 
 
-void 			TTFontManager_SetFontResourcePath(TTFontManager *_this,const char * path){
-	TTFontManagerData *data=_this->data;
+void 			ZG_TTFontManager_SetFontResourcePath(ZG_TTFontManager *_this,const char * path){
+	ZG_TTFontManagerData *data=_this->data;
 	data->font_resource_path=path;
 }
 
-const char * 	TTFontManager_GetFontResourcePath(TTFontManager *_this){
-	TTFontManagerData *data=_this->data;
+const char * 	ZG_TTFontManager_GetFontResourcePath(ZG_TTFontManager *_this){
+	ZG_TTFontManagerData *data=_this->data;
 	return data->font_resource_path;
 }
 
 // MEMBERS
-TTFont * 		TTFontManager_NewFont(TTFontManager *_this){
-	TTFontManagerData *data=_this->data;
-	TTFont *font=NULL;
+ZG_TTFont * 		ZG_TTFontManager_NewFont(ZG_TTFontManager *_this){
+	ZG_TTFontManagerData *data=_this->data;
+	ZG_TTFont *font=NULL;
 
-	if(STRCMP(data->default_font_name,==,DEFAULT_FONT_FAMILY)){
-		font=TTFont_New();
+	if(STRCMP(data->default_font_name,==,ZG_DEFAULT_FONT_FAMILY)){
+		font=ZG_TTFont_New();
 	}else{
 		char filename[ZG_MAX_PATH]={0};
 		strcpy(filename,data->default_font_name);
 
-		if(File_Exists(filename) == false){
+		if(ZG_File_Exists(filename) == false){
 			sprintf(filename,"%s/%s",data->font_resource_path,data->default_font_name);
 		}
 
-		if(File_Exists(filename)){
-			font=TTFont_NewFromFile(filename);
+		if(ZG_File_Exists(filename)){
+			font=ZG_TTFont_NewFromFile(filename);
 		}else{
-			font=TTFont_New();
-			Log_Error("Default font '%s' not exist",data->default_font_name);
+			font=ZG_TTFont_New();
+			ZG_Log_Error("Default font '%s' not exist",data->default_font_name);
 		}
 	}
 
-	List_Add(data->fonts,font);
+	ZG_List_Add(data->fonts,font);
 
 	return font;
 
 }
 
-void			TTFontManager_SetFontName(
-		TTFontManager *_this
-		, TTFont * _font
+void			ZG_TTFontManager_SetFontName(
+		ZG_TTFontManager *_this
+		, ZG_TTFont * _font
 		, const char *_font_name
 ){
-	TTFontManagerData *data=_this->data;
+	ZG_TTFontManagerData *data=_this->data;
 	char filename[ZG_MAX_PATH]={0};
 	strcpy(filename,_font_name);
 
-	if(File_Exists(filename) == false){
+	if(ZG_File_Exists(filename) == false){
 		sprintf(filename,"%s/%s",data->font_resource_path,_font_name);
 	}
 
-	if(File_Exists(filename)){
-		TTFont_LoadFromFile(_font, filename);
+	if(ZG_File_Exists(filename)){
+		ZG_TTFont_LoadFromFile(_font, filename);
 	}else{
-		Log_Error("Font '%s' not exist",_font_name);
+		ZG_Log_Error("Font '%s' not exist",_font_name);
 	}
 }
 /*
-TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uint8_t _font_size){
-	TTFontManagerData *data=_this->data;
+ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filename,uint8_t _font_size){
+	ZG_TTFontManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
-	TTFont * font=NULL,*new_font=NULL;
+	ZG_TTFont * font=NULL,*new_font=NULL;
 	//char filename[ZG_MAX_PATH]={0};
 	char *ttf_font_file_to_lower=NULL;
 
-	id_tmp=Path_GetFilenameWithoutExtension(_filename);
+	id_tmp=ZG_Path_GetFilenameWithoutExtension(_filename);
 
 	if(id_tmp == NULL){ return NULL; }
 
@@ -215,31 +215,31 @@ TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uin
 
 	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
 
-	if((font=MapString_GetValue(data->fonts,id,NULL))==NULL){
-		if(STRCMP(ttf_font_file_to_lower,==,DEFAULT_FONT_FAMILY)){
-			new_font=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
+	if((font=ZG_MapString_GetValue(data->fonts,id,NULL))==NULL){
+		if(STRCMP(ttf_font_file_to_lower,==,ZG_DEFAULT_FONT_FAMILY)){
+			new_font=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 		}
 		else{
 			char filename[ZG_MAX_PATH]={0};
 
 			strcpy(filename,_filename);
 
-			if(File_Exists(filename) == false){
+			if(ZG_File_Exists(filename) == false){
 				sprintf(filename,"%s/%s",data->font_resource_path,_filename);
 			}
 
-			if((new_font=TTFont_NewFromFile(filename,_font_size))==NULL){
+			if((new_font=ZG_TTFont_NewFromFile(filename,_font_size))==NULL){
 				// load default font but configured by font size
-				sprintf(id,"%s_s%i_hl",DEFAULT_FONT_FAMILY,_font_size);
-				if((font=MapString_GetValue(data->fonts,id,NULL))==NULL){ // create new
-					new_font=TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
+				sprintf(id,"%s_s%i_hl",ZG_DEFAULT_FONT_FAMILY,_font_size);
+				if((font=ZG_MapString_GetValue(data->fonts,id,NULL))==NULL){ // create new
+					new_font=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 				}
 			}
 		}
 
 		if(new_font != NULL){
 			font=new_font;
-			MapString_SetValue(data->fonts,id,new_font);
+			ZG_MapString_SetValue(data->fonts,id,new_font);
 		}
 
 	}
@@ -249,10 +249,10 @@ TTFont * 		TTFontManager_GetFont(TTFontManager *_this,const char * _filename,uin
 	return font;
 }
 
-TTFont * 		TTFontManager_GetFontFromMemory(TTFontManager *_this, const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size){
-	TTFontManagerData *data=_this->data;
+ZG_TTFont * 		TTFontManager_GetFontFromMemory(ZG_TTFontManager *_this, const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size){
+	ZG_TTFontManagerData *data=_this->data;
 	char id[100]={0};
-	TTFont * font=NULL;
+	ZG_TTFont * font=NULL;
 	char *ttf_font_file_to_lower=NULL;
 	bool exists=false;
 
@@ -264,12 +264,12 @@ TTFont * 		TTFontManager_GetFontFromMemory(TTFontManager *_this, const uint8_t *
 	free(allocated_int_str);
 	free(ttf_font_file_to_lower);
 
-	font = MapString_GetValue(data->fonts,id,&exists);
+	font = ZG_MapString_GetValue(data->fonts,id,&exists);
 
 	if(exists == false){
-		font=TTFont_NewFromMemory(ptr,ptr_len,font_size);
+		font=ZG_TTFont_NewFromMemory(ptr,ptr_len,font_size);
 		if(font!=NULL){
-			MapString_SetValue(data->fonts,id,font);
+			ZG_MapString_SetValue(data->fonts,id,font);
 		}
 	}
 
@@ -277,18 +277,18 @@ TTFont * 		TTFontManager_GetFontFromMemory(TTFontManager *_this, const uint8_t *
 }*/
 
 
-void TTFontManager_Delete(TTFontManager *_this){
-	TTFontManagerData *data=_this->data;
+void ZG_TTFontManager_Delete(ZG_TTFontManager *_this){
+	ZG_TTFontManagerData *data=_this->data;
 
 	// erase all loaded fonts...
 	if(data->fonts!=NULL){
 		for(int i=0; i < data->fonts->size; i++){
-			TTFont *font=data->fonts->items[i];
-			TTFont_Delete(font);
+			ZG_TTFont *font=data->fonts->items[i];
+			ZG_TTFont_Delete(font);
 		}
 	}
 
-	List_Delete(data->fonts);
+	ZG_List_Delete(data->fonts);
 	data->fonts=NULL;
 
 	ZG_FREE(data);

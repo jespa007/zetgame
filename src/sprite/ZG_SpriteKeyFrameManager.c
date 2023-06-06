@@ -5,14 +5,14 @@
 typedef struct{
 	MapString 	* 	sprite_keyframes;
 	ZG_List 		* 	sprite_keyframe_resources;
-	TextureManager	* texture_manager;
+	ZG_TextureManager	* texture_manager;
 }SpriteKeyFrameManagerData;
 
 // STATIC
-/*void	* SpriteKeyFrameManager_OnDeleteNode(MapStringNode *node){
+/*void	* SpriteKeyFrameManager_OnDeleteNode(ZG_MapStringNode *node){
 	SpriteKeyFrameResource * keyframepack = node->val;
 	if(keyframepack!=NULL){
-		Texture_Delete(keyframepack->texture);
+		ZG_Texture_Delete(keyframepack->texture);
 
 		for(unsigned i=0; i < keyframepack->sprite_keyframes_len; i++){
 			SpriteKeyFrame_Delete(keyframepack->sprite_keyframes[i]);
@@ -27,13 +27,13 @@ typedef struct{
 
 
 // MEMBERS
-SpriteKeyFrameManager *SpriteKeyFrameManager_New(TextureManager	* _texture_manager){
+SpriteKeyFrameManager *SpriteKeyFrameManager_New(ZG_TextureManager	* _texture_manager){
 	SpriteKeyFrameManager *skfm=ZG_NEW(SpriteKeyFrameManager);
 	SpriteKeyFrameManagerData *data=ZG_NEW(SpriteKeyFrameManagerData);
 
-	data->sprite_keyframes = MapString_New();//new std::map<std::string,TTFont *>();
+	data->sprite_keyframes = MapString_New();//new std::map<std::string,ZG_TTFont *>();
 
-	data->sprite_keyframe_resources= List_New();
+	data->sprite_keyframe_resources= ZG_List_New();
 	data->texture_manager=_texture_manager;
 	//data->sprite_keyframes->on_delete=SpriteKeyFrameManager_OnDeleteNode;
 
@@ -53,11 +53,11 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 
 	SpriteKeyFrameManagerData *data=_this->data;
 	char filename[MAX_PATH];
-	Texture *texture;
+	ZG_Texture *texture;
 
 	// 1. read & parse json
 	if(key_id_prefix == NULL){
-		Log_ErrorF("key_id_prefix id NULL");
+		ZG_Log_ErrorF("key_id_prefix id NULL");
 		return false;
 	}
 
@@ -71,37 +71,37 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 
 
 		if(frames == NULL){
-			Log_Error("JsonParse '%s' : Cannot get 'frames' identifier in json",key_id_prefix);
+			ZG_Log_Error("JsonParse '%s' : Cannot get 'frames' identifier in json",key_id_prefix);
 			return false;
 		}
 
 		if(meta == NULL){
-			Log_Error("JsonParse '%s' : Cannot get 'meta' identifier in json",key_id_prefix);
+			ZG_Log_Error("JsonParse '%s' : Cannot get 'meta' identifier in json",key_id_prefix);
 			return false;
 		}
 
 		layers = cJSON_GetObjectItem(meta,"layers");
 
 		if(layers == NULL){
-			Log_Error("JsonParse '%s' : Cannot get 'meta.layers' identifier in json",key_id_prefix);
+			ZG_Log_Error("JsonParse '%s' : Cannot get 'meta.layers' identifier in json",key_id_prefix);
 			return false;
 		}
 
 
 		image=cJSON_GetObjectItem(meta,"image");
 		if(image == NULL){
-			Log_Error("JsonParse '%s' : Cannot get 'meta.image' identifier in json",key_id_prefix);
+			ZG_Log_Error("JsonParse '%s' : Cannot get 'meta.image' identifier in json",key_id_prefix);
 			return false;
 		}
 
 		sprintf(filename,"%s/%s",path,image->valuestring);
 
 		// everything ok, so we can proceed with loading
-		texture=TextureManager_Get(data->texture_manager,filename);
+		texture=ZG_TextureManager_Get(data->texture_manager,filename);
 		if(texture!=NULL){
 			// create sprite frame packs and add to list/map
 			SpriteKeyFrameResource *skp=SpriteKeyFrameResource_New(cJSON_GetArraySize(layers),texture);
-			List_Add(data->sprite_keyframe_resources,skp);
+			ZG_List_Add(data->sprite_keyframe_resources,skp);
 
 			char sprite_keyframe_key[150];
 
@@ -110,7 +110,7 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 
 			cJSON *layer = NULL;
 			cJSON *layer_element = NULL;
-			Log_Info("Loading '%s': %i layers detected",key_id_prefix,skp->sprite_keyframes_len);
+			ZG_Log_Info("Loading '%s': %i layers detected",key_id_prefix,skp->sprite_keyframes_len);
 			unsigned i=0;
 
 			cJSON_ArrayForEach(layer, layers) {
@@ -118,21 +118,21 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 				layer_element = cJSON_GetObjectItem(layer,"name");
 
 				if(layer_element == NULL){
-					Log_Error("JsonParse '%s': Cannot get 'name' attribute in 'layers'",key_id_prefix);
+					ZG_Log_Error("JsonParse '%s': Cannot get 'name' attribute in 'layers'",key_id_prefix);
 					return false;
 				}
 
 				sprintf(sprite_keyframe_key,"%s_%s",key_id_prefix,layer_element->valuestring);
 
 				if(strlen(layer_element->valuestring) >= MAX_SPRITE_KEYFRAME_NAME){
-					Log_Error("JsonParse '%s' name '%s': length is greater that %i",key_id_prefix,layer_element->valuestring,MAX_SPRITE_KEYFRAME_NAME);
+					ZG_Log_Error("JsonParse '%s' name '%s': length is greater that %i",key_id_prefix,layer_element->valuestring,MAX_SPRITE_KEYFRAME_NAME);
 					return false;
 				}
 
 				skp->sprite_keyframes[i].texture=skp->texture;
 				strcpy(skp->sprite_keyframes[i].name,layer_element->valuestring);
 
-				MapString_SetValue(data->sprite_keyframes,sprite_keyframe_key,&skp->sprite_keyframes[i]);
+				ZG_MapString_SetValue(data->sprite_keyframes,sprite_keyframe_key,&skp->sprite_keyframes[i]);
 
 				i++;
 
@@ -192,7 +192,7 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 
 				}
 
-				Log_Info("'%s': %i frames",skp->sprite_keyframes[i].name ,skp->sprite_keyframes[i].frames_len);
+				ZG_Log_Info("'%s': %i frames",skp->sprite_keyframes[i].name ,skp->sprite_keyframes[i].frames_len);
 
 
 			}
@@ -210,7 +210,7 @@ bool SpriteKeyFrameManager_LoadFromMemory(
 /**
  * Load a set of SpriteKeyFrame from exported files from Aseprite
  * @_this: SpriteKeyFrameManager object
- * @_texture_filename: Texture filename (it can be .png,jpg,etc)
+ * @_texture_filename: ZG_Texture filename (it can be .png,jpg,etc)
  * @_json_filename: Json file generated by Aseprite
  * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
  */
@@ -221,7 +221,7 @@ bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this,const char *_key_id
 	char *_path=NULL;
 	bool ok=false;
 
-	if((ase_json_buffer=File_Read(_json_ase_filename))!=NULL){
+	if((ase_json_buffer=ZG_File_Read(_json_ase_filename))!=NULL){
 		ok=SpriteKeyFrameManager_LoadFromMemory(
 			_this
 			,_path=Path_GetDirectoryName(_json_ase_filename)
@@ -232,7 +232,7 @@ bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this,const char *_key_id
 	}
 
 
-	if(ase_json_buffer) BufferByte_Delete(ase_json_buffer);
+	if(ase_json_buffer) ZG_BufferByte_Delete(ase_json_buffer);
 	if(_path) free(_path);
 
 	return ok;
@@ -241,7 +241,7 @@ bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this,const char *_key_id
 SpriteKeyFrame *SpriteKeyFrameManager_Get(SpriteKeyFrameManager *_this, const char *key){
 	SpriteKeyFrameManagerData *data=_this->data;
 
-	return MapString_GetValue(data->sprite_keyframes,key,NULL);
+	return ZG_MapString_GetValue(data->sprite_keyframes,key,NULL);
 }
 
 void  SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this){
@@ -251,8 +251,8 @@ void  SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this){
 		SpriteKeyFrameResource_Delete(data->sprite_keyframe_resources->items[i]);
 	}
 
-	List_Delete(data->sprite_keyframe_resources);
-	MapString_Delete(data->sprite_keyframes);
+	ZG_List_Delete(data->sprite_keyframe_resources);
+	ZG_MapString_Delete(data->sprite_keyframes);
 	ZG_FREE(data);
 	ZG_FREE(_this);
 }

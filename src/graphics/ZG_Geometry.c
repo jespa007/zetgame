@@ -1,79 +1,79 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
-#include "Geometry_GL.c"
+#include "ZG_Geometry_GL.c"
 
-#define DEFAULT_CIRCLE_DIVISIONS_PER_QUADRANT 128
+#define ZG_CIRCLE_DIVISIONS_PER_QUADRANT 128
 
-static Geometry * g_geometry_default_point=NULL;
-static Geometry * g_geometry_default_rectangle=NULL;
-static Geometry * g_geometry_default_rectangle_filled=NULL;
-static Geometry * g_geometry_default_rectangle_textured=NULL;
-static Geometry * g_geometry_default_circle=NULL;
+static ZG_Geometry * g_geometry_default_point=NULL;
+static ZG_Geometry * g_geometry_default_rectangle=NULL;
+static ZG_Geometry * g_geometry_default_rectangle_filled=NULL;
+static ZG_Geometry * g_geometry_default_rectangle_textured=NULL;
+static ZG_Geometry * g_geometry_default_circle=NULL;
 
-Geometry	* Geometry_GetDefaultPoint(void){
+ZG_Geometry	* ZG_Geometry_GetDefaultPoint(void){
 	if(g_geometry_default_point == NULL){
 		short index=0;
 		float pos[]={0,0,0};
-		g_geometry_default_point=Geometry_NewPoints(1,0);
-		Geometry_SetIndices(g_geometry_default_point,&index,1);
-		Geometry_SetMeshVertex(g_geometry_default_point,pos,3);
+		g_geometry_default_point=ZG_Geometry_NewPoints(1,0);
+		ZG_Geometry_SetIndices(g_geometry_default_point,&index,1);
+		ZG_Geometry_SetMeshVertex(g_geometry_default_point,pos,3);
 	}
 
 	return g_geometry_default_point;
 }
 
-Geometry	* Geometry_GetDefaultRectangle(void){
+ZG_Geometry	* ZG_Geometry_GetDefaultRectangle(void){
 	if(g_geometry_default_rectangle == NULL){
-		g_geometry_default_rectangle=Geometry_NewRectangle(0);
+		g_geometry_default_rectangle=ZG_Geometry_NewRectangle(0);
 	}
 
 	return g_geometry_default_rectangle;
 }
 
-Geometry	* 	Geometry_GetDefaultCircle(void){
+ZG_Geometry	* 	ZG_Geometry_GetDefaultCircle(void){
 	if(g_geometry_default_circle == NULL){
-		g_geometry_default_circle=Geometry_NewCircle(0,0);
+		g_geometry_default_circle=ZG_Geometry_NewCircle(0,0);
 	}
 
 	return g_geometry_default_circle;
 }
 
-Geometry	* 	Geometry_GetDefaultRectangleFilled(void){
+ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleFilled(void){
 	if(g_geometry_default_rectangle_filled == NULL){
-		g_geometry_default_rectangle_filled=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_COLOR);
+		g_geometry_default_rectangle_filled=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_COLOR);
 	}
 
 	return g_geometry_default_rectangle_filled;
 }
 
-Geometry	* 	Geometry_GetDefaultRectangleTextured(void){
+ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleTextured(void){
 	if(g_geometry_default_rectangle_textured == NULL){
-		g_geometry_default_rectangle_textured=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
+		g_geometry_default_rectangle_textured=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
 	}
 
 	return g_geometry_default_rectangle_textured;
 }
 
-Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t _n_vertexs,uint32_t _properties){
+ZG_Geometry	* ZG_Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t _n_vertexs,uint32_t _properties){
 
-	if(_n_vertexs < 2 && _geometry_type != GEOMETRY_TYPE_POINTS){
-		Log_ErrorF("Number of vertex should be greather than 2");
+	if(_n_vertexs < 2 && _geometry_type != ZG_GEOMETRY_TYPE_POINTS){
+		ZG_Log_ErrorF("Number of vertex should be greather than 2");
 		return NULL;
 	}
 
-	Geometry *geometry=ZG_NEW(Geometry);
-	memset(geometry, 0,sizeof(Geometry));
+	ZG_Geometry *geometry=ZG_NEW(ZG_Geometry);
+	memset(geometry, 0,sizeof(ZG_Geometry));
 	geometry->geometry_type=_geometry_type;
 	geometry->n_vertexs=_n_vertexs;
 	geometry->index_length=_index_length;
 	geometry->properties=_properties;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_New(geometry,_properties);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_New(geometry,_properties);
 		break;
 	}
 
@@ -81,18 +81,18 @@ Geometry	* Geometry_New(GeometryType _geometry_type,size_t _index_length,size_t 
 }
 
 
-Geometry	* Geometry_NewPoints(size_t _n_points, uint32_t _properties){
+ZG_Geometry	* ZG_Geometry_NewPoints(size_t _n_points, uint32_t _properties){
 
-	Geometry *geometry=NULL;
+	ZG_Geometry *geometry=NULL;
 
-	geometry=Geometry_New(GEOMETRY_TYPE_POINTS,_n_points,_n_points,_properties);
+	geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_POINTS,_n_points,_n_points,_properties);
 
 	return geometry;
 }
 
-Geometry	* Geometry_NewRectangle(uint32_t _properties){
+ZG_Geometry	* ZG_Geometry_NewRectangle(uint32_t _properties){
 
-	Geometry *geometry=NULL;
+	ZG_Geometry *geometry=NULL;
 
 	short indices[]={
 			 0,1
@@ -108,22 +108,22 @@ Geometry	* Geometry_NewRectangle(uint32_t _properties){
 	};
 
 
-	geometry=Geometry_New(GEOMETRY_TYPE_LINE_LOOP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
+	geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_LINE_LOOP,ZG_ARRAY_SIZE(indices),ZG_N_VERTEXS_QUAD,_properties);
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indices,ARRAY_SIZE(indices));
+		ZG_Geometry_SetIndices(geometry,indices,ZG_ARRAY_SIZE(indices));
 
-		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
+		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 
 	}
 
 	return geometry;
 }
 
-Geometry	* Geometry_NewRectangleFilled(uint32_t _properties){
+ZG_Geometry	* ZG_Geometry_NewRectangleFilled(uint32_t _properties){
 
-	Geometry *geometry=NULL;
+	ZG_Geometry *geometry=NULL;
 
 	short indices[]={
 		0,1
@@ -138,16 +138,16 @@ Geometry	* Geometry_NewRectangleFilled(uint32_t _properties){
 		   +0.5f,+0.5f,0.0f   // top right
 	};
 
-	geometry=Geometry_New(GEOMETRY_TYPE_TRIANGLE_STRIP,ARRAY_SIZE(indices),N_VERTEX_QUAD,_properties);
+	geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_TRIANGLE_STRIP,ZG_ARRAY_SIZE(indices),ZG_N_VERTEXS_QUAD,_properties);
 
 	if(geometry){ // setup indices...
 
 
-		Geometry_SetIndices(geometry,indices,ARRAY_SIZE(indices));
+		ZG_Geometry_SetIndices(geometry,indices,ZG_ARRAY_SIZE(indices));
 
-		Geometry_SetMeshVertex(geometry,mesh_vertex,ARRAY_SIZE(mesh_vertex));
+		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 
-		if(_properties & GEOMETRY_PROPERTY_TEXTURE){
+		if(_properties & ZG_GEOMETRY_PROPERTY_TEXTURE){
 
 			float mesh_texture[]={
 				   0.0f,  1.0f,   // bottom left
@@ -156,10 +156,10 @@ Geometry	* Geometry_NewRectangleFilled(uint32_t _properties){
 				   1.0f,  0.0f    // top right
 			};
 
-			Geometry_SetMeshTexture(geometry,mesh_texture,ARRAY_SIZE(mesh_texture));
+			ZG_Geometry_SetMeshTexture(geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 		}
 
-		if(_properties & GEOMETRY_PROPERTY_COLOR){
+		if(_properties & ZG_GEOMETRY_PROPERTY_COLOR){
 
 			float mesh_color[]={
 				  1.0f,1.0f,1.0f,  // bottom left
@@ -168,27 +168,27 @@ Geometry	* Geometry_NewRectangleFilled(uint32_t _properties){
 				  1.0f,1.0f,1.0f   // top right
 			};
 
-			Geometry_SetMeshColor(geometry,mesh_color,ARRAY_SIZE(mesh_color));
+			ZG_Geometry_SetMeshColor(geometry,mesh_color,ZG_ARRAY_SIZE(mesh_color));
 		}
 	}
 
 	return geometry;
 }
 
-Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _properties){
+ZG_Geometry	* ZG_Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _properties){
 
 	if(_divisions_per_quadrant < 1){
-		_divisions_per_quadrant=DEFAULT_CIRCLE_DIVISIONS_PER_QUADRANT;
+		_divisions_per_quadrant=ZG_CIRCLE_DIVISIONS_PER_QUADRANT;
 	}
 
-	Geometry *geometry=NULL;
+	ZG_Geometry *geometry=NULL;
 	uint16_t n_vertexs = 4*_divisions_per_quadrant;
 	size_t index_length=n_vertexs;
 
 	short *indices=malloc(index_length*sizeof(short));
 
 	// A quarter of screen as size...
-	float *mesh_vertex=malloc(n_vertexs*sizeof(float)*VERTEX_COORDS_LEN);
+	float *mesh_vertex=malloc(n_vertexs*sizeof(float)*ZG_VERTEX_COORDS_LEN);
 	float *it_vertexs=mesh_vertex;
 	short *it_indexs=indices;
 
@@ -207,13 +207,13 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
     	index++;
     }
 
-	geometry=Geometry_New(GEOMETRY_TYPE_LINE_LOOP,index_length,n_vertexs,_properties);
+	geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_LINE_LOOP,index_length,n_vertexs,_properties);
 
 	if(geometry){ // setup indexes...
 
-		Geometry_SetIndices(geometry,indices,index_length);
+		ZG_Geometry_SetIndices(geometry,indices,index_length);
 
-		Geometry_SetMeshVertex(geometry,mesh_vertex,n_vertexs*VERTEX_COORDS_LEN);
+		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,n_vertexs*ZG_VERTEX_COORDS_LEN);
 
 	}
 
@@ -224,97 +224,97 @@ Geometry	* Geometry_NewCircle(uint16_t _divisions_per_quadrant, uint32_t _proper
 	return geometry;
 }
 
-void 			Geometry_SetIndices(Geometry *geometry,const short *indices,size_t indices_len){
+void 			ZG_Geometry_SetIndices(ZG_Geometry *geometry,const short *indices,size_t indices_len){
 
 	if(geometry == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_SetIndices(geometry,indices,indices_len);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_SetIndices(geometry,indices,indices_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshVertex(Geometry *geometry,const float *mesh_vertexs,size_t mesh_vertexs_len){
+void 			ZG_Geometry_SetMeshVertex(ZG_Geometry *geometry,const float *mesh_vertexs,size_t mesh_vertexs_len){
 
 	if(geometry == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshTexture(Geometry *geometry,const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len){
+void 			ZG_Geometry_SetMeshTexture(ZG_Geometry *geometry,const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len){
 
 	if(geometry == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshTexture(geometry,mesh_texure_vertexs,mesh_texture_vertexs_len);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_SetMeshTexture(geometry,mesh_texure_vertexs,mesh_texture_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshColor(Geometry *geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len){
+void 			ZG_Geometry_SetMeshColor(ZG_Geometry *geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len){
 
 	if(geometry == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshColor(geometry,mesh_color_vertexs,mesh_color_vertexs_len);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_SetMeshColor(geometry,mesh_color_vertexs,mesh_color_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_SetMeshNormal(Geometry *geometry,const float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len){
+void 			ZG_Geometry_SetMeshNormal(ZG_Geometry *geometry,const float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len){
 	if(geometry == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_SetMeshNormal(geometry,mesh_normal_vertexs,mesh_normal_vertexs_len);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_SetMeshNormal(geometry,mesh_normal_vertexs,mesh_normal_vertexs_len);
 		break;
 	}
 }
 
-void 			Geometry_Draw(Geometry *geometry){
+void 			ZG_Geometry_Draw(ZG_Geometry *geometry){
 	if(geometry == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_Draw(geometry);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_Draw(geometry);
 		break;
 	}
 }
 
-void	Geometry_Delete(Geometry *_this){
+void	ZG_Geometry_Delete(ZG_Geometry *_this){
 	if(_this == NULL) return;
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
 		break;
-	case GRAPHICS_API_GL:
-		Geometry_GL_DeInit(_this);
+	case ZG_GRAPHICS_API_GL:
+		ZG_Geometry_GL_DeInit(_this);
 		break;
 	}
 
@@ -322,9 +322,9 @@ void	Geometry_Delete(Geometry *_this){
 
 }
 
-void			Geometry_DeInit(void){
+void			ZG_Geometry_DeInit(void){
 
-	Geometry **default_geometries[]={
+	ZG_Geometry **default_geometries[]={
 			&g_geometry_default_point
 			,&g_geometry_default_rectangle
 			,&g_geometry_default_rectangle_filled
@@ -333,11 +333,11 @@ void			Geometry_DeInit(void){
 			,NULL
 	};
 
-	Geometry ***it=default_geometries;
+	ZG_Geometry ***it=default_geometries;
 
 	while(*it!=NULL){
 		if(**it != NULL){
-			Geometry_Delete(**it);
+			ZG_Geometry_Delete(**it);
 		}
 		**it=NULL;
 

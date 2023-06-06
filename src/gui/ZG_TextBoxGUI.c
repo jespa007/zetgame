@@ -3,7 +3,7 @@
 static void GUITextBox_Draw(void *gui_label);
 
 typedef struct{
-	TTFont *	font;
+	ZG_TTFont *	font;
 }GUITextBoxData;
 
 GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
@@ -12,7 +12,7 @@ GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
 	label->widget=GUIWidget_New( x,  y,  width,  height);
 	label->widget->type=WIDGET_TYPE_LABEL;
 	label->widget->gui_ptr=label;
-	label->textbox=TextBox_New();
+	label->textbox=ZG_TextBox_New();
 
 	GUIWidget_SetDrawFunction(label->widget
 		,(CallbackWidgetUpdate){
@@ -31,17 +31,17 @@ GUITextBox *GUITextBox_New(int x, int y, uint16_t width, uint16_t height){
 
 static void GUITextBox_Draw(void *gui_label){
 	GUITextBox *_this=gui_label;
-	Transform	transform=Transform_DefaultValues();
-	Color4f color=GUIWidget_GetColor4f(_this->widget);
+	ZG_Transform	transform=ZG_Transform_DefaultValues();
+	ZG_Color4f color=GUIWidget_GetColor4f(_this->widget);
 
-	Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
-	Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
+	ZG_Vector2i position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_WORLD);
+	ZG_Vector2i dimensions=GUIWidget_GetDimensions(_this->widget);
 
 	position.x+=dimensions.x>>1;
 	position.y+=dimensions.y>>1;
 
-	Transform_SetPosition2i(&transform,position.x,position.y);
-	TextBox_Draw(_this->textbox,&transform,&color);
+	ZG_Transform_SetPosition2i(&transform,position.x,position.y);
+	ZG_TextBox_Draw(_this->textbox,&transform,&color);
 }
 
 void GUITextBox_Delete(GUITextBox *_this){
@@ -49,7 +49,7 @@ void GUITextBox_Delete(GUITextBox *_this){
 	GUITextBoxData *data=_this->data;
 
 	GUIWidget_Delete(_this->widget);
-	TextBox_Delete(_this->textbox);
+	ZG_TextBox_Delete(_this->textbox);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

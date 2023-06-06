@@ -1,19 +1,19 @@
-vec4 CalcLightInternal(BaseLight Light, vec3 LightDirection, vec3 Normal)
+vec4 CalcLightInternal(BaseLight ZG_Light, vec3 LightDirection, vec3 Normal)
 {
-    vec4 AmbientColor = vec4(Light.Color, 1.0f) * Light.AmbientIntensity;
+    vec4 AmbientColor = vec4(ZG_Light.Color, 1.0f) * ZG_Light.AmbientIntensity;
     float DiffuseFactor = dot(Normal, -LightDirection);
 
     vec4 DiffuseColor = vec4(0, 0, 0, 0);
     vec4 SpecularColor = vec4(0, 0, 0, 0);
 
     if (DiffuseFactor > 0) {
-        DiffuseColor = vec4(Light.Color * Light.DiffuseIntensity * DiffuseFactor, 1.0f);
+        DiffuseColor = vec4(ZG_Light.Color * ZG_Light.DiffuseIntensity * DiffuseFactor, 1.0f);
         vec3 VertexToEye = normalize(gEyeWorldPos - WorldPos0);
         vec3 LightReflect = normalize(reflect(LightDirection, Normal));
         float SpecularFactor = dot(VertexToEye, LightReflect);
         if (SpecularFactor > 0) {
             SpecularFactor = pow(SpecularFactor, gSpecularPower);
-            SpecularColor = vec4(Light.Color * gMatSpecularIntensity * SpecularFactor, 1.0f);
+            SpecularColor = vec4(ZG_Light.Color * gMatSpecularIntensity * SpecularFactor, 1.0f);
         }
     }
 

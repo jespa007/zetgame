@@ -60,7 +60,7 @@ void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_com
 	if(_this->components[idx_component] == NULL){
 		_this->components[idx_component]=ptr_component;
 	}else{
-		Log_Error("Entity component not null");
+		ZG_Log_Error("Entity component not null");
 	}
 }
 
@@ -69,7 +69,7 @@ void Entity_DeAttachComponent(Entity *_this, uint16_t idx_component){
 	if(_this->components[idx_component] != NULL){
 		_this->components[idx_component]=NULL;
 	}else{
-		Log_Error("Entity component already null");
+		ZG_Log_Error("Entity component already null");
 	}
 }
 */

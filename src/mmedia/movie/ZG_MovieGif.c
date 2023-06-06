@@ -44,7 +44,7 @@ namespace zetgine{
 
 
 		if (ft == NULL) {
-			  Log_Error("DGifOpen failed");
+			  ZG_Log_Error("DGifOpen failed");
 			  return false;
 		}
 
@@ -64,7 +64,7 @@ namespace zetgine{
 
 		for(int fr = 0; fr < ft->ImageCount; fr++) {
 
-			Log_Info("loading (%i/%i)",fr+1, ft->ImageCount);
+			ZG_Log_Info("loading (%i/%i)",fr+1, ft->ImageCount);
 
 			int start_x = ft->SavedImages[fr].ImageDesc.Left;
 			int start_y = ft->SavedImages[fr].ImageDesc.Top;
@@ -79,7 +79,7 @@ namespace zetgine{
 						RMASK32, GMASK32, BMASK32, AMASK32);
 
 			if(dst_surface== NULL) {
-				Log_Error("Cannot create SDL Surface %s", SDL_GetError());
+				ZG_Log_Error("Cannot create SDL Surface %s", SDL_GetError());
 				return false;
 			}
 
@@ -151,7 +151,7 @@ namespace zetgine{
 				ani.m_renderAttribs = CMovieGif::ANIFRAME_RESTORE_PREVIOUS;
 				break;
 			}
-			//Log_Info("dispose mode: %i ",GCB.DisposalMode);
+			//ZG_Log_Info("dispose mode: %i ",GCB.DisposalMode);
 			image_collection.push_back(ani);
 		}
 
@@ -171,7 +171,7 @@ namespace zetgine{
 
 		ft = DGifOpen(&userData, customReadGifFromMem, &error_code);
 		if (ft == NULL) {
-			  Log_Error("DGifOpen failed");
+			  ZG_Log_Error("DGifOpen failed");
 			  return false;
 		}
 
@@ -218,17 +218,17 @@ namespace zetgine{
 
 
 		if (ft == NULL) {
-			  Log_Error("DGifOpen failed");
+			  ZG_Log_Error("DGifOpen failed");
 			  return false;
 		}
 
 		if( DGifSlurp( ft ) != GIF_OK ) {
-			Log_Error(" NOT GIF ");
+			ZG_Log_Error(" NOT GIF ");
 			return false;
 		}
 
 		if( ft->ImageCount <= 0 ) {
-			Log_Error(" NOT IMAGES ");
+			ZG_Log_Error(" NOT IMAGES ");
 				return false;
 		}
 
@@ -253,7 +253,7 @@ namespace zetgine{
 		else if(StrUtils::EndsWith(filename, ".gif")) {// try to load gif with libGif (Frame support)
 			ok= loadGif(filename,m_frame);
 
-		}else Log_Error("\"%s\": invalid extension .gif?",filename.c_str());
+		}else ZG_Log_Error("\"%s\": invalid extension .gif?",filename.c_str());
 
 		videoReady = ok;
 
@@ -282,7 +282,7 @@ namespace zetgine{
 
 			switch(bytes_per_pixel) {
 			default:
-				Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
+				ZG_Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
 				return false;
 				break;
 			case CImage::RGB16:
@@ -377,7 +377,7 @@ namespace zetgine{
 								RMASK16, GMASK16, BMASK16, AMASK16);
 
 			if(gif_frame== NULL) {
-				Log_Error("Cannot create SDL Surface %s", SDL_GetError());
+				ZG_Log_Error("Cannot create SDL Surface %s", SDL_GetError());
 				return;
 			}*/
 		}
@@ -392,7 +392,7 @@ namespace zetgine{
 
 		{
 
-			//Log_Info("loading (%i/%i)",fr+1, ft->ImageCount);
+			//ZG_Log_Info("loading (%i/%i)",fr+1, ft->ImageCount);
 
 			int start_x = ft->SavedImages[fr].ImageDesc.Left;
 			int start_y = ft->SavedImages[fr].ImageDesc.Top;
@@ -407,7 +407,7 @@ namespace zetgine{
 						RMASK32, GMASK32, BMASK32, AMASK32);
 
 			if(dst_surface== NULL) {
-				Log_Error("Cannot create SDL Surface %s", SDL_GetError());
+				ZG_Log_Error("Cannot create SDL Surface %s", SDL_GetError());
 				return;
 			}*/
 
@@ -531,7 +531,7 @@ namespace zetgine{
 				//ani.m_renderAttribs = CMovieGif::ANIFRAME_RESTORE_PREVIOUS;
 				break;
 			}*/
-			//Log_Info("dispose mode: %i ",GCB.DisposalMode);
+			//ZG_Log_Info("dispose mode: %i ",GCB.DisposalMode);
 
 		//}
 

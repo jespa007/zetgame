@@ -13,7 +13,7 @@ Zetgame 1.0.0
 #6 organize component update by system, physics and render
 > #7 Adapt zetgame for Rasperry-PI 
 > #8 Adapt zetgame for RetroFW RS-97 
-#9 Texture manager 
+#9 ZG_Texture manager 
 > #10 Port to Emmscripten 
 > #11 Implement Physics Entity-Tilemap colliding 
 #12 Implement Tilemap rendering

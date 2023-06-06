@@ -64,7 +64,7 @@ void 	ACTransformAnimation_Update(void *_this){
 
 	ECTransform *ac_transform=ac_transform_animation->header.entity->components[EC_TRANSFORM];
 	if(ac_transform != NULL){
-		Transform *local=ECTransform_GetTransform(ac_transform,EC_TRANSFORM_TYPE_LOCAL);
+		ZG_Transform *local=ECTransform_GetTransform(ac_transform,EC_TRANSFORM_TYPE_LOCAL);
 		TransformAnimation_Update(data->ani_transform,local);
 	}
 

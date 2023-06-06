@@ -2,8 +2,8 @@
 
 typedef struct{
 	MapString 			* 	windows;
-	TextureManager   	*   texture_manager;
-	//TTFontManager   	*   ttfont_manager;
+	ZG_TextureManager   	*   texture_manager;
+	//ZG_TTFontManager   	*   ttfont_manager;
 }GUIWindowManagerData;
 
 typedef struct{
@@ -15,7 +15,7 @@ typedef struct{
 	GUIWindowManagerData *gui_window_manager_data;
 }GUIWMWindowData;
 
-void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
+void GUIWindowManager_OnDeleteGUIWMWindowData(ZG_MapStringNode *node){
 	GUIWMWindowData *window_data=(GUIWMWindowData *)node->val;
 
 	if(window_data != NULL){
@@ -30,14 +30,14 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 				,{window_data->frames,(void (*)(void *))GUIFrame_Delete}
 		};
 
-		for(unsigned j=0; j < ARRAY_SIZE(widget_deallocate_collections); j++){
+		for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_deallocate_collections); j++){
 
 			// deallocate all widgets
 			for(int i=0; i < widget_deallocate_collections[j].list->count; i++){
 				widget_deallocate_collections[j].delete_callback(widget_deallocate_collections[j].list->items[i]);
 			}
 
-			List_Delete(widget_deallocate_collections[j].list);
+			ZG_List_Delete(widget_deallocate_collections[j].list);
 		}
 
 		GUIWindow_Delete(window_data->window);
@@ -47,23 +47,23 @@ void GUIWindowManager_OnDeleteGUIWMWindowData(MapStringNode *node){
 	}
 }
 
-void GUIWindowManager_OnDeleteTexture(MapStringNode *node){
-	Texture *texture=(Texture *)node->val;
+void GUIWindowManager_OnDeleteTexture(ZG_MapStringNode *node){
+	ZG_Texture *texture=(ZG_Texture *)node->val;
 
 	if(texture != NULL){
-		Texture_Delete(texture);
+		ZG_Texture_Delete(texture);
 	}
 }
 
 // MEMBERS
 GUIWindowManager *GUIWindowManager_New(
-		TextureManager	* _texture_manager
-		//, TTFontManager * _ttfont_manager
+		ZG_TextureManager	* _texture_manager
+		//, ZG_TTFontManager * _ttfont_manager
 ){
 	GUIWindowManager *window_manager=ZG_NEW(GUIWindowManager);
 	GUIWindowManagerData *data=ZG_NEW(GUIWindowManagerData);
 
-	data->windows = MapString_New();//new std::map<std::string,TTFont *>();
+	data->windows = MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
 	//data->ttfont_manager = _ttfont_manager;
 
@@ -80,7 +80,7 @@ bool GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,GUIWidget *_parent,
 	int int_value=0;
 	XmlAttribute *attribute=e->attributes;
 	GUIFrame *frame=GUIFrame_New(0,0,10,10);
-	List_Add(_window_data->frames,frame);
+	ZG_List_Add(_window_data->frames,frame);
 
 	if(_parent != NULL){
 		GUIWidget_AttachWidget(_parent,frame->widget);
@@ -115,7 +115,7 @@ bool GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,GUIWidget *_parent,
 			 }else if(STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
-				 Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 			 attribute=attribute->next;
@@ -154,32 +154,32 @@ bool GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,GUIWidget *_paren
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetWidth(gui_texture->widget,int_value);
-					 TextBox_SetWidth(gui_texture->textbox,int_value);
+					 ZG_TextBox_SetWidth(gui_texture->textbox,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetHeight(gui_texture->widget,int_value);
-					 TextBox_SetHeight(gui_texture->textbox,int_value);
+					 ZG_TextBox_SetHeight(gui_texture->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 TextBox_SetText(gui_texture->textbox,attribute->value);
+				 ZG_TextBox_SetText(gui_texture->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
-				 TextBox_SetHorizontalAlignment(gui_texture->textbox,TextBox_ParseTextAlign(attribute->value));
+				 ZG_TextBox_SetHorizontalAlignment(gui_texture->textbox,ZG_TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
-				 TextBox_SetVerticalAlignment(gui_texture->textbox,TextBox_ParseVerticalAlignment(attribute->value));
+				 ZG_TextBox_SetVerticalAlignment(gui_texture->textbox,ZG_TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 TextBox_SetFontSize(gui_texture->textbox,int_value);
+					 ZG_TextBox_SetFontSize(gui_texture->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-file")){
-				 TextBox_SetFontFile(gui_texture->textbox,attribute->value);
+				 ZG_TextBox_SetFontFile(gui_texture->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"color")){
-				 GUIWidget_SetColor4f(gui_texture->widget,Color4f_FromHtml(attribute->value));
+				 GUIWidget_SetColor4f(gui_texture->widget,ZG_Color4f_FromHtml(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"source")){
 				 GUITexture_SetTexture(gui_texture,attribute->value);
 			 }else{
-				 Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 
@@ -188,7 +188,7 @@ bool GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,GUIWidget *_paren
 		// process attributes
 	}
 
-	 List_Add(_window_data->viewers,gui_texture);
+	 ZG_List_Add(_window_data->viewers,gui_texture);
 
 	return ok;
 }
@@ -236,7 +236,7 @@ bool GUIWindowManager_NewButton(GUIWMWindowData *_window_data,GUIWidget *_parent
 			 }else if(STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
-				 Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 
@@ -245,7 +245,7 @@ bool GUIWindowManager_NewButton(GUIWMWindowData *_window_data,GUIWidget *_parent
 		// process attributes
 	}
 
-	 List_Add(_window_data->buttons,button);
+	 ZG_List_Add(_window_data->buttons,button);
 
 	return ok;
 }
@@ -278,34 +278,34 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 			 }else if(STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetWidth(gui_textbox->widget,int_value);
-					 TextBox_SetWidth(gui_textbox->textbox,int_value);
+					 ZG_TextBox_SetWidth(gui_textbox->textbox,int_value);
 
 				 }
 			 }else if(STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetHeight(gui_textbox->widget,int_value);
-					 TextBox_SetHeight(gui_textbox->textbox,int_value);
+					 ZG_TextBox_SetHeight(gui_textbox->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-size")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 TextBox_SetFontSize(gui_textbox->textbox,int_value);
+					 ZG_TextBox_SetFontSize(gui_textbox->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"font-file")){
-				 TextBox_SetFontFile(gui_textbox->textbox,attribute->value);
+				 ZG_TextBox_SetFontFile(gui_textbox->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"text")){
-				 TextBox_SetText(gui_textbox->textbox,attribute->value);
+				 ZG_TextBox_SetText(gui_textbox->textbox,attribute->value);
 			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
-				 TextBox_SetHorizontalAlignment(gui_textbox->textbox,TextBox_ParseTextAlign(attribute->value));
+				 ZG_TextBox_SetHorizontalAlignment(gui_textbox->textbox,ZG_TextBox_ParseTextAlign(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
-				 TextBox_SetVerticalAlignment(gui_textbox->textbox,TextBox_ParseVerticalAlignment(attribute->value));
+				 ZG_TextBox_SetVerticalAlignment(gui_textbox->textbox,ZG_TextBox_ParseVerticalAlignment(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"border-thickness")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 TextBox_SetBorderThickness(gui_textbox->textbox,int_value);
+					 ZG_TextBox_SetBorderThickness(gui_textbox->textbox,int_value);
 				 }
 			 }else if(STRCMP(attribute->name,==,"border-color")){
-				 TextBox_SetBorderColor4f(gui_textbox->textbox,Color4f_FromHtml(attribute->value));
+				 ZG_TextBox_SetBorderColor4f(gui_textbox->textbox,ZG_Color4f_FromHtml(attribute->value));
 			 }else{
-				 Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 
@@ -314,7 +314,7 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 		// process attributes
 	}
 
-	 List_Add(_window_data->textboxes,gui_textbox);
+	 ZG_List_Add(_window_data->textboxes,gui_textbox);
 
 	return ok;
 }
@@ -322,7 +322,7 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 bool GUIWindowManager_NewWindow(GUIWMWindowData *_window_data,GUIWidget *_parent, const XmlElement *e ){
 	XmlAttribute *attribute=e->attributes;
 	GUIWindow *window=GUIWindow_New(0,0,10,10);
-	List_Add(_window_data->windows,window);
+	ZG_List_Add(_window_data->windows,window);
 
 	if(_parent != NULL){
 		GUIWidget_AttachWidget(_parent,window->widget);
@@ -354,7 +354,7 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 	 }else if(STRCMP(e->name,==,"textbox")){
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else{
-		Log_Error("unexpected tag '%s'",e->name);
+		ZG_Log_Error("unexpected tag '%s'",e->name);
 		ok=false;
 	 }
 
@@ -389,12 +389,12 @@ bool GUIWindowManager_LoadFromMemory(
 	 if (xmlDocError(doc) != XML_SUCCESS)
 	 {
 		/* unparsable XML was read from stdin */
-		Log_ErrorF("Cannot parse xml");
+		ZG_Log_ErrorF("Cannot parse xml");
 		goto wm_load_from_memmory_exit;
 	}
 
 	 if(STRCMP(doc->root->name,!=,"window")){
-			Log_Error("Expected first tag as 'window' but it was '%s'",doc->root->name);
+			ZG_Log_Error("Expected first tag as 'window' but it was '%s'",doc->root->name);
 			goto wm_load_from_memmory_exit;
 	 }
 
@@ -402,10 +402,10 @@ bool GUIWindowManager_LoadFromMemory(
 
 
 	 // setup gui elements
-	 window_data->buttons=List_New();
-	 window_data->textboxes=List_New();
-	 window_data->viewers=List_New();
-	 window_data->frames=List_New();
+	 window_data->buttons=ZG_List_New();
+	 window_data->textboxes=ZG_List_New();
+	 window_data->viewers=ZG_List_New();
+	 window_data->frames=ZG_List_New();
 	 window_data->gui_window_manager_data=data;
 
 
@@ -419,7 +419,7 @@ bool GUIWindowManager_LoadFromMemory(
 			 int int_value=0;
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(STRCMP(attribute->name,==,"background-color")){
-				 GUIWindow_SetBackgroundColor4f(window_data->window,Color4f_FromHtml(attribute->value));
+				 GUIWindow_SetBackgroundColor4f(window_data->window,ZG_Color4f_FromHtml(attribute->value));
 			 }else if(STRCMP(attribute->name,==,"window-style")){
 				 if(STRCMP(attribute->value,==,"none")){
 					 GUIWindow_SetWindowStyle(window_data->window,WINDOW_STYLE_NONE);
@@ -436,7 +436,7 @@ bool GUIWindowManager_LoadFromMemory(
 					 GUIWindow_SetHeight(window_data->window,int_value);
 				 }
 			 }else{
-				 Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
 			 }
 
 			 attribute=attribute->next;
@@ -453,7 +453,7 @@ bool GUIWindowManager_LoadFromMemory(
 
 	 ok=true;
 
-	MapString_SetValue(data->windows,_id,window_data);
+	ZG_MapString_SetValue(data->windows,_id,window_data);
 
 wm_load_from_memmory_exit:
 
@@ -466,7 +466,7 @@ wm_load_from_memmory_exit:
 /**
  * Load a set of GUIWindow from exported files from Aseprite
  * @_this: GUIWindowManager object
- * @_texture_filename: Texture filename (it can be .png,jpg,etc)
+ * @_texture_filename: ZG_Texture filename (it can be .png,jpg,etc)
  * @_json_filename: Json file generated by Aseprite
  * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
  */
@@ -476,29 +476,29 @@ bool GUIWindowManager_Load(GUIWindowManager *_this,const char *_json_tmx_file){
 	char *file=NULL;
 
 
-	if((_xml_buf=File_Read(_json_tmx_file))!=NULL){
+	if((_xml_buf=ZG_File_Read(_json_tmx_file))!=NULL){
 		ok=GUIWindowManager_LoadFromMemory(
 				_this
-				,file=Path_GetFilenameWithoutExtension(_json_tmx_file)
+				,file=ZG_Path_GetFilenameWithoutExtension(_json_tmx_file)
 				,_xml_buf->ptr
 				,_xml_buf->len
 		);
 	}
 
 
-	if(_xml_buf) BufferByte_Delete(_xml_buf);
+	if(_xml_buf) ZG_BufferByte_Delete(_xml_buf);
 	if(file) free(file);
 
 
 	return ok;
 }
 
-TextureManager		*	GUIWindowManager_GetTextureManager(GUIWindowManager *_this){
+ZG_TextureManager		*	GUIWindowManager_GetTextureManager(GUIWindowManager *_this){
 	GUIWindowManagerData *data=_this->data;
 	return data->texture_manager;
 }
 /*
-TTFontManager		*	GUIWindowManager_GetTTFontManager(GUIWindowManager *_this){
+ZG_TTFontManager		*	GUIWindowManager_GetTTFontManager(GUIWindowManager *_this){
 	GUIWindowManagerData *data=_this->data;
 	return data->ttfont_manager;
 
@@ -508,7 +508,7 @@ TTFontManager		*	GUIWindowManager_GetTTFontManager(GUIWindowManager *_this){
 GUIWindow *GUIWindowManager_Get(GUIWindowManager *_this, const char *key){
 	GUIWindowManagerData *data=_this->data;
 
-	GUIWMWindowData *window_data= MapString_GetValue(data->windows,key,NULL);
+	GUIWMWindowData *window_data= ZG_MapString_GetValue(data->windows,key,NULL);
 
 	if(window_data != NULL){
 		return window_data->window;
@@ -521,8 +521,8 @@ GUIWindow *GUIWindowManager_Get(GUIWindowManager *_this, const char *key){
 void  GUIWindowManager_Delete(GUIWindowManager *_this){
 	GUIWindowManagerData 	*data=_this->data;
 
-	MapString_Delete(data->windows);
-	//MapString_Delete(data->textures);
+	ZG_MapString_Delete(data->windows);
+	//ZG_MapString_Delete(data->textures);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

@@ -1,4 +1,4 @@
-#include "zg_base.h"
+#include "_zg_base_.h"
 
 void * zg_malloc(size_t size,const char *file, int line){
 	void * p=NULL;
@@ -11,7 +11,7 @@ void * zg_malloc(size_t size,const char *file, int line){
 #endif
 
 	if(p==NULL){
-		Log_Error("Cannot allocate %i",size);
+		ZG_Log_Error("Cannot allocate %i",size);
 		return NULL;
 	}
 

@@ -1,33 +1,33 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 typedef struct{
 	MapString 	* 	images;
 	const char 	*	image_resource_path;
 	Image		* 	image_embedded;
-}ImageManagerData;
+}ZG_ImageManagerData;
 
 static Image		* 	g_default_image=NULL;
 
 //-------------
 // STATIC
 
-Image * 	ImageManager_GetDefaultImage(void){
+ZG_Image * 	ZG_ImageManager_GetDefaultImage(void){
 	if(g_default_image==NULL){
-		g_default_image=Image_NewFromSurface(SDL_GetDefaultImage());
+		g_default_image=ZG_Image_NewFromSurface(SDL_GetDefaultImage());
 	}
 	return g_default_image;
 }
 
-void	ImageManager_OnDeleteNode(MapStringNode *node){
-	Image * image = node->val;
+void	ZG_ImageManager_OnDeleteNode(ZG_MapStringNode *node){
+	ZG_Image * image = node->val;
 	if(image!=NULL){
-		Image_Delete(image);
+		ZG_Image_Delete(image);
 	}
 }
 
-void	 	ImageManager_DeInit(){
+void	 	ZG_ImageManager_DeInit(){
 	if(g_default_image != NULL){
-		Image_Delete(g_default_image);
+		ZG_Image_Delete(g_default_image);
 		g_default_image = NULL;
 	}
 }
@@ -35,33 +35,33 @@ void	 	ImageManager_DeInit(){
 //----------------
 // PUBLIC MEMBERS
 
-ImageManager *ImageManager_New(void){
-	ImageManager 		*tm=ZG_NEW(ImageManager);
-	ImageManagerData 	*data=ZG_NEW(ImageManagerData);
+ZG_ImageManager *ZG_ImageManager_New(void){
+	ZG_ImageManager 		*tm=ZG_NEW(ZG_ImageManager);
+	ZG_ImageManagerData 	*data=ZG_NEW(ZG_ImageManagerData);
 
 	data->image_resource_path=".";
-	data->images = MapString_New();//new std::map<std::string,TTFont *>();
-	data->images->on_delete=ImageManager_OnDeleteNode;
+	data->images = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->images->on_delete=ZG_ImageManager_OnDeleteNode;
 
 	tm->data=data;
 
 	return tm;
 }
 
-void 		ImageManager_SetImageResourcePath(ImageManager *_this,const char * path){
-	ImageManagerData *data=_this->data;
+void 		ZG_ImageManager_SetImageResourcePath(ZG_ImageManager *_this,const char * path){
+	ZG_ImageManagerData *data=_this->data;
 	data->image_resource_path=path;
 }
 
-Image * 		ImageManager_Get(ImageManager *_this,const char * _filename){
-	ImageManagerData *data=_this->data;
+Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
+	ZG_ImageManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
-	Image * image=NULL;
+	ZG_Image * image=NULL;
 	//char filename[MAX_PATH];
 	char *image_file_to_lower=NULL;
 
-	id_tmp=Path_GetFilenameWithoutExtension(_filename);
+	id_tmp=ZG_Path_GetFilenameWithoutExtension(_filename);
 
 	if(id_tmp == NULL) { return NULL;}
 
@@ -78,41 +78,41 @@ Image * 		ImageManager_Get(ImageManager *_this,const char * _filename){
 	free(image_file_to_lower);
 
 	// if image not set yet, try to load
-	if((image=MapString_GetValue(data->images,id,NULL)) == NULL){
+	if((image=ZG_MapString_GetValue(data->images,id,NULL)) == NULL){
 		char filename[ZG_PATH_MAX]={0};
 
 		strcpy(filename,_filename);
 
-		if(File_Exists(filename) == false){
+		if(ZG_File_Exists(filename) == false){
 			sprintf(filename,"%s/%s",data->image_resource_path,_filename);
 		}
 
-		if(File_Exists(filename) == false){
-			Log_Error("File '%s' not exist either in the given path or in the resource path",_filename);
+		if(ZG_File_Exists(filename) == false){
+			ZG_Log_Error("File '%s' not exist either in the given path or in the resource path",_filename);
 			return NULL;
 		}
 
-		if((image=Image_NewFromFile(filename))!=NULL){
-			MapString_SetValue(data->images,id,image);
+		if((image=ZG_Image_NewFromFile(filename))!=NULL){
+			ZG_MapString_SetValue(data->images,id,image);
 		}
 		else{
-			image=ImageManager_GetDefaultImage();
+			image=ZG_ImageManager_GetDefaultImage();
 		}
 	}
 	return image;
 }
 
-void			ImageManager_Delete(ImageManager *_this){
+void			ZG_ImageManager_Delete(ZG_ImageManager *_this){
 
-	ImageManagerData 	*data=_this->data;
+	ZG_ImageManagerData 	*data=_this->data;
 
 	if(data->images!=NULL){
-		MapString_Delete(data->images);
+		ZG_MapString_Delete(data->images);
 		data->images=NULL;
 	}
 
 
-	MapString_Delete(data->images);
+	ZG_MapString_Delete(data->images);
 	ZG_FREE(data);
 	ZG_FREE(_this);
 }

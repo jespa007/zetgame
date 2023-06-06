@@ -1,14 +1,14 @@
 #ifndef __BOUNDINGBOX_H__
 #define __BOUNDINGBOX_H__
 
-typedef struct BoundingBox BoundingBox;
+typedef struct ZG_BoundingBox ZG_BoundingBox;
 
-struct BoundingBox{
+struct ZG_BoundingBox{
 	float minx,miny,maxx,maxy;
 };
 
-BoundingBox  BoundingBox_New(void);
-BoundingBox  BoundingBox_New4f(
+ZG_BoundingBox  BoundingBox_New(void);
+ZG_BoundingBox  ZG_BoundingBox_New4f(
 	float xmin
 	,float _ymin
 	,float _xmax

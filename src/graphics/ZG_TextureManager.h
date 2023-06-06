@@ -1,21 +1,21 @@
-#ifndef __TEXTURE_MANAGER_H__
-#define __TEXTURE_MANAGER_H__
+#ifndef __ZG_TEXTURE_MANAGER_H__
+#define __ZG_TEXTURE_MANAGER_H__
 
-typedef struct TextureManager TextureManager;
+typedef struct ZG_TextureManager ZG_TextureManager;
 
-struct TextureManager{
+struct ZG_TextureManager{
 	void *data;
 };
 
 // STATIC
-Texture * 		TextureManager_GetDefaultTexture(void);
-void			TextureManager_DeInit(void);
+ZG_Texture * 		ZG_TextureManager_GetDefaultTexture(void);
+void				ZG_TextureManager_DeInit(void);
 
 // MEMBERS
-TextureManager *TextureManager_New(void);
-void 			TextureManager_SetTextureResourcePath(TextureManager *_this,const char * path);
-Texture * 		TextureManager_Get(TextureManager *_this,const char * _filename);
-void			TextureManager_Delete(TextureManager *_this);
+ZG_TextureManager *	ZG_TextureManager_New(void);
+void 				ZG_TextureManager_SetTextureResourcePath(ZG_TextureManager *_this,const char * path);
+ZG_Texture * 		ZG_TextureManager_Get(ZG_TextureManager *_this,const char * _filename);
+void				ZG_TextureManager_Delete(ZG_TextureManager *_this);
 
 
 #endif

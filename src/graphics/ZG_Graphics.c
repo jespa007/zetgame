@@ -1,4 +1,4 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 typedef struct
 {
@@ -18,7 +18,7 @@ typedef struct{
 
 	 float 		fps;
 
-	 //ViewPort  * view_port;
+	 //ZG_ViewPort  * view_port;
 
 	 ZG_Color4f 			background_color;
 	 SDL_Window		* 	sdl_window;
@@ -37,20 +37,17 @@ typedef struct{
 
 	ZG_Geometry *geometry_rectangle_default;
 	ZG_Appearance *appearance_rectangle_default;
-	Material *material_rectangle_default;
+	ZG_Material *material_rectangle_default;
 	SDL_Rect *rect_display;
 	int num_displays;
 	int active_display;
 	bool fullscreen;
 	ZG_ProjectionMode projection_mode;
 
-}GraphicsVars;
+}ZG_GraphicsVars;
 
 
-GraphicsVars *g_graphics_vars=NULL;
-
-
-
+ZG_GraphicsVars *g_graphics_vars=NULL;
 
 #include "ZG_Graphics_GL.c"
 #include "ZG_Graphics_Win32.c"
@@ -61,7 +58,7 @@ bool ZG_Graphics_Init(
 		int start_posx,int start_posy	// start position
 		, uint16_t _width, uint16_t _height // logical resolution
 		//, uint16_t _window_width, uint16_t _window_height // screen resolution
-		,GraphicsApi _video_context
+		,ZG_GraphicsApi _video_context
 		,const char *_caption
 		,uint16_t _properties
 	) {
@@ -70,18 +67,18 @@ bool ZG_Graphics_Init(
 	uint16_t _window_height=_height;
 
 	if(g_graphics_vars != NULL){
-		Log_ErrorF("Graphics already initialized");
+		ZG_Log_ErrorF("Graphics already initialized");
 		return false;
 	}
 
-	g_graphics_vars = ZG_NEW(GraphicsVars);
-	g_graphics_vars->capture_screen_callbacks=List_New();
+	g_graphics_vars = ZG_NEW(ZG_GraphicsVars);
+	g_graphics_vars->capture_screen_callbacks=ZG_List_New();
 
 	uint32_t video_flags = 0;
 
 
 	if (SDL_Init(0 ) < 0) {
-		Log_Error("Unable to init SDL: %s\n", SDL_GetError());
+		ZG_Log_Error("Unable to init SDL: %s\n", SDL_GetError());
 		return false;
 	}
 
@@ -90,29 +87,29 @@ bool ZG_Graphics_Init(
 
 	if (SDL_WasInit(SDL_INIT_VIDEO) != SDL_INIT_VIDEO) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-			Log_Error("Unable to init video subsystem: %s", SDL_GetError());
+			ZG_Log_Error("Unable to init video subsystem: %s", SDL_GetError());
 			return false;
 		}
 	}
 
 	g_graphics_vars->num_displays=SDL_GetNumVideoDisplays();
 	if(g_graphics_vars->num_displays < 0){
-		Log_Error("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
+		ZG_Log_Error("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
 		return false;
 	}
 	g_graphics_vars->rect_display=(SDL_Rect *)malloc(sizeof(SDL_Rect)*g_graphics_vars->num_displays);
 	for(int i=0 ; i < g_graphics_vars->num_displays; i++){
 		if(SDL_GetDisplayBounds(i, &g_graphics_vars->rect_display[i])!=0){
-			Log_Error("SDL_GetDisplayBounds error : %s\n", SDL_GetError());
+			ZG_Log_Error("SDL_GetDisplayBounds error : %s\n", SDL_GetError());
 			return false;
 		}
 	}
 
-	if(_properties & MSK_GRAPHIC_PROPERTY_FULLSCREEN){
+	if(_properties & ZG_MSK_GRAPHIC_PROPERTY_FULLSCREEN){
 
 		/*SDL_DisplayMode current;
 		if(SDL_GetCurrentDisplayMode(0, &current) != 0){
-			Log_Error("Unable to get display mode: %s", SDL_GetError());
+			ZG_Log_Error("Unable to get display mode: %s", SDL_GetError());
 			return false;
 		}
 		_window_width=current.w;
@@ -123,7 +120,7 @@ bool ZG_Graphics_Init(
 
 
 	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
+	case ZG_GRAPHICS_API_GL:
 		// set video_flags as opengl
 		video_flags|=SDL_WINDOW_OPENGL;
 		break;
@@ -138,7 +135,7 @@ bool ZG_Graphics_Init(
 			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].h:_height
 			, video_flags);
 	if (!g_graphics_vars->sdl_window) {
-		Log_Error("Unable to create window: %s", SDL_GetError());
+		ZG_Log_Error("Unable to create window: %s", SDL_GetError());
 		return false;
 	}
 
@@ -154,12 +151,12 @@ bool ZG_Graphics_Init(
 	g_graphics_vars->scale=Vector2f_New(1,1);
 
 
-	Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
-	Log_Info("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
+	ZG_Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
+	ZG_Log_Info("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
 
 	//Input_SetupCursors();
 	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
+	case ZG_GRAPHICS_API_GL:
 		if(ZG_Graphics_GL_Init()==false){
 			return false;
 		}
@@ -167,7 +164,7 @@ bool ZG_Graphics_Init(
 	}
 
 	// select 2d model view as default...
-	ZG_Graphics_SetProjectionMode(PROJECTION_MODE_ORTHO);
+	ZG_Graphics_SetProjectionMode(ZG_PROJECTION_MODE_ORTHO);
 
 
 	// adapter list
@@ -179,14 +176,14 @@ bool ZG_Graphics_Init(
 
 	ZG_Graphics_PrintAdapterInformation();
 
-	TTFont_Init();
-	IconManager_Init();
-	ViewPort_Init(_width,_height);
+	ZG_TTFont_Init();
+	ZG_IconManager_Init();
+	ZG_ViewPort_Init(_width,_height);
 
 	// created default rectangle/s for drawing
-	g_graphics_vars->geometry_rectangle_default=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE);
+	g_graphics_vars->geometry_rectangle_default=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
 	g_graphics_vars->appearance_rectangle_default=Appearance_New();
-	g_graphics_vars->material_rectangle_default=Material_New(0);
+	g_graphics_vars->material_rectangle_default=ZG_Material_New(0);
 	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
 
 	ZG_Graphics_SetFullscreen(g_graphics_vars->fullscreen);
@@ -199,23 +196,23 @@ Vector2f ZG_Graphics_GetScale(){
 	return g_graphics_vars->scale;
 }
 
-void ZG_Graphics_SetProjectionMode(PROJECTION_MODE _projection_mode){
+void ZG_Graphics_SetProjectionMode(ZG_ProjectionMode _projection_mode){
 	//Input_SetupCursors();
 	g_graphics_vars->projection_mode=_projection_mode;
 
 	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
+	case ZG_GRAPHICS_API_GL:
 		ZG_Graphics_GL_SetProjectionMode(_projection_mode);
 		break;
 
 	}
 }
 
-void ZG_Graphics_SetCameraTransform(Transform *transform){
+void ZG_Graphics_SetCameraTransform(ZG_Transform *transform){
 	switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
-		case GRAPHICS_API_GL:
+		case ZG_GRAPHICS_API_GL:
 			ZG_Graphics_GL_SetCameraTransform(transform);
 			break;
 	}
@@ -225,7 +222,7 @@ void ZG_Graphics_SetLineThickness(uint8_t _thickness){
 	switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
-		case GRAPHICS_API_GL:
+		case ZG_GRAPHICS_API_GL:
 			ZG_Graphics_GL_SetLineThickness(_thickness);
 			break;
 	}
@@ -235,7 +232,7 @@ void ZG_Graphics_SetPointSize(uint8_t _point_size){
 	switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
-		case GRAPHICS_API_GL:
+		case ZG_GRAPHICS_API_GL:
 			ZG_Graphics_GL_SetPointSize(_point_size);
 			break;
 	}
@@ -245,13 +242,13 @@ void ZG_Graphics_SetColor4f(float _r, float _g, float _b, float _a){
 		switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
-		case GRAPHICS_API_GL:
+		case ZG_GRAPHICS_API_GL:
 			ZG_Graphics_GL_SetColor4f(_r,_g,_b,_a);
 			break;
 	}
 }
 
-GraphicsApi ZG_Graphics_GetGraphicsApi(void){
+ZG_GraphicsApi ZG_Graphics_GetGraphicsApi(void){
 	return g_graphics_vars->graphics_api;
 }
 
@@ -267,7 +264,7 @@ void ZG_Graphics_PrintVideoInfo(void){
 	    SDL_GetDisplayBounds( i, &rect_display);
 	    SDL_GetCurrentDisplayMode(i, &current);
 
-	    Log_Info("* Detected %i monitor [%i %i %i %i %i]",
+	    ZG_Log_Info("* Detected %i monitor [%i %i %i %i %i]",
 	    		i+1,
 				rect_display.x,
 				rect_display.y,
@@ -285,7 +282,7 @@ unsigned ZG_Graphics_GetNumMonitors(void){
 
 float CZG_Graphics_GetAdapterPhysicalWidth(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
-		Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
+		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
@@ -296,7 +293,7 @@ float CZG_Graphics_GetAdapterPhysicalWidth(unsigned idx_monitor){
 
 float CZG_Graphics_GetAdapterPhysicalHeight(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
-		Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
+		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
@@ -305,7 +302,7 @@ float CZG_Graphics_GetAdapterPhysicalHeight(unsigned idx_monitor){
 
 const char *CZG_Graphics_GetAdapterMonitorModel(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
-		Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
+		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
@@ -316,21 +313,21 @@ static void ZG_Graphics_PrintAdapterInformation(void){
 
 
 	if( g_graphics_vars->adapters == NULL || g_graphics_vars->adapters->count==0){
-		Log_InfoF("No adapters information");
+		ZG_Log_InfoF("No adapters information");
 		return;
 	}
 
 	for(unsigned i = 0;i < g_graphics_vars->adapters->count; i++){
 		AdapterInfo *adapter=(void *)g_graphics_vars->adapters->items[i];
-		Log_InfoF("--------------------------------------");
-		Log_Info("MonitorModel: %s",adapter->monitor_model);
-		Log_Info("Width: %i",adapter->pixels_width);
-		Log_Info("Height: %i",adapter->pixels_height);
-		Log_Info("PhysicalWidth: %f",adapter->physical_width);
-		Log_Info("PhysicalHeight: %f",adapter->physical_height);
+		ZG_Log_InfoF("--------------------------------------");
+		ZG_Log_Info("MonitorModel: %s",adapter->monitor_model);
+		ZG_Log_Info("Width: %i",adapter->pixels_width);
+		ZG_Log_Info("Height: %i",adapter->pixels_height);
+		ZG_Log_Info("PhysicalWidth: %f",adapter->physical_width);
+		ZG_Log_Info("PhysicalHeight: %f",adapter->physical_height);
 
 	}
-	Log_InfoF("--------------------------------------");
+	ZG_Log_InfoF("--------------------------------------");
 }
 
 
@@ -355,14 +352,14 @@ void ZG_Graphics_ToggleFullscreen(void)
 		// Swith to WINDOWED mode
 		if (SDL_SetWindowFullscreen(g_graphics_vars->sdl_window, SDL_FALSE) < 0)
 	  {
-			Log_Error("Setting windowed failed : %s",SDL_GetError());
+			ZG_Log_Error("Setting windowed failed : %s",SDL_GetError());
 
 	  }
 	} else {
 		// Swith to FULLSCREEN mode
 		if (SDL_SetWindowFullscreen(g_graphics_vars->sdl_window, SDL_TRUE) < 0)
 		{
-			Log_Error("Setting fullscreen failed : %s", SDL_GetError());
+			ZG_Log_Error("Setting fullscreen failed : %s", SDL_GetError());
 
 		}
 	}
@@ -470,7 +467,7 @@ void ZG_Graphics_PrintGraphicsInfo(void){
 		SDL_GetDisplayBounds( i, &screen_rect);
 		SDL_GetCurrentDisplayMode(i, &current);
 
-		Log_Info("Detected %i monitor [%i %i %i %i %i]",
+		ZG_Log_Info("Detected %i monitor [%i %i %i %i %i]",
 				i+1,
 				screen_rect.x,
 				screen_rect.y,
@@ -528,11 +525,11 @@ float ZG_Graphics_GetOneOverAspectRatio(void){
 	return g_graphics_vars->one_over_aspect_ratio;
 }
 
-void ZG_Graphics_SetBackgroundColor3i(Color4f c){
+void ZG_Graphics_SetBackgroundColor3i(ZG_Color4f c){
 	g_graphics_vars->background_color = c;
 }
 
-void ZG_Graphics_ClearScreen(Color4f color){
+void ZG_Graphics_ClearScreen(ZG_Color4f color){
 	g_graphics_vars->start_ms=SDL_GetTicks();
 	switch(g_graphics_vars->graphics_api){
 	case ZG_GRAPHICS_API_GL:
@@ -550,11 +547,11 @@ void ZG_Graphics_BeginRender(void){
 	}
 }
 
-void ZG_Graphics_SetBackgroundColor(Color4f color){
+void ZG_Graphics_SetBackgroundColor(ZG_Color4f color){
 	g_graphics_vars->background_color=color;
 }
 /*
-void ZG_Graphics_AddCaptureScreenCallback(Callback fun){
+void ZG_Graphics_AddCaptureScreenCallback(ZG_Callback fun){
 
 }
 */
@@ -570,7 +567,7 @@ void ZG_Graphics_EndRender(void)
 			FPS=1000.0f/diff;
 		}
 
-		ZG_Graphics_Print(0,ZG_Graphics_GetHeight()-30,COLOR4F_WHITE, "FPS: %.02f",FPS);
+		ZG_Graphics_Print(0,ZG_Graphics_GetHeight()-30,ZG_COLOR4F_WHITE, "FPS: %.02f",FPS);
 //			printf("%.2f fps\n",1000.0f/diff);
 
 
@@ -589,7 +586,7 @@ void ZG_Graphics_EndRender(void)
 
 		SDL_Surface *srf_screen_shoot=NULL;
 		switch(g_graphics_vars->graphics_api){
-			case GRAPHICS_API_GL:
+			case ZG_GRAPHICS_API_GL:
 				srf_screen_shoot=ZG_Graphics_GL_ScreenShoot();
 				break;
 
@@ -605,7 +602,7 @@ void ZG_Graphics_EndRender(void)
 			}
 			else {
 				for(unsigned i=0; i < g_graphics_vars->capture_screen_callbacks->count; i++){
-					Callback *c=g_graphics_vars->capture_screen_callbacks->items[i];
+					ZG_Callback *c=g_graphics_vars->capture_screen_callbacks->items[i];
 					if(c->ptr_function){
 						c->ptr_function(srf_screen_shoot,NULL);
 					}
@@ -623,49 +620,49 @@ void ZG_Graphics_EndRender(void)
 // Drawing functions
 //
 
-void ZG_Graphics_Draw(Transform *transform, Geometry *geometry, Appearance *appearance){
-	if(transform)	Transform_Apply(transform);
-	if(appearance)  Appearance_Apply(appearance);
+void ZG_Graphics_Draw(ZG_Transform *transform, ZG_Geometry *geometry, ZG_Appearance *appearance){
+	if(transform)	ZG_Transform_Apply(transform);
+	if(appearance)  ZG_Appearance_Apply(appearance);
 
-	if(geometry) 	Geometry_Draw(geometry);
+	if(geometry) 	ZG_Geometry_Draw(geometry);
 
-	if(appearance) 	Appearance_Restore(appearance);
-	if(transform) 	Transform_Restore(transform);
+	if(appearance) 	ZG_Appearance_Restore(appearance);
+	if(transform) 	ZG_Transform_Restore(transform);
 }
 
-void ZG_Graphics_DrawPoint2f(float _x, float _y, Color4f _color, uint8_t _point_size){
-	ZG_Transform t=Transform_New();
+void ZG_Graphics_DrawPoint2f(float _x, float _y, ZG_Color4f _color, uint8_t _point_size){
+	ZG_Transform t=ZG_Transform_New();
 	t.translate.x=_x;
 	t.translate.y=_y;
 
 	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Graphics_SetPointSize(_point_size);
 	ZG_Transform_Apply(&t);
-	ZG_Geometry_Draw(Geometry_GetDefaultPoint());
+	ZG_Geometry_Draw(ZG_Geometry_GetDefaultPoint());
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawPoint2i(int _x, int _y, Color4f _color, uint8_t _point_size){
+void ZG_Graphics_DrawPoint2i(int _x, int _y, ZG_Color4f _color, uint8_t _point_size){
 	ZG_Graphics_DrawPoint2f(
-		ViewPort_ScreenToWorldPositionX(_x)
-		,ViewPort_ScreenToWorldPositionY(_y)
+		ZG_ViewPort_ScreenToWorldPositionX(_x)
+		,ZG_ViewPort_ScreenToWorldPositionY(_y)
 		,_color
 		,_point_size
 	);
 }
 
 
-void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, int _width, int _height, Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, int _width, int _height, ZG_Color4f _color, uint8_t _thickness){
 
 
-	ZG_Vector3f translate=ViewPort_ScreenToWorld(_x_center,_y_center);
-	ZG_Vector3f scale=ViewPort_ScreenToWorldDimension2i(_width,_height);
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
+	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
 	ZG_Graphics_DrawRectangle4f(translate.x,translate.y,scale.x,scale.y,_color,_thickness);
 }
 
-void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, Color4f _color, uint8_t _thickness){
-	ZG_Transform t=Transform_New();
+void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color, uint8_t _thickness){
+	ZG_Transform t=ZG_Transform_New();
 	t.translate.x=_x_center;
 	t.translate.y=_y_center;
 	t.scale.x=_scale_x;
@@ -674,24 +671,24 @@ void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_
 
 	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Graphics_SetLineThickness(_thickness);
-	Transform_Apply(&t);
-	Geometry_Draw(Geometry_GetDefaultRectangle());
-	Transform_Restore(&t);
+	ZG_Transform_Apply(&t);
+	ZG_Geometry_Draw(ZG_Geometry_GetDefaultRectangle());
+	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, Color4f color){
+void ZG_Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, ZG_Color4f color){
 
 	ZG_Vector2i p1_2d=Vector2i_New(x,y);
 	ZG_Vector2i p2_2d=Vector2i_New(x+width,y+height);
 
-	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
-	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
+	ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
+	ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 	ZG_Graphics_DrawRectangleFilled4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color);
 }
 
-void ZG_Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, Color4f _color){
-	Transform t=Transform_New();
+void ZG_Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, ZG_Color4f _color){
+	ZG_Transform t=ZG_Transform_New();
 	float w=_x2-_x1;
 	float h=_y2-_y1;
 	t.translate.x=_x1+w*0.5;
@@ -700,24 +697,24 @@ void ZG_Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y
 	t.scale.y=h;
 
 	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
-	Transform_Apply(&t);
-	Geometry_Draw(Geometry_GetDefaultRectangleFilled());
-	Transform_Restore(&t);
+	ZG_Transform_Apply(&t);
+	ZG_Geometry_Draw(ZG_Geometry_GetDefaultRectangleFilled());
+	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, Color4f _color, Texture *text, TextureRect * text_crop){
+void ZG_Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
 
-	Vector2i p1_2d=Vector2i_New(_x-(_width>>1),_y+(_height>>1));
-	Vector2i p2_2d=Vector2i_New(_x+(_width>>1),_y-(_height>>1));
+	ZG_Vector2i p1_2d=Vector2i_New(_x-(_width>>1),_y+(_height>>1));
+	ZG_Vector2i p2_2d=Vector2i_New(_x+(_width>>1),_y-(_height>>1));
 
-	Vector3f p1_3d=ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
-	Vector3f p2_3d=ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
+	ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
+	ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
 
 	ZG_Graphics_DrawRectangleTextured4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,_color,text,text_crop);
 }
 
-void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2,  Color4f _color,Texture *_texture, TextureRect * _text_crop){
-	Transform t=Transform_New();
+void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2,  ZG_Color4f _color,ZG_Texture *_texture, ZG_TextureRect * _text_crop){
+	ZG_Transform t=ZG_Transform_New();
 
 	// setup transform
 	float w=fabs(_x2-_x1);
@@ -731,8 +728,8 @@ void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float 
 	g_graphics_vars->appearance_rectangle_default->material->color=_color;
 	g_graphics_vars->appearance_rectangle_default->texture=_texture;
 
-	Transform_Apply(&t);
-	Appearance_Apply(g_graphics_vars->appearance_rectangle_default);
+	ZG_Transform_Apply(&t);
+	ZG_Appearance_Apply(g_graphics_vars->appearance_rectangle_default);
 
 	// setup crop
    if(_text_crop == NULL){
@@ -744,7 +741,7 @@ void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float 
 			   1.0f,  0.0f    // top right
 		};
 
-		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ARRAY_SIZE(mesh_texture));
+		ZG_Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 	}else{
 		float mesh_texture[]={
 				_text_crop->u1, _text_crop->v2, // bottom left
@@ -753,19 +750,19 @@ void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float 
 				_text_crop->u2, _text_crop->v1  // top right
 		};
 
-		Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ARRAY_SIZE(mesh_texture));
+		ZG_Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 	}
 
-	Geometry_Draw(g_graphics_vars->geometry_rectangle_default);
+	ZG_Geometry_Draw(g_graphics_vars->geometry_rectangle_default);
 
-	Appearance_Restore(g_graphics_vars->appearance_rectangle_default);
-	Transform_Restore(&t);
+	ZG_Appearance_Restore(g_graphics_vars->appearance_rectangle_default);
+	ZG_Transform_Restore(&t);
 }
 
 
-void ZG_Graphics_DrawCircle3f(float _x, float _y, float _r, Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawCircle3f(float _x, float _y, float _r, ZG_Color4f _color, uint8_t _thickness){
 
-	Transform t=Transform_New();
+	ZG_Transform t=ZG_Transform_New();
 	t.translate.x=_x;
 	t.translate.y=_y;
 	t.scale.x=_r;
@@ -773,67 +770,67 @@ void ZG_Graphics_DrawCircle3f(float _x, float _y, float _r, Color4f _color, uint
 
 	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Graphics_SetLineThickness(_thickness);
-	Transform_Apply(&t);
-	Geometry_Draw(Geometry_GetDefaultCircle());
-	Transform_Restore(&t);
+	ZG_Transform_Apply(&t);
+	ZG_Geometry_Draw(ZG_Geometry_GetDefaultCircle());
+	ZG_Transform_Restore(&t);
 }
 
 
-void ZG_Graphics_DrawCircle3i(int _x, int _y, int _r, Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawCircle3i(int _x, int _y, int _r, ZG_Color4f _color, uint8_t _thickness){
 
 	ZG_Graphics_DrawCircle3f(
-			ViewPort_ScreenToWorldPositionX(_x)
-			,ViewPort_ScreenToWorldPositionY(_y)
-			,ViewPort_ScreenToWorldWidth(_r)
+			ZG_ViewPort_ScreenToWorldPositionX(_x)
+			,ZG_ViewPort_ScreenToWorldPositionY(_y)
+			,ZG_ViewPort_ScreenToWorldWidth(_r)
 			,_color
 			,_thickness
 	);
 }
 
-void ZG_Graphics_Print(int x, int y, Color4f color, const char *in, ...){
+void ZG_Graphics_Print(int x, int y, ZG_Color4f color, const char *in, ...){
 
 	char out[1024]={0};
 	ZG_VARGS(out,in);
 
-	Vector3f pos3d=ViewPort_ScreenToWorld(x,y);
+	ZG_Vector3f pos3d=ZG_ViewPort_ScreenToWorld(x,y);
 
-	TTFont_RenderTextBegin(NULL);
-	TTFont_Print(TTFont_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
-	TTFont_RenderTextEnd();
+	ZG_TTFont_RenderTextBegin(NULL);
+	ZG_TTFont_Print(ZG_TTFont_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
+	ZG_TTFont_RenderTextEnd();
 }
 
-void ZG_Graphics_WPrint(int x, int y, Color4f color, const wchar_t *in, ...){
+void ZG_Graphics_WPrint(int x, int y, ZG_Color4f color, const wchar_t *in, ...){
 	wchar_t out[1024]={0};
 	ZG_WVARGS(out,in);
 
-	TTFont_RenderTextBegin(NULL);
-	TTFont_WPrint(TTFont_GetEmbeddedFont(),x,y,color,out);
-	TTFont_RenderTextEnd();
+	ZG_TTFont_RenderTextBegin(NULL);
+	ZG_TTFont_WPrint(ZG_TTFont_GetEmbeddedFont(),x,y,color,out);
+	ZG_TTFont_RenderTextEnd();
 }
 //---------------------------------------------------------------------------------------------------------------------------
 void ZG_Graphics_DeInit(void) {
 
 	if(g_graphics_vars == NULL){
-		Log_ErrorF("Graphics not initialized");
+		ZG_Log_ErrorF("Graphics not initialized");
 		return;
 	}
 
-	IconManager_DeInit();
-	TextureManager_DeInit();
-	Geometry_DeInit();
+	ZG_IconManager_DeInit();
+	ZG_TextureManager_DeInit();
+	ZG_Geometry_DeInit();
 
-	TTFont_DeInit();
-	ViewPort_DeInit();
+	ZG_TTFont_DeInit();
+	ZG_ViewPort_DeInit();
 
 
 	// deinit gl vars first
-	Geometry_Delete(g_graphics_vars->geometry_rectangle_default);
+	ZG_Geometry_Delete(g_graphics_vars->geometry_rectangle_default);
 	Appearance_Delete(g_graphics_vars->appearance_rectangle_default);
-	Material_Delete(g_graphics_vars->material_rectangle_default);
+	ZG_Material_Delete(g_graphics_vars->material_rectangle_default);
 
 	// ...then deini gl context
 	switch(g_graphics_vars->graphics_api){
-	case GRAPHICS_API_GL:
+	case ZG_GRAPHICS_API_GL:
 		ZG_Graphics_GL_DeInit();
 		break;
 	}
@@ -843,8 +840,8 @@ void ZG_Graphics_DeInit(void) {
 	}
 
 	// Remove adapter lists
-	List_DeleteAndFreeAllItems(g_graphics_vars->adapters);
-	List_DeleteAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
+	ZG_List_DeleteAndFreeAllItems(g_graphics_vars->adapters);
+	ZG_List_DeleteAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
 
 	ZG_FREE(g_graphics_vars->rect_display);
 	ZG_FREE(g_graphics_vars);

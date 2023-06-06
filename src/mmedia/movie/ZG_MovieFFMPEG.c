@@ -104,7 +104,7 @@ namespace zetgine{
 
 			switch(bytes_per_pixel) {
 			default:
-				Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
+				ZG_Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
 				return false;
 				break;
 			case CImage::RGB16:
@@ -136,7 +136,7 @@ namespace zetgine{
 
 			// Retrieve stream information
 			if(avformat_find_stream_info(pFormatCtx, &optStream)<0) {
-				Log_Error("Couldn't find stream information");
+				ZG_Log_Error("Couldn't find stream information");
 				return false;
 			}
 
@@ -150,7 +150,7 @@ namespace zetgine{
 				}
 			if(videoStreamIndex==-1)
 			{
-				Log_Error("Didn't find a video stream");
+				ZG_Log_Error("Didn't find a video stream");
 				return false; //
 			}
 
@@ -172,7 +172,7 @@ namespace zetgine{
 
 
 			if (avcodec_open2(pCodecCtx, pCodec, &optStream) < 0) {
-				Log_Error("Could not open codec");
+				ZG_Log_Error("Could not open codec");
 				return false;
 			}
 
@@ -197,7 +197,7 @@ namespace zetgine{
 			pFrameConversionRGB=av_frame_alloc();
 			if(pFrameConversionRGB==NULL)
 			{
-				Log_Error("Cannot allocate RGB frame");
+				ZG_Log_Error("Cannot allocate RGB frame");
 				return false;
 			}
 			// Determine required buffer size and allocate dest buffer
@@ -239,7 +239,7 @@ namespace zetgine{
 		if(videoStream != NULL && pCodecCtx != NULL){
 
 			if((videoStream->r_frame_rate.den == 0) && (pCodecCtx->time_base.num || pCodecCtx->ticks_per_frame)){
-				Log_Error("Cannot get current FPS (gif or raw video load ?)");
+				ZG_Log_Error("Cannot get current FPS (gif or raw video load ?)");
 				return 0;
 			}
 
@@ -319,13 +319,13 @@ namespace zetgine{
 	/*
 
 			if(av_dict_set(&optStream, "b", "2.5M", 0) <0){
-				Log_Error("Couldn't set dict set ");
+				ZG_Log_Error("Couldn't set dict set ");
 				return false;
 			}*/
 
 			// Open video file
 			if(avformat_open_input(&pFormatCtx, "dummyFilename", NULL, NULL/*&optStream*/)<0) {
-				Log_Error("Couldn't get file info");
+				ZG_Log_Error("Couldn't get file info");
 				return false;
 			}
 
@@ -352,7 +352,7 @@ namespace zetgine{
 
 			// Open video file
 			if(avformat_open_input(&pFormatCtx, _filename.c_str(), NULL, NULL)<0) {
-				Log_Error("Couldn't open file %s", _filename.c_str());
+				ZG_Log_Error("Couldn't open file %s", _filename.c_str());
 				return false;
 			}
 			setup(width, height, bytes_per_pixel);

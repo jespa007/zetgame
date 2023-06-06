@@ -187,7 +187,7 @@ void 	__glFrontFace__(const char *file, int line,	GLenum mode);
 void 	__glPixelStorei__(const char *file, int line,	GLenum pname, 	GLint param);
 
 
-// Texture
+// ZG_Texture
 void 	__glBindTexture__(const char *file, int line,GLenum target,	GLuint texture);
 void 	__glTexParameteri__(const char *file, int line,GLenum target, GLenum pname,GLint param);
 void 	__glTexParameterf__(const char *file, int line,GLenum target, GLenum pname,GLfloat param);

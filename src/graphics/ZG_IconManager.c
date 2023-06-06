@@ -1,6 +1,6 @@
 
 #include "assets/image/silk_icons_preview.png.c"
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 //#include "../res/image/silk_icons_preview.gif.c"
 
 #define DEFAULT_WIDTH_ICON_PACK 316
@@ -13,14 +13,14 @@
 
 
 
-IconManager *g_icon_manager_default=NULL;
+ZG_IconManager *g_icon_manager_default=NULL;
 
 
 // STATIC
 
-void IconManager_Init(void){
+void ZG_IconManager_Init(void){
 	if(g_icon_manager_default != NULL){
-		Log_ErrorF("Icon manager already init");
+		ZG_Log_ErrorF("Icon manager already init");
 	}
 
 	g_icon_manager_default=IconManager_LoadFromMemory(
@@ -34,17 +34,17 @@ void IconManager_Init(void){
 	);
 }
 
-void IconManager_DeInit(void){
+void ZG_IconManager_DeInit(void){
 	if(	g_icon_manager_default == NULL){
-		Log_ErrorF("Icon manager not init");
+		ZG_Log_ErrorF("Icon manager not init");
 	}
 
-	IconManager_Delete(g_icon_manager_default);
+	ZG_IconManager_Delete(g_icon_manager_default);
 
 	g_icon_manager_default=NULL;
 }
 
-IconManager * IconManager_GetDefault() {
+ZG_IconManager * IconManager_GetDefault() {
 	return g_icon_manager_default;
 }
 
@@ -52,7 +52,7 @@ IconManager * IconManager_GetDefault() {
 
 // PUBLIC
 
-IconManager * IconManager_LoadFromMemory(
+ZG_IconManager * IconManager_LoadFromMemory(
 		const uint8_t *ptr,
 		size_t ptr_len,
 		uint16_t icon_width,
@@ -62,14 +62,14 @@ IconManager * IconManager_LoadFromMemory(
 		uint16_t icons_per_row
 	) {
 
-	IconManager *icon_manager=ZG_NEW(IconManager);
+	ZG_IconManager *icon_manager=ZG_NEW(ZG_IconManager);
 
 
 
 	SDL_Surface *img=SDL_LoadImageFromMemory(ptr,ptr_len,SDL_LOAD_IMAGE_POWER_OF_2_ORIGINAL_RESOLUTION,0);
 
 	if(img != NULL){
-		icon_manager->texture = Texture_NewFromSurface(img);
+		icon_manager->texture = ZG_Texture_NewFromSurface(img);
 
 		icon_manager->icon_width = icon_width;
 		icon_manager->icon_height = icon_height;
@@ -88,7 +88,7 @@ IconManager * IconManager_LoadFromMemory(
 	return icon_manager;
 }
 
-IconManager * IconManager_LoadFromFile(
+ZG_IconManager * IconManager_LoadFromFile(
 		const char  * _filename,
 		uint16_t icon_width,
 		uint16_t icon_height,
@@ -97,8 +97,8 @@ IconManager * IconManager_LoadFromFile(
 		uint16_t icons_per_row
 	) {
 
-	ZG_BufferByte *buffer = File_Read(_filename);
-	IconManager *icon_manager=NULL;
+	ZG_BufferByte *buffer = ZG_File_Read(_filename);
+	ZG_IconManager *icon_manager=NULL;
 	if(buffer != NULL){
 		icon_manager=IconManager_LoadFromMemory(
 				buffer->ptr
@@ -109,40 +109,40 @@ IconManager * IconManager_LoadFromFile(
 				,icon_offset_y
 				,icons_per_row
 		);
-		BufferByte_Delete(buffer);
+		ZG_BufferByte_Delete(buffer);
 	}
 
 	return icon_manager;
 }
 
-void IconManager_DrawIcon(IconManager * _this,uint16_t idx_icon, int x,int y,uint16_t width, uint16_t height) { // from url: "../media/image/silk_icons_preview.png".
+void ZG_IconManager_DrawIcon(ZG_IconManager * _this,uint16_t idx_icon, int x,int y,uint16_t width, uint16_t height) { // from url: "../media/image/silk_icons_preview.png".
 
 	if(_this != NULL) {
 
-		Icon icon=IconManager_GetIcon(_this,idx_icon);
+		Icon icon=ZG_IconManager_GetIcon(_this,idx_icon);
 
 
 		if(icon.texture != NULL){
 
-			Graphics_DrawRectangleTextured4i(x,y,width,height,COLOR4F_WHITE,icon.texture,&icon.texture_crop);
+			Graphics_DrawRectangleTextured4i(x,y,width,height,ZG_COLOR4F_WHITE,icon.texture,&icon.texture_crop);
 		}
 	}
 }
 
-void IconManager_DrawIconDefault(uint16_t idx_icon, int x,int y,uint16_t width, uint16_t height) { // from url: "../media/image/silk_icons_preview.png".
+void ZG_IconManager_DrawIconDefault(uint16_t idx_icon, int x,int y,uint16_t width, uint16_t height) { // from url: "../media/image/silk_icons_preview.png".
 
-	IconManager_DrawIcon(g_icon_manager_default,idx_icon, x,y, width,  height);
+	ZG_IconManager_DrawIcon(g_icon_manager_default,idx_icon, x,y, width,  height);
 }
 
 
-Icon IconManager_GetIcon(IconManager *_this,uint16_t idx_icon){
+Icon ZG_IconManager_GetIcon(ZG_IconManager *_this,uint16_t idx_icon){
 	Icon icon;
 	memset(&icon,0,sizeof(Icon));
 
 	if(_this != NULL && _this->texture != NULL){
 
 		/*if(idx_icon >= _this->n_icons){
-			Log_Error("Icon out of bounds. Max icons %i >= %i", idx_icon, _this->n_icons);
+			ZG_Log_Error("Icon out of bounds. Max icons %i >= %i", idx_icon, _this->n_icons);
 			idx_icon = 0;
 			//return;
 		}*/
@@ -168,14 +168,14 @@ Icon IconManager_GetIcon(IconManager *_this,uint16_t idx_icon){
 }
 
 
-Icon IconManager_GetIconDefault(uint16_t idx_icon){
-	return IconManager_GetIcon(g_icon_manager_default,idx_icon);
+Icon ZG_IconManager_GetIconDefault(uint16_t idx_icon){
+	return ZG_IconManager_GetIcon(g_icon_manager_default,idx_icon);
 }
 
-void IconManager_Delete(IconManager * _this){
+void ZG_IconManager_Delete(ZG_IconManager * _this){
 	if(_this == NULL) return;
 
-	Texture_Delete(_this->texture);
+	ZG_Texture_Delete(_this->texture);
 
 	ZG_FREE(_this);
 }

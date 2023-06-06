@@ -1,22 +1,22 @@
-#ifndef __SHAPE_H__
-#define __SHAPE_H__
+#ifndef __ZG_SHAPE_H__
+#define __ZG_SHAPE_H__
 
-typedef struct Shape Shape;
+typedef struct ZG_Shape ZG_Shape;
 
 
 	//SHAPE_TRANSFORM3D=0x1<<0,
-#define	SHAPE_GEOMETRY		(0x1<<1)
-#define	SHAPE_APPEARANCE	(0x1<<2)
+#define	ZG_SHAPE_GEOMETRY		(0x1<<1)
+#define	ZG_SHAPE_APPEARANCE	(0x1<<2)
 
 
-struct Shape{
-	void *data;
-	Geometry	*geometry;
-	Appearance  *appearance;
+struct ZG_Shape{
+	ZG_Geometry		*geometry;
+	ZG_Appearance  	*appearance;
+	void 			*data;
 };
 
-Shape * Shape_New(void);
-void 	Shape_SetAppearance(Shape *_this,Appearance *appearance);
-void 	Shape_Draw(Shape *_this, Transform *transform);
-void 	Shape_Delete(Shape *shape);
+ZG_Shape * 	ZG_Shape_New(void);
+void 		ZG_Shape_SetAppearance(ZG_Shape *_this,ZG_Appearance *appearance);
+void 		ZG_Shape_Draw(ZG_Shape *_this, ZG_Transform *transform);
+void 		ZG_Shape_Delete(ZG_Shape *shape);
 #endif

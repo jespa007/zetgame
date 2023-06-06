@@ -3,7 +3,7 @@
 typedef struct{
 	char *name;
 	uint32_t start_time;
-	Callback on_start,on_update;
+	ZG_Callback on_start,on_update;
 	void *user_data;
 	Scene *scene;
 }SceneStateData;
@@ -12,8 +12,8 @@ typedef struct{
 SceneState *SceneState_New(
 		Scene *scene
 		,const char *name
-		,Callback on_start
-		,Callback on_update){
+		,ZG_Callback on_start
+		,ZG_Callback on_update){
 
 	SceneState *state_state=ZG_NEW(SceneState);
 	SceneStateData *data = ZG_NEW(SceneStateData);

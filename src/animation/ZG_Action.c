@@ -25,7 +25,7 @@ void 	ZG_Action_SetKeyframesTrack(ZG_Action *_this
 	if(keyframe_points == NULL) return;
 
 	if(idx_channel >= _this->channels_info->n_channels){
-		Log_ErrorF("Internal error index reached max channels");
+		ZG_Log_ErrorF("Internal error index reached max channels");
 		return;
 	}
 
@@ -75,7 +75,7 @@ void 				ZG_Action_SetKeyframesTrackGroup(ZG_Action *_this, uint8_t idx_channel_
 		w=KeyframeTrackGroup_New();
 		break;
 	default:
-		Log_ErrorF("ZG_Action_SetKeyframes: invalid mask");
+		ZG_Log_ErrorF("ZG_Action_SetKeyframes: invalid mask");
 		break;
 	}
 
@@ -115,7 +115,7 @@ bool ZG_Action_Update(ZG_Action *_this, uint32_t current_time_ms, uint32_t *star
 		_this->channels_info->on_reset_channels.ptr_function(_this->channels_info,_this->channels_info->on_reset_channels.user_data);
 	}
 
-	uint32_t time_ms=current_time_ms-*start_time_ms;//[MAX_MATERIAL_COMPONENTS];
+	uint32_t time_ms=current_time_ms-*start_time_ms;//[MAX_ZG_MATERIAL_COMPONENTS];
 
 	if(
 		(time_ms < _this->duration ) || ((time_ms >= _this->duration)

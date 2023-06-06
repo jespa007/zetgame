@@ -26,7 +26,7 @@ typedef struct ZetGameSetupParams ZetGameSetupParams;
 
 struct ZetGameSetupParams{
 
-	GraphicsApi	graphics_api;
+	ZG_GraphicsApi	graphics_api;
 	uint16_t width;
 	uint16_t height;
 	const char * wcaption_title;

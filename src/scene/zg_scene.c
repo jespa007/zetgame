@@ -24,11 +24,11 @@
 //#include "playable/animation/Action.c"
 //#include "playable/animation/Animation.c"
 
-// Transform
+// ZG_Transform
 
-//#include "transform3d/Transform.c"
+//#include "transform3d/ZG_Transform.c"
 
-// Appearance
-//#include "appearance/Material.c"
-//#include "appearance/Appearance.c"
+// ZG_Appearance
+//#include "appearance/ZG_Material.c"
+//#include "appearance/ZG_Appearance.c"
 

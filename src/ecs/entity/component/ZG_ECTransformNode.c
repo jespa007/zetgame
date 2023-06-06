@@ -4,8 +4,8 @@
 typedef struct{
 	TransformNode		*parent;
 	ZG_List		*child_nodes;
-	Transform 	transform_default;
-	Transform 	*transform_local;
+	ZG_Transform 	transform_default;
+	ZG_Transform 	*transform_local;
 	uint16_t	transform_attributes;
 }ECTransformData;
 
@@ -29,7 +29,7 @@ TransformNode * New(void){
 	sg_node->data=data;
 
 	data->transform_local=&data->transform_default;
-	data->child_nodes=List_New();
+	data->child_nodes=ZG_List_New();
 
 
 	// by default...
@@ -59,7 +59,7 @@ void ClearNodes(TransformNode *_this){
 }
 
 void SetTranslate3f(TransformNode *_this,float x, float y, float z){
-	Transform_SetTranslate3f(&_this->transform,x,y,z);
+	ZG_Transform_SetTranslate3f(&_this->transform,x,y,z);
 }
 
 bool IsParentNodeRoot(TransformNode *_this){
@@ -77,28 +77,28 @@ bool IsParentNodeRoot(TransformNode *_this){
 
 void SetPosition2i(TransformNode *_this,int x, int y){
 	ECTransformData *data=_this->data;
-	Vector3f v=ViewPort_ScreenToWorldDimension2i(x,y);
-	Transform_SetPosition2i(data->transform_local,v.x,v.y);
+	ZG_Vector3f v=ZG_ViewPort_ScreenToWorldDimension2i(x,y);
+	ZG_Transform_SetPosition2i(data->transform_local,v.x,v.y);
 }
 
-Vector2i	GetPosition2i(TransformNode *_this){
+ZG_Vector2i	GetPosition2i(TransformNode *_this){
 
-	return Transform_GetPosition2i(&_this->transform);
+	return ZG_Transform_GetPosition2i(&_this->transform);
 }
 
 void SetRotateZ(TransformNode *_this,float z){
 	ECTransformData *data=_this->data;
-	Transform_SetRotateZ(data->transform_local,z);
+	ZG_Transform_SetRotateZ(data->transform_local,z);
 }
 
 void SetRotate3f(TransformNode *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetRotate3f(data->transform_local,x,y,z);
+	ZG_Transform_SetRotate3f(data->transform_local,x,y,z);
 }
 
 void SetScale3f(TransformNode *_this,float x, float y, float z){
 	ECTransformData *data=_this->data;
-	Transform_SetScale3f(data->transform_local,x,y,z);
+	ZG_Transform_SetScale3f(data->transform_local,x,y,z);
 }
 
 void	SetParent(TransformNode *_this, TransformNode *parent_node){
@@ -119,7 +119,7 @@ bool DetachNode(TransformNode *_this,TransformNode * obj) {
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
 		ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
-			Log_Error("Cannot add node child because cannot deattach from parent");
+			ZG_Log_Error("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
@@ -143,7 +143,7 @@ bool AttachNode(TransformNode *_this,TransformNode * obj) {
 	}
 
 	SetParent(obj,_this);
-	List_Add(data->child_nodes,obj);
+	ZG_List_Add(data->child_nodes,obj);
 
 	return false;
 }
@@ -179,33 +179,33 @@ void UpdateSceneGraph(TransformNode *_this) {
 
 	ECTransformData *data = _this->data;
 
-	Quaternion local_quaternion;
-	Transform *transform_world=&_this->transform;
-	Transform *transform_local=data->transform_local;
+	ZG_Quaternion local_quaternion;
+	ZG_Transform *transform_world=&_this->transform;
+	ZG_Transform *transform_local=data->transform_local;
 
 	// transfer local -> absolute ...
 	*transform_world=*transform_local;
 
 	// todo: quaternions
-	_this->transform.quaternion = transform_world->quaternion = local_quaternion = Quaternion_FromEulerV3f(transform_local->rotate);
+	_this->transform.quaternion = transform_world->quaternion = local_quaternion = ZG_Quaternion_FromEulerV3f(transform_local->rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
 	if(!IsParentNodeRoot(_this)) { // Conditioned to transformations of m_scrParent....
 
 		TransformNode *parent=data->parent;
 		if(parent == NULL){
-			Log_Error("Expected parent not null!!");
+			ZG_Log_Error("Expected parent not null!!");
 			return;
 		}
 
 		//ECTransformData *parent_data = parent->data;
-		Transform *parent_transform_world=&parent->transform;
+		ZG_Transform *parent_transform_world=&parent->transform;
 
 		// todo: quaternions
-		//Quaternion total_quaternion=parent->quaternion;//getTransform()getActualRotateMatrix());
+		//ZG_Quaternion total_quaternion=parent->quaternion;//getTransform()getActualRotateMatrix());
 
 		// ok. Let's to transform position child from rotation m_scrParent value ...
-		Vector3f transform_child_from_parent=transform_local->translate;
+		ZG_Vector3f transform_child_from_parent=transform_local->translate;
 
 		// the is propagated ...
 		if(((data->transform_attributes & TRANSFORM_SCALE) == TRANSFORM_SCALE)) {
@@ -230,7 +230,7 @@ void UpdateSceneGraph(TransformNode *_this) {
 	}
 	else { // Is the root, then add origin on their initial values ...
 
-		/*Vector3f origin=ViewPort_GetProjectionOrigin();
+		/*ZG_Vector3f origin=ZG_ViewPort_GetProjectionOrigin();
 		if(_this->transform->transform_properties & TRANSFORM_PROPERTY_POSITION_RELATIVE_X){ //  add x offset origin according opengl
 			transform_absolute->translate.x+=origin.x;
 		}
@@ -258,7 +258,7 @@ void Update(TransformNode *_this) {
 	PostUpdate(_this);
 }
 
-Transform *GetTransform(TransformNode *_this, TransformNodeType sgtransform){
+ZG_Transform *GetTransform(TransformNode *_this, TransformNodeType sgtransform){
 	ECTransformData *data=_this->data;
 	if(sgtransform == TRANSFORM_NODE_TYPE_WORLD){
 		return &_this->transform;
@@ -276,7 +276,7 @@ void 	 Delete(TransformNode *_this){
 	ECTransformData *_data = _this->data;
 
 	ClearNodes(_this);
-	List_Delete(_data->child_nodes);
+	ZG_List_Delete(_data->child_nodes);
 
 	ZG_FREE(_data);
 	ZG_FREE(_this);

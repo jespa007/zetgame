@@ -1,29 +1,29 @@
-#include "Graphics.h"
+#include "__zg_graphics_.h"
 
-typedef struct ShapeData ShapeData;
+typedef struct ZG_ShapeData ZG_ShapeData;
 
 
-Shape * Shape_New(void){
-	Shape *shape=ZG_NEW(Shape);
+ZG_Shape * ZG_Shape_New(void){
+	ZG_Shape *shape=ZG_NEW(ZG_Shape);
 	return shape;
 }
 
-void Shape_SetAppearance(Shape *_this,Appearance *appearance){
+void ZG_Shape_SetAppearance(ZG_Shape *_this,ZG_Appearance *appearance){
 	_this->appearance = appearance;
 }
 
-void Shape_Draw(Shape *_this, Transform *_transform){
+void ZG_Shape_Draw(ZG_Shape *_this, ZG_Transform *_transform){
 
-	Appearance_Apply(_this->appearance);
-	Transform_Apply(_transform);
+	ZG_Appearance_Apply(_this->appearance);
+	ZG_Transform_Apply(_transform);
 
-	Geometry_Draw(_this->geometry);
+	ZG_Geometry_Draw(_this->geometry);
 
-	Transform_Restore(_transform);
-	Appearance_Restore(_this->appearance);
+	ZG_Transform_Restore(_transform);
+	ZG_Appearance_Restore(_this->appearance);
 }
 
-void Shape_Delete(Shape *_this){
+void ZG_Shape_Delete(ZG_Shape *_this){
 	if(_this != NULL){
 		ZG_FREE(_this);
 	}

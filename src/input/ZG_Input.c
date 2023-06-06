@@ -26,12 +26,12 @@ bool 	        	old_state[ZGK_LAST]={0};
 
 
 typedef struct{
-	MapInt 	* on_key_up
+	ZG_MapInt 	* on_key_up
 				   ,*on_key_down;
-	MapInt  *on_mouse_button_down
+	ZG_MapInt  *on_mouse_button_down
 				  ,*on_mouse_motion
 				  ,*on_mouse_button_up;
-	MapInt * on_drop_file;
+	ZG_MapInt * on_drop_file;
 	MouseInfo  mouse_info;
 	bool enable_mouse_events;
 	uint32_t second_mouse_motion;
@@ -86,11 +86,11 @@ MouseInfo Input_GetMouseInfo(void){
 	return g_input_vars->mouse_info;
 }
 
-Vector2i  Input_GetMousePosition(void){
+ZG_Vector2i  Input_GetMousePosition(void){
 	return g_input_vars->mouse_info.position;
 }
 
-Vector2i  *Input_GetMousePositionPtr(void){
+ZG_Vector2i  *Input_GetMousePositionPtr(void){
 	return &g_input_vars->mouse_info.position;
 }
 
@@ -111,7 +111,7 @@ void Input_EnableMouseEvents(bool _enable_mouse_events){
 //------------------------------------------------------------------------------------------------
 void Input_ShowCursor(bool _show_cursor){
 	if(SDL_ShowCursor(_show_cursor)<0){
-		Log_Error("SDL_ShowCursor:%s",SDL_GetError());
+		ZG_Log_Error("SDL_ShowCursor:%s",SDL_GetError());
 	}
 
 }
@@ -216,7 +216,7 @@ void Input_UpdateDropEvents(DropEvent *drop_event) {
 		}
 }
 
-void Input_UpdateMouseEvents(MapInt *mouse_events,MouseEvent *mouse_event) {
+void Input_UpdateMouseEvents(ZG_MapInt *mouse_events,MouseEvent *mouse_event) {
 
 	for(unsigned i = 0; i < mouse_events->list->count; i++){
 		MapIntNode *node=mouse_events->list->items[i];
@@ -226,7 +226,7 @@ void Input_UpdateMouseEvents(MapInt *mouse_events,MouseEvent *mouse_event) {
 
 }
 
-void Input_UpdateKeyEvents(MapInt *key_events,KeyEvent *key_event) {
+void Input_UpdateKeyEvents(ZG_MapInt *key_events,KeyEvent *key_event) {
 
 	for(unsigned i = 0; i < key_events->list->count; i++){
 		MapIntNode *node=key_events->list->items[i];
@@ -348,7 +348,7 @@ void Input_Update() {
 			case SDL_KEYDOWN:
 				id_key = event.key.keysym.sym;
 
-				//Log_Info("UnPress");
+				//ZG_Log_Info("UnPress");
 
 				if(SDLK_UP ==event.key.keysym.sym) {key_event.code_key =id_key = ZGK_UP; key_event.press_up = true;}
 				else if(SDLK_DOWN ==event.key.keysym.sym) {key_event.code_key =id_key = ZGK_DOWN; key_event.press_down = true;}
@@ -396,7 +396,7 @@ void Input_Update() {
 					}
 				}
 				if(id_key >= ZGK_LAST) {
-					Log_Error("unhandled id key %i", id_key);
+					ZG_Log_Error("unhandled id key %i", id_key);
 				}
 				else{
 					if(id_key) {
@@ -417,7 +417,7 @@ void Input_Update() {
 				}
 				break;
 			default:
-				//Log_Info("unknow event %i",event.type);
+				//ZG_Log_Info("unknow event %i",event.type);
 				break;
 			}
 		}

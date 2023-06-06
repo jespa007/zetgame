@@ -145,8 +145,8 @@ bool CTilemap::load(
 				//basicSetup();
 
 				//---- provisional load image with properties...
-				//text->getTexture().setMagFilter(Texture.BASE_LEVEL_POINT);
-				//text->getTexture().setMinFilter(Texture.BASE_LEVEL_POINT);
+				//text->getTexture().setMagFilter(ZG_Texture.BASE_LEVEL_POINT);
+				//text->getTexture().setMinFilter(ZG_Texture.BASE_LEVEL_POINT);
 				//------------------------------------------------
 
 				//draw_attributes = _draw_attributes;
@@ -373,7 +373,7 @@ bool CTilemap::load(
 			}
 			else
 			{
-				Log_Error("Cannot create tilemap \"%s\" with NULL texture!",getName().c_str());
+				ZG_Log_Error("Cannot create tilemap \"%s\" with NULL texture!",getName().c_str());
 				//system.exit(-1);
 			}
 

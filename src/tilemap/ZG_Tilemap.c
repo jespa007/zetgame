@@ -7,12 +7,12 @@ typedef struct{
 	//size_t 		width, height; 	// in tiles...
 	//size_t 		tile_height, tile_width; // in pixels ...
 	//short 		*tiles; // map tile ...
-	Geometry 	*geometry;
+	ZG_Geometry 	*geometry;
 
 	//short  		*indexs;
 	//float	 	*mesh_vertexs;
 	//float 		*mesh_texture;
-	Texture 	*texture;
+	ZG_Texture 	*texture;
 	Tilesets	*tilesets;
 }TilemapData;
 
@@ -23,11 +23,11 @@ Tilemap *Tilemap_New(
 		, size_t _height
 		, size_t _tile_width
 		, size_t _tile_height
-		, Texture *_texture
+		, ZG_Texture *_texture
 		,Tilesets *_tilesets
 ){
 	Tilemap *tm=ZG_NEW(Tilemap);
-	Geometry *geometry=NULL;
+	ZG_Geometry *geometry=NULL;
 	//short *tiles=NULL;
 	TilemapData *data=ZG_NEW(TilemapData);
 	tm->data=data;
@@ -38,10 +38,10 @@ Tilemap *Tilemap_New(
 	int offset_mesh=0;
 	int offset_indices=0;
 	int offset_ptr_indices=0;
-	float start_tilemap_x3d= -ViewPort_ScreenToWorldWidth((float)(_width*_tile_width))/2.0f;
-	float tilemap_y3d= ViewPort_ScreenToWorldHeight((float)(_height*_tile_height))/2.0f;
-	float inc_tilemap_dxdx3d = ViewPort_ScreenToWorldWidth((float)(_tile_width));
-	float inc_tilemap_dydy3d = ViewPort_ScreenToWorldHeight((float)(_tile_height));
+	float start_tilemap_x3d= -ZG_ViewPort_ScreenToWorldWidth((float)(_width*_tile_width))/2.0f;
+	float tilemap_y3d= ZG_ViewPort_ScreenToWorldHeight((float)(_height*_tile_height))/2.0f;
+	float inc_tilemap_dxdx3d = ZG_ViewPort_ScreenToWorldWidth((float)(_tile_width));
+	float inc_tilemap_dydy3d = ZG_ViewPort_ScreenToWorldHeight((float)(_tile_height));
 
 
 	float inc_tile_dxdu = (float)(_tile_width) / (float)_texture->width;
@@ -62,11 +62,11 @@ Tilemap *Tilemap_New(
 	float *mesh_vertexs=malloc(sizeof(float)*mesh_vertexs_len);
 	float *mesh_texture=malloc(sizeof(float)*mesh_texture_len);
 
-	geometry=data->geometry = 	Geometry_New(
+	geometry=data->geometry = 	ZG_Geometry_New(
 			GEOMETRY_TYPE_TRIANGLES
 			,n_indexs
 			,n_vertexs,
-			  GEOMETRY_PROPERTY_TEXTURE
+			  ZG_GEOMETRY_PROPERTY_TEXTURE
 	);
 
 	// mesh vertexs
@@ -142,9 +142,9 @@ Tilemap *Tilemap_New(
 		}
 	}
 
-	Geometry_SetIndices(geometry,indexs,n_indexs);
-	Geometry_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
-	Geometry_SetMeshTexture(geometry,mesh_texture,mesh_texture_len);
+	ZG_Geometry_SetIndices(geometry,indexs,n_indexs);
+	ZG_Geometry_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
+	ZG_Geometry_SetMeshTexture(geometry,mesh_texture,mesh_texture_len);
 
 	free(mesh_vertexs);
 	free(mesh_texture);
@@ -169,7 +169,7 @@ void Tilemap_Update(Tilemap *_this){
 
 					tile_animation->time_change_frame=SDL_GetTicks()+frame->duration;
 					TileImage *tile_image=data->tilesets->tile_images[frame->tile_id];
-					Texture_UpdateFromSurface(data->texture,tile_animation->u1,tile_animation->v1,tile_image->image);
+					ZG_Texture_UpdateFromSurface(data->texture,tile_animation->u1,tile_animation->v1,tile_image->image);
 
 				}
 			}
@@ -179,8 +179,8 @@ void Tilemap_Update(Tilemap *_this){
 
 void Tilemap_Draw(Tilemap *_this){
 	TilemapData *data=_this->data;
-	Texture_Bind(data->texture);
-	Geometry_Draw(data->geometry);
+	ZG_Texture_Bind(data->texture);
+	ZG_Geometry_Draw(data->geometry);
 }
 
 void Tilemap_Delete(Tilemap *_this){
@@ -195,11 +195,11 @@ void Tilemap_Delete(Tilemap *_this){
 					TileAnimationFrame *frame=tile_animation->frames->items[k];
 					ZG_FREE(frame);
 				}
-				List_Delete(tile_animation->frames);
+				ZG_List_Delete(tile_animation->frames);
 				ZG_FREE(tile_animation);
 
 			}
-			List_Delete(data->tilesets->animations);
+			ZG_List_Delete(data->tilesets->animations);
 		}
 
 
@@ -218,7 +218,7 @@ void Tilemap_Delete(Tilemap *_this){
 		ZG_FREE(data->tilesets);
 	}
 
-	Geometry_Delete(data->geometry);
+	ZG_Geometry_Delete(data->geometry);
 
 	free(data);
 	free(_this);

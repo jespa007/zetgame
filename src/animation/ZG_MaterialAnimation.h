@@ -31,7 +31,7 @@ void					ZG_MaterialAnimation_StartTween(
 	, uint32_t _duration
 	, int _repeat
 );
-void 					ZG_MaterialAnimation_Update(ZG_MaterialAnimation *_this, Material *_transform);
+void 					ZG_MaterialAnimation_Update(ZG_MaterialAnimation *_this, ZG_Material *_transform);
 void 					ZG_MaterialAnimation_Delete(ZG_MaterialAnimation *_this);
 
 #endif

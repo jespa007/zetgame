@@ -40,10 +40,10 @@ void					AnimationSystem_Update(AnimationSystem *_this);
 /*void  			AnimationSystem_RemoveEntity(AnimationSystem * _this, Entity entity);
 
 // Channels
-Transform 	*		AnimationSystem_GetComponentTransform(AnimationSystem * _this, Entity entity);
+ZG_Transform 	*		AnimationSystem_GetComponentTransform(AnimationSystem * _this, Entity entity);
 TransformNode 		*		AnimationSystem_GetComponentTransformNode(AnimationSystem * _this, Entity entity);
-Appearance 	*		AnimationSystem_GetComponentAppearance(AnimationSystem * _this, Entity entity);
-Geometry 	*		AnimationSystem_GetComponentGeometry(AnimationSystem * _this, Entity entity);
+ZG_Appearance 	*		AnimationSystem_GetComponentAppearance(AnimationSystem * _this, Entity entity);
+ZG_Geometry 	*		AnimationSystem_GetComponentGeometry(AnimationSystem * _this, Entity entity);
 Camera 		*		AnimationSystem_GetComponentCamera(AnimationSystem * _this, Entity entity);
 */
 void				AnimationSystem_StartTweenTransform(

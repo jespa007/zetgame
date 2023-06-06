@@ -38,12 +38,12 @@ bool CSprite2dFrameAnimation::addFrame(Sint16 u,Sint16 v, Sint16 width, Sint16 h
 
 	uint16_t max_width,max_height;
 	if(texture == NULL){
-		Log_Error("Error. You have to set the image before configure frames");
+		ZG_Log_Error("Error. You have to set the image before configure frames");
 		return false;
 	}
 
 	if(this->texture==NULL){
-		Log_Error("setTexture before call addFrame");
+		ZG_Log_Error("setTexture before call addFrame");
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool CSprite2dFrameAnimation::addFrame(Sint16 u,Sint16 v, Sint16 width, Sint16 h
 	max_height = texture->getHeight();
 
 	if(u<0 || v < 0 || ((u+width)>max_width) || ((v+height)>max_height)){
-		Log_Error("crop dimensions out of bounds. You passed [u1:%i v1:%i u2:%i v2:%i] and texture limits are [u1:0 v1:0 u2:%i v2:%i]",
+		ZG_Log_Error("crop dimensions out of bounds. You passed [u1:%i v1:%i u2:%i v2:%i] and texture limits are [u1:0 v1:0 u2:%i v2:%i]",
 				u,v,u+width,v+height,max_width,max_height);
 		return false;
 	}

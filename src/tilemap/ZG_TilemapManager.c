@@ -3,10 +3,10 @@
 
 typedef struct{
 	MapString 			* 	tilemaps;	// it saves its layers
-	TextureManager   	*   texture_manager;
+	ZG_TextureManager   	*   texture_manager;
 }TilemapManagerData;
 
-void TilemapManager_OnDeleteTilemap(MapStringNode *node){
+void TilemapManager_OnDeleteTilemap(ZG_MapStringNode *node){
 	Tilemap *tm=(Tilemap *)node->val;
 
 	if(tm != NULL){
@@ -14,20 +14,20 @@ void TilemapManager_OnDeleteTilemap(MapStringNode *node){
 	}
 }
 
-void TilemapManager_OnDeleteTexture(MapStringNode *node){
-	Texture *texture=(Texture *)node->val;
+void TilemapManager_OnDeleteTexture(ZG_MapStringNode *node){
+	ZG_Texture *texture=(ZG_Texture *)node->val;
 
 	if(texture != NULL){
-		Texture_Delete(texture);
+		ZG_Texture_Delete(texture);
 	}
 }
 
 // MEMBERS
-TilemapManager *TilemapManager_New(TextureManager	* _texture_manager){
+TilemapManager *TilemapManager_New(ZG_TextureManager	* _texture_manager){
 	TilemapManager *tmm=ZG_NEW(TilemapManager);
 	TilemapManagerData *data=ZG_NEW(TilemapManagerData);
 
-	data->tilemaps = MapString_New();//new std::map<std::string,TTFont *>();
+	data->tilemaps = MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
 
 	data->tilemaps->on_delete=TilemapManager_OnDeleteTilemap;
@@ -48,7 +48,7 @@ bool TilemapManager_LoadFromMemory(
 	char filename[MAX_PATH]={0};
 	bool ok=false;
 
-	Texture *texture;
+	ZG_Texture *texture;
 	TilemapManagerData *data=_this->data;
 
 	// first read tilesets...
@@ -89,9 +89,9 @@ bool TilemapManager_LoadFromMemory(
 			,{"tiles",&tilesets_tiles}
 	};
 
-	for(unsigned i=0; i < ARRAY_SIZE(tilemap_attr); i++){
+	for(unsigned i=0; i < ZG_ARRAY_SIZE(tilemap_attr); i++){
 		if((*tilemap_attr[i].value = cJSON_GetObjectItem(root,tilemap_attr[i].name))== NULL){
-			Log_Error("JsonParse: Cannot get '%s'",tilemap_attr[i].name);
+			ZG_Log_Error("JsonParse: Cannot get '%s'",tilemap_attr[i].name);
 			return false;
 		}
 	}
@@ -99,7 +99,7 @@ bool TilemapManager_LoadFromMemory(
 	size_t tileset_data_len=cJSON_GetArraySize(tilesets);
 
 	if(tileset_data_len == 0){
-		Log_ErrorF("JsonParse: there's no tilesets");
+		ZG_Log_ErrorF("JsonParse: there's no tilesets");
 		return false;
 	}
 
@@ -107,15 +107,15 @@ bool TilemapManager_LoadFromMemory(
 
 		bool tileset_found=false;
 
-		for(unsigned i=0; i < ARRAY_SIZE(tilemap_attr); i++){
+		for(unsigned i=0; i < ZG_ARRAY_SIZE(tilemap_attr); i++){
 			if((*layer_attr[i].value = cJSON_GetObjectItem(layer,layer_attr[i].name)) == NULL){
-				Log_Error("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
+				ZG_Log_Error("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
 				return false;
 			}
 		}
 
-		if(MapString_GetValue(data->tilemaps,layer_name->valuestring,NULL)!=NULL){
-			Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
+		if(ZG_MapString_GetValue(data->tilemaps,layer_name->valuestring,NULL)!=NULL){
+			ZG_Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
 			continue;
 		}
 
@@ -128,7 +128,7 @@ bool TilemapManager_LoadFromMemory(
 		}
 
 		if(tilemap_data_len != tilemap_dim){
-			Log_Error("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
+			ZG_Log_Error("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
 			return false;
 		}
 
@@ -136,9 +136,9 @@ bool TilemapManager_LoadFromMemory(
 
 		// search tileset...
 		cJSON_ArrayForEach(tileset, tilesets) {
-			for(unsigned i=0; i < ARRAY_SIZE(tileset_attr); i++){
+			for(unsigned i=0; i < ZG_ARRAY_SIZE(tileset_attr); i++){
 				if((*tileset_attr[i].value = cJSON_GetObjectItem(tileset,tileset_attr[i].name))== NULL){
-					Log_Error("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
+					ZG_Log_Error("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
 					return false;
 				}
 			}
@@ -151,12 +151,12 @@ bool TilemapManager_LoadFromMemory(
 		}
 
 		if(tileset_found == false){
-			Log_Error("JsonParse layer '%s': tileset not found",layer_name->valuestring);
+			ZG_Log_Error("JsonParse layer '%s': tileset not found",layer_name->valuestring);
 			return false;
 		}
 
 		if(tileset_found == false){
-			Log_Error("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
+			ZG_Log_Error("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
 			return false;
 		}
 
@@ -172,7 +172,7 @@ bool TilemapManager_LoadFromMemory(
 			if(firstgid->valueint <= idx_tile_block && idx_tile_block <= tilecount->valueint){
 				*(tiles+idx_tile)=idx_tile_block;
 			}else{
-				Log_Error("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
+				ZG_Log_Error("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
 						,layer_name->valuestring
 						,idx_tile_block
 						,firstgid->valueint
@@ -184,7 +184,7 @@ bool TilemapManager_LoadFromMemory(
 		}
 
 		sprintf(filename,"%s/%s",_path,image->valuestring);
-		if((texture=TextureManager_Get(data->texture_manager,filename)) == NULL){
+		if((texture=ZG_TextureManager_Get(data->texture_manager,filename)) == NULL){
 			goto tmm_load_error;
 		}
 
@@ -217,7 +217,7 @@ bool TilemapManager_LoadFromMemory(
 			//int pitch=image->w; // texture scanline //(tm_tilesets->tile_height+tm_tilesets->tile_spacing)*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 			tm_tilesets->tile_images=malloc( tilecount->valueint*sizeof(SDL_Surface *));
-			tm_tilesets->animations=List_New();
+			tm_tilesets->animations=ZG_List_New();
 
 			cJSON_ArrayForEach(tilesets_tile, tilesets_tiles) {
 
@@ -229,14 +229,14 @@ bool TilemapManager_LoadFromMemory(
 				}
 
 				TileAnimation *tile_animation=ZG_NEW(TileAnimation);
-				List_Add(tm_tilesets->animations,tile_animation);
+				ZG_List_Add(tm_tilesets->animations,tile_animation);
 
 				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*image->w;
 				int u1=tm_tilesets->tile_margin+(tileid->valueint%(tilemap_width->valueint))*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 				tile_animation->u1=u1;
 				tile_animation->v1=v1;
-				tile_animation->frames=List_New();
+				tile_animation->frames=ZG_List_New();
 
 				size_t tilesets_tiles_animation_len=cJSON_GetArraySize(tilesets_tile_animations);
 				// resrve
@@ -244,12 +244,12 @@ bool TilemapManager_LoadFromMemory(
 
 					cJSON_ArrayForEach(tilesets_tile_animation, tilesets_tile_animations) {
 						if((tilesets_tile_animation_duration = cJSON_GetObjectItem(tilesets_tile_animation,"duration")) == NULL){
-							Log_ErrorF("JsonParse data tilesets->animation->duration not found");
+							ZG_Log_ErrorF("JsonParse data tilesets->animation->duration not found");
 							continue;
 						}
 
 						if((tilesets_tile_animation_tileid = cJSON_GetObjectItem(tilesets_tile_animation,"tileid")) == NULL){
-							Log_ErrorF("JsonParse data tilesets->animation->tileid not found");
+							ZG_Log_ErrorF("JsonParse data tilesets->animation->tileid not found");
 							continue;
 						}
 
@@ -272,9 +272,9 @@ bool TilemapManager_LoadFromMemory(
 
 						}
 
-						Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
+						ZG_Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
 
-						List_Add(tile_animation->frames,tileset_animation_frame);
+						ZG_List_Add(tile_animation->frames,tileset_animation_frame);
 					}
 				}
 			}
@@ -293,7 +293,7 @@ bool TilemapManager_LoadFromMemory(
 				,tm_tilesets);
 
 		if(tm != NULL){
-			MapString_SetValue(data->tilemaps,layer_name->valuestring,tm);
+			ZG_MapString_SetValue(data->tilemaps,layer_name->valuestring,tm);
 			ok=true;
 		}
 	}
@@ -310,7 +310,7 @@ tmm_load_error:
 /**
  * Load a set of Tilemap from exported files from Aseprite
  * @_this: TilemapManager object
- * @_texture_filename: Texture filename (it can be .png,jpg,etc)
+ * @_texture_filename: ZG_Texture filename (it can be .png,jpg,etc)
  * @_json_filename: Json file generated by Aseprite
  * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
  */
@@ -320,7 +320,7 @@ bool TilemapManager_Load(TilemapManager *_this,const char *_json_tmx_file){
 	char *_path=NULL;
 
 
-	if((_json_buf=File_Read(_json_tmx_file))!=NULL){
+	if((_json_buf=ZG_File_Read(_json_tmx_file))!=NULL){
 		ok=TilemapManager_LoadFromMemory(
 				_this
 				,_path=Path_GetDirectoryName(_json_tmx_file)
@@ -330,7 +330,7 @@ bool TilemapManager_Load(TilemapManager *_this,const char *_json_tmx_file){
 	}
 
 
-	if(_json_buf) BufferByte_Delete(_json_buf);
+	if(_json_buf) ZG_BufferByte_Delete(_json_buf);
 	if(_path) free(_path);
 
 
@@ -340,7 +340,7 @@ bool TilemapManager_Load(TilemapManager *_this,const char *_json_tmx_file){
 Tilemap *TilemapManager_Get(TilemapManager *_this, const char *key){
 	TilemapManagerData *data=_this->data;
 
-	return MapString_GetValue(data->tilemaps,key,NULL);
+	return ZG_MapString_GetValue(data->tilemaps,key,NULL);
 }
 
 
@@ -348,8 +348,8 @@ Tilemap *TilemapManager_Get(TilemapManager *_this, const char *key){
 void  TilemapManager_Delete(TilemapManager *_this){
 	TilemapManagerData 	*data=_this->data;
 
-	MapString_Delete(data->tilemaps);
-	//MapString_Delete(data->textures);
+	ZG_MapString_Delete(data->tilemaps);
+	//ZG_MapString_Delete(data->textures);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

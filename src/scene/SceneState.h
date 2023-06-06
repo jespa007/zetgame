@@ -13,8 +13,8 @@ struct SceneState{
 SceneState *SceneState_New(
 		Scene *scene
 		,const char *name
-		,Callback init
-		,Callback udpate);
+		,ZG_Callback init
+		,ZG_Callback udpate);
 
 void SceneState_Start(SceneState *_this);
 void SceneState_Update(SceneState *_this);

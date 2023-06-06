@@ -31,7 +31,7 @@ void					ZG_TransformAnimation_StartTween(
 	, uint32_t _duration
 	, int _repeat
 );
-void 					ZG_TransformAnimation_Update(ZG_TransformAnimation *_this, Transform *_transform);
+void 					ZG_TransformAnimation_Update(ZG_TransformAnimation *_this, ZG_Transform *_transform);
 void 					ZG_TransformAnimation_Delete(ZG_TransformAnimation *_this);
 
 #endif

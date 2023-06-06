@@ -5,7 +5,7 @@ typedef struct ECMaterial ECMaterial;
 
 struct ECMaterial{
 	EComponentHeader header;
-	Material 		*material;
+	ZG_Material 		*material;
 	void			*data;
 };
 

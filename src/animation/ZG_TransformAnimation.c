@@ -9,14 +9,14 @@ typedef struct{
 ZG_TransformAction *ZG_TransformAnimation_New(void){
 	ZG_TransformAction *transform_animation=ZG_NEW(ZG_TransformAction);
 	ZG_TransformActionData *data=ZG_NEW(ZG_TransformActionData);
-	data->animation=ZG_Animation_New(TRANSFORM_COMPONENT_MAX);
+	data->animation=ZG_Animation_New(ZG_TRANSFORM_COMPONENT_MAX);
 
 	transform_animation->data=data;
 
 	return transform_animation;
 }
 
-void ZG_TransformAnimation_Update(ZG_TransformAction *_this, Transform *_transform){
+void ZG_TransformAnimation_Update(ZG_TransformAction *_this, ZG_Transform *_transform){
 	ZG_TransformActionData *data=_this->data;
 	ZG_Animation_Update(data->animation,SDL_GetTicks());
 	ZG_Animation_CopyChannelValues(data->animation,&_transform->translate.x);

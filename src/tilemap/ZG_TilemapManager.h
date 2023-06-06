@@ -7,7 +7,7 @@ struct TilemapManager{
 	void *data;
 };
 
-TilemapManager *TilemapManager_New(TextureManager	* _texture_manager);
+TilemapManager *TilemapManager_New(ZG_TextureManager	* _texture_manager);
 bool 			TilemapManager_Load(TilemapManager *_this,const char *_tmx_filename);
 Tilemap 	  *	TilemapManager_Get(TilemapManager *_this,const char *_tm_id);
 

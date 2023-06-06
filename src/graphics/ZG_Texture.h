@@ -1,56 +1,56 @@
-#ifndef __TExTURE_H__
-#define __TExTURE_H__
+#ifndef __ZG_TEXTURE_H__
+#define __ZG_TExTURE_H__
 
-#define INVALID_TEXTURE_HANDLE -1
-
-typedef enum{
-	TEXTURE_TYPE_IMAGE=0,
-	TEXTURE_TYPE_CUBEMAP
-}TextureType;
-
+#define ZG_INVALID_TEXTURE_HANDLE -1
 
 typedef enum{
-	TEXTURE_FILTER_LINEAR=0,
-	TEXTURE_FILTER_NEAREST
-}TextureFilter;
+	ZG_TEXTURE_TYPE_IMAGE=0,
+	ZG_TEXTURE_TYPE_CUBEMAP
+}ZG_TextureType;
+
+
+typedef enum{
+	ZG_TEXTURE_FILTER_LINEAR=0,
+	ZG_TEXTURE_FILTER_NEAREST
+}ZG_TextureFilter;
 
 
 
-typedef struct Texture Texture;
+typedef struct ZG_Texture ZG_Texture;
 
-struct Texture{
+struct ZG_Texture{
 	void *texture_data;
 	uint16_t width, height;
 	uint8_t bytes_per_pixel;
-	TextureType texture_type;
+	ZG_TextureType texture_type;
 };
 
 // static
-void	  	Texture_Init(void);
-void	  	Texture_DeInit(void);
+void	  	ZG_Texture_Init(void);
+void	  	ZG_Texture_DeInit(void);
 
 // public
-void 		Texture_SetTextureResourcePath(const char *resource_path);
+void 		ZG_Texture_SetTextureResourcePath(const char *resource_path);
 
 
-Texture * 	Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel);
-Texture *	Texture_NewFromSurface(SDL_Surface *_img);
-Texture * 	Texture_NewFromFile(const char *file);
-Texture * 	Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len);
-Texture * 	Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-Texture * 	Texture_NewRectangle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-Texture * 	Texture_NewCross(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
-Texture * 	Texture_NewArrow(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+ZG_Texture * 	ZG_Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel);
+ZG_Texture *	ZG_Texture_NewFromSurface(SDL_Surface *_img);
+ZG_Texture * 	ZG_Texture_NewFromFile(const char *file);
+ZG_Texture * 	ZG_Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len);
+ZG_Texture * 	ZG_Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+ZG_Texture * 	ZG_Texture_NewRectangle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+ZG_Texture * 	ZG_Texture_NewCross(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+ZG_Texture * 	ZG_Texture_NewArrow(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 
 
-void		Texture_SetFilter(Texture *_this, TextureFilter _filter);
-void 		Texture_Bind(Texture *_this);
-void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);
-void	 	Texture_SetRepeatUV(Texture *_this, bool _repeat_uv);
-int		 	Texture_GetHandle(Texture *_this);
-bool 	  	Texture_Update(Texture * _this, uint16_t _x, uint16_t _y, uint16_t _width, uint16_t _height,void *_pixels, uint8_t _bytes_per_pixel);
-bool	  	Texture_UpdateFromSurface(Texture *_this, uint16_t _x, uint16_t _y,SDL_Surface * _srf);
-void	  	Texture_Delete(Texture * _this);
+void		ZG_Texture_SetFilter(ZG_Texture *_this, ZG_TextureFilter _filter);
+void 		ZG_Texture_Bind(ZG_Texture *_this);
+void	 	ZG_Texture_SetRepeatUV(ZG_Texture *_this, bool _repeat_uv);
+void	 	ZG_Texture_SetRepeatUV(ZG_Texture *_this, bool _repeat_uv);
+int		 	ZG_Texture_GetHandle(ZG_Texture *_this);
+bool 	  	ZG_Texture_Update(ZG_Texture * _this, uint16_t _x, uint16_t _y, uint16_t _width, uint16_t _height,void *_pixels, uint8_t _bytes_per_pixel);
+bool	  	ZG_Texture_UpdateFromSurface(ZG_Texture *_this, uint16_t _x, uint16_t _y,SDL_Surface * _srf);
+void	  	ZG_Texture_Delete(ZG_Texture * _this);
 
 
 

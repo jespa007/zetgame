@@ -4,9 +4,9 @@
 typedef struct{
 	ZG_List 				*widgets;
 	GUIWidget 			*parent;
-	Vector2i 			position_local, position_world, position_screen;
-	Vector2i 			dimensions;
-	Color4f				color,background_color;
+	ZG_Vector2i 			position_local, position_world, position_screen;
+	ZG_Vector2i 			dimensions;
+	ZG_Color4f				color,background_color;
 	float 				opacity;
 	bool 				is_enabled;
 
@@ -24,13 +24,13 @@ typedef struct{
 GUIWidget  * GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 	GUIWidget *widget=ZG_NEW(GUIWidget);
 	GUIWidgetData *data=ZG_NEW(GUIWidgetData);
-	data->widgets = List_New();
+	data->widgets = ZG_List_New();
 	widget->data=data;
 
 	data->is_enabled=true;
-	data->color=COLOR4F_WHITE;
-	data->background_color=COLOR4F_WHITE;
-	data->opacity=ALPHA_VALUE_SOLID;
+	data->color=ZG_COLOR4F_WHITE;
+	data->background_color=ZG_COLOR4F_WHITE;
+	data->opacity=ZG_ALPHA_VALUE_SOLID;
 
 	data->position_local.x=x;
 	data->position_local.y=y;
@@ -44,7 +44,7 @@ GUIWidget  * GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 void GUIWidget_SetWindow(GUIWidget *_this,GUIWindow *_window){
 	GUIWidgetData *data=_this->data;
 	if(data->window!=NULL){
-		Log_ErrorF("widget already has a window");
+		ZG_Log_ErrorF("widget already has a window");
 		return;
 	}
 
@@ -99,23 +99,23 @@ void GUIWidget_SetDimensions(GUIWidget *_this,uint16_t width, uint16_t height){
 	GUIWidget_SetWidth(_this,width);
 }
 
-Color4f GUIWidget_GetBackgroundColor4f(GUIWidget *_this){
+ZG_Color4f GUIWidget_GetBackgroundColor4f(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	return data->background_color;
 }
 
-void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,Color4f _color){
+void 		GUIWidget_SetBackgroundColor4f(GUIWidget *_this,ZG_Color4f _color){
 	GUIWidgetData *data=_this->data;
 	data->background_color=_color;
 }
 
-void 		GUIWidget_SetColor4f(GUIWidget *_this,Color4f _color){
+void 		GUIWidget_SetColor4f(GUIWidget *_this,ZG_Color4f _color){
 	GUIWidgetData *data=_this->data;
 	data->color=_color;
 
 }
 
-Color4f 	GUIWidget_GetColor4f(GUIWidget *_this){
+ZG_Color4f 	GUIWidget_GetColor4f(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	return data->color;
 }
@@ -141,7 +141,7 @@ bool GUIWidget_IsEnabled(GUIWidget *_this){
 	return data->is_enabled;
 }
 
-Vector2i GUIWidget_GetDimensions(GUIWidget *_this){
+ZG_Vector2i GUIWidget_GetDimensions(GUIWidget *_this){
 	GUIWidgetData *data=_this->data;
 	return data->dimensions;
 }
@@ -152,18 +152,18 @@ void GUIWidget_AttachWidgetBase(GUIWidget *_this, GUIWidget *widget_to_attach){
 	GUIWidgetData *data_widget=NULL;
 
 	if(widget_to_attach==NULL){
-		Log_ErrorF("widget null");
+		ZG_Log_ErrorF("widget null");
 		return;
 	}
 
 	data_widget=widget_to_attach->data;
 
 	if(data_widget->parent!=NULL){
-		Log_ErrorF("Widget is already added. Please detach first");
+		ZG_Log_ErrorF("Widget is already added. Please detach first");
 		return;
 	}
 
-	List_Add(data->widgets, widget_to_attach);
+	ZG_List_Add(data->widgets, widget_to_attach);
 
 	// now widget has this parent
 	data_widget->parent=_this;
@@ -189,21 +189,21 @@ GUIWindow 		*GUIWidget_GetWindow(GUIWidget *_this){
 	return NULL;
 }
 /*
-TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this){
+ZG_TTFontManager 	*GUIWidget_GetTTFontManager(GUIWidget *_this){
 	GUIWindow *window=GUIWidget_GetWindow(_this);
 
 	if(window == NULL){
-		Log_ErrorF("Cannot get TTFontManager because there's not window attached in this widget");
+		ZG_Log_ErrorF("Cannot get ZG_TTFontManager because there's not window attached in this widget");
 	}
 
 	return GUIWindow_GetTTFontManager(window);
 }
 */
-TextureManager 	*GUIWidget_GetTextureManager(GUIWidget *_this){
+ZG_TextureManager 	*GUIWidget_GetTextureManager(GUIWidget *_this){
 	GUIWindow *window=GUIWidget_GetWindow(_this);
 
 	if(window == NULL){
-		Log_ErrorF("Cannot get TextureManager because there's not window attached in this widget");
+		ZG_Log_ErrorF("Cannot get ZG_TextureManager because there's not window attached in this widget");
 	}
 
 	return GUIWindow_GetTextureManager(window);
@@ -252,7 +252,7 @@ void GUIWidget_OnSetWidth(GUIWidget *_this,CallbackWidgetOnSetDimension on_set_w
 }
 
 
-bool	GUIWidget_IsPointCollision(GUIWidget *_this,Vector2i point){
+bool	GUIWidget_IsPointCollision(GUIWidget *_this,ZG_Vector2i point){
 	GUIWidgetData *data=_this->data;
 	return Vector2i_PointRectCollision(
 				 point
@@ -262,7 +262,7 @@ bool	GUIWidget_IsPointCollision(GUIWidget *_this,Vector2i point){
 }
 
 
-Vector2i GUIWidget_GetPosition(GUIWidget *_this,WidgetPosition widget_pos){
+ZG_Vector2i GUIWidget_GetPosition(GUIWidget *_this,WidgetPosition widget_pos){
 	GUIWidgetData *data=_this->data;
 	switch(widget_pos){
 	case WIDGET_POSITION_WORLD:
@@ -332,7 +332,7 @@ void GUIWidget_Delete(GUIWidget *_this){
 
 	GUIWidgetData *_data= _this->data;
 
-	List_Delete(_data->widgets);
+	ZG_List_Delete(_data->widgets);
 	ZG_FREE(_data);
 	ZG_FREE(_this);
 }

@@ -1,47 +1,47 @@
-#ifndef __TEXT_BOX_H__
-#define __TEXT_BOX_H__
+#ifndef __ZG_TEXT_BOX_H__
+#define __ZG_TEXT_BOX_H__
 
 typedef enum{
-	HORIZONTAL_ALIGNMENT_LEFT	=0,
-	HORIZONTAL_ALIGNMENT_CENTER	=1,
-	HORIZONTAL_ALIGNMENT_RIGHT	=2,
-	HORIZONTAL_ALIGNMENT_JUSTIFY=3
+	ZG_HORIZONTAL_ALIGNMENT_LEFT	=0,
+	ZG_HORIZONTAL_ALIGNMENT_CENTER	=1,
+	ZG_HORIZONTAL_ALIGNMENT_RIGHT	=2,
+	ZG_HORIZONTAL_ALIGNMENT_JUSTIFY=3
 
-}HorizontalAlignment;
+}ZG_HorizontalAlignment;
 
 typedef enum{
-	VERTICAL_ALIGNMENT_TOP		=0,
-	VERTICAL_ALIGNMENT_CENTER	=1,
+	ZG_VERTICAL_ALIGNMENT_TOP		=0,
+	ZG_VERTICAL_ALIGNMENT_CENTER	=1,
 	VERTICAL_ALIGNMENT_BOTTOM	=2,
-}VerticalAlignment;
+}ZG_VerticalAlignment;
 
-typedef struct TextBox TextBox;
+typedef struct ZG_TextBox ZG_TextBox;
 
-struct TextBox{
+struct ZG_TextBox{
 	void *data; // internal data
 };
 
 // STATIC
-HorizontalAlignment 	TextBox_ParseTextAlign(const char *_text);
-VerticalAlignment 		TextBox_ParseVerticalAlignment(const char *_text);
+ZG_HorizontalAlignment 	ZG_TextBox_ParseTextAlign(const char *_text);
+ZG_VerticalAlignment 		ZG_TextBox_ParseVerticalAlignment(const char *_text);
 
 
-TextBox 	*	TextBox_New(void);
+ZG_TextBox 	*	ZG_TextBox_New(void);
 
-void			TextBox_SetDimensions(TextBox *_this, uint16_t w, uint16_t h);
-void	 		TextBox_SetBorderThickness(TextBox *_this, uint16_t _border_thickness);
-void	 		TextBox_SetBorderColor4f(TextBox *_this, Color4f _border_color);
-void	 		TextBox_SetWidth(TextBox *_this, uint16_t _width);
-void	 		TextBox_SetHeight(TextBox *_this, uint16_t _height);
-void	 		TextBox_SetHorizontalAlignment(TextBox *_this, HorizontalAlignment horizontal_alignment);
-void	 		TextBox_SetVerticalAlignment(TextBox *_this, VerticalAlignment vertical_alignment);
-void     		TextBox_SetText(TextBox *_this,const char *s, ...);
-const char 	*	TextBox_GetText(TextBox *_this);
-void     		TextBox_WSetText(TextBox *_this,const wchar_t *s, ...);
-void     		TextBox_SetFontFile(TextBox *_this, const char *_font_file);
-void     		TextBox_SetFontSize(TextBox *_this, uint16_t _font_file);
-uint16_t   		TextBox_GetFontSize(TextBox *_this);
-void	 		TextBox_Draw(TextBox *_this, Transform *transform, Color4f *color);
-void	 		TextBox_Delete(TextBox *_this);
+void			ZG_TextBox_SetDimensions(ZG_TextBox *_this, uint16_t w, uint16_t h);
+void	 		ZG_TextBox_SetBorderThickness(ZG_TextBox *_this, uint16_t _border_thickness);
+void	 		ZG_TextBox_SetBorderColor4f(ZG_TextBox *_this, ZG_Color4f _border_color);
+void	 		ZG_TextBox_SetWidth(ZG_TextBox *_this, uint16_t _width);
+void	 		ZG_TextBox_SetHeight(ZG_TextBox *_this, uint16_t _height);
+void	 		ZG_TextBox_SetHorizontalAlignment(ZG_TextBox *_this, ZG_HorizontalAlignment horizontal_alignment);
+void	 		ZG_TextBox_SetVerticalAlignment(ZG_TextBox *_this, ZG_VerticalAlignment vertical_alignment);
+void     		ZG_TextBox_SetText(ZG_TextBox *_this,const char *s, ...);
+const char 	*	ZG_TextBox_GetText(ZG_TextBox *_this);
+void     		ZG_TextBox_WSetText(ZG_TextBox *_this,const wchar_t *s, ...);
+void     		ZG_TextBox_SetFontFile(ZG_TextBox *_this, const char *_font_file);
+void     		ZG_TextBox_SetFontSize(ZG_TextBox *_this, uint16_t _font_file);
+uint16_t   		ZG_TextBox_GetFontSize(ZG_TextBox *_this);
+void	 		ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform, ZG_Color4f *color);
+void	 		ZG_TextBox_Delete(ZG_TextBox *_this);
 
 #endif

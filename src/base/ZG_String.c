@@ -1,9 +1,9 @@
-#include "zg_base.h"
+#include "_zg_base_.h"
 
 //------------------------------------------------------------------------------
 
 static ZG_List  * ZG_String_WSplitCharByAnyWCharInDelim(const wchar_t *str_in, const wchar_t *str_delim) {
-	ZG_List *elems=List_New();
+	ZG_List *elems=ZG_List_New();
 
 	if(str_in!=0 && wcscmp(str_in,L"")!=0){
 
@@ -20,7 +20,7 @@ static ZG_List  * ZG_String_WSplitCharByAnyWCharInDelim(const wchar_t *str_in, c
 		   size_t len=wcslen(token)*sizeof(wchar_t);
 		   wchar_t *text=malloc(len+sizeof(wchar_t));
 		   wcscpy(text,token);
-		   List_Add(elems,text);
+		   ZG_List_Add(elems,text);
 		   token = wcstok(NULL, str_delim
 	#ifdef __linux__
 				   ,&ptr
@@ -33,7 +33,7 @@ static ZG_List  * ZG_String_WSplitCharByAnyWCharInDelim(const wchar_t *str_in, c
 }
 
 static ZG_List * ZG_String_SplitCharByAnyCharInDelim(const char *str_in, const char *str_delim) {
-	ZG_List *elems=List_New();
+	ZG_List *elems=ZG_List_New();
 	//char delim_str[2]={delim,0};
 	char * token = strtok((char *)str_in, str_delim);
    // loop through the string to extract all other tokens
@@ -41,7 +41,7 @@ static ZG_List * ZG_String_SplitCharByAnyCharInDelim(const char *str_in, const c
 	   size_t len=strlen(token)+1;
 	   char *text=malloc(len+1);
 	   strcpy(text,token);
-	   List_Add(elems,text);
+	   ZG_List_Add(elems,text);
 	   token = strtok(NULL, str_delim);
    }
 
@@ -124,7 +124,7 @@ ZG_List *  ZG_String_SplitChar(const char *str_in, char delim) {
 
 
 ZG_List *  ZG_String_SplitString(const char *str_in, const char *delim) {
-    ZG_List *elems=List_New();
+    ZG_List *elems=ZG_List_New();
     char *str_it = (char *)str_in;
     char *str_found = NULL;
     size_t size_delim=strlen(delim);
@@ -136,7 +136,7 @@ ZG_List *  ZG_String_SplitString(const char *str_in, const char *delim) {
 			token=malloc((word_len+1)*sizeof(char));
 			memset(token,0,(word_len+1)*sizeof(char));
 			strncpy(token,str_it,word_len);
-			List_Add(elems,token);
+			ZG_List_Add(elems,token);
     	}
         str_it=str_found+size_delim;
     }
@@ -145,12 +145,12 @@ ZG_List *  ZG_String_SplitString(const char *str_in, const char *delim) {
 	token=malloc((size_end+1)*sizeof(char));
     memset(token,0,(size_end+1)*sizeof(char));
     strncpy(token,str_it,size_end);
-    List_Add(elems,token);
+    ZG_List_Add(elems,token);
     return elems;
 }
 
 ZG_List *  ZG_String_WSplitString(const wchar_t *str_in, const wchar_t *delim) {
-    ZG_List *elems=List_New();
+    ZG_List *elems=ZG_List_New();
     wchar_t *str_it = (wchar_t *)str_in;
     wchar_t *str_found = NULL;
     size_t size_delim=wcslen(delim);
@@ -162,7 +162,7 @@ ZG_List *  ZG_String_WSplitString(const wchar_t *str_in, const wchar_t *delim) {
 			token=malloc((word_len+1)*sizeof(wchar_t));
 			memset(token,0,(word_len+1)*sizeof(wchar_t));
 			wcsncpy(token,str_it,word_len);
-			List_Add(elems,token);
+			ZG_List_Add(elems,token);
     	}
         str_it=str_found+size_delim;
     }
@@ -171,7 +171,7 @@ ZG_List *  ZG_String_WSplitString(const wchar_t *str_in, const wchar_t *delim) {
 	token=malloc((size_end+1)*sizeof(wchar_t));
     memset(token,0,(size_end+1)*sizeof(wchar_t));
     wcsncpy(token,str_it,size_end);
-    List_Add(elems,token);
+    ZG_List_Add(elems,token);
     return elems;
 }
 
@@ -210,16 +210,16 @@ bool ZG_String_StringToInt(int * i, const char *s, int base){
 	errno = 0;
 	l = strtol(s, &end, base);
 	if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX) {
-		Log_Error("\"%s\" number overflow",s);
+		ZG_Log_Error("\"%s\" number overflow",s);
 		return false;
 	}
 	if ((errno == ERANGE && l == LONG_MIN) || l < INT_MIN) {
-		Log_Error("\"%s\" number underflow",s);
+		ZG_Log_Error("\"%s\" number underflow",s);
 		return false;
 
 	}
 	if (*s == '\0' || *end != '\0') {
-		Log_Error("\"%s\" number inconvertible",s);
+		ZG_Log_Error("\"%s\" number inconvertible",s);
 		return false;
 	}
 	*i = l;
@@ -232,15 +232,15 @@ bool ZG_String_StringToFloat(float * f, const char * s){
 	errno = 0;
 	l = strtof(s, &end);
 	if ((errno == ERANGE && l == FLT_MAX) || l > FLT_MAX) {
-		Log_Error("\"%s\" number overflow",s);
+		ZG_Log_Error("\"%s\" number overflow",s);
 		return false;
 	}
 	if ((errno == ERANGE && l == FLT_MIN) || l < FLT_MIN) {
-		Log_Error("\"%s\" number underflow",s);
+		ZG_Log_Error("\"%s\" number underflow",s);
 		return false;
 	}
 	if (*s == '\0' || *end != '\0') {
-		Log_Error("\"%s\" number inconvertible",s);
+		ZG_Log_Error("\"%s\" number inconvertible",s);
 		return false;
 	}
 	*f = l;

@@ -2,12 +2,12 @@
 
 
 
-Matrix4f Matrix4f_New(void){
+ZG_Matrix4f Matrix4f_New(void){
 	return Matrix4f_Identity();
 }
 
-Matrix4f Matrix4f_FromMatrix3f(const Matrix3f *_m3){
-	return (Matrix4f){
+ZG_Matrix4f Matrix4f_FromMatrix3f(const Matrix3f *_m3){
+	return (ZG_Matrix4f){
 		 _m3->e11,_m3->e12,_m3->e13	,0
 		,_m3->e21,_m3->e22,_m3->e23	,0
 		,_m3->e31,_m3->e32,_m3->e33	,0
@@ -15,9 +15,9 @@ Matrix4f Matrix4f_FromMatrix3f(const Matrix3f *_m3){
 	};
 }
 
-Matrix4f Matrix4f_Identity(void){
+ZG_Matrix4f Matrix4f_Identity(void){
 
-	Matrix4f m;
+	ZG_Matrix4f m;
 	float *m_ptr=&m.e11;
 
 	m_ptr[M4_E11]=1.0f;
@@ -44,8 +44,8 @@ Matrix4f Matrix4f_Identity(void){
 
 }
 
-Matrix4f Matrix4f_Inverse(const Matrix4f *_this){
-	Matrix4f m=Matrix4f_New();
+ZG_Matrix4f Matrix4f_Inverse(const ZG_Matrix4f *_this){
+	ZG_Matrix4f m=Matrix4f_New();
 
 	float *inverse=&m.e11;
 	const float *mvp=&_this->e11;
@@ -70,7 +70,7 @@ Matrix4f Matrix4f_Inverse(const Matrix4f *_this){
 		inverse[M4_E33] =  (mvp[M4_E11]*mvp[M4_E22]-mvp[M4_E21]*mvp[M4_E12])*invdet;
 
 	}else{
-		Log_ErrorF("Determinant zero");
+		ZG_Log_ErrorF("Determinant zero");
 	}
 
 	return m;

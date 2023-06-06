@@ -1,40 +1,40 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
-#include "ViewPort_GL.c"
+#include "ZG_ViewPort_GL.c"
 
-#define STACK_VIEW_PORTS_MAX 25
+#define ZG_STACK_VIEW_PORTS_MAX 25
 
 typedef struct{
-	ViewPort 		view_ports[STACK_VIEW_PORTS_MAX];
-	ViewPort 		current_viewport;
-	ViewPort 		first_viewport;
-	int				stk_viewport;
+	ZG_ViewPort 		view_ports[ZG_STACK_VIEW_PORTS_MAX];
+	ZG_ViewPort 		current_viewport;
+	ZG_ViewPort 		first_viewport;
+	int					stk_viewport;
 
-}ViewPortVars;
-
-
-static ViewPortVars * g_viewport_vars=NULL;
-
-static ViewPort 	ViewPort_New(int x ,int y,uint16_t _width, uint16_t _height, PROJECTION_MODE projection_mode);
-static float ViewPort_ScreenToWorldPosX_BuiltIn(ViewPort *view_port,int x);
-static float ViewPort_ScreenToWorldPosY_BuiltIn(ViewPort *view_port,int y);
+}ZG_ViewPortVars;
 
 
-void 		ViewPort_Init(uint16_t _width, uint16_t _height){
+static ZG_ViewPortVars * g_viewport_vars=NULL;
+
+static ZG_ViewPort 	ZG_ViewPort_New(int x ,int y,uint16_t _width, uint16_t _height, ZG_ProjectionMode projection_mode);
+static float 		ZG_ViewPort_ScreenToWorldPosX_BuiltIn(ZG_ViewPort *view_port,int x);
+static float 		ZG_ViewPort_ScreenToWorldPosY_BuiltIn(ZG_ViewPort *view_port,int y);
+
+
+void 		ZG_ViewPort_Init(uint16_t _width, uint16_t _height){
 	if(g_viewport_vars!=NULL){
-		Log_WarningF("ViewPort status already initialized");
+		Log_WarningF("ZG_ViewPort status already initialized");
 	}
 
-	g_viewport_vars=ZG_NEW(ViewPortVars);
-	g_viewport_vars->first_viewport=g_viewport_vars->current_viewport=ViewPort_New(0,0,_width,_height,PROJECTION_MODE_ORTHO);
+	g_viewport_vars=ZG_NEW(ZG_ViewPortVars);
+	g_viewport_vars->first_viewport=g_viewport_vars->current_viewport=ZG_ViewPort_New(0,0,_width,_height,ZG_PROJECTION_MODE_ORTHO);
 
 }
 
 
 //--------
 // PRIVATE
-static ViewPort  	ViewPort_New(int x, int y,uint16_t _width, uint16_t _height, PROJECTION_MODE projection_mode){
-	ViewPort view_port;
+static ZG_ViewPort  	ZG_ViewPort_New(int x, int y,uint16_t _width, uint16_t _height, ZG_ProjectionMode projection_mode){
+	ZG_ViewPort view_port;
 
 	memset(&view_port,0,sizeof(view_port));
 
@@ -46,9 +46,9 @@ static ViewPort  	ViewPort_New(int x, int y,uint16_t _width, uint16_t _height, P
 	view_port.one_over_width = 1.0f/(float)_width;
 	view_port.one_over_height = 1.0f/(float)_height;
 	//view_port.aspect_ratio = g_viewport_vars->aspect_ratio;//(float)Graphics_Width()/(float)Graphics_Height(); //640.0f/480.0f;//((float) (_width) / (float) (_height));
-	view_port.projection_origin=(Vector3f){
-			.x=ViewPort_ScreenToWorldPosX_BuiltIn(&view_port,0)
-			,.y=ViewPort_ScreenToWorldPosY_BuiltIn(&view_port,0)
+	view_port.projection_origin=(ZG_Vector3f){
+			.x=ZG_ViewPort_ScreenToWorldPosX_BuiltIn(&view_port,0)
+			,.y=ZG_ViewPort_ScreenToWorldPosY_BuiltIn(&view_port,0)
 			,.z=0
 	};
 
@@ -56,14 +56,14 @@ static ViewPort  	ViewPort_New(int x, int y,uint16_t _width, uint16_t _height, P
 }
 
 
-void 		ViewPort_SetView(ViewPort *  view_port){
+void 		ZG_ViewPort_SetView(ZG_ViewPort *  view_port){
 
 	g_viewport_vars->current_viewport=*view_port;
 
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		ViewPort_SetView_GL(view_port);
+	switch(ZG_Graphics_GetGraphicsApi()){
+	case ZG_GRAPHICS_API_GL:
+		ZG_ViewPort_GL_SetView(view_port);
 		break;
 	default:
 		break;
@@ -73,11 +73,11 @@ void 		ViewPort_SetView(ViewPort *  view_port){
 
 //--------
 // PUBLIC
-void ViewPort_RestoreView(ViewPort * view_port){
+void ZG_ViewPort_RestoreView(ZG_ViewPort * view_port){
 
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
-		ViewPort_RestoreView_GL(view_port);
+	switch(ZG_Graphics_GetGraphicsApi()){
+	case ZG_GRAPHICS_API_GL:
+		ZG_ViewPort_GL_RestoreView(view_port);
 		break;
 	default:
 		break;
@@ -89,19 +89,19 @@ void ViewPort_RestoreView(ViewPort * view_port){
 
 
 
-ViewPort *		ViewPort_Push(int x, int y,uint16_t width, uint16_t height, PROJECTION_MODE projection_mode){
+ZG_ViewPort *		ZG_ViewPort_Push(int x, int y,uint16_t width, uint16_t height, ZG_ProjectionMode projection_mode){
 	// PRE: Init should be initialized as well as opengl context
-	ViewPort * view_port=NULL;
+	ZG_ViewPort * view_port=NULL;
 	// set glview...
-	if(g_viewport_vars->stk_viewport<STACK_VIEW_PORTS_MAX){
+	if(g_viewport_vars->stk_viewport<ZG_STACK_VIEW_PORTS_MAX){
 
 		view_port=&g_viewport_vars->view_ports[g_viewport_vars->stk_viewport++];
-		*view_port=ViewPort_New(x,y,width,height, projection_mode);
+		*view_port=ZG_ViewPort_New(x,y,width,height, projection_mode);
 
-		ViewPort_SetView(view_port);
+		ZG_ViewPort_SetView(view_port);
 
 	}else{
-		Log_Error("Max view ports reached (Max: %i)",STACK_VIEW_PORTS_MAX);
+		ZG_Log_Error("Max view ports reached (Max: %i)",ZG_STACK_VIEW_PORTS_MAX);
 	}
 
 	return view_port;
@@ -109,15 +109,15 @@ ViewPort *		ViewPort_Push(int x, int y,uint16_t width, uint16_t height, PROJECTI
 }
 
 
-ViewPort * 	ViewPort_GetCurrent(void){
+ZG_ViewPort * 	ZG_ViewPort_GetCurrent(void){
 	return &g_viewport_vars->current_viewport;
 }
 
-ViewPort * 	ViewPort_Pop(void){
+ZG_ViewPort * 	ZG_ViewPort_Pop(void){
 
 	if(g_viewport_vars == NULL) return NULL;
 
-	ViewPort *viewport=NULL;
+	ZG_ViewPort *viewport=NULL;
 
 	if(g_viewport_vars->stk_viewport>0){
 
@@ -131,11 +131,11 @@ ViewPort * 	ViewPort_Pop(void){
 			viewport=&g_viewport_vars->first_viewport;
 		}
 
-		ViewPort_RestoreView(viewport);
+		ZG_ViewPort_RestoreView(viewport);
 
 
 	}else{
-		Log_ErrorF("Cannot pop view ports stack empty");
+		ZG_Log_ErrorF("Cannot pop view ports stack empty");
 	}
 	// restore glview...
 
@@ -144,91 +144,89 @@ ViewPort * 	ViewPort_Pop(void){
 
 
 
-float ViewPort_ScreenToWorldPosX_BuiltIn(ViewPort * view_port,int x2d){
+float ZG_ViewPort_ScreenToWorldPosX_BuiltIn(ZG_ViewPort * view_port,int x2d){
 
-	return (-Graphics_GetAspectRatio() + 2.0f*(float)(x2d)*(Graphics_GetAspectRatio()*view_port->one_over_width))*1;
+	return (-ZG_Graphics_GetAspectRatio() + 2.0f*(float)(x2d)*(ZG_Graphics_GetAspectRatio()*view_port->one_over_width))*1;
 }
 
-float ViewPort_ScreenToWorldPosY_BuiltIn(ViewPort * view_port,int y2d){
+float ZG_ViewPort_ScreenToWorldPosY_BuiltIn(ZG_ViewPort * view_port,int y2d){
 
 	return (1.0f - 2.0f*(float)(y2d)*view_port->one_over_height)*1;
 }
 
-int ViewPort_WorldToScreenPosX_BuiltIn(ViewPort * view_port,float x3d){
-	return (x3d+Graphics_GetAspectRatio())*Graphics_GetOneOverAspectRatio()*0.5f*view_port->width;
+int ZG_ViewPort_WorldToScreenPosX_BuiltIn(ZG_ViewPort * view_port,float x3d){
+	return (x3d+ZG_Graphics_GetAspectRatio())*Graphics_GetOneOverAspectRatio()*0.5f*view_port->width;
 }
 
-int ViewPort_WorldToScreenPosY_BuiltIn(ViewPort * view_port,float y3d){
+int ZG_ViewPort_WorldToScreenPosY_BuiltIn(ZG_ViewPort * view_port,float y3d){
 	return (y3d-1)*(-0.5f)*view_port->height;
 }
 
-
-
-uint16_t ViewPort_CurrentWidth(void){
+uint16_t ZG_ViewPort_CurrentWidth(void){
 	return g_viewport_vars->current_viewport.width;
 }
 
-uint16_t ViewPort_CurrentHeight(void){
+uint16_t ZG_ViewPort_CurrentHeight(void){
 	return g_viewport_vars->current_viewport.height;
 }
 
-int ViewPort_WorldToScreenPosX(float x3d){
-	return ViewPort_WorldToScreenPosX_BuiltIn(&g_viewport_vars->current_viewport, x3d);
+int ZG_ViewPort_WorldToScreenPosX(float x3d){
+	return ZG_ViewPort_WorldToScreenPosX_BuiltIn(&g_viewport_vars->current_viewport, x3d);
 }
 
-int ViewPort_WorldToScreenPosY(float y3d){
-	return ViewPort_WorldToScreenPosY_BuiltIn(&g_viewport_vars->current_viewport, y3d);
+int ZG_ViewPort_WorldToScreenPosY(float y3d){
+	return ZG_ViewPort_WorldToScreenPosY_BuiltIn(&g_viewport_vars->current_viewport, y3d);
 }
 
-Vector2i ViewPort_WorldToScreen(float x3d, float y3d){
-	return (Vector2i){
-		.x=ViewPort_WorldToScreenPosY(x3d)
-		,.y=ViewPort_WorldToScreenPosY(y3d)
+ZG_Vector2i ZG_ViewPort_WorldToScreen(float x3d, float y3d){
+	return (ZG_Vector2i){
+		.x=ZG_ViewPort_WorldToScreenPosY(x3d)
+		,.y=ZG_ViewPort_WorldToScreenPosY(y3d)
 	};
 
 }
 
-float ViewPort_ScreenToWorldPositionX(int x2d){
-	return ViewPort_ScreenToWorldPosX_BuiltIn(&g_viewport_vars->current_viewport, x2d);
+float ZG_ViewPort_ScreenToWorldPositionX(int x2d){
+	return ZG_ViewPort_ScreenToWorldPosX_BuiltIn(&g_viewport_vars->current_viewport, x2d);
 }
 
-float ViewPort_ScreenToWorldPositionY(int y2d){
-	return ViewPort_ScreenToWorldPosY_BuiltIn(&g_viewport_vars->current_viewport, y2d);
+float ZG_ViewPort_ScreenToWorldPositionY(int y2d){
+	return ZG_ViewPort_ScreenToWorldPosY_BuiltIn(&g_viewport_vars->current_viewport, y2d);
 }
 
-Vector3f ViewPort_ScreenToWorld(int x, int y){
-	Vector3f v3d=(Vector3f){
-		.x=ViewPort_ScreenToWorldPositionX(x)
-		,.y=ViewPort_ScreenToWorldPositionY(y)
+ZG_Vector3f ZG_ViewPort_ScreenToWorld(int x, int y){
+	ZG_Vector3f v3d=(ZG_Vector3f){
+		.x=ZG_ViewPort_ScreenToWorldPositionX(x)
+		,.y=ZG_ViewPort_ScreenToWorldPositionY(y)
 		,.z=0
 	};
 	return v3d;
 }
 
-Vector3f ViewPort_GetProjectionOrigin(void){
+ZG_Vector3f ZG_ViewPort_GetProjectionOrigin(void){
 	return g_viewport_vars->current_viewport.projection_origin;
 }
 
-float ViewPort_ScreenToWorldWidth(int  w){
-	return 2*(w)*(Graphics_GetAspectRatio()*g_viewport_vars->current_viewport.one_over_width);
+float ZG_ViewPort_ScreenToWorldWidth(int  w){
+	return 2*(w)*(ZG_Graphics_GetAspectRatio()*g_viewport_vars->current_viewport.one_over_width);
 }
 
-float ViewPort_ScreenToWorldHeight(int h){
+float ZG_ViewPort_ScreenToWorldHeight(int h){
 	return 2*(h)*(g_viewport_vars->current_viewport.one_over_height);
 }
 
-Vector3f ViewPort_ScreenToWorldDimension2i(int width, int height){
-	Vector3f v3d=(Vector3f){
-		.x=ViewPort_ScreenToWorldWidth(width)
-		,.y=ViewPort_ScreenToWorldHeight(height)
+ZG_Vector3f ZG_ViewPort_ScreenToWorldDimension2i(int width, int height){
+	ZG_Vector3f v3d=(ZG_Vector3f){
+		.x=ZG_ViewPort_ScreenToWorldWidth(width)
+		,.y=ZG_ViewPort_ScreenToWorldHeight(height)
 		,.z=0
 	};
 	return v3d;
 }
 
-void 		ViewPort_DeInit(void){
+void 		ZG_ViewPort_DeInit(void){
 	if(g_viewport_vars == NULL) {
-		Log_ErrorF("Viewport not init");
+		ZG_Log_ErrorF("Viewport not init");
 		return;
 	}
 

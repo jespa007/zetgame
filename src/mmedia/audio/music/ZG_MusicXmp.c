@@ -39,7 +39,7 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 	//current_playing_row = last_played_row = -1;
 
 	if ((ctx = xmp_create_context()) == NULL) {
-		Log_ErrorF("I can't create context!");
+		ZG_Log_ErrorF("I can't create context!");
 		return false;
 	}
 
@@ -58,7 +58,7 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 		}
 
 		xmp_free_context(ctx);
-		Log_Error("Cannot open module from memory: %s!",error_str);
+		ZG_Log_Error("Cannot open module from memory: %s!",error_str);
 		return false;
 	}
 
@@ -67,7 +67,7 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 
 	if(sp_xmp == 0){
 		xmp_free_context(ctx);
-		Log_Error("Error allocating %i bytes from memory!", sizeof(MusicXmp));
+		ZG_Log_Error("Error allocating %i bytes from memory!", sizeof(MusicXmp));
 		return false;
 	}
 
@@ -109,7 +109,7 @@ bool MusicXmp_Load(MixerSound *sp_info, const char *file){
 	if(buffer!=NULL){
 		bool res=MusicXmp_LoadFromMemory(sp_info, buffer->ptr, buffer->len);
 
-		BufferByte_Delete(buffer);
+		ZG_BufferByte_Delete(buffer);
 
 		return res;
 	}
@@ -137,7 +137,7 @@ void MusicXmp_Play(MixerSound *sp_info){
 
 	MusicXmp *s_xmp=(MusicXmp *)sp_info->data;
 	if(xmp_start_player(s_xmp->ctx,SPLAYER_FREQUENCY,0) != 0){
-		Log_ErrorF("Error starting module");
+		ZG_Log_ErrorF("Error starting module");
 	}
 }
 
@@ -246,7 +246,7 @@ void MusicXmp_Update(MixerSound *sp_info){
 			break;
 		}
 
-		Log_Error("Error playing xmp:%s",error_str);
+		ZG_Log_Error("Error playing xmp:%s",error_str);
 	}
 
 	wave_buffer->block_len[n_current_block]=g_mixer_vars->frame_size;

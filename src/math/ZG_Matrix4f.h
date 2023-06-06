@@ -18,19 +18,19 @@
 #define M4_E43	14
 #define M4_E44	15
 
-typedef struct Matrix4f Matrix4f;
+typedef struct ZG_Matrix4f ZG_Matrix4f;
 
-struct Matrix4f{
+struct ZG_Matrix4f{
 	float  e11,e12,e13,e14
 	      ,e21,e22,e23,e24
 		  ,e31,e32,e33,e34
 		  ,e41,e42,e43,e44;
 };
 
-Matrix4f Matrix4f_New(void);
-Matrix4f Matrix4f_FromMatrix3f(const Matrix3f *_m3);
-Matrix4f Matrix4f_Identity(void);
-Vector3f Matrix4f_Transformv3f(const Matrix4f *_this, Vector3f v);
-Matrix4f Matrix4f_Inverse(const Matrix4f *_this);
+ZG_Matrix4f Matrix4f_New(void);
+ZG_Matrix4f Matrix4f_FromMatrix3f(const Matrix3f *_m3);
+ZG_Matrix4f Matrix4f_Identity(void);
+ZG_Vector3f Matrix4f_Transformv3f(const ZG_Matrix4f *_this, ZG_Vector3f v);
+ZG_Matrix4f Matrix4f_Inverse(const ZG_Matrix4f *_this);
 
 #endif

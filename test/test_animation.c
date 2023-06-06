@@ -7,7 +7,7 @@ void convert_to_displacement2d_x(float *vx, size_t count){
 
 	for(;it<count;){
 
-		vx[it+1]=ViewPort_ScreenToWorldWidth(vx[it+1]);
+		vx[it+1]=ZG_ViewPort_ScreenToWorldWidth(vx[it+1]);
 		it+=2;
 	}
 }
@@ -17,7 +17,7 @@ void convert_to_displacement2d_y(float *vy, size_t count){
 
 	for(;it<count;){
 
-		vy[it+1]=ViewPort_ScreenToWorldHeight(vy[it+1]);
+		vy[it+1]=ZG_ViewPort_ScreenToWorldHeight(vy[it+1]);
 		it+=2;
 	}
 }
@@ -35,8 +35,8 @@ int main(int argc, char *argv[]){
 	float inc_y=STEP_INC; // [-1 to 1]
 	float inc_scale=STEP_INC; // [0.5 to 1.5]
 
-	Texture * text_png = Texture_NewFromFile("../../../test/data/images/test.png");
-	Texture * text_jpg = Texture_NewFromFile("../../../test/data/images/test.jpg");
+	ZG_Texture * text_png = ZG_Texture_NewFromFile("../../../test/data/images/test.png");
+	ZG_Texture * text_jpg = ZG_Texture_NewFromFile("../../../test/data/images/test.jpg");
 	TransformAnimation 			*trs_animation=TransformAnimation_New();
 	TransformAction	    		*act_translate=TransformAction_New();
 
@@ -60,24 +60,24 @@ int main(int argc, char *argv[]){
 
 		};
 
-	convert_to_displacement2d_x(tr_values_x,ARRAY_SIZE(tr_values_x));
-	convert_to_displacement2d_y(tr_values_y,ARRAY_SIZE(tr_values_y));
+	convert_to_displacement2d_x(tr_values_x,ZG_ARRAY_SIZE(tr_values_x));
+	convert_to_displacement2d_y(tr_values_y,ZG_ARRAY_SIZE(tr_values_y));
 
 	// set key frames x an y
 	TransformAction_SetKeyframesTrack(
 		act_translate
-		,TRANSFORM_COMPONENT_TRANSLATE_X
+		,ZG_TRANSFORM_COMPONENT_TRANSLATE_X
 		,EASE_IN_OUT_SINE
 		,tr_values_x
-		,ARRAY_SIZE(tr_values_x)
+		,ZG_ARRAY_SIZE(tr_values_x)
 	);
 
 	TransformAction_SetKeyframesTrack(
 		act_translate
-		,TRANSFORM_COMPONENT_TRANSLATE_Y
+		,ZG_TRANSFORM_COMPONENT_TRANSLATE_Y
 		,EASE_IN_OUT_SINE
 		,tr_values_y
-		,ARRAY_SIZE(tr_values_y)
+		,ZG_ARRAY_SIZE(tr_values_y)
 	);
 
 	TransformAnimation_StartAction(
@@ -86,14 +86,14 @@ int main(int argc, char *argv[]){
 			,SDL_GetTicks()
 			,1);
 
-	Appearance *appearance=Appearance_New();
+	ZG_Appearance *appearance=Appearance_New();
 	Appearance_SetColor3i(appearance,1,0,0);
 	appearance->texture=text_png;
 
-	Transform transform=Transform_New();
+	ZG_Transform transform=ZG_Transform_New();
 
 
-	Graphics_SetBackgroundColor(Color4f_FromHex(0xFFFF));
+	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
 
 	do{
 		Graphics_BeginRender();
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 			TransformAnimation_StartTween(
 				  trs_animation
 				 , SDL_GetTicks()
-				, TRANSFORM_COMPONENT_SCALE_Y
+				, ZG_TRANSFORM_COMPONENT_SCALE_Y
 				, EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]){
 			TransformAnimation_StartTween(
 				  trs_animation
 				, SDL_GetTicks()
-				, TRANSFORM_COMPONENT_SCALE_X
+				, ZG_TRANSFORM_COMPONENT_SCALE_X
 				, EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]){
 			TransformAnimation_StartTween(
 				 trs_animation
 				, SDL_GetTicks()
-				, TRANSFORM_COMPONENT_ROTATE_Z
+				, ZG_TRANSFORM_COMPONENT_ROTATE_Z
 				, EASE_LINEAR
 				, 0
 				, 90
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]){
 			);
 		}
 
-		Graphics_Draw(&transform,Geometry_GetDefaultRectangleTextured(),appearance);
+		Graphics_Draw(&transform,ZG_Geometry_GetDefaultRectangleTextured(),appearance);
 
 		x+=inc_x;
 		y+=inc_y;
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
 		if(scale< 0.5f || scale > 2.0f) inc_scale*=-1;
 
 
-		Graphics_DrawRectangleFilled4i(10,10,100,100,Color4f_FromHex(0xFF));
+		Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
 
 		if(K_T){
 			Graphics_ToggleFullscreen();
@@ -169,12 +169,12 @@ int main(int argc, char *argv[]){
 	TransformAnimation_Delete(trs_animation);
 	TransformAction_Delete(act_translate);
 
-	//Transform_Delete(transform);
+	//ZG_Transform_Delete(transform);
 
 
-	Texture_Delete(text_png);
-	Texture_Delete(text_jpg);
-	//TTFont_Delete(font);
+	ZG_Texture_Delete(text_png);
+	ZG_Texture_Delete(text_jpg);
+	//ZG_TTFont_Delete(font);
 	Appearance_Delete(appearance);
 
 

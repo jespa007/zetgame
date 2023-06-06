@@ -1,21 +1,21 @@
-#ifndef __IMAGE_H__
-#define __IMAGE_H__
+#ifndef __ZG_IMAGE_H__
+#define __ZG_IMAGE_H__
 
-typedef struct Image Image;
+typedef struct ZG_Image ZG_Image;
 
-struct Image{
+struct ZG_Image{
 	void *data;
 };
 
-Image * 		Image_NewFromMemory(uint8_t *ptr, size_t ptr_len);
-Image *			Image_NewFromFile(const char *_file);
-Image *			Image_New(uint16_t _with,uint16_t _height);
+ZG_Image * 		ZG_Image_NewFromMemory(uint8_t *ptr, size_t ptr_len);
+ZG_Image *		ZG_Image_NewFromFile(const char *_file);
+ZG_Image *		ZG_Image_New(uint16_t _with,uint16_t _height);
 
-uint16_t 		Image_GetHeight(Image *_this);
-uint16_t 		Image_GetWidth(Image *_this);
-uint8_t 	*	Image_GetPixels(Image *_this);
+uint16_t 		ZG_Image_GetHeight(ZG_Image *_this);
+uint16_t 		ZG_Image_GetWidth(ZG_Image *_this);
+uint8_t 	*	ZG_Image_GetPixels(ZG_Image *_this);
 
 
-void 			Image_Delete(Image *_this);
+void 			ZG_Image_Delete(ZG_Image *_this);
 
 #endif

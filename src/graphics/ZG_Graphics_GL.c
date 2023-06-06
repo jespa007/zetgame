@@ -1,34 +1,34 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 //bool screen_shoot_request;
 uint32_t start_ticks;
 
-#define GRAPHICS_GL_DISABLE_VSYNCH
+#define ZG_GRAPHICS_GL_DISABLE_VSYNCH
 
 //static SDL_GLContext * g_sdl_gl_context = NULL;
 
 
-bool Graphics_GL_Init(void){
+bool ZG_Graphics_GL_Init(void){
 
 	// Attach the OpenGL context to our window
 // Only creates opengl context in Windows environment. In linux is already created
 #ifdef _WIN32
 	SDL_GLContext *g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
 	if(g_sdl_gl_context == NULL){
-		Log_Error("Cannot create gl context:%s",SDL_GetError());
+		ZG_Log_Error("Cannot create gl context:%s",SDL_GetError());
 		return false;
 	}
 
 	/*if(SDL_GL_MakeCurrent(g_graphics_vars->sdl_window,
 			g_sdl_gl_context)!=0){
-		Log_Error("Cannot make current context:%s",SDL_GetError());
+		ZG_Log_Error("Cannot make current context:%s",SDL_GetError());
 		return false;
 	}*/
 #endif
 
 	// Disable vsync (Because it takes lot of high CPU)
 	SDL_GL_SetSwapInterval(
-#ifdef GRAPHICS_GL_DISABLE_VSYNCH
+#ifdef ZG_GRAPHICS_GL_DISABLE_VSYNCH
 			0
 #else
 			1
@@ -40,7 +40,7 @@ bool Graphics_GL_Init(void){
 	// ini opengl core functions...
 	glExtraIni();
 
-	Log_Info("OpenGL %s Shading language:%s", glGetString(GL_VERSION),glGetString ( GL_SHADING_LANGUAGE_VERSION ));
+	ZG_Log_Info("OpenGL %s Shading language:%s", glGetString(GL_VERSION),glGetString ( GL_SHADING_LANGUAGE_VERSION ));
 
 	// return to modelview matrix
 	glShadeModel(GL_SMOOTH);                    // shading mathod: _GL_SMOOTH or _GL_FLAT
@@ -86,7 +86,7 @@ bool Graphics_GL_Init(void){
 	glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, pda);
 
 	glPointSize(psr[1]);
-	Log_Info("Point sizes (%f,%f) ",psr[0],psr[1]);
+	ZG_Log_Info("Point sizes (%f,%f) ",psr[0],psr[1]);
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
@@ -97,10 +97,10 @@ bool Graphics_GL_Init(void){
 
 }
 
-void Graphics_GL_SetCameraTransform(Transform *transform){
-	Vector3f rotate,translate;
-	Quaternion q_inv;
-	Matrix4f m_inv;
+void ZG_Graphics_GL_SetCameraTransform(ZG_Transform *transform){
+	ZG_Vector3f rotate,translate;
+	ZG_Quaternion q_inv;
+	ZG_Matrix4f m_inv;
 
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
@@ -109,14 +109,14 @@ void Graphics_GL_SetCameraTransform(Transform *transform){
 	rotate = transform->rotate;
 
 	// rotate negate...
-	q_inv=Quaternion_FromEulerV3f(
-			(Vector3f){
+	q_inv=ZG_Quaternion_FromEulerV3f(
+			(ZG_Vector3f){
 				.x=-rotate.x
 				,.y=-rotate.y
 				,.z=-rotate.z
 			}
 	);
-	m_inv=Quaternion_ToMatrix4f(q_inv);
+	m_inv=ZG_Quaternion_ToMatrix4f(q_inv);
 
 
 	glLoadMatrixf(&m_inv.e11);
@@ -124,21 +124,21 @@ void Graphics_GL_SetCameraTransform(Transform *transform){
 	glTranslatef(-translate.x, -translate.y,-translate.z);
 }
 
-void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){
+void ZG_Graphics_GL_SetProjectionMode(ZG_ProjectionMode projection_mode){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glViewport(0, 0, Graphics_GetWindowWidth(), Graphics_GetWindowHeight());
+	glViewport(0, 0, ZG_Graphics_GetWindowWidth(), ZG_Graphics_GetWindowHeight());
 
 
 	switch(projection_mode){
-	case PROJECTION_MODE_ORTHO:
-		glOrtho(-Graphics_GetAspectRatio(), Graphics_GetAspectRatio(), -1, 1, -1, 1);
+	case ZG_PROJECTION_MODE_ORTHO:
+		glOrtho(-ZG_Graphics_GetAspectRatio(), ZG_Graphics_GetAspectRatio(), -1, 1, -1, 1);
 		break;
-	case PROJECTION_MODE_PERSPECTIVE:
+	case ZG_PROJECTION_MODE_PERSPECTIVE:
 
 		glPerspective(90.0f, //90.0f,  // field of view
-				Graphics_GetAspectRatio(), // shape of viewport rectangle
+				ZG_Graphics_GetAspectRatio(), // shape of viewport rectangle
 				.01f,         // Min Z: how far from eye position does view start
 				500.0f);       // max Z: how far from eye position does view extend
 
@@ -151,32 +151,32 @@ void Graphics_GL_SetProjectionMode(PROJECTION_MODE projection_mode){
 }
 
 
-void Graphics_GL_SetColor4f(float _r, float _g, float _b, float _a){
+void ZG_Graphics_GL_SetColor4f(float _r, float _g, float _b, float _a){
 	glColor4f(_r, _g, _b, _a);
 }
 
-void Graphics_GL_SetLineThickness( uint8_t _thickness){
+void ZG_Graphics_GL_SetLineThickness( uint8_t _thickness){
 	glLineWidth(_thickness); // set line width
 }
 
-void Graphics_GL_SetPointSize( uint8_t _point_size){
+void ZG_Graphics_GL_SetPointSize( uint8_t _point_size){
 	glPointSize(_point_size); // set line width
 }
 
-void Graphics_GL_ClearScreen(Color4f color) { // start render and clear background...
+void ZG_Graphics_GL_ClearScreen(ZG_Color4f color) { // start render and clear background...
 	glClearColor(color.r,color.g,color.b,color.a);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 //begin/end
-void Graphics_GL_StartRender(void) { // start render and clear background...
+void ZG_Graphics_GL_StartRender(void) { // start render and clear background...
 	glClearColor(g_graphics_vars->background_color.r,g_graphics_vars->background_color.g,g_graphics_vars->background_color.b,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	start_ticks=SDL_GetTicks();
 
 }
 
-void Graphics_GL_EndRender(void) {
+void ZG_Graphics_GL_EndRender(void) {
 	float diff = (float)(SDL_GetTicks()-start_ticks);
 	int to_16 = (16-diff);
 
@@ -190,7 +190,7 @@ void Graphics_GL_EndRender(void) {
 	SDL_GL_SwapWindow(g_graphics_vars->sdl_window);
 
 
-#ifdef GRAPHICS_GL_DISABLE_VSYNCH
+#ifdef ZG_GRAPHICS_GL_DISABLE_VSYNCH
 	// because we had disabled vsync we have to wait for 60 FPS...
 	if(to_16 > 0){
 		SDL_Delay(to_16);
@@ -198,9 +198,9 @@ void Graphics_GL_EndRender(void) {
 #endif
 }
 
-SDL_Surface * Graphics_GL_ScreenShoot(void){
+SDL_Surface * ZG_Graphics_GL_ScreenShoot(void){
 
-	ViewPort *view_port=ViewPort_GetCurrent();
+	ZG_ViewPort *view_port=ZG_ViewPort_GetCurrent();
 	SDL_Surface * srf_screenshoot = SDL_CreateRGBSurface(SDL_SWSURFACE, view_port->width, view_port->height, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
 	glReadPixels(0, 0, view_port->width, view_port->height, GL_RGB, GL_UNSIGNED_BYTE, srf_screenshoot->pixels);
@@ -210,13 +210,13 @@ SDL_Surface * Graphics_GL_ScreenShoot(void){
 }
 
 
-void Graphics_GL_DeInit(void) {
+void ZG_Graphics_GL_DeInit(void) {
 
 	GLenum e=glGetError();
 	if(e!=GL_NO_ERROR){
-		Log_Warning("OpenGL (%x): There's some OGL problems. Enable debug to check file/line",e);
+		ZG_Log_Warning("OpenGL (%x): There's some OGL problems. Enable debug to check file/line",e);
 	}else{
-		Log_InfoF("OpenGL: OK");
+		ZG_Log_InfoF("OpenGL: OK");
 	}
 
 }

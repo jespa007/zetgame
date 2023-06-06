@@ -13,11 +13,11 @@ int main(int argc, char *argv[]){
 	ZetGame_Init(&params);
 	ZetGame_SetDebugMode(true);
 
-	TextureManager * texture_manager= TextureManager_New();
-	//TTFontManager * ttfont_manager= TTFontManager_New();
+	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
+	//ZG_TTFontManager * ttfont_manager= ZG_TTFontManager_New();
 
-	TTFont_SetFontResourcePath("../../../test/data/fonts");
-	TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
+	ZG_TTFont_SetFontResourcePath("../../../test/data/fonts");
+	ZG_TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
 
 
 	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager);
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
 		)){
 
 		if((window=GUIWindowManager_Get(window_manager,WINDOW_NAME))==NULL) {
-			Log_Error("Cannot get window '%s'",WINDOW_NAME);
+			ZG_Log_Error("Cannot get window '%s'",WINDOW_NAME);
 		}
 	}
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 
 	if(window){
 
-		//TextBox_SetText(gui_viewer->widget->textbox,"1");
+		//ZG_TextBox_SetText(gui_viewer->widget->textbox,"1");
 		//GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
 			Graphics_BeginRender();
@@ -56,8 +56,8 @@ int main(int argc, char *argv[]){
 
 	//GUITexture_Delete(gui_viewer);
 	//GUIWindow_Delete(window);
-	TextureManager_Delete(texture_manager);
-//	TTFontManager_Delete(ttfont_manager);
+	ZG_TextureManager_Delete(texture_manager);
+//	ZG_TTFontManager_Delete(ttfont_manager);
 	GUIWindowManager_Delete(window_manager);
 
 	ZetGame_DeInit();

@@ -15,14 +15,14 @@
 typedef struct{
 	ZG_List 		*	map_render_z[MAX_Z]; // a map of lists of maximum of MAX_Z
 	SGCamera 	* 	sg_camera;
-	Color4f			background_color;
+	ZG_Color4f			background_color;
 }SGRenderData;
 
 static SGCamera * default_camera_render = NULL;
 
 void SGRender_Init(void){
 	default_camera_render=SGCamera_New();
-	default_camera_render->projection_mode=PROJECTION_MODE_ORTHO;
+	default_camera_render->projection_mode=ZG_PROJECTION_MODE_ORTHO;
 }
 
 void SGRender_DeInit(void){
@@ -39,10 +39,10 @@ static void SGRender_SetSGCamera(SGCamera *_camera){
 
 	Graphics_SetProjectionMode(sg_camera->projection_mode);
 
-	switch(Graphics_GetGraphicsApi()){
+	switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
-		case GRAPHICS_API_GL:
+		case ZG_GRAPHICS_API_GL:
 			SGRender_GL_SetSGCamera(sg_camera);
 			break;
 	}
@@ -58,7 +58,7 @@ SGRender * SGRender_New(void){
 
 	// init data...
 	for(unsigned z=0; z < MAX_Z; z++){
-		data->map_render_z[z]=List_New();
+		data->map_render_z[z]=ZG_List_New();
 	}
 
 
@@ -77,15 +77,15 @@ void SGRender_Begin(SGRender *_this,SGCamera * sg_camera){
 
 void SGRender_SetBackgroundColor3i(SGRender *_this, uint8_t r, uint8_t g, uint8_t b){
 	SGRenderData *data=(SGRenderData *)_this->data;
-	data->background_color.r=r*ONE_OVER_256;
-	data->background_color.g=g*ONE_OVER_256;
-	data->background_color.b=b*ONE_OVER_256;
+	data->background_color.r=r*ZG_ONE_OVER_256;
+	data->background_color.g=g*ZG_ONE_OVER_256;
+	data->background_color.b=b*ZG_ONE_OVER_256;
 }
 
 void SGRender_AddNodeToDraw(SGRender *_this, TransformNode *sg_node){
 	int idx_z =0;
-	Transform *transform_camera,*transform_node;
-	Vector3f origin,camera_space;
+	ZG_Transform *transform_camera,*transform_node;
+	ZG_Vector3f origin,camera_space;
 	SGRenderData *data=NULL;
 	SGCamera *sg_camera=NULL;
 
@@ -117,7 +117,7 @@ void SGRender_AddNodeToDraw(SGRender *_this, TransformNode *sg_node){
 
 
 
-	List_Add(data->map_render_z[idx_z],sg_node);
+	ZG_List_Add(data->map_render_z[idx_z],sg_node);
 
 }
 
@@ -134,7 +134,7 @@ void SGRender_End(SGRender *_this){
 		for(int n=0; n < sg_nodes->count ;n++)
 		{
 			TransformNode *node=sg_nodes->items[n];
-			Transform *transform_node=TransformNode_GetTransform(node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
+			ZG_Transform *transform_node=TransformNode_GetTransform(node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
 
 			Graphics_Draw(transform_node, node->geometry, node->appearance);
 		}
@@ -150,7 +150,7 @@ void SGRender_Delete(SGRender *_this){
 	SGRenderData *data=_this->data;
 
 	for(unsigned z=0; z < MAX_Z; z++){
-		List_Delete(data->map_render_z[z]);
+		ZG_List_Delete(data->map_render_z[z]);
 	}
 
 

@@ -132,7 +132,7 @@ bool CParticleEmitter::loadFromEmitterInfo(
 		}
 
 		if(!found)
-			Log_Warning("Property \"%s\" don't reconized.",list_attribs[i].c_str());
+			ZG_Log_Warning("Property \"%s\" don't reconized.",list_attribs[i].c_str());
 
 	}
 
@@ -150,7 +150,7 @@ bool CParticleEmitter::loadFromEmitterInfo(
 		}
 
 		if(!found)
-			Log_Warning("Property \"%s\" don't reconized.",list_app_attribs[i].c_str());
+			ZG_Log_Warning("Property \"%s\" don't reconized.",list_app_attribs[i].c_str());
 	}
 
 	return load(
@@ -400,7 +400,7 @@ bool CParticleEmitter::load(
 }
 
 void CParticleEmitter::updateAndDraw(){
-	//Log_Info("hola!");
+	//ZG_Log_Info("hola!");
 	float life,new_life;
 	CScreenObject *m_scrParent = dynamic_cast<CScreenObject *>(m_parent);
 	CMatrix3f *m3=NULL;

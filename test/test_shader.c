@@ -6,7 +6,7 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
-	Shader *s=Shader_Load(
+	ZG_Shader *s=Shader_Load(
 		"../../../test/data/shaders/sample"
 	);
 

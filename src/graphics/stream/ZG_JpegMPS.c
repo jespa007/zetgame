@@ -77,8 +77,8 @@ void fill_circle2(SDL_Surface *surface, int cx, int cy, int radius, uint32_t pix
 }
 
 bool JpegMPS_GfxSetup(JpegMPSData *data){
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
+	switch(ZG_Graphics_GetGraphicsApi()){
+	case ZG_GRAPHICS_API_GL:
 		return JpegMPS_GL_SetupGfx(data);
 		break;
 	}
@@ -247,7 +247,7 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 	// if we can write ...
 	if(HttpServerMPS_CanWrite(data->http_server_mps)){
 
-		Vector2i mp=Input_GetMousePosition();
+		ZG_Vector2i mp=Input_GetMousePosition();
 
 		SDL_Rect rect=(SDL_Rect){
 				.x=(int)((mp.x-RADIUS_CIRCLE_CURSOR)*data->scale_x)
@@ -291,8 +291,8 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 }
 
 void JpegMPS_CaptureFrame(JpegMPSData *data){
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
+	switch(ZG_Graphics_GetGraphicsApi()){
+	case ZG_GRAPHICS_API_GL:
 		JpegMPS_GL_CaptureFrame(data);
 		break;
 	}
@@ -301,8 +301,8 @@ void JpegMPS_CaptureFrame(JpegMPSData *data){
 }
 
 void JpegMPS_FetchFrame(JpegMPSData *data){
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
+	switch(ZG_Graphics_GetGraphicsApi()){
+	case ZG_GRAPHICS_API_GL:
 		JpegMPS_GL_FetchFrame(data);
 		break;
 	}
@@ -350,8 +350,8 @@ void JpegMPS_Delete(JpegMPS *_this){
 	HttpServerMPS_Delete(data->http_server_mps);
 
 	//SDL_RWclose(rw);
-	switch(Graphics_GetGraphicsApi()){
-	case GRAPHICS_API_GL:
+	switch(ZG_Graphics_GetGraphicsApi()){
+	case ZG_GRAPHICS_API_GL:
 		JpegMPS_Delete_GL(data);
 		break;
 	}

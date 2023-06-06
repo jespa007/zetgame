@@ -1,6 +1,6 @@
 // ccolor.hpp
-#ifndef __ZG_ZG_TERM_H__
-#define __ZG_ZG_TERM_H__
+#ifndef __ZG_TERM_H__
+#define __ZG_TERM_H__
 
 
 typedef enum{

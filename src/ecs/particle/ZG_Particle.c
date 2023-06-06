@@ -231,11 +231,11 @@ void CParticle::update() {
 			if(size_variation < 0.0f)
 				size_variation = 0;
 
-			float m_totalVisibility = CMaterial::ALPHA_VALUE_SOLID;
+			float m_totalVisibility = CMaterial::ZG_ALPHA_VALUE_SOLID;
 
-			m_totalVisibility = CMaterial::ALPHA_VALUE_SOLID;
+			m_totalVisibility = CMaterial::ZG_ALPHA_VALUE_SOLID;
 
-			m_alpha = CMaterial::ALPHA_VALUE_SOLID;
+			m_alpha = CMaterial::ZG_ALPHA_VALUE_SOLID;
 
 			if(m_intAlpha->getInterpolatedPoint(aux_time, m_alpha_from_interpolator)) {
 				m_alpha=(m_alpha)*(m_alpha_from_interpolator[0]);

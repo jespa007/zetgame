@@ -3,8 +3,8 @@
 
 typedef struct{
 	//Shape2d *shape2d;
-	Geometry 		*	geometry;
-	Appearance	 	*  	appearance;
+	ZG_Geometry 		*	geometry;
+	ZG_Appearance	 	*  	appearance;
 	uint16_t 			width, height;
 }ECSpriteRendererData;
 
@@ -18,7 +18,7 @@ static EComponent g_ec_sprite_renderer_required_components[]={
 EComponentList ECSpriteRenderer_RequiredComponents(void){
 	EComponentList cl;
 	cl.components=g_ec_sprite_renderer_required_components;
-	cl.n_components=ARRAY_SIZE(g_ec_sprite_renderer_required_components);
+	cl.n_components=ZG_ARRAY_SIZE(g_ec_sprite_renderer_required_components);
 
 	return cl;
 }
@@ -35,8 +35,8 @@ void ECSpriteRenderer_Setup(void *_this,ComponentId _id){
 	ECMaterial *ec_material=_entity->components[EC_MATERIAL];
 
 	data->appearance=Appearance_New();
-	ec_geometry->geometry=data->geometry=Geometry_NewRectangleFilled(GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
-	ec_material->material=data->appearance->material=Material_New(0); // Mat by default ?
+	ec_geometry->geometry=data->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
+	ec_material->material=data->appearance->material=ZG_Material_New(0); // Mat by default ?
 
 	ec_sprite_renderer->data=data;
 
@@ -50,10 +50,10 @@ void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint
 	ECSpriteRendererData * data= _this->data;
 	if(!(data->width == width && data->height == height)){
 		// project dimensions
-		Vector3f p=ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
+		ZG_Vector3f p=ZG_ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
 
 		// setup vertexs...
-		float vertexs[N_VERTEX_QUAD*VERTEX_COORDS_LEN]={
+		float vertexs[ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN]={
 				   -p.x,-p.y,0.0f,  // bottom left
 				   +p.x,-p.y,0.0f,  // bottom right
 				   -p.x,+p.y,0.0f,  // top left
@@ -63,7 +63,7 @@ void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint
 
 
 		//.. and set vertex to geometry
-	   Geometry_SetMeshVertex(data->geometry,vertexs,N_VERTEX_QUAD*VERTEX_COORDS_LEN);
+	   ZG_Geometry_SetMeshVertex(data->geometry,vertexs,ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN);
 
 		data->width=width;
 		data->height=height;
@@ -78,7 +78,7 @@ void ECSpriteRenderer_SetAlpha(ECSpriteRenderer *_this, float _alpha){
 	data->appearance->material->color.a=_alpha;
 }
 
-void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,Texture *texture){
+void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,ZG_Texture *texture){
 
 	if(_this == NULL) return;
 
@@ -90,7 +90,7 @@ void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,Texture *texture){
 void ECSpriteRenderer_Update(void *_this){
 	ECSpriteRenderer *ec_sprite_renderer=_this;
 	ECSpriteRendererData * data= ec_sprite_renderer->data;
-	Transform *transform = NULL;
+	ZG_Transform *transform = NULL;
 	ECTransform *ec_transform=ec_sprite_renderer->header.entity->components[EC_TRANSFORM];
 	ECTexture *ec_texture=ec_sprite_renderer->header.entity->components[EC_TEXTURE];
 	if(ec_transform){

@@ -5,7 +5,7 @@ typedef struct GUITextBox GUITextBox;
 
 struct GUITextBox{
 	GUIWidget 	*	widget;
-	TextBox 	*	textbox;
+	ZG_TextBox 	*	textbox;
 	void *data;
 };
 

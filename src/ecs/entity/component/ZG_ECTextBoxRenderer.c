@@ -11,7 +11,7 @@ static EComponent g_ec_textbox_renderer_required_components[]={
 EComponentList ECTextBoxRenderer_RequiredComponents(void){
 	EComponentList cl;
 	cl.components=g_ec_textbox_renderer_required_components;
-	cl.n_components=ARRAY_SIZE(g_ec_textbox_renderer_required_components);
+	cl.n_components=ZG_ARRAY_SIZE(g_ec_textbox_renderer_required_components);
 
 	return cl;
 }
@@ -20,7 +20,7 @@ void ECTextBoxRenderer_Setup(void *_this,ComponentId _id, Entity *_entity){
 	ECTextBoxRenderer *ec_textbox_renderer=_this;
 	ec_textbox_renderer->header.entity=_entity;
 	ec_textbox_renderer->header.id=_id;
-	ec_textbox_renderer->textbox=TextBox_New();
+	ec_textbox_renderer->textbox=ZG_TextBox_New();
 
 	_entity->components[EC_TEXTBOX_RENDERER]=_this;
 
@@ -35,7 +35,7 @@ void ECTextBoxRenderer_Setup(void *_this,ComponentId _id, Entity *_entity){
 
 void ECTextBoxRenderer_Update(void *_this){
 	ECTextBoxRenderer *ec_textbox_renderer=_this;
-	Transform *transform = NULL;
+	ZG_Transform *transform = NULL;
 	ECTransform *ec_transform=ec_textbox_renderer->header.entity->components[EC_TRANSFORM];
 
 
@@ -44,7 +44,7 @@ void ECTextBoxRenderer_Update(void *_this){
 	}
 
 	if(ec_textbox_renderer){
-		TextBox_Draw(ec_textbox_renderer->textbox,transform,NULL);
+		ZG_TextBox_Draw(ec_textbox_renderer->textbox,transform,NULL);
 	}
 
 }
@@ -52,7 +52,7 @@ void ECTextBoxRenderer_Update(void *_this){
 void ECTextBoxRenderer_Destroy(void *_this){
 	ECTextBoxRenderer *ec_textbox_renderer=_this;
 	ECTextBoxRendererData * data= ((ECTextBoxRenderer *)_this)->data;
-	TextBox_Delete(ec_textbox_renderer->textbox);
+	ZG_TextBox_Delete(ec_textbox_renderer->textbox);
 	ZG_FREE(data);
 }
 

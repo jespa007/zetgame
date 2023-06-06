@@ -10,6 +10,7 @@
 #include "3rdparty/cJSON/cJSON.c"
 #include "3rdparty/gifdec/gifdec.c"
 #include "3rdparty/lodepng/lodepng.c"
+#include "3rdparty/util-fmemopen/util-fmemopen.c"
 
 #include "ZG_Directory.c"
 #include "ZG_File.c"
@@ -23,9 +24,8 @@
 #include "sdl/_zg_base_sdl_.c"
 //#include "sdl/SDL_windows_main.c"
 #include "ZG_Term.c"
-#include "util-fmemopen.c"
 #include "ZG_Bit.c"
 #include "ZG_FileSystem.c"
 #include "ZG_Guid.c"
 #include "ZG_String.c"
-#include "zg_memory.c"
+#include "ZG_Memory.c"

@@ -25,7 +25,7 @@ GUIFrame * GUIFrame_New(int x, int y, uint16_t width, uint16_t height){
 
 void GUIFrame_Update(void * gui_frame){
 	GUIFrame *_this=gui_frame;
-	Vector2i position,dimensions;
+	ZG_Vector2i position,dimensions;
 
 	// update first position...
 	GUIWidget_UpdatePosition(_this->widget);
@@ -33,7 +33,7 @@ void GUIFrame_Update(void * gui_frame){
 	position=GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_SCREEN);
 	dimensions=GUIWidget_GetDimensions(_this->widget);
 
-	ViewPort_Push(position.x,position.y,dimensions.x,dimensions.y,PROJECTION_MODE_ORTHO);
+	ZG_ViewPort_Push(position.x,position.y,dimensions.x,dimensions.y,ZG_PROJECTION_MODE_ORTHO);
 
 	Graphics_ClearScreen(GUIWidget_GetBackgroundColor4f(_this->widget));
 
@@ -42,7 +42,7 @@ void GUIFrame_Update(void * gui_frame){
 
 	GUIWidget_UpdateChilds(_this->widget);
 
-	ViewPort_Pop();
+	ZG_ViewPort_Pop();
 
 }
 

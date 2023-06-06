@@ -16,8 +16,8 @@ typedef enum{
 
 struct ECTransform{
 	EComponentHeader 		header;
-	Transform				transform; // world coordinates
-	Quaternion				quaternion;
+	ZG_Transform				transform; // world coordinates
+	ZG_Quaternion				quaternion;
 	void 					*data;
 };
 
@@ -32,7 +32,7 @@ void 			ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z)
  */
 void 			ECTransform_SetPosition2i(ECTransform *_this,int x, int y);
 
-Vector2i		ECTransform_GetPosition2i(ECTransform *_this);
+ZG_Vector2i		ECTransform_GetPosition2i(ECTransform *_this);
 
 /**
  * Sets 2d displacement from offset position xy
@@ -43,14 +43,14 @@ void 			ECTransform_SetDisplacement2i(ECTransform *_this,int offset_x, int offse
 
 ECTransform	*	ECTransform_GetParent(ECTransform *_this);
 
-Transform *		ECTransform_GetTransform(ECTransform *node, ECTransformType ec_transform_type);
+ZG_Transform *		ECTransform_GetTransform(ECTransform *node, ECTransformType ec_transform_type);
 
 void 			ECTransform_SetRotate3f(ECTransform *_this,float x, float y, float z);
 void 			ECTransform_SetScale3f(ECTransform *_this,float x, float y, float z);
 
 
 /**
- * Transform animation
+ * ZG_Transform animation
  */
 void ECTransform_SetTransformAnimation(ECTransform *_this, ACTransformAnimation * _ac_transform_animation);
 ACTransformAnimation * ECTransform_GetTransformAnimation(ECTransform *_this);
