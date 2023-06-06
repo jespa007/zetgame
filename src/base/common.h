@@ -53,8 +53,8 @@ typedef struct{
 }cJSONAttribute;
 
 
-#define 	IS_POW2(x)   		(!(bool)((x) & ((x)-1)))
-#define 	UNUSUED_PARAM(x) 	((void)(x))
+#define 	ZG_IS_POW2(x)   		(!(bool)((x) & ((x)-1)))
+#define 	ZG_UNUSUED_PARAM(x) 	((void)(x))
 
 
 #define ZG_VARGS(text_out, text_in)\
@@ -83,8 +83,8 @@ if(n==(int)max_len){\
 va_end(ap);}
 
 
-#define ARRAY_SIZE(s) (sizeof(s)/sizeof(s[0]))
-#define STRCMP(str1,op,str2) (strcmp(str1,str2)op(0))
+#define ZG_ARRAY_SIZE(s) (sizeof(s)/sizeof(s[0]))
+#define ZG_STRCMP(str1,op,str2) (strcmp(str1,str2)op(0))
 #define ZG_ERROR -1
 
 #endif

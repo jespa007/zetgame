@@ -13,7 +13,7 @@
 
 
 typedef struct{
-	List 		*	map_render_z[MAX_Z]; // a map of lists of maximum of MAX_Z
+	ZG_List 		*	map_render_z[MAX_Z]; // a map of lists of maximum of MAX_Z
 	SGCamera 	* 	sg_camera;
 	Color4f			background_color;
 }SGRenderData;
@@ -129,7 +129,7 @@ void SGRender_End(SGRender *_this){
 
 	for(unsigned z=0; z < MAX_Z; z++){
 
-		List * sg_nodes = data->map_render_z[z];
+		ZG_List * sg_nodes = data->map_render_z[z];
 
 		for(int n=0; n < sg_nodes->count ;n++)
 		{

@@ -29,10 +29,10 @@ int main(int argc, char *argv[]){
 
 		Log_InfoF("Load from memory");
 
-		BufferByte *bb_effect = File_Read("../../../test/data/samples/sample.wav");
-		BufferByte *bb_wav = File_Read("../../../test/data/musics/music.wav");
-		BufferByte *bb_ogg = File_Read("../../../test/data/musics/music.ogg");
-		BufferByte *bb_xm = File_Read("../../../test/data/musics/music.xm");
+		ZG_BufferByte *bb_effect = File_Read("../../../test/data/samples/sample.wav");
+		ZG_BufferByte *bb_wav = File_Read("../../../test/data/musics/music.wav");
+		ZG_BufferByte *bb_ogg = File_Read("../../../test/data/musics/music.ogg");
+		ZG_BufferByte *bb_xm = File_Read("../../../test/data/musics/music.xm");
 
 		id_effect = Sample_LoadFromMemory(bb_effect->ptr, bb_effect->len);
 		id_wav = Music_LoadFromMemory(bb_wav->ptr, bb_wav->len);

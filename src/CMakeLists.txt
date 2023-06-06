@@ -303,43 +303,45 @@ ENDIF()
 set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 
 	#-- Base --
-	base/zg_base.c
-	
-	#-- Animation --
-	animation/zg_animation.c
-	
-	#-- Multimedia -- 
-	mmedia/zg_mmedia.c
-	
-	#-- Math --
-	math/zg_math.c
-	
-	#-- Input --
-	input/zg_input.c
+	base/_zg_base_.c
 	
 	#-- Graphics -- 
-	graphics/zg_graphics.c
+	#graphics/_zg_graphics_.c
+	
+	
+	#-- Animation --
+	#animation/_zg_animation_.c
+	
+	#-- Multimedia -- 
+	#mmedia/_zg_mmedia_.c
+	
+	#-- Math --
+	#math/_zg_math_.c
+	
+	#-- Input --
+	#input/_zg_input_.c
+	
 	
 	#-- Scene --
-	#scene/zg_scene.c
+	##scene/zg_scene.c
 	
 	#-- Physics --
-	physics/zg_physics.c
+	#physics/_zg_physics_.c
 	
 	#-- Gui --
-	gui/zg_gui.c
+	#gui/_zg_gui_.c
 	
 	#-- Sprite --
-	sprite/zg_sprite.c
+	#sprite/_zg_sprite_.c
 
 	#-- Tilemap --
-	tilemap/zg_tilemap.c
+	#tilemap/_zg_tilemap_.c
 	
 	#-- Entity Component System --
-	ecs/zg_ecs.c
+	#ecs/_zg_ecs_.c
 	
 	#-- Zetgame --
-	zetgame.c		
+	#zetgame.c		
 )
 
 add_library( ${ZETGAME_LIB_NAME}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )

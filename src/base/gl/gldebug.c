@@ -158,29 +158,29 @@ void glPrintError(const char *file, int line)
 	case GL_NO_ERROR:
 		break;
 	default:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] Unknow error (%i)",error);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] Unknow error (%i)",error);
 		break;
 	case GL_INVALID_ENUM:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] An unacceptable value is specified for an enumerated argument. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] An unacceptable value is specified for an enumerated argument. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
 		break;
 	case GL_INVALID_VALUE:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] A numeric argument is out of range. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] A numeric argument is out of range. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
 		break;
 
 	case GL_INVALID_OPERATION:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] The specified operation is not allowed in the current state. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] The specified operation is not allowed in the current state. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
 		break;
 	case GL_INVALID_FRAMEBUFFER_OPERATION:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] The framebuffer object is not complete. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] The framebuffer object is not complete. The offending command is ignored and has no other side effect than to set the error flag.\n",file,line);
 		break;
 	case GL_OUT_OF_MEMORY:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] There is not enough memory left to execute the command. The state of the GL is undefined, except for the state of the error flags, after this error is recorded.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] There is not enough memory left to execute the command. The state of the GL is undefined, except for the state of the error flags, after this error is recorded.\n",file,line);
 		break;
 	case GL_STACK_UNDERFLOW:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] An attempt has been made to perform an operation that would cause an internal stack to underflow.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] An attempt has been made to perform an operation that would cause an internal stack to underflow.\n",file,line);
 		break;
 	case GL_STACK_OVERFLOW:
-		Log_Print(file,line,LOG_LEVEL_ERROR,"[OGL_ERROR] An attempt has been made to perform an operation that would cause an internal stack to overflow.\n",file,line);
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_ERROR,"[OGL_ERROR] An attempt has been made to perform an operation that would cause an internal stack to overflow.\n",file,line);
 		break;
 	}
 }
@@ -211,8 +211,8 @@ void 	__glGetFloatv__(const char *file, int line,GLenum pname,	GLfloat * params)
 }
 
 void 	__glBegin__(const char *file, int line,	GLenum mode){
-	UNUSUED_PARAM(file);
-	UNUSUED_PARAM(line);
+	ZG_UNUSUED_PARAM(file);
+	ZG_UNUSUED_PARAM(line);
 	glBegin(mode);
 	// we do not call glPrintError due is not allowed while we are defining drawing points (should do it after glEnd)
 }

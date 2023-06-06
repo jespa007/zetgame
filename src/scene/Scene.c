@@ -13,31 +13,31 @@ typedef enum{
 typedef struct{
 
 	uint32_t			start_time;
-	List 			* 	animations;
-	List 			* 	movie_players;
-	List 			* 	sprite2d_emitters;
+	ZG_List 			* 	animations;
+	ZG_List 			* 	movie_players;
+	ZG_List 			* 	sprite2d_emitters;
 	//TransformNode		*	node_root;
 	//SceneState  	* 	current_state;
-	//List			*	scene_states;
+	//ZG_List			*	scene_states;
 	SceneStatus 		scene_status;
 	EntitySystem	*	entity_system;
 	AnimationSystem *	animation_system;
 	CollisionSystem *	collision_system;
 
-	List			* 	sg_nodes;
-	List			* 	sg_textures;
-	List			* 	sg_textboxes;
+	ZG_List			* 	sg_nodes;
+	ZG_List			* 	sg_textures;
+	ZG_List			* 	sg_textboxes;
 
 	EntityManager	* 	em_sg_nodes;
 	EntityManager	* 	em_sg_textures;
 	EntityManager	* 	em_sg_textboxes;
-	List			* 	entity_managers2d;
+	ZG_List			* 	entity_managers2d;
 
-/*	List * appearances;
-	List * transforms3d;
-	List * transform_actions;
-	List * transform_animations;
-	List * sprite_emitters;*/
+/*	ZG_List * appearances;
+	ZG_List * transforms3d;
+	ZG_List * transform_actions;
+	ZG_List * transform_animations;
+	ZG_List * sprite_emitters;*/
 }SceneData;
 
 

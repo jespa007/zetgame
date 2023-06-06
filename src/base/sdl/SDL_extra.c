@@ -1,5 +1,5 @@
 #include "assets/image/default.png.c"
-#include "base/zg_base.h"
+#include "base/_zg_base_.h"
 #include "graphics/zg_graphics.h"
 
 /*{
@@ -75,7 +75,7 @@ bool SDL_SaveJPG(const char * filename, SDL_Surface * srf){
 		}
 
 		if((out=jpeg_encode_mem(srf->pixels, srf->w, srf->h, 80, &outsize))!=NULL){
-			BufferByte bb=(BufferByte){.ptr=out,.len=outsize};
+			ZG_BufferByte bb=(ZG_BufferByte){.ptr=out,.len=outsize};
 			ok=File_Write(filename,&bb);
 		}
 		else{
@@ -133,7 +133,7 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 		//                               unsigned w, unsigned h, LodePNGColorType colortype, unsigned bitdepth)
 		error=lodepng_encode_memory(&out,&outsize,srf->pixels,srf->w,srf->h,LCT_RGBA,32);
 		if(!error){
-			BufferByte bb=(BufferByte){.ptr=out,.len=outsize};
+			ZG_BufferByte bb=(ZG_BufferByte){.ptr=out,.len=outsize};
 			ok=File_Write(filename,&bb);
 		}else{
 			Log_Error("Error saving %s",filename);
@@ -173,7 +173,7 @@ SDL_Surface *SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, u
 }
 //--------------------------------------------------------------------------------------------------------------------------------
 SDL_Surface	*	SDL_LoadImageFromFile(const char * filename, uint32_t properties, uint8_t convert_to_bpp) {
-	BufferByte *buf=FileSystem_ReadFile(filename);
+	ZG_BufferByte *buf=FileSystem_ReadFile(filename);
 	SDL_Surface *new_image_surface = NULL;
 	if(!buf){return NULL;}
 

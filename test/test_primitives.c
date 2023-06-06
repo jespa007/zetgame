@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 
 	ZetGame_Init(NULL);
 
-	List *textures= List_New();
+	ZG_List *textures= List_New();
 
 	// circle with without border...
 	// foreach image create a texture...
