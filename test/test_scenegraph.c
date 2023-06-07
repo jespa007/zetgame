@@ -426,7 +426,7 @@ int main(int argc, char *argv[]){
 
 		ZG_Input_Update();
 
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 
 
 	ZG_TextureManager_Delete(tm);

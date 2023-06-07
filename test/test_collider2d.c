@@ -14,7 +14,7 @@ typedef enum{
 
 void update_options(
 		SelectCollider *_selected_collider
-		, Collider2dType *_mouse_collider_type
+		, ZG_Collider2dType *_mouse_collider_type
 		, ZG_Vector3f		*_mouse_scale
 
 	){
@@ -34,22 +34,22 @@ void update_options(
 
 				switch(i){
 				case SELECT_COLLIDER_POINT:
-					*_mouse_collider_type=COLLIDER2D_TYPE_POINT;
+					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_POINT;
 					break;
 				case SELECT_COLLIDER_RECTANGLE_PORTRAIT:
 					_mouse_w=80;
 					_mouse_h=160;
-					*_mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
+					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_RECTANGLE;
 					break;
 				case SELECT_COLLIDER_RECTANGLE_LANDSCAPE:
 					_mouse_w=160;
 					_mouse_h=80;
-					*_mouse_collider_type=COLLIDER2D_TYPE_RECTANGLE;
+					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_RECTANGLE;
 					break;
 				case SELECT_COLLIDER_CIRCLE:
 					_mouse_w=50;
 					_mouse_h=50;
-					*_mouse_collider_type=COLLIDER2D_TYPE_CIRCLE;
+					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_CIRCLE;
 					break;
 				}
 
@@ -80,16 +80,16 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 		}
 
 		// border selection
-		Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE,BUTTON_GROUP_SIZE,color,thickness);
+		ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE,BUTTON_GROUP_SIZE,color,thickness);
 		switch(i){
 		case SELECT_COLLIDER_POINT: // point
 			Graphics_DrawPoint2i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,color,thickness*2);
 			break;
 		case SELECT_COLLIDER_RECTANGLE_PORTRAIT: // rectangle portrait
-			Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,10,40,color,thickness);
+			ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,10,40,color,thickness);
 			break;
 		case SELECT_COLLIDER_RECTANGLE_LANDSCAPE: // rectangle landscape
-			Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,10,color,thickness);
+			ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,10,color,thickness);
 			break;
 		case SELECT_COLLIDER_CIRCLE: // circle
 			Graphics_DrawCircle3i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE>>2,color,thickness);
@@ -112,19 +112,19 @@ int main(int argc, char *argv[]){
 	const char *colliding="none";
 	struct{
 		ZG_Transform transform;
-		Collider2dType collider_type;
+		ZG_Collider2dType collider_type;
 	}colliders[]={
 		{
 				ZG_Transform_New()
-				,COLLIDER2D_TYPE_POINT
+				,ZG_COLLIDER2D_TYPE_POINT
 		}
 		,{
 				ZG_Transform_New()
-				,COLLIDER2D_TYPE_RECTANGLE
+				,ZG_COLLIDER2D_TYPE_RECTANGLE
 		}
 		,{
 				ZG_Transform_New()
-				,COLLIDER2D_TYPE_CIRCLE
+				,ZG_COLLIDER2D_TYPE_CIRCLE
 		}
 	};
 
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]){
 	colliders[2].transform.scale.x=ZG_ViewPort_ScreenToWorldWidth(100);
 
 
-	Collider2dType mouse_collider_type=COLLIDER2D_TYPE_POINT;
+	ZG_Collider2dType mouse_collider_type=ZG_COLLIDER2D_TYPE_POINT;
 	SelectCollider select_collider=SELECT_COLLIDER_POINT;
 
 	ZG_Transform mouse_transform=ZG_Transform_New();
@@ -163,21 +163,21 @@ int main(int argc, char *argv[]){
 		for(unsigned i=0; i < ZG_ARRAY_SIZE(colliders); i++){
 			ZG_Color4f color=ZG_COLOR4F_WHITE;
 
-			if(Collider2d_Test(mouse_transform
+			if(ZG_Collider2d_Test(mouse_transform
 					,mouse_collider_type
 					,colliders[i].transform
 					,colliders[i].collider_type
 					)){
 				switch(colliders[i].collider_type){
-				case COLLIDER2D_TYPE_POINT:
+				case ZG_COLLIDER2D_TYPE_POINT:
 					color=ZG_COLOR4F_RED;
 					colliding="Point";
 					break;
-				case COLLIDER2D_TYPE_RECTANGLE:
+				case ZG_COLLIDER2D_TYPE_RECTANGLE:
 					color=ZG_COLOR4F_RED;
 					colliding="Rectangle";
 					break;
-				case COLLIDER2D_TYPE_CIRCLE:
+				case ZG_COLLIDER2D_TYPE_CIRCLE:
 					color=ZG_COLOR4F_RED;
 					colliding="Circle";
 					break;
@@ -185,7 +185,7 @@ int main(int argc, char *argv[]){
 				}
 			}
 
-			Collider2d_Draw(
+			ZG_Collider2d_Draw(
 					 colliders[i].transform
 					,colliders[i].collider_type
 					,color
@@ -193,7 +193,7 @@ int main(int argc, char *argv[]){
 
 		}
 
-		Collider2d_Draw(
+		ZG_Collider2d_Draw(
 			mouse_transform
 			,mouse_collider_type
 			,ZG_COLOR4F_WHITE
@@ -214,7 +214,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_EndRender();
 
 		ZG_Input_Update();
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 
 
 	ZG_DeInit();

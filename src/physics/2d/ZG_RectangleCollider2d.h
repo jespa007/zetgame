@@ -1,13 +1,13 @@
-#ifndef __RECTANGLE_COLLIDER2D_H__
-#define __RECTANGLE_COLLIDER2D_H__
+#ifndef __ZG_RECTANGLE_COLLIDER2D_H__
+#define __ZG_RECTANGLE_COLLIDER2D_H__
 
-typedef struct RectangleCollider2d RectangleCollider2d;
+typedef struct ZG_RectangleCollider2d ZG_RectangleCollider2d;
 
-struct RectangleCollider2d{
+struct ZG_RectangleCollider2d{
 	float width,height;
 };
 
-RectangleCollider2d * 	RectangleCollider2d_New(uint16_t width, uint16_t height);
-void 					RectangleCollider2d_Delete(RectangleCollider2d * _this);
+ZG_RectangleCollider2d * 	ZG_RectangleCollider2d_New(uint16_t width, uint16_t height);
+void 					ZG_RectangleCollider2d_Delete(ZG_RectangleCollider2d * _this);
 
 #endif

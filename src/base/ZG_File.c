@@ -63,7 +63,7 @@ bool	File_Write(const char *filename, ZG_BufferByte * buf){
 	return ok;
 }
 
-long int  File_Length(const char * filename)
+long int  ZG_File_Length(const char * filename)
 {
 
 	long int length=-1;
@@ -99,7 +99,7 @@ bool ZG_File_Exists(const char *filename) {
 	return true;
 #else
 
-	if(Directory_Exists(filename)) return false;
+	if(ZG_Directory_Exists(filename)) return false;
 
 
 	struct stat buffer;

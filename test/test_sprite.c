@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
 	   ZG_Graphics_EndRender();
 
 		ZG_Input_Update();
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 
 
 	SpriteKeyFrameManager_Delete(skfm);

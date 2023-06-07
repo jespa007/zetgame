@@ -67,13 +67,13 @@ typedef struct{
 //------------------------------------------------------------------------------------------
 
 
-void 		ZG_Input_Init(void);
+void 			ZG_Input_Init(void);
 ZG_MouseInfo	ZG_Input_GetMouseInfo(void);
 ZG_Vector2i  	ZG_Input_GetMousePosition(void);
 ZG_Vector2i  *	ZG_Input_GetMousePositionPtr(void);
 uint32_t 		ZG_Input_GetSecondMouseMotionType(void);
-void		ZG_Input_EnableMouseEvents(bool _enable);
-void 		ZG_Input_ShowCursor(bool _show_cursor);
+void			ZG_Input_EnableMouseEvents(bool _enable);
+void 			ZG_Input_ShowCursor(bool _show_cursor);
 
 uint32_t 		ZG_Input_AddEventOnKeyUp(ZG_CallbackKeyEvent _callback);
 uint32_t 		ZG_Input_AddEventOnKeyDown(ZG_CallbackKeyEvent _callback);
@@ -82,15 +82,15 @@ uint32_t 		ZG_Input_AddEventOnMouseButtonDown(ZG_CallbackMouseEvent _callback);
 uint32_t 		ZG_Input_AddEventOnMouseMotion(ZG_CallbackMouseEvent _callback);
 uint32_t		ZG_Input_AddEventOnDropFile(ZG_CallbackDropEvent _callback);
 
-void 		ZG_Input_RemoveEventOnKeyUp(uint32_t idx_handle);
-void 		ZG_Input_RemoveEventOnKeyDown(uint32_t idx_handle);
-void 		ZG_Input_RemoveEventOnMouseButtonUp(uint32_t idx_handle);
-void 		Input_RemoveEventOnMouseMotion(uint32_t idx_handle);
-void 		ZG_Input_RemoveEventOnMouseButtonDown(uint32_t idx_handle);
-void		ZG_Input_RemoveEventOnDropFile(uint32_t idx_handle);
+void 			ZG_Input_RemoveEventOnKeyUp(uint32_t idx_handle);
+void 			ZG_Input_RemoveEventOnKeyDown(uint32_t idx_handle);
+void 			ZG_Input_RemoveEventOnMouseButtonUp(uint32_t idx_handle);
+void 			ZG_Input_RemoveEventOnMouseMotion(uint32_t idx_handle);
+void 			ZG_Input_RemoveEventOnMouseButtonDown(uint32_t idx_handle);
+void			ZG_Input_RemoveEventOnDropFile(uint32_t idx_handle);
 
-void 		ZG_Input_Update(void);
-bool		ZG_Input_IsKeyPressed(int id_key);
-bool		ZG_Input_IsLeftButtonPressed(void);
-void 		ZG_Input_DeInit(void);
+void 			ZG_Input_Update(void);
+bool			ZG_Input_IsKeyPressed(int id_key);
+bool			ZG_Input_IsLeftButtonPressed(void);
+void 			ZG_Input_DeInit(void);
 #endif

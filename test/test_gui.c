@@ -20,45 +20,45 @@ int main(int argc, char *argv[]){
 	ZG_TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
 
 
-	GUIWindowManager *window_manager= GUIWindowManager_New(texture_manager);
-	GUIWindow * window=NULL;
+	ZG_GUIWindowManager *window_manager= ZG_GUIWindowManager_New(texture_manager);
+	ZG_GUIWindow * window=NULL;
 
-	if(GUIWindowManager_Load(
+	if(ZG_GUIWindowManager_Load(
 			window_manager
 			,"../../../test/data/windows/"WINDOW_NAME".xml"
 		)){
 
-		if((window=GUIWindowManager_Get(window_manager,WINDOW_NAME))==NULL) {
+		if((window=ZG_GUIWindowManager_Get(window_manager,WINDOW_NAME))==NULL) {
 			ZG_Log_Error("Cannot get window '%s'",WINDOW_NAME);
 		}
 	}
 
 
-	//window=GUIWindow_New(10,10,200,100);
-	//GUITexture * gui_viewer=GUITexture_New(10,10,42,42);
+	//window=ZG_GUIWindow_New(10,10,200,100);
+	//ZG_GUITexture * gui_viewer=ZG_GUITexture_New(10,10,42,42);
 
 	if(window){
 
 		//ZG_TextBox_SetText(gui_viewer->widget->textbox,"1");
-		//GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
+		//ZG_GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
 			ZG_Graphics_BeginRender();
 
 
-			GUIWidget_Update(window->widget);
+			ZG_GUIWidget_Update(window->widget);
 
 			ZG_Graphics_EndRender();
 
 			ZG_Input_Update();
 
-		}while(!K_ESC);
+		}while(!ZG_KP_ESC);
 	}
 
-	//GUITexture_Delete(gui_viewer);
-	//GUIWindow_Delete(window);
+	//ZG_GUITexture_Delete(gui_viewer);
+	//ZG_GUIWindow_Delete(window);
 	ZG_TextureManager_Delete(texture_manager);
 //	ZG_TTFontManager_Delete(ttfont_manager);
-	GUIWindowManager_Delete(window_manager);
+	ZG_GUIWindowManager_Delete(window_manager);
 
 	ZG_DeInit();
 

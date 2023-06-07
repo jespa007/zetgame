@@ -1,23 +1,23 @@
-bool JpegMPS_GL_SetupGfx(JpegMPSData *data){
+bool ZG_JpegMPS_GL_SetupGfx(ZG_JpegMPSData *data){
 
 	if(FRAMEBUFFER_OBJECT_EXTENSION_ENABLED){
 
 		if(VERTEX_BUFFER_OBJECT_EXTENSION_ENABLED){
-			// create PBO_COUNT pixel buffer objects, you need to delete them when program exits.
-			glGenBuffers(PBO_COUNT, data->pboIds);
+			// create ZG_PBO_COUNT pixel buffer objects, you need to delete them when program exits.
+			glGenBuffers(ZG_PBO_COUNT, data->pboIds);
 			// reserve memory for back and front system buffer
-			for(int i = 0; i < PBO_COUNT; i++){
-				//downsampleData[i] = (unsigned char *)malloc(STREAM_SIZE);
-				//processed_jpeg[i]=NULL;//(uint8_t *)malloc(STREAM_WIDTH*STREAM_HEIGHT*STREAM_CHANNELS);
+			for(int i = 0; i < ZG_PBO_COUNT; i++){
+				//downsampleData[i] = (unsigned char *)malloc(ZG_STREAM_SIZE);
+				//processed_jpeg[i]=NULL;//(uint8_t *)malloc(ZG_STREAM_WIDTH*ZG_STREAM_HEIGHT*ZG_STREAM_CHANNELS);
 				// glBufferDataARB with NULL pointer reserves only memory space.
 				glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, data->pboIds[i]);
-				glBufferData(GL_PIXEL_PACK_BUFFER_ARB, STREAM_SIZE, 0, GL_STREAM_READ_ARB);
+				glBufferData(GL_PIXEL_PACK_BUFFER_ARB, ZG_STREAM_SIZE, 0, GL_STREAM_READ_ARB);
 			}
 
 			glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, 0);
 
 			// create frame buffer ...
-			if(glGenFrameBufferExt(&data->fbo,STREAM_WIDTH,STREAM_HEIGHT)){
+			if(glGenFrameBufferExt(&data->fbo,ZG_STREAM_WIDTH,ZG_STREAM_HEIGHT)){
 				return true;
 			}else{
 				ZG_Log_ErrorF("Cannot create glGenFrameBufferExt");
@@ -34,17 +34,17 @@ bool JpegMPS_GL_SetupGfx(JpegMPSData *data){
 
 }
 
-void JpegMPS_GL_CaptureFrame(JpegMPSData *data){
+void ZG_JpegMPS_GL_CaptureFrame(ZG_JpegMPSData *data){
 
 	//blit backbuffer to downsampled buffer
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, data->fbo.id);
-	glBlitFramebuffer(0, 0, ZG_Graphics_GetWidth(), ZG_Graphics_GetHeight(), 0, 0, STREAM_WIDTH, STREAM_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	glBlitFramebuffer(0, 0, ZG_Graphics_GetWidth(), ZG_Graphics_GetHeight(), 0, 0, ZG_STREAM_WIDTH, ZG_STREAM_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void JpegMPS_GL_FetchFrame(JpegMPSData *data){
+void ZG_JpegMPS_GL_FetchFrame(ZG_JpegMPSData *data){
 
 
 	// bind downsampled data...
@@ -52,14 +52,14 @@ void JpegMPS_GL_FetchFrame(JpegMPSData *data){
 
 	//--------------
 	// Method 1: bind downsampled buffer for reading
-	//glReadPixels(0, 0, STREAM_WIDTH, STREAM_HEIGHT,  GL_BGRA, GL_UNSIGNED_BYTE, downsampleData[n_write]);
+	//glReadPixels(0, 0, ZG_STREAM_WIDTH, ZG_STREAM_HEIGHT,  GL_BGRA, GL_UNSIGNED_BYTE, downsampleData[n_write]);
 
 	//--------------
 	// Method 3: using pbo
 	glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, data->pboIds[data->index]);
 	//read from framebuffer to PBO asynchronously
 
-	glReadPixels(0, 0, STREAM_WIDTH, STREAM_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glReadPixels(0, 0, ZG_STREAM_WIDTH, ZG_STREAM_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	//now read other PBO which should be ready
 
 	glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, data->pboIds[data->nextIndex]);
@@ -71,7 +71,7 @@ void JpegMPS_GL_FetchFrame(JpegMPSData *data){
 		// copy vertically...
 
 		// user function
-		JpegMPS_SaveFrame(data,gpu_data);
+		ZG_JpegMPS_SaveFrame(data,gpu_data);
 		//if(on_data != NULL){
 		//	on_data.callback(gpu_data,on_data.user_data);
 		//}
@@ -99,11 +99,11 @@ void JpegMPS_GL_FetchFrame(JpegMPSData *data){
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void JpegMPS_Delete_GL(JpegMPSData *data){
+void ZG_JpegMPS_Delete_GL(ZG_JpegMPSData *data){
 	if(FRAMEBUFFER_OBJECT_EXTENSION_ENABLED){
-		glDeleteBuffers(PBO_COUNT, data->pboIds);
+		glDeleteBuffers(ZG_PBO_COUNT, data->pboIds);
 
-		/*for(int i = 0; i < PBO_COUNT; i++){
+		/*for(int i = 0; i < ZG_PBO_COUNT; i++){
 			if(processed_jpeg[i]!=NULL){
 				free(processed_jpeg[i]);
 				processed_jpeg[i]=NULL;

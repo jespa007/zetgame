@@ -31,8 +31,8 @@ int main(int argc, char *argv[]){
 	do{
 		ZG_Graphics_BeginRender();
 
-		Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
-		Graphics_DrawRectangleFilled4i(20,20,100,100,ZG_Color4f_FromHex(0xFFFF));
+		ZG_Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
+		ZG_Graphics_DrawRectangleFilled4i(20,20,100,100,ZG_Color4f_FromHex(0xFFFF));
 		ZG_Graphics_DrawRectangleTextured4i(200,200,100,100,ZG_COLOR4F_WHITE,text_png,NULL);
 		ZG_Graphics_DrawRectangleTextured4i(300,300,100,100,ZG_COLOR4F_WHITE,text_jpg,NULL);
 		ZG_Graphics_DrawRectangleTextured4i(100,200,100,100,ZG_COLOR4F_WHITE,text_default,NULL);
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_EndRender();
 
 		ZG_Input_Update();
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 	//ZG_Transform_Delete(transform);
 //	Shape2d_Delete(shape2d);
 	ZG_Geometry_Delete(geometry);

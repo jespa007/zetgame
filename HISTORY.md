@@ -6,7 +6,7 @@ Zetgame
 -------------------------------------------
 Zetgame 1.0.0
 
-> #1 Implement Collider2d
+> #1 Implement ZG_Collider2d
 > #2 Implement SpriteKeyFrame
 #3 Get rid of deprecated fixed opengl pipeline
 > #5 Compile and Run shader+fragment shader
@@ -26,7 +26,7 @@ Zetgame 1.0.0
 > #19 Implement Managing Scene
 #20 Integrate cXml 
 > #21 Implement Managing SpriteKeyFrame 
-> #22 Implement Managing functions for GUIWindow 
+> #22 Implement Managing functions for ZG_GUIWindow 
 > #23 Implement Scene
 > #24 Implement Managing functions for Tilemap 
 > #25 Implement TilemapCollider 

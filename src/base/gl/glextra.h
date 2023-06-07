@@ -32,7 +32,7 @@ typedef struct {
 	GLuint color;
 	GLuint depth;
 	GLuint rbo;
-} FBOInfo;
+} ZG_FBOInfo;
 
 // Vertex arrays ...
 extern PFNGLDISABLEVERTEXATTRIBARRAYPROC 		glDisableVertexAttribArray;
@@ -110,8 +110,8 @@ GLushort	glGetEnabledExtensions(void);
 
 void 		glExtraIni(void);
 GLuint		glGenTexture2D(GLushort width, GLushort height, GLint internalFormat, GLenum format, GLenum type);
-GLboolean	glGenFrameBufferExt(FBOInfo * fboInfo, GLushort width, GLushort height);
-void		glDeleteFrameBufferExt(FBOInfo * fboInfo);
+GLboolean	glGenFrameBufferExt(ZG_FBOInfo * fboInfo, GLushort width, GLushort height);
+void		glDeleteFrameBufferExt(ZG_FBOInfo * fboInfo);
 
 #ifdef __cplusplus
 }

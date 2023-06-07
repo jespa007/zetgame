@@ -13,7 +13,7 @@ static ZG_SetupParams default_setup={
 static bool debug_mode=false;
 
 
-void SetupInfo_SetupInfo(ZG_SetupParams *si){
+void ZG_SetupInfo_SetupInfo(ZG_SetupParams *si){
 	si->width=ZG_DEFAULT_SCREEN_WIDTH;
 	si->height=ZG_DEFAULT_SCREEN_HEIGHT;
 }
@@ -31,11 +31,11 @@ void ZG_Init(ZG_SetupParams * info){
 #ifdef __WITH_FFMPEG__
 	av_register_all();
 #endif
-	ZetNet_Init();
+	ZN_Init();
 
 	ZG_Mixer_Init();
 
-	if(!Graphics_Init(
+	if(!ZG_Graphics_Init(
 			 info->wposx
 			,info->wposy
 			,info->width
@@ -50,11 +50,11 @@ void ZG_Init(ZG_SetupParams * info){
 	}
 
 	ZG_Input_Init();
-	if(!ECS_Init()){
+	if(!ZG_ECS_Init()){
 		exit(EXIT_FAILURE);
 	}
 	//SGRender_Init();
-	GUI_Init();
+	ZG_GUI_Init();
 }
 
 void ZG_SetDebugMode(bool _debug_mode){
@@ -68,17 +68,17 @@ bool ZG_IsDebugMode(void){
 
 void ZG_DeInit(void){
 
-	GUI_DeInit();
+	ZG_GUI_DeInit();
 	//SGRender_DeInit();
 
 	ZG_Mixer_DeInit();
 	ZG_Input_DeInit();
-	Graphics_DeInit();
-	ECS_DeInit();
+	ZG_Graphics_DeInit();
+	ZG_ECS_DeInit();
 
 	SDL_DestroyResources();
 
-	ZetNet_DeInit();
+	ZN_DeInit();
 }
 
 

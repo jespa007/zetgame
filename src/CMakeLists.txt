@@ -326,10 +326,10 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	##scene/zg_scene.c
 	
 	#-- Physics --
-	#physics/_zg_physics_.c
+	physics/_zg_physics_.c
 	
 	#-- Gui --
-	#gui/_zg_gui_.c
+	gui/_zg_gui_.c
 	
 	#-- Sprite --
 	#sprite/_zg_sprite_.c
@@ -341,7 +341,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#ecs/_zg_ecs_.c
 	
 	#-- Zetgame --
-	#zetgame.c		
+	zetgame.c		
 )
 
 add_library( ${ZETGAME_LIB_NAME}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )

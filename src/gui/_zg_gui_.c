@@ -1,24 +1,24 @@
-#include "GUIWidget.c"
-#include "GUIFrame.c"
-#include "GUIButton.c"
-#include "GUITextBox.c"
-#include "GUITexture.c"
-#include "GUIWindow.c"
-#include "GUIWindowManager.c"
+#include "ZG_GUIWidget.c"
+#include "ZG_GUIFrame.c"
+#include "ZG_GUIButton.c"
+#include "ZG_GUITextBox.c"
+#include "ZG_GUITexture.c"
+#include "ZG_GUIWindow.c"
+#include "ZG_GUIWindowManager.c"
 
 
-GUIWindow *g_active_window=NULL;
+ZG_GUIWindow *g_active_window=NULL;
 
-void GUI_Init(void){
-	GUIButton_Init();
+void ZG_GUI_Init(void){
+	ZG_GUIButton_Init();
 }
 
-void GUI_DeInit(void){
-	GUIButton_DeInit();
+void ZG_GUI_DeInit(void){
+	ZG_GUIButton_DeInit();
 }
 
 /*
-void GUI_Begin(GUIWindow * window){
+void GUI_Begin(ZG_GUIWindow * window){
 	g_active_window=window;
 
 	if(window != NULL) {
@@ -79,6 +79,6 @@ void GUI_End(void){
 }
 */
 void Gui_DeInit(void){
-	GUIButton_DeInit();
+	ZG_GUIButton_DeInit();
 }
 

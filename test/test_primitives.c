@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_EndRender();
 
 		ZG_Input_Update();
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 
 	// unload all textures...
 	for(unsigned i=0; i < textures->count; i++){

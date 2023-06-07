@@ -56,7 +56,7 @@ typedef struct Entity Entity;
 //#include "component/ECViewer2d.h"
 //#include "entity/EntityManager.h"
 
-bool ECS_Init(void);
-void ECS_DeInit(void);
+bool ZG_ECS_Init(void);
+void ZG_ECS_DeInit(void);
 
 #endif

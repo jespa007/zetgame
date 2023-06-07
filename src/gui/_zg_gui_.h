@@ -4,26 +4,26 @@
 #include "input/_zg_input_.h"
 #include "graphics/_zg_graphics_.h"
 
-#include "ZG_WidgetGUI.h"
-#include "ZG_FrameGUI.h"
-#include "ZG_ButtonGUI.h"
-#include "ZG_TextBoxGUI.h"
-#include "ZG_TextureGUI.h"
-#include "ZG_WindowGUI.h"
-#include "ZG_WindowManagerGUI.h"
+#include "ZG_GUIWidget.h"
+#include "ZG_GUIFrame.h"
+#include "ZG_GUIButton.h"
+#include "ZG_GUITextBox.h"
+#include "ZG_GUITexture.h"
+#include "ZG_GUIWindow.h"
+#include "ZG_GUIWindowManager.h"
 
 
 void ZG_GUI_Init(void);
 
 
-/*void GUI_Begin(GUIWindow * window);
+/*void GUI_Begin(ZG_GUIWindow * window);
 void GUI_End(void);*/
 
 void ZG_GUI_DeInit(void);
 
 
 		/*void begin(){
-			CGUIWindow *window=ZG_GET_ACTIVE_GUI_WINDOW;
+			CZG_GUIWindow *window=ZG_GET_ACTIVE_GUI_WINDOW;
 
 			if(window != NULL) {
 				window->update();
@@ -44,7 +44,7 @@ void ZG_GUI_DeInit(void);
 
 
 
-			cursor = CGUIWindow::getIconCollisionCursor();
+			cursor = CZG_GUIWindow::getIconCollisionCursor();
 			CPoint2i *m_normalizedMouseCoordinates=ZG_INPUT->getNormalizedMouseCoordinates();
 
 			switch(cursor){

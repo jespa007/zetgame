@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
 		if(scale< 0.5f || scale > 2.0f) inc_scale*=-1;
 
 
-		Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
+		ZG_Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
 
 		if(K_T){
 			Graphics_ToggleFullscreen();
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_EndRender();
 
 		ZG_Input_Update();
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 
 	TransformAnimation_Delete(trs_animation);
 	TransformAction_Delete(act_translate);

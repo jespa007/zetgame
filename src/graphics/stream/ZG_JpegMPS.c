@@ -1,17 +1,17 @@
 #include "graphics/_zg_graphics_.h"
-#include "input/zg_input.h"
+#include "input/_zg_input_.h"
 
-#define PBO_COUNT 2
-#define MASK_PBO_COUNT (PBO_COUNT-1)
-#define STREAM_WIDTH 480
-#define STREAM_HEIGHT 360
-#define STREAM_CHANNELS 3
-#define STREAM_SIZE (STREAM_WIDTH*STREAM_HEIGHT*STREAM_CHANNELS)
-#define IMAGE_QUALITY 80	// The image quality goes between 1..100 that means low/high quality VS fast/slow processing
+#define ZG_PBO_COUNT 2
+#define ZG_MASK_PBO_COUNT (ZG_PBO_COUNT-1)
+#define ZG_STREAM_WIDTH 480
+#define ZG_STREAM_HEIGHT 360
+#define ZG_STREAM_CHANNELS 3
+#define ZG_STREAM_SIZE (ZG_STREAM_WIDTH*ZG_STREAM_HEIGHT*ZG_STREAM_CHANNELS)
+#define ZG_IMAGE_QUALITY 80	// The image quality goes between 1..100 that means low/high quality VS fast/slow processing
 
 
-#define RADIUS_CIRCLE_CURSOR 10
-#define COLOR_CIRCLE_CURSOR 0x005FE6
+#define ZG_RADIUS_CIRCLE_CURSOR 10
+#define ZG_COLOR_CIRCLE_CURSOR 0x005FE6
 
 typedef struct{
 
@@ -22,20 +22,20 @@ typedef struct{
 
 	float scale_x,scale_y;
 
-	GLuint pboIds[PBO_COUNT];
-	FBOInfo fbo;
+	GLuint pboIds[ZG_PBO_COUNT];
+	ZG_FBOInfo fbo;
 	//uint8_t *processed_jpeg[MAX_BUFFERS];
 	//unsigned long processed_jpeg_len[MAX_BUFFERS];
-	//uint8_t message[MAX_BUFFERS][STREAM_SIZE+256];
+	//uint8_t message[MAX_BUFFERS][ZG_STREAM_SIZE+256];
 	SDL_Surface *srf_clone;
 	SDL_Surface *srf_circle;
 
 	//SDL_RWops *rw;
 
 	ZN_HttpServerMPS * http_server_mps;
-}JpegMPSData;
+}ZG_JpegMPSData;
 
-void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data);
+void ZG_JpegMPS_SaveFrame(ZG_JpegMPSData * data,uint8_t *gpu_data);
 
 #include "ZG_JpegMPS_GL.c"
 
@@ -76,21 +76,21 @@ void fill_circle2(SDL_Surface *surface, int cx, int cy, int radius, uint32_t pix
 	}
 }
 
-bool JpegMPS_GfxSetup(JpegMPSData *data){
+bool ZG_JpegMPS_GfxSetup(ZG_JpegMPSData *data){
 	switch(ZG_Graphics_GetGraphicsApi()){
 	case ZG_GRAPHICS_API_GL:
-		return JpegMPS_GL_SetupGfx(data);
+		return ZG_JpegMPS_GL_SetupGfx(data);
 		break;
 	}
 
 	return false;
 }
 
-JpegMPS * JpegMPS_New(void){
+ZG_JpegMPS * ZG_JpegMPS_New(void){
 
 
-	JpegMPS * jpg_mps=ZG_NEW(JpegMPS);
-	JpegMPSData * data=ZG_NEW(JpegMPSData);
+	ZG_JpegMPS * jpg_mps=ZG_NEW(ZG_JpegMPS);
+	ZG_JpegMPSData * data=ZG_NEW(ZG_JpegMPSData);
 	data->nextIndex = 0;
 	data->index = 0;
 	data->init = false;
@@ -100,19 +100,19 @@ JpegMPS * JpegMPS_New(void){
 	data->fbo.id = GL_INVALID_VALUE;
 	data->fbo.depth = GL_INVALID_VALUE;
 	//memset(aux_buffer,0,sizeof(aux_buffer));
-	//rw = SDL_RWFromMem(aux_buffer, STREAM_SIZE);
+	//rw = SDL_RWFromMem(aux_buffer, ZG_STREAM_SIZE);
 
 
-	data->srf_clone = SDL_CreateRGBSurface(SDL_SWSURFACE, STREAM_WIDTH, STREAM_HEIGHT, 24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-	data->srf_circle= SDL_CreateRGBSurface(SDL_SWSURFACE, RADIUS_CIRCLE_CURSOR*2, RADIUS_CIRCLE_CURSOR*2, 24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	data->srf_clone = SDL_CreateRGBSurface(SDL_SWSURFACE, ZG_STREAM_WIDTH, ZG_STREAM_HEIGHT, 24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	data->srf_circle= SDL_CreateRGBSurface(SDL_SWSURFACE, ZG_RADIUS_CIRCLE_CURSOR*2, ZG_RADIUS_CIRCLE_CURSOR*2, 24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 
-	fill_circle2( data->srf_circle, RADIUS_CIRCLE_CURSOR,RADIUS_CIRCLE_CURSOR,RADIUS_CIRCLE_CURSOR, COLOR_CIRCLE_CURSOR);//(0xff<<24)|(r<<16)|(g<<8)|(b<<0) );
+	fill_circle2( data->srf_circle, ZG_RADIUS_CIRCLE_CURSOR,ZG_RADIUS_CIRCLE_CURSOR,ZG_RADIUS_CIRCLE_CURSOR, ZG_COLOR_CIRCLE_CURSOR);//(0xff<<24)|(r<<16)|(g<<8)|(b<<0) );
 	SDL_SetColorKey(data->srf_circle, SDL_TRUE, 0);
 
-	data->scale_x=(float)STREAM_WIDTH/(float)ZG_Graphics_GetWidth();
-	data->scale_y=(float)STREAM_HEIGHT/(float)ZG_Graphics_GetHeight();
+	data->scale_x=(float)ZG_STREAM_WIDTH/(float)ZG_Graphics_GetWidth();
+	data->scale_y=(float)ZG_STREAM_HEIGHT/(float)ZG_Graphics_GetHeight();
 
-	if(JpegMPS_GfxSetup(data)){
+	if(ZG_JpegMPS_GfxSetup(data)){
 
 		data->http_server_mps = ZN_HttpServerMPS_New();
 		ZN_HttpServerMPS_SetTimeDelay(data->http_server_mps,16);
@@ -123,18 +123,18 @@ JpegMPS * JpegMPS_New(void){
 }
 
 
-void JpegMPS_GfxSetup_Start(JpegMPS *_this,int port){
+void ZG_JpegMPS_GfxSetup_Start(ZG_JpegMPS *_this,int port){
 	if(_this == NULL) return;
-	JpegMPSData *data= _this->data;
+	ZG_JpegMPSData *data= _this->data;
 
 	if(data->init){
 		ZN_HttpServerMPS_Start(data->http_server_mps,port);
 	}
 }
 
-void ZG_JpegMPS_GfxSetup_Stop(JpegMPS *_this){
+void ZG_JpegMPS_GfxSetup_Stop(ZG_JpegMPS *_this){
 	if(_this == NULL) return;
-	JpegMPSData *data= _this->data;
+	ZG_JpegMPSData *data= _this->data;
 	if(data->init){
 		ZN_HttpServerMPS_Stop(data->http_server_mps);
 	}
@@ -241,7 +241,7 @@ void  CJpegStreamNet::gestServer(){
 #endif
 //---------------------------------------------------------------------------------------------------------------
 
-void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
+void ZG_JpegMPS_SaveFrame(ZG_JpegMPSData * data,uint8_t *gpu_data){
 
 
 	// if we can write ...
@@ -250,22 +250,22 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 		ZG_Vector2i mp=ZG_Input_GetMousePosition();
 
 		SDL_Rect rect=(SDL_Rect){
-				.x=(int)((mp.x-RADIUS_CIRCLE_CURSOR)*data->scale_x)
-				,.y=(int)((mp.y-RADIUS_CIRCLE_CURSOR)*data->scale_y)
+				.x=(int)((mp.x-ZG_RADIUS_CIRCLE_CURSOR)*data->scale_x)
+				,.y=(int)((mp.y-ZG_RADIUS_CIRCLE_CURSOR)*data->scale_y)
 				//,.w=0
 				//,.h=0
 		};
 
 
-		memcpy(data->srf_clone->pixels,gpu_data,STREAM_SIZE);
+		memcpy(data->srf_clone->pixels,gpu_data,ZG_STREAM_SIZE);
 
-		int size_scanline = STREAM_WIDTH*3;
+		int size_scanline = ZG_STREAM_WIDTH*3;
 		char aux_scanline[size_scanline];
 		uint8_t *src_up   = (uint8_t *)data->srf_clone->pixels;
-		uint8_t *src_down = ((uint8_t *)data->srf_clone->pixels+(STREAM_HEIGHT-1)*size_scanline);
+		uint8_t *src_down = ((uint8_t *)data->srf_clone->pixels+(ZG_STREAM_HEIGHT-1)*size_scanline);
 
 
-		for(int y = 0; y < (STREAM_HEIGHT>>1); y++){
+		for(int y = 0; y < (ZG_STREAM_HEIGHT>>1); y++){
 
 			memcpy(aux_scanline , src_up	  	,size_scanline);
 			memcpy(src_up		, src_down		,size_scanline);
@@ -279,10 +279,9 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 
 
 		// paint eyetracker cursor...
-		//drawCircle(gpu_data,JEME_INPUT->m_mousePosition.y,JEME_INPUT->m_mousePosition.x, 30, 255,0,0);
 		long unsigned int jpeg_len;
 
-		uint8_t *jpeg_bin = jpeg_encode_mem((uint8_t *)data->srf_clone->pixels,STREAM_WIDTH,STREAM_HEIGHT,IMAGE_QUALITY , &jpeg_len);
+		uint8_t *jpeg_bin = jpeg_encode_mem((uint8_t *)data->srf_clone->pixels,ZG_STREAM_WIDTH,ZG_STREAM_HEIGHT,ZG_IMAGE_QUALITY , &jpeg_len);
 
 		ZN_HttpServerMPS_Write(data->http_server_mps,jpeg_bin,(size_t)jpeg_len);
 
@@ -290,20 +289,20 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 	}
 }
 
-void JpegMPS_CaptureFrame(JpegMPSData *data){
+void ZG_JpegMPS_CaptureFrame(ZG_JpegMPSData *data){
 	switch(ZG_Graphics_GetGraphicsApi()){
 	case ZG_GRAPHICS_API_GL:
-		JpegMPS_GL_CaptureFrame(data);
+		ZG_JpegMPS_GL_CaptureFrame(data);
 		break;
 	}
 
 
 }
 
-void JpegMPS_FetchFrame(JpegMPSData *data){
+void ZG_JpegMPS_FetchFrame(ZG_JpegMPSData *data){
 	switch(ZG_Graphics_GetGraphicsApi()){
 	case ZG_GRAPHICS_API_GL:
-		JpegMPS_GL_FetchFrame(data);
+		ZG_JpegMPS_GL_FetchFrame(data);
 		break;
 	}
 
@@ -311,7 +310,7 @@ void JpegMPS_FetchFrame(JpegMPSData *data){
 }
 
 
-void JpegMPS_Update(JpegMPSData *data){
+void ZG_JpegMPS_Update(ZG_JpegMPSData *data){
 
 	if(data->init ) // with PBO
 	{
@@ -319,7 +318,7 @@ void JpegMPS_Update(JpegMPSData *data){
 
 		if((n_frame & 0x1) == 0){ // capture fbo..
 
-			JpegMPS_CaptureFrame(data);
+			ZG_JpegMPS_CaptureFrame(data);
 
 		}
 		else{ //write result to framebuffer...
@@ -329,10 +328,10 @@ void JpegMPS_Update(JpegMPSData *data){
 				// increment current index first then get the next index
 				// "index" is used to read pixels from a framebuffer to a PBO
 				// "nextIndex" is used to process pixels in the other PBO
-				data->index = (data->index + 1) & MASK_PBO_COUNT;
-				data->nextIndex = (data->index + 1) & MASK_PBO_COUNT;
+				data->index = (data->index + 1) & ZG_MASK_PBO_COUNT;
+				data->nextIndex = (data->index + 1) & ZG_MASK_PBO_COUNT;
 
-				JpegMPS_FetchFrame(data);
+				ZG_JpegMPS_FetchFrame(data);
 
 			}
 		}
@@ -343,16 +342,16 @@ void JpegMPS_Update(JpegMPSData *data){
     ///////////////////////////////////////////////////
 }
 
-void JpegMPS_Delete(JpegMPS *_this){
+void ZG_JpegMPS_Delete(ZG_JpegMPS *_this){
 
-	JpegMPSData *data=_this->data;
+	ZG_JpegMPSData *data=_this->data;
 
 	ZN_HttpServerMPS_Delete(data->http_server_mps);
 
 	//SDL_RWclose(rw);
 	switch(ZG_Graphics_GetGraphicsApi()){
 	case ZG_GRAPHICS_API_GL:
-		JpegMPS_Delete_GL(data);
+		ZG_JpegMPS_Delete_GL(data);
 		break;
 	}
 

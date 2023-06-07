@@ -116,7 +116,7 @@ int  ZG_FileSystem_GetLength(const char * filename)
 		return ZG_FileSystem_FileLengthPFS(filename);
 	}
 
-	return File_Length(filename);
+	return ZG_File_Length(filename);
 }
 
 ZP_List *  ZG_FileSystem_ListFiles(const char * folder, const char * filter, bool recursive){

@@ -1,15 +1,15 @@
-#include "physics/zg_physics.h"
+#include "physics/_zg_physics_.h"
 
 
-RectangleCollider2d * RectangleCollider2d_New(uint16_t _width, uint16_t _height){
-	RectangleCollider2d *collider=ZG_NEW(RectangleCollider2d);
+ZG_RectangleCollider2d * ZG_RectangleCollider2d_New(uint16_t _width, uint16_t _height){
+	ZG_RectangleCollider2d *collider=ZG_NEW(ZG_RectangleCollider2d);
 	collider->width=ZG_ViewPort_ScreenToWorldWidth(_width)*0.5;
 	collider->height=ZG_ViewPort_ScreenToWorldHeight(_height)*0.5;
 	return collider;
 }
 
 
-void RectangleCollider2d_Delete(RectangleCollider2d * _this){
+void ZG_RectangleCollider2d_Delete(ZG_RectangleCollider2d * _this){
 	ZG_FREE(_this);
 }
 

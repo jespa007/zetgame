@@ -63,12 +63,12 @@ int main(int argc, char *argv[]){
 		request_forward_seek=0;
 		request_backward_seek=0;
 
-		if(K_0){
+		if(ZG_KP_0){
 			ZG_Log_InfoF("play effect");
 			ZG_Sample_Play(id_effect);
 
 		}
-		if(K_1){
+		if(ZG_KP_1){
 
 			if(ZG_Music_IsPlaying(id_wav)&& !ZG_Music_IsPaused(id_wav)){
 				ZG_Log_InfoF("Pause wav");
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]){
 				}
 			}
 		}
-		if(K_2){
+		if(ZG_KP_2){
 			if(ZG_Music_IsPlaying(id_xm)&& !ZG_Music_IsPaused(id_xm)){
 				ZG_Log_InfoF("Pause xm");
 				ZG_Music_Pause(id_xm);
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]){
 				}
 			}
 		}
-		if(K_3){
+		if(ZG_KP_3){
 			if(ZG_Music_IsPlaying(id_ogg)&& !ZG_Music_IsPaused(id_ogg)){
 				ZG_Log_InfoF("Pause ogg");
 				ZG_Music_Stop(id_ogg);
@@ -116,8 +116,8 @@ int main(int argc, char *argv[]){
 		}
 
 
-		if(K_RIGHT)	request_forward_seek=1;
-		if(K_LEFT)	request_backward_seek=1;
+		if(ZG_KP_RIGHT)	request_forward_seek=1;
+		if(ZG_KP_LEFT)	request_backward_seek=1;
 
 
 		if(request_forward_seek){
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 		ZG_Input_Update();
-	}while(!K_ESC);
+	}while(!ZG_KP_ESC);
 
 	ZG_DeInit();
 

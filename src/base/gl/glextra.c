@@ -372,7 +372,7 @@ GLuint glGenTexture2D(GLushort width, GLushort height, GLint internalFormat, GLe
 	return textureId;
 }
 
-GLboolean glGenFrameBufferExt(FBOInfo * fboInfo, GLushort width, GLushort height)
+GLboolean glGenFrameBufferExt(ZG_FBOInfo * fboInfo, GLushort width, GLushort height)
 {
 	GLuint result = GL_FRAMEBUFFER_UNDEFINED;
 
@@ -405,7 +405,7 @@ GLboolean glGenFrameBufferExt(FBOInfo * fboInfo, GLushort width, GLushort height
 }
 
 
-void glDeleteFrameBufferExt(FBOInfo * fboInfo)
+void glDeleteFrameBufferExt(ZG_FBOInfo * fboInfo)
 {
 	glDeleteFramebuffers(1,&fboInfo->id);
 	glDeleteTextures(1,&fboInfo->color);

@@ -1,6 +1,3 @@
-#ifndef __ZG_MATH_H__
-#define __ZG_MATH_H__
-
 #include "../base/_zg_base_.h"
 
 #include "ZG_Luts.h"
@@ -25,5 +22,3 @@
 #define  PI  3.14159265358979323846264338327950288419716939937510582
 #endif
 
-
-#endif
