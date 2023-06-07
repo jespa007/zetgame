@@ -204,7 +204,7 @@ void 				GUIWindow_SetWindowStyle(GUIWindow * _this, WindowStyle _window_style){
 
 void GUIWindow_OnSetWidth(void *gui_window, uint16_t width){
 
-	UNUSUED_PARAM(width);
+	ZG_UNUSUED_PARAM(width);
 
 	GUIWindow *_this=gui_window;
 	GUIWindowData *data=_this->data;
@@ -266,7 +266,7 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 
 void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 
-	UNUSUED_PARAM(event);
+	ZG_UNUSUED_PARAM(event);
 
 	 GUIWindow *_this=gui_window;
 	 GUIWindowData *data=_this->data;
@@ -280,9 +280,9 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 
 		//ZG_Log_Info("moving !");
 
-		ZG_Vector2i position = Vector2i_Add(
+		ZG_Vector2i position = ZG_Vector2i_Add(
 			GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_LOCAL)
-			,Vector2i_Sub(Input_GetMousePosition(),data->start_mouse_position)
+			,ZG_Vector2i_Sub(Input_GetMousePosition(),data->start_mouse_position)
 		);
 
 		GUIWidget_SetPosition2i(_this->widget,position.x,position.y);
@@ -296,7 +296,7 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 }
 
  void GUIWindow_OnMouseButtonUp(MouseEvent * event, void *gui_window){
-	 UNUSUED_PARAM(event);
+	 ZG_UNUSUED_PARAM(event);
 
 	 GUIWindow *_this=gui_window;
 	 GUIWindowData *data=_this->data;

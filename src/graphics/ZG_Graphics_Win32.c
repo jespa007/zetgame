@@ -172,7 +172,7 @@ ZG_List * ZG_Graphics_Win32_GetListAdapters(void){
         strncpy(device_name, dd.DeviceName,sizeof(dd.DeviceName));
         while(EnumDisplayDevices(device_name, idx_monitor, &dd, 1))
         {
-        	AdapterInfo *mei=ZG_NEW(AdapterInfo);
+        	ZG_AdapterInfo *mei=ZG_NEW(ZG_AdapterInfo);
         	DWORD width, height;
         	//CHAR monitor_model[1024];
 
@@ -180,7 +180,7 @@ ZG_List * ZG_Graphics_Win32_GetListAdapters(void){
 
             //std::cout << mei.MonitorModel << ":" << width <<"x" << height << "." << idx_device << "\n";
 
-        	if(Graphics_GetScreenBounds( idx_device,&rect)){
+        	if(ZG_Graphics_GetScreenBounds( idx_device,&rect)){
         		mei->pixels_width=rect.w;
         		mei->pixels_height=rect.h;
         	}

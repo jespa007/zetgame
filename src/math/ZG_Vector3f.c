@@ -1,6 +1,6 @@
-#include "zg_math.h"
+#include "_zg_math_.h"
 
-ZG_Vector3f  Vector3f_New3f(float x, float y, float z){
+ZG_Vector3f  ZG_Vector3f_New3f(float x, float y, float z){
 	return (ZG_Vector3f){
 		.x=x
 		,.y=y
@@ -8,14 +8,14 @@ ZG_Vector3f  Vector3f_New3f(float x, float y, float z){
 	};
 }
 
-ZG_Vector3f  Vector3f_Zeros(){
+ZG_Vector3f  ZG_Vector3f_Zeros(){
 	return (ZG_Vector3f){
 		.x=0
 		,.y=0
 		,.z=0
 	};
 }
-ZG_Vector3f  Vector3f_Ones(){
+ZG_Vector3f  ZG_Vector3f_Ones(){
 	return (ZG_Vector3f){
 		.x=1
 		,.y=1
@@ -23,7 +23,7 @@ ZG_Vector3f  Vector3f_Ones(){
 	};
 }
 
-ZG_Vector3f  Vector3f_Normalize(ZG_Vector3f  v){
+ZG_Vector3f  ZG_Vector3f_Normalize(ZG_Vector3f  v){
 	float length = 1.0f/sqrtf( v.x*v.x + v.y*v.y + v.z*v.z );
 	v.x*=length;
 	v.y*=length;
@@ -31,7 +31,7 @@ ZG_Vector3f  Vector3f_Normalize(ZG_Vector3f  v){
 	return v;
 }
 
-ZG_Vector3f  Vector3f_Add(ZG_Vector3f  v1,ZG_Vector3f  v2){
+ZG_Vector3f  ZG_Vector3f_Add(ZG_Vector3f  v1,ZG_Vector3f  v2){
 	return (ZG_Vector3f){
 	 .x=v1.x + v2.x
 	,.y=v1.y + v2.y
@@ -39,7 +39,7 @@ ZG_Vector3f  Vector3f_Add(ZG_Vector3f  v1,ZG_Vector3f  v2){
 	};
 }
 
-ZG_Vector3f  Vector3f_Sub(ZG_Vector3f  v1,ZG_Vector3f  v2){
+ZG_Vector3f  ZG_Vector3f_Sub(ZG_Vector3f  v1,ZG_Vector3f  v2){
 	return (ZG_Vector3f){
 	 .x=v1.x - v2.x
 	,.y=v1.y - v2.y
@@ -47,7 +47,7 @@ ZG_Vector3f  Vector3f_Sub(ZG_Vector3f  v1,ZG_Vector3f  v2){
 	};
 }
 
-ZG_Vector3f  Vector3f_Mul(ZG_Vector3f  v1,ZG_Vector3f  v2){
+ZG_Vector3f  ZG_Vector3f_Mul(ZG_Vector3f  v1,ZG_Vector3f  v2){
 	return (ZG_Vector3f){
 		.x=v1.x * v2.x
 		,.y=v1.y * v2.y

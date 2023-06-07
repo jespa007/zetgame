@@ -45,8 +45,8 @@ ZG_Texture * ZG_Texture_NewFromFile(const char *_filename){
 	ZG_BufferByte *buffer= NULL;
 	ZG_Texture *texture = NULL;
 
-	if(FileSystem_FileExists(_filename)){
-		buffer=FileSystem_ReadFile(_filename);
+	if(ZG_FileSystem_FileExists(_filename)){
+		buffer=ZG_FileSystem_ReadFile(_filename);
 
 		texture=ZG_Texture_NewFromMemory(buffer->ptr,buffer->len);
 		ZG_BufferByte_Delete(buffer);
@@ -132,7 +132,7 @@ bool ZG_Texture_UpdateFromSurface(ZG_Texture *_this, uint16_t _x, uint16_t _y,SD
 	if(_this == NULL) return false;
 
 	if(srf ==NULL) {
-		Log_WarningF("Surface null");
+		ZG_Log_WarningF("Surface null");
 		return false;
 	}
 	return ZG_Texture_Update(_this,_x,_y,srf->w,srf->h,srf->pixels,srf->format->BytesPerPixel);

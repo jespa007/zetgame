@@ -16,7 +16,7 @@ void	ACTransformAnimation_Setup(void *_this, ComponentId _id){
 	ac_transform_animation->data=data;
 }
 
-void			ACTransformAnimation_StartAction(void *_this, TransformAction *action, int repeat){
+void			ACTransformAnimation_StartAction(void *_this, ZG_TransformAction *action, int repeat){
 	ACTransformAnimation *ac_transform_animation=_this;
 	ACTransformAnimationData *data=ac_transform_animation->data;
 
@@ -33,7 +33,7 @@ void			ACTransformAnimation_StartAction(void *_this, TransformAction *action, in
 
 void ACTransformAnimation_StartTween(
 		  void *_this
-		, TransformComponent _transform_component
+		, ZG_TransformComponent _transform_component
 		, Ease _ease
 		, float _from
 		, float _to

@@ -1,8 +1,8 @@
 
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
 typedef struct{
-	Action *action;
+	ZG_Action *action;
 }ZG_TransformActionData;
 
 
@@ -12,7 +12,7 @@ ZG_TransformAction 	*	ZG_TransformAction_New(void){
 	ZG_TransformAction *transform_action=ZG_NEW(ZG_TransformAction);
 	ZG_TransformActionData *data=ZG_NEW(ZG_TransformActionData);
 
-	Action *action=Action_New(ZG_TRANSFORM_COMPONENT_MAX);
+	ZG_Action *action=ZG_Action_New(ZG_TRANSFORM_COMPONENT_MAX);
 	data->action=action;
 
 	transform_action->data=data;
@@ -21,13 +21,13 @@ ZG_TransformAction 	*	ZG_TransformAction_New(void){
 }
 void					ZG_TransformAction_SetKeyframesTrack(
 		ZG_TransformAction *_this
-		, TransformComponent _transform_component
+		, ZG_TransformComponent _transform_component
 		, Ease _ease
 		,float *_keyframe_points
 		, size_t _keyframe_points_count
 ){
 	ZG_TransformActionData *data=_this->data;
-	Action_SetKeyframesTrack(
+	ZG_Action_SetKeyframesTrack(
 		data->action
 		,_transform_component
 		,_ease
@@ -37,7 +37,7 @@ void					ZG_TransformAction_SetKeyframesTrack(
 
 }
 
-Action *ZG_TransformAction_GetAction(ZG_TransformAction 	*_this){
+ZG_Action *ZG_TransformAction_GetAction(ZG_TransformAction 	*_this){
 	ZG_TransformActionData *data=_this->data;
 
 	return data->action;
@@ -45,7 +45,7 @@ Action *ZG_TransformAction_GetAction(ZG_TransformAction 	*_this){
 
 void 					ZG_TransformAction_Delete(ZG_TransformAction *_this){
 	ZG_TransformActionData *data=_this->data;
-	Action_Delete(data->action);
+	ZG_Action_Delete(data->action);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

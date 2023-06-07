@@ -11,7 +11,7 @@ void			ACMaterialAnimation_Init(void *_this);
 
 void			ACMaterialAnimation_StartAction(
 		void *_this
-		, MaterialAction *action
+		, ZG_MaterialAction *action
 		, int repeat
 );
 

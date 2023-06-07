@@ -1,10 +1,10 @@
-#ifndef __LIGHT_H__
-#define __LIGHT_H__
+#ifndef __ZG_LIGHT_H__
+#define __ZG_LIGHT_H__
 
 typedef struct ZG_Light ZG_Light;
 
 struct ZG_Light{
-	Shape 			*shape;
+	ZG_Shape 			*shape;
 };
 
 ZG_Light * ZG_Light_New(void);

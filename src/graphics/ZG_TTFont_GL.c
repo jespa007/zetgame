@@ -15,7 +15,7 @@ void ZG_TTFont_GL_Init(void){
 	// PRE: OpenGL context is already initialized!
 }
 
-void ZG_TTFont_GL_BuildChar(TTFontCharacter *_font_character, FT_Face _face){
+void ZG_TTFont_GL_BuildChar(ZG_TTFontCharacter *_font_character, FT_Face _face){
 
 	GLuint texture=GL_INVALID_VALUE;
 
@@ -51,14 +51,14 @@ void ZG_TTFont_GL_BuildChar(TTFontCharacter *_font_character, FT_Face _face){
 
 }
 
-void ZG_TTFont_GL_DrawCharacter(TTFontCharacter *_font_character){
+void ZG_TTFont_GL_DrawCharacter(ZG_TTFontCharacter *_font_character){
 	ZG_CharacterDataGL *ch_data=_font_character->data;
 	glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be ZG_Texture and Bind according
 }
 
 
 
-void ZG_TTFont_GL_DeleteChar(TTFontCharacter *_font_character){
+void ZG_TTFont_GL_DeleteChar(ZG_TTFontCharacter *_font_character){
 	ZG_CharacterDataGL *ch_data=_font_character->data;
 	glDeleteTextures(1,&ch_data->texture);
 	ZG_FREE(ch_data);

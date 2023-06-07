@@ -1,10 +1,10 @@
-#ifndef __VECTOR3I_H__
-#define __VECTOR3I_H__
+#ifndef __ZG_VECTOR3I_H__
+#define __ZG_VECTOR3I_H__
 
 
-typedef struct Vector3i Vector3i;
+typedef struct ZG_Vector3i ZG_Vector3i;
 
-struct Vector3i{
+struct ZG_Vector3i{
 	int x,y,z;
 };
 

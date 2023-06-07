@@ -5,11 +5,11 @@
 
 
 typedef struct ZG_Action ZG_Action;
-//typedef struct KeyframeTrack KeyframeTrack;
+//typedef struct ZG_KeyframeTrack ZG_KeyframeTrack;
 
 struct ZG_Action{
-	ChannelsInfo		*channels_info;
-	KeyframeTrack 		**channel_keyframe_tracks;
+	ZG_ChannelsInfo		*channels_info;
+	ZG_KeyframeTrack 		**channel_keyframe_tracks;
 	uint32_t 	   		duration;
 	uint32_t 			min_time_ms;
 	uint32_t 			max_time_ms;

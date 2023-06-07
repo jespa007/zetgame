@@ -1,25 +1,25 @@
 #ifndef __ZG_GUI_H__
 #define __ZG_GUI_H__
 
-#include "input/zg_input.h"
-#include "graphics/zg_graphics.h"
+#include "input/_zg_input_.h"
+#include "graphics/_zg_graphics_.h"
 
-#include "GUIWidget.h"
-#include "GUIFrame.h"
-#include "GUIButton.h"
-#include "GUITextBox.h"
-#include "GUITexture.h"
-#include "GUIWindow.h"
-#include "GUIWindowManager.h"
+#include "ZG_WidgetGUI.h"
+#include "ZG_FrameGUI.h"
+#include "ZG_ButtonGUI.h"
+#include "ZG_TextBoxGUI.h"
+#include "ZG_TextureGUI.h"
+#include "ZG_WindowGUI.h"
+#include "ZG_WindowManagerGUI.h"
 
 
-void GUI_Init(void);
+void ZG_GUI_Init(void);
 
 
 /*void GUI_Begin(GUIWindow * window);
 void GUI_End(void);*/
 
-void GUI_DeInit(void);
+void ZG_GUI_DeInit(void);
 
 
 		/*void begin(){

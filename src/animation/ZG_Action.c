@@ -1,15 +1,15 @@
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
 ZG_Action * 			ZG_Action_New(uint8_t n_channels){
 	ZG_Action *action=ZG_NEW(ZG_Action);
 	memset(action,0,sizeof(ZG_Action));
 
-	action->channels_info=ChannelsInfo_New(n_channels);
+	action->channels_info=ZG_ChannelsInfo_New(n_channels);
 
-	action->channel_keyframe_tracks=malloc(sizeof(KeyframeTrack *)*n_channels);
+	action->channel_keyframe_tracks=malloc(sizeof(ZG_KeyframeTrack *)*n_channels);
 
 	for(unsigned i=0; i < action->channels_info->n_channels; i++){
-		action->channel_keyframe_tracks[i]=KeyframeTrack_New();
+		action->channel_keyframe_tracks[i]=ZG_KeyframeTrack_New();
 	}
 
 	return action;
@@ -29,8 +29,8 @@ void 	ZG_Action_SetKeyframesTrack(ZG_Action *_this
 		return;
 	}
 
-	KeyframeTrack_SetEase(_this->channel_keyframe_tracks[idx_channel],ease);
-	KeyframeTrack_SetKeyframes(_this->channel_keyframe_tracks[idx_channel],keyframe_points,keyframe_points_count);
+	ZG_KeyframeTrack_SetEase(_this->channel_keyframe_tracks[idx_channel],ease);
+	ZG_KeyframeTrack_SetKeyframes(_this->channel_keyframe_tracks[idx_channel],keyframe_points,keyframe_points_count);
 
 	_this->min_time_ms=MIN(_this->min_time_ms,_this->channel_keyframe_tracks[idx_channel]->minx_interval);
 	_this->max_time_ms=MAX(_this->max_time_ms,_this->channel_keyframe_tracks[idx_channel]->maxx_interval);
@@ -138,7 +138,7 @@ bool ZG_Action_Update(ZG_Action *_this, uint32_t current_time_ms, uint32_t *star
 
 	// update all channels...
 	for(int i = 0; i < _this->channels_info->n_channels; i++){
-		if(KeyframeTrack_Interpolate(_this->channel_keyframe_tracks[i],time_ms,&point)){
+		if(ZG_KeyframeTrack_Interpolate(_this->channel_keyframe_tracks[i],time_ms,&point)){
 				_this->channels_info->channels[i]  = point;
 		}
 	}
@@ -150,7 +150,7 @@ void ZG_Action_Unload(ZG_Action *_this){
 	if(_this->channel_keyframe_tracks !=NULL){
 		for(unsigned i = 0; i < _this->channels_info->n_channels; i++){
 			if(_this->channel_keyframe_tracks[i] != NULL){
-				KeyframeTrack_Delete(_this->channel_keyframe_tracks[i]);
+				ZG_KeyframeTrack_Delete(_this->channel_keyframe_tracks[i]);
 			}
 		}
 
@@ -163,12 +163,12 @@ void ZG_Action_Unload(ZG_Action *_this){
 void ZG_Action_Delete(ZG_Action * _this){
 	if(_this != NULL){
 		for(unsigned i=0; i < _this->channels_info->n_channels; i++){
-			KeyframeTrack_Delete(_this->channel_keyframe_tracks[i]);
+			ZG_KeyframeTrack_Delete(_this->channel_keyframe_tracks[i]);
 		}
 
 		ZG_FREE(_this->channel_keyframe_tracks);
 
-		ChannelsInfo_Delete(_this->channels_info);
+		ZG_ChannelsInfo_Delete(_this->channels_info);
 		ZG_FREE(_this);
 
 	}

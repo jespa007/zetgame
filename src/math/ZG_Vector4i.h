@@ -1,9 +1,9 @@
-#ifndef __VECTOR4I_H__
-#define __VECTOR4I_H__
+#ifndef __ZG_VECTOR4I_H__
+#define __ZG_VECTOR4I_H__
 
-typedef struct Vector4i Vector4i;
+typedef struct ZG_Vector4i ZG_Vector4i;
 
-struct Vector4i{
+struct ZG_Vector4i{
 	int x,y,z,w;
 };
 

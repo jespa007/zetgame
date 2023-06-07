@@ -1,6 +1,6 @@
 #include "_zg_base_.h"
 
-static ZN_PackedFileSystem *g_packed_file_system=NULL;
+static ZP_PackedFileSystem *g_packed_file_system=NULL;
 
 //-----------------------------------------------------------------------------------------------v
 // PFGS memory ops.
@@ -13,7 +13,7 @@ static bool ZG_FileSystem_FileExistsPFS(const char * filename) {
 		return false;
 	}
 
-	if(PackedZG_FileSystem_Open(g_packed_file_system,filename,&fp)){
+	if(ZP_PackedFileSystem_Open(g_packed_file_system,filename,&fp)){
 		return true;
 	}
 
@@ -29,10 +29,10 @@ static ZG_BufferByte * ZG_FileSystem_ReadFilePFS(const char * filename){
 		return NULL;
 	}
 
-	if(PackedZG_FileSystem_Open(g_packed_file_system,filename,&fp)){
+	if(ZP_PackedFileSystem_Open(g_packed_file_system,filename,&fp)){
 
-		ZG_BufferByte *buffer = BufferByte_New(fp.size+1);
-		PackedZG_FileSystem_Read(g_packed_file_system,fp, buffer->ptr, fp.size);
+		ZG_BufferByte *buffer = ZG_BufferByte_New(fp.size+1);
+		ZP_PackedFileSystem_Read(g_packed_file_system,fp, buffer->ptr, fp.size);
 		return buffer;
 	}
 	else{
@@ -50,7 +50,7 @@ static int  ZG_FileSystem_FileLengthPFS(const char * filename){
 	}
 
 
-	if(PackedZG_FileSystem_Open(g_packed_file_system,filename,&fp)){
+	if(ZP_PackedFileSystem_Open(g_packed_file_system,filename,&fp)){
 		return fp.size;
 	}else{
 		ZG_Log_Error("File not exist %s",filename);
@@ -64,8 +64,8 @@ bool ZG_FileSystem_InitFromFile(const char * filename) {
 		ZG_Log_ErrorF("Filesystem already initialized");
 	}
 
-	g_packed_file_system=PackedZG_FileSystem_New();
-	return PackedZG_FileSystem_LoadFromFile(g_packed_file_system,filename,0);
+	g_packed_file_system=ZP_PackedFileSystem_New();
+	return ZP_PackedFileSystem_LoadFromFile(g_packed_file_system,filename,0);
 }
 
 bool ZG_FileSystem_InitFromMemory(ZG_BufferByte *buffer){
@@ -73,8 +73,8 @@ bool ZG_FileSystem_InitFromMemory(ZG_BufferByte *buffer){
 		ZG_Log_ErrorF("Filesystem already initialized");
 	}
 
-	g_packed_file_system=PackedZG_FileSystem_New();
-	return PackedZG_FileSystem_LoadFromMemory(g_packed_file_system,buffer->ptr,buffer->len);
+	g_packed_file_system=ZP_PackedFileSystem_New();
+	return ZP_PackedFileSystem_LoadFromMemory(g_packed_file_system,buffer->ptr,buffer->len);
 }
 
 time_t ZG_FileSystem_GetModificationTime(const  char  * filename){
@@ -119,19 +119,19 @@ int  ZG_FileSystem_GetLength(const char * filename)
 	return File_Length(filename);
 }
 
-ZPList *  ZG_FileSystem_ListFiles(const char * folder, const char * filter, bool recursive){
+ZP_List *  ZG_FileSystem_ListFiles(const char * folder, const char * filter, bool recursive){
 
 	if(g_packed_file_system!=NULL){
-		return PackedZG_FileSystem_ListFiles(g_packed_file_system,folder, filter,recursive);
+		return ZP_PackedFileSystem_ListFiles(g_packed_file_system,folder, filter,recursive);
 	}
 
-	return ZPIO_ListFiles(folder,filter, recursive);
+	return ZP_IO_ListFiles(folder,filter, recursive);
 }
 
 
 void ZG_FileSystem_DeInit(void) {
 	if(g_packed_file_system != NULL){
-		PackedZG_FileSystem_Delete(g_packed_file_system);
+		ZP_PackedFileSystem_Delete(g_packed_file_system);
 	}
 
 }

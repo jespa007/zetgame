@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
 
-	ZetGameSetupParams default_setup={
+	ZG_SetupParams default_setup={
 			.graphics_api=ZG_GRAPHICS_API_GL
 			,.width=ZG_DEFAULT_SCREEN_WIDTH
 			,.height=ZG_DEFAULT_SCREEN_HEIGHT
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	uint_t	 request_forward_seek=0
 			,request_backward_seek=0;
 
-	ZetGame_Init(&default_setup);
+	ZG_Init(&default_setup);
 
 	SAMPLE 	id_effect = INVALID_SOUND_IDX;
 	MUSIC 	id_wav = INVALID_SOUND_IDX
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 	ZG_Log_Info("duration 3: %2i:%02i s",Music_GetDuration(id_ogg)/60000	,(int)(((float)(Music_GetDuration(id_ogg))/60000.0f)*60.0f));
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		request_forward_seek=0;
 		request_backward_seek=0;
@@ -134,7 +134,7 @@ int main(int argc, char *argv[]){
 
 		Mixer_Update();
 
-		Graphics_EndRender();
+		ZG_Graphics_EndRender();
 		Input_Update();
 	}while(!K_ESC);
 

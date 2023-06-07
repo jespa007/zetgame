@@ -198,7 +198,7 @@ void AnimationSystem_ExtendComponent(AnimationSystem *_this,AComponent _idx_comp
 void				AnimationSystem_StartTweenTransform(
 		AnimationSystem *_this
 		,Entity	*_entity
-		, TransformComponent _transform_component
+		, ZG_TransformComponent _transform_component
 		, Ease _ease
 		, float _from
 		, float _to

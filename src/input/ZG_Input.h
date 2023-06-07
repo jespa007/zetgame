@@ -35,7 +35,7 @@ typedef struct
 
 typedef struct{
 	ZG_Vector2i   	position,position_previous,position_diff;
-	Vector2f    factor;
+	ZG_Vector2f    factor;
 	bool    	motion,left_press,left_hold;
 }MouseInfo;
 

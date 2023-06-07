@@ -2,7 +2,7 @@
 
 
 typedef struct{
-	MapString 			* 	tilemaps;	// it saves its layers
+	ZG_MapString 			* 	tilemaps;	// it saves its layers
 	ZG_TextureManager   	*   texture_manager;
 }TilemapManagerData;
 
@@ -27,7 +27,7 @@ TilemapManager *TilemapManager_New(ZG_TextureManager	* _texture_manager){
 	TilemapManager *tmm=ZG_NEW(TilemapManager);
 	TilemapManagerData *data=ZG_NEW(TilemapManagerData);
 
-	data->tilemaps = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->tilemaps = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
 
 	data->tilemaps->on_delete=TilemapManager_OnDeleteTilemap;
@@ -123,7 +123,7 @@ bool TilemapManager_LoadFromMemory(
 		size_t tilemap_dim= tilemap_width->valueint*tilemap_height->valueint;
 
 		if(tilemap_data_len == 0){
-			Log_WarningF("JsonParse: empty tilemap");
+			ZG_Log_WarningF("JsonParse: empty tilemap");
 			continue;
 		}
 

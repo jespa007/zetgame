@@ -3,7 +3,7 @@
 void ZG_ViewPort_GL_SetView(ZG_ViewPort * viewport){
 
 	// transform gl normalized y origin on the on top...
-	int yn=Graphics_GetHeight()-viewport->y-viewport->height;
+	int yn=ZG_Graphics_GetHeight()-viewport->y-viewport->height;
 
 
 	glViewport(viewport->x,yn, viewport->width, viewport->height);

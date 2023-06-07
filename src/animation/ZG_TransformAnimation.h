@@ -10,14 +10,14 @@ struct ZG_TransformAnimation{
 };
 
 // STATIC
-Action 				*	ZG_TransformAnimation_NewAction(void);
+ZG_Action 				*	ZG_TransformAnimation_NewAction(void);
 
 
 // PUBLIC
 ZG_TransformAnimation 	*	ZG_TransformAnimation_New(void);
 void					ZG_TransformAnimation_StartAction(
 		ZG_TransformAnimation *_this
-		, TransformAction *_action
+		, ZG_TransformAction *_action
 		,uint32_t _start_time
 		, int _repeat
 );

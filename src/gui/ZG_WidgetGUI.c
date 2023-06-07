@@ -257,7 +257,7 @@ bool	GUIWidget_IsPointCollision(GUIWidget *_this,ZG_Vector2i point){
 	return Vector2i_PointRectCollision(
 				 point
 				,data->position_screen
-				,Vector2i_Add(data->position_screen,data->dimensions)
+				,ZG_Vector2i_Add(data->position_screen,data->dimensions)
 			);
 }
 
@@ -293,8 +293,8 @@ void GUIWidget_UpdatePosition(GUIWidget *_this){
 
 	if(data->parent!=NULL){
 		GUIWidgetData *parent_data=data->parent->data;
-		data->position_world=Vector2i_Add(data->position_world,parent_data->position_world);
-		data->position_screen=Vector2i_Add(data->position_screen,parent_data->position_screen);
+		data->position_world=ZG_Vector2i_Add(data->position_world,parent_data->position_world);
+		data->position_screen=ZG_Vector2i_Add(data->position_screen,parent_data->position_screen);
 	}
 }
 

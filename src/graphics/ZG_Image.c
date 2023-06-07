@@ -17,8 +17,8 @@ ZG_Image * ZG_Image_NewFromFile(const char *_filename){
 	ZG_BufferByte *buffer= NULL;
 	ZG_Image *image = NULL;
 
-	if(FileSystem_FileExists(_filename)){
-		buffer=FileSystem_ReadFile(_filename);
+	if(ZG_FileSystem_FileExists(_filename)){
+		buffer=ZG_FileSystem_ReadFile(_filename);
 
 		image=ZG_Image_NewFromMemory(buffer->ptr,buffer->len);
 		ZG_BufferByte_Delete(buffer);

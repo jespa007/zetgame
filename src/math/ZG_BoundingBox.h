@@ -7,7 +7,7 @@ struct ZG_BoundingBox{
 	float minx,miny,maxx,maxy;
 };
 
-ZG_BoundingBox  BoundingBox_New(void);
+ZG_BoundingBox  ZG_BoundingBox_New(void);
 ZG_BoundingBox  ZG_BoundingBox_New4f(
 	float xmin
 	,float _ymin

@@ -73,8 +73,8 @@ Entity *NewEntityTextBox(
 }
 
 int main(int argc, char *argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
 	//---------------------------------
 	// ALPHA ANIMATION
@@ -214,15 +214,15 @@ int main(int argc, char *argv[]){
 			EC_TEXTBOX_RENDERER
 	};
 	//----------------------------------------------------------------------------------------------------
-	//ZetGameSetupParams setup;
+	//ZG_SetupParams setup;
 	//memset(&setup,0,sizeof(setup));
 	//setup.width=640;
 	//setup.height=480;
 	//setup.graphic_properties=ZG_MSK_GRAPHIC_PROPERTY_FULLSCREEN;
-	//ZetGame_Init(&setup);
+	//ZG_Init(&setup);
 
 	// Initializes zetgame with viewport as 640x480 by default
-	ZetGame_Init(NULL);
+	ZG_Init(NULL);
 
 	EntitySystem  *entity_system=EntitySystem_New();
 
@@ -275,16 +275,16 @@ int main(int argc, char *argv[]){
 	ZG_Texture * text_wheel=ZG_TextureManager_Get(tm,"wheel.png");
 
 	// setup animations/actions (update material action function)...
-	MaterialAction 	  	 			*mat_act_fade_in_out=MaterialAction_New();//ZG_MATERIAL_COMPONENT_MAX);
+	ZG_MaterialAction 	  	 			*mat_act_fade_in_out=MaterialAction_New();//ZG_MATERIAL_COMPONENT_MAX);
 
 	//---
 	// ground
 	NewEntityTexture(
 		em_textures
-		,Graphics_GetWidth()>>1
-		,Graphics_GetHeight()>>1
-		,Graphics_GetWidth()
-		, Graphics_GetHeight()
+		,ZG_Graphics_GetWidth()>>1
+		,ZG_Graphics_GetHeight()>>1
+		,ZG_Graphics_GetWidth()
+		, ZG_Graphics_GetHeight()
 		,text_ground
 		,false
 	);
@@ -323,7 +323,7 @@ int main(int argc, char *argv[]){
 		/*Scene_StartTweenTransform(
 			spr_base_van
 			,ZG_TRANSFORM_COMPONENT_ROTATE_Z
-			, EASE_LINEAR
+			, ZG_EASE_LINEAR
 			, 0
 			, 360
 			, 1000
@@ -351,7 +351,7 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SETUP CAR
-	spr_base_car=NewEntityTransform(em_transforms,Graphics_GetWidth()>>1,Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
+	spr_base_car=NewEntityTransform(em_transforms,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
 	spr_track_car=NewEntityTransform(em_transforms,0,0,true);
 	spr_image_car_part1=NewEntityTexture(em_textures,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
 	spr_image_car_part2=NewEntityTexture(em_textures,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
@@ -386,13 +386,13 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SUN
-	spr_image_sun=NewEntityTexture(em_textures,Graphics_GetWidth()-200,100,100,100,text_sun,false);
+	spr_image_sun=NewEntityTexture(em_textures,ZG_Graphics_GetWidth()-200,100,100,100,text_sun,false);
 	ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ZG_ALPHA_VALUE_TRANSPARENT);
 
 	// ani
 	/*MaterialAction_SetKeyframesTrack(
 			 mat_act_fade_in_out
-			,EASE_IN_OUT_SINE
+			,ZG_EASE_IN_OUT_SINE
 			,alpha_fade_in_out_keyframes
 			,ZG_ARRAY_SIZE(alpha_fade_in_out_keyframes)
 	);*/
@@ -403,7 +403,7 @@ int main(int argc, char *argv[]){
 	//ZG_Transform transform_camera=ZG_Transform_DefaultValues();
 	do{
 
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		/*if(K_SPACE){
 			// todo start action from TextureNode_StartMaterialAction
@@ -422,7 +422,7 @@ int main(int argc, char *argv[]){
 			Graphics_ToggleFullscreen();
 		}
 
-		Graphics_EndRender();
+		ZG_Graphics_EndRender();
 
 		Input_Update();
 

@@ -18,7 +18,7 @@ void ClearChilds(TransformNode * node){
 	}
 
 	SetParent(node,NULL);
-	List_Clear(data->child_nodes);
+	ZG_List_Clear(data->child_nodes);
 }
 //------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ void ClearNodes(TransformNode *_this){
 		ClearNodes(data->child_nodes->items[i]);
 	}
 
-	List_Clear(data->child_nodes);
+	ZG_List_Clear(data->child_nodes);
 }
 
 void SetTranslate3f(TransformNode *_this,float x, float y, float z){
@@ -210,22 +210,22 @@ void UpdateSceneGraph(TransformNode *_this) {
 		// the is propagated ...
 		if(((data->transform_attributes & TRANSFORM_SCALE) == TRANSFORM_SCALE)) {
 			// transforms the scale ...
-			transform_world->scale=Vector3f_Mul(transform_world->scale,parent_transform_world->scale);
+			transform_world->scale=ZG_Vector3f_Mul(transform_world->scale,parent_transform_world->scale);
 		}
 		// Set origin translation ...
 		if(((data->transform_attributes & TRANSFORM_TRANSLATE) == TRANSFORM_TRANSLATE)){
 			transform_world->translate=parent_transform_world->translate;
 
 			// Scale the translation...
-			transform_child_from_parent=Vector3f_Mul(transform_child_from_parent,parent_transform_world->scale);
+			transform_child_from_parent=ZG_Vector3f_Mul(transform_child_from_parent,parent_transform_world->scale);
 
 		}else{
 			transform_world->translate=transform_local->translate;
 		}
 
-		transform_child_from_parent=Quaternion_InverseTransformV3f(parent_transform_world->quaternion,transform_child_from_parent);
-		transform_world->translate=Vector3f_Add(transform_world->translate,transform_child_from_parent);
-		transform_world->quaternion=Quaternion_Mul(local_quaternion,parent_transform_world->quaternion);
+		transform_child_from_parent=ZG_Quaternion_InverseTransformV3f(parent_transform_world->quaternion,transform_child_from_parent);
+		transform_world->translate=ZG_Vector3f_Add(transform_world->translate,transform_child_from_parent);
+		transform_world->quaternion=ZG_Quaternion_Mul(local_quaternion,parent_transform_world->quaternion);
 
 	}
 	else { // Is the root, then add origin on their initial values ...

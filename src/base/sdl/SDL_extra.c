@@ -173,7 +173,7 @@ SDL_Surface *SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, u
 }
 //--------------------------------------------------------------------------------------------------------------------------------
 SDL_Surface	*	SDL_LoadImageFromFile(const char * filename, uint32_t properties, uint8_t convert_to_bpp) {
-	ZG_BufferByte *buf=FileSystem_ReadFile(filename);
+	ZG_BufferByte *buf=ZG_FileSystem_ReadFile(filename);
 	SDL_Surface *new_image_surface = NULL;
 	if(!buf){return NULL;}
 
@@ -439,7 +439,7 @@ SDL_Surface * SDL_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t width
 
 SDL_Surface   * SDL_NewCross(uint16_t dimension, uint32_t fill_color, uint16_t border_width){
 
-	//UNUSUED_PARAM(border_color);
+	//ZG_UNUSUED_PARAM(border_color);
 
 	if(dimension < 32){ // minimum is 32 ...
 		dimension = 32;
@@ -501,7 +501,7 @@ SDL_Surface * SDL_NewRectangle(uint16_t dimension,  uint32_t fill_color, uint16_
 
 /*
 SDL_Surface * SDL_NewTriangle(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color){
-	UNUSUED_PARAM(border_color);
+	ZG_UNUSUED_PARAM(border_color);
 	return NULL;
 }
 */

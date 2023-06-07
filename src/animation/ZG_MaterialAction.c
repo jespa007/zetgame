@@ -1,8 +1,8 @@
 
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
 typedef struct{
-	Action *action;
+	ZG_Action *action;
 }ZG_MaterialActionData;
 
 
@@ -11,7 +11,7 @@ ZG_MaterialAction 	*	ZG_MaterialAction_New(void){
 	ZG_MaterialAction *transform_action=ZG_NEW(ZG_MaterialAction);
 	ZG_MaterialActionData *data=ZG_NEW(ZG_MaterialActionData);
 
-	Action *action=Action_New(ZG_TRANSFORM_COMPONENT_MAX);
+	ZG_Action *action=ZG_Action_New(ZG_TRANSFORM_COMPONENT_MAX);
 	data->action=action;
 
 	transform_action->data=data;
@@ -27,7 +27,7 @@ void					ZG_MaterialAction_SetKeyframesTrack(
 		, size_t _keyframe_points_count
 ){
 	ZG_MaterialActionData *data=_this->data;
-	Action_SetKeyframesTrack(
+	ZG_Action_SetKeyframesTrack(
 		data->action
 		,_material_component
 		,_ease
@@ -37,7 +37,7 @@ void					ZG_MaterialAction_SetKeyframesTrack(
 
 }
 
-Action *ZG_MaterialAction_GetAction(ZG_MaterialAction 	*_this){
+ZG_Action *ZG_MaterialAction_GetAction(ZG_MaterialAction 	*_this){
 	ZG_MaterialActionData *data=_this->data;
 
 	return data->action;
@@ -45,7 +45,7 @@ Action *ZG_MaterialAction_GetAction(ZG_MaterialAction 	*_this){
 
 void 					ZG_MaterialAction_Delete(ZG_MaterialAction *_this){
 	ZG_MaterialActionData *data=_this->data;
-	Action_Delete(data->action);
+	ZG_Action_Delete(data->action);
 
 	ZG_FREE(data);
 	ZG_FREE(_this);

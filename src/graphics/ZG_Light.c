@@ -3,7 +3,7 @@
 ZG_Light * ZG_Light_New(void){
 	ZG_Light * light = ZG_NEW(ZG_Light);
 	// Shape3d it stores transform3d and it can render for debbuging.
-	light->shape = Shape_New();
+	light->shape = ZG_Shape_New();
 
 	return light;
 }

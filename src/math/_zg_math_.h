@@ -1,7 +1,7 @@
 #ifndef __ZG_MATH_H__
 #define __ZG_MATH_H__
 
-#include "base/_zg_base_.h"
+#include "../base/_zg_base_.h"
 
 #include "ZG_Luts.h"
 #include "ZG_Vector2f.h"

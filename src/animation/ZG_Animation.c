@@ -1,7 +1,7 @@
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
 typedef struct{
-	Action *action;
+	ZG_Action *action;
 	uint32_t start_time;
 	int repeat;
 }InfoAction;
@@ -9,14 +9,14 @@ typedef struct{
 
 typedef struct{
 	ZG_List *info_actions;
-	Tween  *tween;
-	ChannelsInfo 	*channels_info;
+	ZG_Tween  *tween;
+	ZG_ChannelsInfo 	*channels_info;
 	ZG_Callback on_after_set_components;
 
 }ZG_AnimationData;
 
 
-InfoAction * InfoAniAction_New(Action *_action,uint32_t _start_time, int  _repeat){
+InfoAction * InfoAniAction_New(ZG_Action *_action,uint32_t _start_time, int  _repeat){
 	InfoAction * action_info = ZG_NEW(InfoAction);
 	action_info->start_time=_start_time; // only for triggered info_actions...
 	action_info->repeat=_repeat;
@@ -25,13 +25,13 @@ InfoAction * InfoAniAction_New(Action *_action,uint32_t _start_time, int  _repea
 	return action_info;
 }
 
-void ZG_Animation_OnResetChannels(ZG_Animation * _this,void (*_on_reset_channels)(ChannelsInfo *_channels_info, void *_user_data), void *_user_data){
+void ZG_Animation_OnResetChannels(ZG_Animation * _this,void (*_on_reset_channels)(ZG_ChannelsInfo *_channels_info, void *_user_data), void *_user_data){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
 	data->channels_info->on_set_channels.ptr_function=_on_reset_channels;
 	data->channels_info->on_set_channels.user_data=_user_data;
 }
 
-void ZG_Animation_OnSetChannels(ZG_Animation * _this,void (*_on_set_channels)(ChannelsInfo *_channels_info, void *user_data), void *_user_data){
+void ZG_Animation_OnSetChannels(ZG_Animation * _this,void (*_on_set_channels)(ZG_ChannelsInfo *_channels_info, void *user_data), void *_user_data){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
 	data->channels_info->on_set_channels.ptr_function=_on_set_channels;
 	data->channels_info->on_set_channels.user_data=_user_data;
@@ -48,7 +48,7 @@ void InfoAniAction_Delete(InfoAction *info_ani){
 // PUBLIC FUNCTIONS
 
 uint32_t ZG_Animation_GetDefaultStartTimeTriggerAction(void *user_data){
-	UNUSUED_PARAM(user_data);
+	ZG_UNUSUED_PARAM(user_data);
 	return SDL_GetTicks();
 }
 
@@ -60,11 +60,11 @@ ZG_Animation *ZG_Animation_New(uint8_t n_channels){
 	//ZG_AnimationData *data = ZG_NEW(ZG_AnimationData);
 	//memset(data,0,sizeof(ZG_AnimationData));
 
-	data->channels_info=ChannelsInfo_New(n_channels);
+	data->channels_info=ZG_ChannelsInfo_New(n_channels);
 	//ani->ani_controlled_objects=ZG_List_New();
 	data->info_actions=ZG_List_New();
-	data->tween=Tween_New(n_channels);//(Tween *)malloc(sizeof(Tween)*n_channels);
-	//memset(data->tweens,0,sizeof(Tween)*n_channels);
+	data->tween=ZG_Tween_New(n_channels);//(ZG_Tween *)malloc(sizeof(ZG_Tween)*n_channels);
+	//memset(data->tweens,0,sizeof(ZG_Tween)*n_channels);
 
 	ani->data=data;
 
@@ -74,7 +74,7 @@ ZG_Animation *ZG_Animation_New(uint8_t n_channels){
 /**
  * Trigger action (independent to time line)
  */
-void ZG_Animation_StartAction(ZG_Animation *_this, Action *_action,uint32_t _start_time, int _repeat){
+void ZG_Animation_StartAction(ZG_Animation *_this, ZG_Action *_action,uint32_t _start_time, int _repeat){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
 	if(data->channels_info->n_channels != _action->channels_info->n_channels){
 		ZG_Log_Error("Internal error animation components (%i) != action components (%i)"
@@ -95,16 +95,16 @@ void ZG_Animation_StartAction(ZG_Animation *_this, Action *_action,uint32_t _sta
 /**
  * Remove action to time line
  */
-void ZG_Animation_ClearAction(ZG_Animation *_this,Action *_action){
+void ZG_Animation_ClearAction(ZG_Animation *_this,ZG_Action *_action){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
 	for(unsigned i = 0; i < data->info_actions->count; i++){
 		if(((InfoAction *)data->info_actions->items[i])->action == _action){
 			InfoAniAction_Delete((InfoAction *)data->info_actions->items[i]);
-			List_Erase(data->info_actions,i);
+			ZG_List_Erase(data->info_actions,i);
 			return;
 		}
 	}
-	Log_WarningF("action not exist");
+	ZG_Log_WarningF("action not exist");
 }
 
 void ZG_Animation_StartTween(
@@ -118,7 +118,7 @@ void ZG_Animation_StartTween(
 		, int _repeat
 ){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
-	Tween_Start(data->tween, _start_time,_idx_channel, _ease, _from, _to, _duration,_repeat);
+	ZG_Tween_Start(data->tween, _start_time,_idx_channel, _ease, _from, _to, _duration,_repeat);
 
 }
 
@@ -129,13 +129,13 @@ void ZG_Animation_Clear(ZG_Animation * _this){
 		InfoAniAction_Delete((InfoAction *)data->info_actions->items[i]);
 	}
 
-	List_Clear(data->info_actions);
+	ZG_List_Clear(data->info_actions);
 
 }
 
 void ZG_Animation_CopyChannelValues(ZG_Animation * _this, float *_array){
 	ZG_AnimationData *data=_this->data;
-	ChannelsInfo_CopyToFloatArray(data->channels_info,_array);
+	ZG_ChannelsInfo_CopyToFloatArray(data->channels_info,_array);
 }
 
 bool ZG_Animation_Update(ZG_Animation * _this, uint32_t _time){
@@ -154,7 +154,7 @@ bool ZG_Animation_Update(ZG_Animation * _this, uint32_t _time){
 		bool update_action = true;
 
 		// render frame...
-		if(Action_Update(
+		if(ZG_Action_Update(
 				info_action->action
 				,_time
 				,&info_action->start_time
@@ -164,7 +164,7 @@ bool ZG_Animation_Update(ZG_Animation * _this, uint32_t _time){
 		}
 
 		// update last channels...
-		ChannelsInfo_Copy(data->channels_info,info_action->action->channels_info);
+		ZG_ChannelsInfo_Copy(data->channels_info,info_action->action->channels_info);
 		data->channels_info->msk_active_channels |= info_action->action->channels_info->msk_active_channels;
 
 
@@ -172,15 +172,15 @@ bool ZG_Animation_Update(ZG_Animation * _this, uint32_t _time){
 			i++;
 		}else{ // remove
 			InfoAniAction_Delete(info_action);
-			List_Erase(data->info_actions,i);
+			ZG_List_Erase(data->info_actions,i);
 		}
 	}
 
 	if(data->tween->channels_info->msk_active_channels != 0){
 		// save current channels
 		uint32_t msk_active_channels=data->tween->channels_info->msk_active_channels;
-		Tween_Update(data->tween,&msk_active_channels,_time);
-		ChannelsInfo_Copy(data->channels_info,data->tween->channels_info);
+		ZG_Tween_Update(data->tween,&msk_active_channels,_time);
+		ZG_ChannelsInfo_Copy(data->channels_info,data->tween->channels_info);
 		data->tween->channels_info->msk_active_channels=msk_active_channels;
 	}
 
@@ -196,8 +196,8 @@ void ZG_Animation_Delete(ZG_Animation * _this){
 	ZG_Animation_Clear(_this);
 
 	ZG_List_Delete(_data->info_actions);
-	ChannelsInfo_Delete(_data->channels_info);
-	Tween_Delete(_data->tween);
+	ZG_ChannelsInfo_Delete(_data->channels_info);
+	ZG_Tween_Delete(_data->tween);
 
 
 	ZG_FREE(_data);

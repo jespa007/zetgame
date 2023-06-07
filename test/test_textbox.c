@@ -37,17 +37,17 @@ const PrintFontInfo print_font_info[]={
 };
 
 int main(int argc, char * argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
-	ZetGameSetupParams setup_options;
-	memset(&setup_options,0,sizeof(ZetGameSetupParams));
+	ZG_SetupParams setup_options;
+	memset(&setup_options,0,sizeof(ZG_SetupParams));
 
 	setup_options.width=WIDTH_RESOLUTION;
 	setup_options.height=HEIGHT_RESOLUTION;
 
-	ZetGame_Init(&setup_options);
-	ZetGame_SetDebugMode(true);
+	ZG_Init(&setup_options);
+	ZG_SetDebugMode(true);
 
 	ZG_TextBox *textbox=ZG_TextBox_New();
 	ZG_TextBox_SetFontFile(textbox,"../../../test/data/fonts/Trebuchet MS.ttf");
@@ -57,7 +57,7 @@ int main(int argc, char * argv[]){
 	ZG_TextBox_SetBorderColor4f(textbox,ZG_Color4f_New3f(1,1,1));
 	do{
 
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		PrintFontInfo *aux_ptr=(PrintFontInfo *)print_font_info;
 		while(aux_ptr->text !=NULL){
@@ -80,7 +80,7 @@ int main(int argc, char * argv[]){
 			Graphics_ToggleFullscreen();
 		}
 
-		Graphics_EndRender();
+		ZG_Graphics_EndRender();
 
 		Input_Update();
 

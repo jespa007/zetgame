@@ -1,8 +1,8 @@
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
 ZG_Tween *ZG_Tween_New(Uint8 n_channels){
 	ZG_Tween *tween=ZG_NEW(ZG_Tween);
-	tween->channels_info=ChannelsInfo_New(n_channels);
+	tween->channels_info=ZG_ChannelsInfo_New(n_channels);
 	tween->tween_channels=(ZG_TweenChannel *)malloc(sizeof(ZG_TweenChannel)*n_channels);
 	memset(tween->tween_channels,0,sizeof(ZG_TweenChannel)*n_channels);
 
@@ -50,7 +50,7 @@ void ZG_Tween_Update(ZG_Tween *_this, uint32_t *_msk_active_channels, uint32_t _
 				float value=tween_channel->from;
 
 				if((diff_time) < tween_channel->duration){ // interpolate
-					value=tween_channel->from+ease_linear(t)*(tween_channel->to - tween_channel->from);
+					value=tween_channel->from+ZG_Ease_Linear(t)*(tween_channel->to - tween_channel->from);
 				}else{ // set last and delete active msk
 					value=tween_channel->to;
 					*_msk_active_channels&=~(0x1<<i);
@@ -62,7 +62,7 @@ void ZG_Tween_Update(ZG_Tween *_this, uint32_t *_msk_active_channels, uint32_t _
 }
 
 void ZG_Tween_Delete(ZG_Tween *_this){
-	ChannelsInfo_Delete(_this->channels_info);
+	ZG_ChannelsInfo_Delete(_this->channels_info);
 
 	free(_this->tween_channels);
 	free(_this);

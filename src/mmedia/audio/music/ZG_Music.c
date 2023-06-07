@@ -1,8 +1,8 @@
-#include "mmedia/audio/zg_audio.h"
+#include "mmedia/audio/_zg_mmedia_audio_.h"
 
-#include "mmedia/audio/music/MusicFFmpeg.c"
-#include "mmedia/audio/music/MusicWav.c"
-#include "mmedia/audio/music/MusicXmp.c"
+#include "ZG_MusicFFmpeg.c"
+#include "ZG_MusicWav.c"
+#include "ZG_MusicXmp.c"
 
 
 

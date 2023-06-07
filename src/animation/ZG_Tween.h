@@ -4,7 +4,7 @@
 typedef struct ZG_Tween ZG_Tween;
 
 struct ZG_Tween{
-	ChannelsInfo	*channels_info;
+	ZG_ChannelsInfo	*channels_info;
 	ZG_TweenChannel	*tween_channels;
 };
 

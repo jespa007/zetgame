@@ -1,4 +1,4 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 
 
@@ -57,8 +57,8 @@ ZG_Color4f ZG_Color4f_FromHtml(const char * _html){
 }
 
 
-ZG_Color4f Color4f_FromString(const char * color){
-	if(STRCMP(color,==,"white")){
+ZG_Color4f ZG_Color4f_FromString(const char * color){
+	if(ZG_STRCMP(color,==,"white")){
 		return (ZG_Color4f){1,1,1,1};
 	}
 

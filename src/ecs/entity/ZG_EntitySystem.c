@@ -15,7 +15,7 @@ typedef struct{
 
 
 typedef struct{
-	MapString *map_entity_managers;
+	ZG_MapString *map_entity_managers;
 	ZG_List *lst_entity_managers;
 	EntitySystemEComponentData **components;//[ENTITY_COMPONENT_MAX];
 }EntitySystemData;
@@ -172,7 +172,7 @@ EntitySystem *EntitySystem_New(void){
 	EntitySystem *system=ZG_NEW(EntitySystem);
 	EntitySystemData *data=ZG_NEW(EntitySystemData);
 	data->lst_entity_managers=ZG_List_New();
-	data->map_entity_managers=MapString_New();
+	data->map_entity_managers=ZG_MapString_New();
 
 	data->components=malloc(sizeof(EntitySystemEComponentData)*g_entity_system_registered_components->count);
 	memset(data->components,0,sizeof(EntitySystemEComponentData)*g_entity_system_registered_components->count);

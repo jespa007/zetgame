@@ -5,8 +5,8 @@
 #define SHAPE_BORDER_COLOR	0xffe0e0e0
 
 int main(int argc, char *argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
 	struct{
 		uint32_t width, fill_color, border_width,border_color;
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
 			,{SHAPE_WIDTH>>1,SHAPER_COLOR,SHAPE_WIDTH*0.1,SHAPE_BORDER_COLOR}
 	};
 
-	ZetGame_Init(NULL);
+	ZG_Init(NULL);
 
 	ZG_List *textures= ZG_List_New();
 
@@ -37,10 +37,10 @@ int main(int argc, char *argv[]){
 	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFF));
 
 	ZG_Geometry *geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
-	ZG_Appearance *appearance=Appearance_New();
+	ZG_Appearance *appearance=ZG_Appearance_New();
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		int x=10,y=10;
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 			appearance->texture=textures->items[i];
 
 			// circle
-			Graphics_DrawRectangleTextured4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,textures->items[i],NULL);
+			ZG_Graphics_DrawRectangleTextured4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,textures->items[i],NULL);
 			x+=SHAPE_WIDTH+10;
 
 			if((i%2==0) && i > 0){
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 			}
 		}
 
-		Graphics_EndRender();
+		ZG_Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 	}
 
 	ZG_Geometry_Delete(geometry);
-	Appearance_Delete(appearance);
+	ZG_Appearance_Delete(appearance);
 
 	ZG_List_Delete(textures);
 

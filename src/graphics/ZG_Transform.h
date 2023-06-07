@@ -15,7 +15,7 @@ typedef enum{
 	ZG_TRANSFORM_COMPONENT_SCALE_Y  	,
 	ZG_TRANSFORM_COMPONENT_SCALE_Z  	,
 	ZG_TRANSFORM_COMPONENT_MAX
-}TransformComponent;
+}ZG_TransformComponent;
 
 struct ZG_Transform{
 	//----------------------------

@@ -104,10 +104,10 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 
 int main(int argc, char *argv[]){
 
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
-	ZetGame_Init(NULL);
+	ZG_Init(NULL);
 
 	const char *colliding="none";
 	struct{
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]){
 
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		ZG_Vector2i m=Input_GetMousePosition();
 		mouse_transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(m.x);
@@ -211,7 +211,7 @@ int main(int argc, char *argv[]){
 			Graphics_ToggleFullscreen();
 		}
 
-		Graphics_EndRender();
+		ZG_Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);

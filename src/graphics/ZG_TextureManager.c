@@ -1,7 +1,7 @@
 #include "_zg_graphics_.h"
 
 typedef struct{
-	MapString 	* 	textures;
+	ZG_MapString 	* 	textures;
 	const char 	*	texture_resource_path;
 	ZG_Texture		* 	texture_embedded;
 }ZG_TextureManagerData;
@@ -40,7 +40,7 @@ ZG_TextureManager *ZG_TextureManager_New(void){
 	ZG_TextureManagerData 	*data=ZG_NEW(ZG_TextureManagerData);
 
 	data->texture_resource_path=".";
-	data->textures = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->textures = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->textures->on_delete=ZG_TextureManager_OnDeleteNode;
 
 	tm->data=data;

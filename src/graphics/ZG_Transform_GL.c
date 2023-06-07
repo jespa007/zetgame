@@ -49,6 +49,6 @@ void ZG_Transform_GL_Apply(ZG_Transform *_this){
 
 
 void ZG_Transform_GL_Restore(ZG_Transform *transform){
-	UNUSUED_PARAM(transform);
+	ZG_UNUSUED_PARAM(transform);
 	glPopMatrix();
 }

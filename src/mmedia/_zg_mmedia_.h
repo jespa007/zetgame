@@ -1,2 +1,2 @@
-#include "audio/zg_audio.h"
-#include "movie/zg_movie.h"
+#include "audio/_zg_mmedia_audio_.h"
+#include "movie/_zg_mmedia_movie_.h"

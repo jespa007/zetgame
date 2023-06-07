@@ -1,4 +1,4 @@
-#include "_zg_graphics.h_"
+#include "_zg_graphics_.h"
 
 void ZG_Appearance_GL_Apply(ZG_Appearance * appearance){
 

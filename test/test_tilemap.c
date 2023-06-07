@@ -3,9 +3,9 @@
 #define TILEMAP_LAYER_NAME "mario3_world1"
 
 int main(int argc, char *argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
-	ZetGameSetupParams setup=(ZetGameSetupParams){
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
+	ZG_SetupParams setup=(ZG_SetupParams){
 		.graphics_api=ZG_GRAPHICS_API_GL
 		,.width=224
 		,.height=144
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
 		,.wposy=SDL_WINDOWPOS_CENTERED
 		,.graphic_properties=0 //MSK_GRAPHIC_PROPERTY_DESKTOP | MSK_GRAPHIC_PROPERTY_NO_SHOW_ICON_TASKBAR
 	};
-	ZetGame_Init(&setup);
+	ZG_Init(&setup);
 
 	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
 	TilemapManager *tilemap_manager=TilemapManager_New(texture_manager);
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 	}
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 
 		if(tilemap != NULL){
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 			Graphics_ToggleFullscreen();
 		}
 
-	   Graphics_EndRender();
+	   ZG_Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);

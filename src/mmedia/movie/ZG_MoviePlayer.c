@@ -1,4 +1,4 @@
-#include "mmedia/zg_mmedia.h"
+#include "mmedia/_zg_mmedia_.h"
 
 MoviePlayer * MoviePlayer_New(void){
 	MoviePlayer *movie_player=ZG_NEW(MoviePlayer);

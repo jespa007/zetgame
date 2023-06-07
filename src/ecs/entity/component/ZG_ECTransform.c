@@ -18,7 +18,7 @@ void ECTransform_ClearChilds(ECTransform * node){
 	}
 
 	ECTransform_SetParent(node,NULL);
-	List_Clear(data->child_nodes);
+	ZG_List_Clear(data->child_nodes);
 }
 //------------------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ void ECTransform_ClearNodes(ECTransform *_this){
 		ECTransform_ClearNodes(data->child_nodes->items[i]);
 	}
 
-	List_Clear(data->child_nodes);
+	ZG_List_Clear(data->child_nodes);
 }
 
 void ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z){
@@ -142,7 +142,7 @@ ECTransform	*	ECTransform_GetParent(ECTransform *_this){
 
 
 bool ECTransform_Detach(ECTransform *_this,ECTransform * obj) {
-	UNUSUED_PARAM(_this);
+	ZG_UNUSUED_PARAM(_this);
 
 	ECTransformData *obj_data = obj->data;
 
@@ -254,24 +254,24 @@ void ECTransform_UpdateSceneGraph(ECTransform *_this) {
 		// the is propagated ...
 		if(data->transform_attributes & EC_TRANSFORM_SCALE) {
 			// transforms the scale ...
-			_this->transform.scale=Vector3f_Mul(_this->transform.scale,parent_transform.scale);
+			_this->transform.scale=ZG_Vector3f_Mul(_this->transform.scale,parent_transform.scale);
 		}
 		// Set origin translation ...
 		if(data->transform_attributes & EC_TRANSFORM_TRANSLATE){
 			_this->transform.translate=parent_transform.translate;
 
 			// Scale the translation...
-			translate_from_parent=Vector3f_Mul(translate_from_parent,parent_transform.scale);
+			translate_from_parent=ZG_Vector3f_Mul(translate_from_parent,parent_transform.scale);
 
 		}else{
 			_this->transform.translate=data->transform_local.translate;
 		}
 
-		translate_from_parent=Quaternion_InverseTransformV3f(parent->quaternion,translate_from_parent);
-		_this->transform.translate=Vector3f_Add(_this->transform.translate,translate_from_parent);
-		_this->transform.rotate=Vector3f_Add(_this->transform.rotate,parent->transform.rotate);
+		translate_from_parent=ZG_Quaternion_InverseTransformV3f(parent->quaternion,translate_from_parent);
+		_this->transform.translate=ZG_Vector3f_Add(_this->transform.translate,translate_from_parent);
+		_this->transform.rotate=ZG_Vector3f_Add(_this->transform.rotate,parent->transform.rotate);
 
-		//_this->quaternion=Quaternion_Mul(local_quaternion,parent->quaternion);
+		//_this->quaternion=ZG_Quaternion_Mul(local_quaternion,parent->quaternion);
 
 	}
 	else { // Is the root, then add origin on their initial values ...

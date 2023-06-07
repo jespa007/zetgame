@@ -10,14 +10,14 @@ struct ZG_MaterialAnimation{
 };
 
 // STATIC
-Action 				*	ZG_MaterialAnimation_NewAction(void);
+ZG_Action 				*	ZG_MaterialAnimation_NewAction(void);
 
 
 // PUBLIC
 ZG_MaterialAnimation 	*	ZG_MaterialAnimation_New(void);
 void					ZG_MaterialAnimation_StartAction(
 		ZG_MaterialAnimation *_this
-		, MaterialAction *_action
+		, ZG_MaterialAction *_action
 		,uint32_t _start_time
 		, int _repeat
 );

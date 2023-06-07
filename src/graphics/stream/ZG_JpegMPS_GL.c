@@ -39,7 +39,7 @@ void JpegMPS_GL_CaptureFrame(JpegMPSData *data){
 	//blit backbuffer to downsampled buffer
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, data->fbo.id);
-	glBlitFramebuffer(0, 0, Graphics_GetWidth(), Graphics_GetHeight(), 0, 0, STREAM_WIDTH, STREAM_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	glBlitFramebuffer(0, 0, ZG_Graphics_GetWidth(), ZG_Graphics_GetHeight(), 0, 0, STREAM_WIDTH, STREAM_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

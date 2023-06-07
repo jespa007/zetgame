@@ -148,7 +148,7 @@ void	ZG_MapInt_EraseAndFreeItem(ZG_MapInt *_this,intptr_t key){
 void 	ZG_MapInt_ClearInternal(ZG_MapInt *_this, bool _free_all_items){
 	/*if(_this==NULL) return;
 
-	List_Clear(_this->list);*/
+	ZG_List_Clear(_this->list);*/
 
 	if(_this==NULL) return;
 

@@ -1,5 +1,5 @@
-#include "../../../mmedia/audio/music/xmp_common.h"
-#include "../../../mmedia/audio/music/xmp_s.c"
+#include "xmp_common.h"
+#include "xmp_s.c"
 
 #define 	AUDIO_MODULE_MAX_SAMPLES	32
 #define 	AUDIO_MODULE_MAX_CHANNELS	64
@@ -104,7 +104,7 @@ bool MusicXmp_IsFileSupported(const char * file){
 }
 
 bool MusicXmp_Load(MixerSound *sp_info, const char *file){
-	ZG_BufferByte *buffer=FileSystem_ReadFile(file);
+	ZG_BufferByte *buffer=ZG_FileSystem_ReadFile(file);
 
 	if(buffer!=NULL){
 		bool res=MusicXmp_LoadFromMemory(sp_info, buffer->ptr, buffer->len);

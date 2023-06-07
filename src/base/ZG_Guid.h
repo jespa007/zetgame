@@ -12,6 +12,6 @@ struct ZG_Guid{
 extern const char *ZG_GUID_EMPTY;
 
 ZG_Guid * ZG_Guid_New(void);
-void   ZG_Guid_Delete(ZG_Guid *guid);
+void   ZG_Guid_Delete(ZG_Guid *_this);
 
 #endif

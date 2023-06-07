@@ -2,14 +2,14 @@
 /*
 void Transform_UpdateRotate(ZG_Transform *_this){
 	_this->quaternion=ZG_Quaternion_FromEulerV3f(_this->rotate);
-	//_this->matrix3f=Quaternion_ToMatrix3f(_this->quaternion);
+	//_this->matrix3f=ZG_Quaternion_ToMatrix3f(_this->quaternion);
 }
 */
 ZG_Transform	  ZG_Transform_DefaultValues(void){
 	ZG_Transform transform;
-	transform.translate=Vector3f_Zeros();
-	transform.rotate=Vector3f_Zeros();
-	transform.scale=Vector3f_Ones();
+	transform.translate=ZG_Vector3f_Zeros();
+	transform.rotate=ZG_Vector3f_Zeros();
+	transform.scale=ZG_Vector3f_Ones();
 	//transform.quaternion=ZG_Quaternion_FromEulerV3f(transform.rotate);
 	//Transform_UpdateRotate(&transform);
 	return transform;
@@ -44,7 +44,7 @@ void ZG_Transform_Apply(ZG_Transform *_this){
 // TRANSLATE
 
 void ZG_Transform_SetTranslate3f(ZG_Transform *_this,float x, float y, float z){
-	_this->translate=Vector3f_New3f(x,y,z);
+	_this->translate=ZG_Vector3f_New3f(x,y,z);
 	//CLR_MSK(_this->transform_properties,TRANSFORM_PROPERTY_POSITION_RELATIVE_X|TRANSFORM_PROPERTY_POSITION_RELATIVE_Y);
 }
 
@@ -100,7 +100,7 @@ void Transform_SetPositionRelative2i(ZG_Transform *_this,int x, int y){
 }
 
 ZG_Vector2i 	ZG_Transform_GetPosition2i(ZG_Transform *_this){
-	return Vector2i_New(
+	return ZG_Vector2i_New(
 		 ZG_ViewPort_WorldToScreenPosX(_this->translate.x)
 		,ZG_ViewPort_WorldToScreenPosY(_this->translate.y)
 	);
@@ -125,7 +125,7 @@ void ZG_Transform_SetRotateZ(ZG_Transform *_this, float z){
 // SCALE
 
 void ZG_Transform_SetScale3f(ZG_Transform *_this,float x, float y, float z){
-	_this->scale=Vector3f_New3f(x,y,z);
+	_this->scale=ZG_Vector3f_New3f(x,y,z);
 }
 
 void ZG_Transform_Restore(ZG_Transform *transform){

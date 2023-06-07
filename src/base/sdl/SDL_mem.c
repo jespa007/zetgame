@@ -39,8 +39,8 @@ void  MEMSDL_PrintStatus()
 	for(unsigned i = 0; i < MAX_CHECK_SURFACES; i++){
 		SDL_SurfacePointerTrackInfo *pti=&g_allocated_surfaces[i];
 		if(pti->pointer != 0){
-			//Log_Print(const  char  *file,  int  line, LogLevel level, bool with_cr, const  char  *string_text,...);
-			Log_Print(pti->file,pti->line,LOG_LEVEL_WARNING," SDL surface not deallocated");
+			//ZG_Log_Print(const  char  *file,  int  line, LogLevel level, bool with_cr, const  char  *string_text,...);
+			ZG_Log_Print(pti->file,pti->line,ZG_LOG_LEVEL_WARNING," SDL surface not deallocated");
 			n_unllocated++;
 		}
 	}
@@ -199,7 +199,7 @@ void	 __sdlmem__SDL_FreeSurface(const  char  *file,  int  line, void  *srf)
 		SDL_FreeSurface(srf);
 	}
 	else{
-		Log_Print(file,line,LOG_LEVEL_WARNING," pointer was not allocated by SDL");
+		ZG_Log_Print(file,line,ZG_LOG_LEVEL_WARNING," pointer was not allocated by SDL");
 	}
 
 }

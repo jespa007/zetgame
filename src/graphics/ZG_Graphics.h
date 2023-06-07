@@ -12,7 +12,7 @@ typedef enum{
 typedef enum{
 	ZG_PROJECTION_MODE_ORTHO=0
 	,ZG_PROJECTION_MODE_PERSPECTIVE
-}ZG_ProjectioNmode;
+}ZG_ProjectionMode;
 
 
 bool 	ZG_Graphics_Init(int start_posx
@@ -27,7 +27,7 @@ void 	ZG_Graphics_SetProjectionMode(ZG_ProjectionMode );
 void 	ZG_Graphics_SetCameraTransform(ZG_Transform *transform);
 void 	ZG_Graphics_SetResolutionDesign(int _width, int _height);
 
-Vector2f ZG_Graphics_GetScale(void);
+ZG_Vector2f ZG_Graphics_GetScale(void);
 
 ZG_GraphicsApi ZG_Graphics_GetGraphicsApi(void);
 unsigned ZG_Graphics_GetNumMonitors(void);

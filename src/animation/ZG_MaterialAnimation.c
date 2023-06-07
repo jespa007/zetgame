@@ -1,7 +1,7 @@
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
 typedef struct{
-	Animation *animation;
+	ZG_Animation *animation;
 }ZG_MaterialAnimationData;
 
 
@@ -9,7 +9,7 @@ typedef struct{
 ZG_MaterialAnimation *ZG_MaterialAnimation_New(void){
 	ZG_MaterialAnimation *transform_animation=ZG_NEW(ZG_MaterialAnimation);
 	ZG_MaterialAnimationData *data=ZG_NEW(ZG_MaterialAnimationData);
-	data->animation=Animation_New(ZG_TRANSFORM_COMPONENT_MAX);
+	data->animation=ZG_Animation_New(ZG_TRANSFORM_COMPONENT_MAX);
 
 	transform_animation->data=data;
 
@@ -18,22 +18,22 @@ ZG_MaterialAnimation *ZG_MaterialAnimation_New(void){
 
 void ZG_MaterialAnimation_Update(ZG_MaterialAnimation *_this, ZG_Material *_material){
 	ZG_MaterialAnimationData *data=_this->data;
-	Animation_Update(data->animation,SDL_GetTicks());
-	Animation_CopyChannelValues(data->animation,&_material->color.r);
+	ZG_Animation_Update(data->animation,SDL_GetTicks());
+	ZG_Animation_CopyChannelValues(data->animation,&_material->color.r);
 
 }
 
 void					ZG_MaterialAnimation_StartAction(
 		ZG_MaterialAnimation *_this
-		, MaterialAction *_action
+		, ZG_MaterialAction *_action
 		,uint32_t _start_time
 		, int _repeat
 ){
 	ZG_MaterialAnimationData *data=_this->data;
 
-	Animation_StartAction(
+	ZG_Animation_StartAction(
 			data->animation
-			,MaterialAction_GetAction(_action)
+			,ZG_MaterialAction_GetAction(_action)
 			,_start_time
 			,_repeat
 	);
@@ -50,7 +50,7 @@ void ZG_MaterialAnimation_StartTween(
 		, int _repeat
 ){
 	ZG_MaterialAnimationData *data=_this->data;
-	Animation_StartTween(
+	ZG_Animation_StartTween(
 		data->animation
 		, _start_time
 		, _material_component
@@ -65,7 +65,7 @@ void ZG_MaterialAnimation_StartTween(
 void ZG_MaterialAnimation_Delete(ZG_MaterialAnimation *_this){
 	ZG_MaterialAnimationData *data=_this->data;
 
-	Animation_Delete(data->animation);
+	ZG_Animation_Delete(data->animation);
 	ZG_FREE(data);
 	ZG_FREE(_this);
 }

@@ -1,4 +1,4 @@
-#include "__zg_graphics_.h"
+#include "_zg_graphics_.h"
 
 typedef struct ZG_ShapeData ZG_ShapeData;
 

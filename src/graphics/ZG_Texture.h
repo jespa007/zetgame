@@ -1,5 +1,5 @@
 #ifndef __ZG_TEXTURE_H__
-#define __ZG_TExTURE_H__
+#define __ZG_TEXTURE_H__
 
 #define ZG_INVALID_TEXTURE_HANDLE -1
 

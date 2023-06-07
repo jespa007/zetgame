@@ -1,10 +1,10 @@
 #include "zetgame.h"
 
 int main(int argc, char *argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
-	ZetGame_Init(NULL);
+	ZG_Init(NULL);
 
 	ZG_TextureManager *texture_manager = ZG_TextureManager_New();
 	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New(texture_manager);
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		if(skf_current != NULL){
 
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
 
 			}
 
-			Graphics_DrawRectangleTextured4i(
+			ZG_Graphics_DrawRectangleTextured4i(
 				32
 				,32
 				,64
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
 			);
 		}
 
-	   Graphics_EndRender();
+	   ZG_Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);

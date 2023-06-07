@@ -22,7 +22,7 @@ static void GUIButton_PostUpdate( void *gui_button);
 void GUIButton_Init(void){
 	if(g_default_texture_button != NULL)
 	{
-		Log_WarningF("GUIButton already initialized");
+		ZG_Log_WarningF("GUIButton already initialized");
 		return;
 	}
 
@@ -32,7 +32,7 @@ void GUIButton_Init(void){
 void GUIButton_DeInit(void){
 	if(g_default_texture_button == NULL)
 	{
-		Log_WarningF("GUIButton not initialized");
+		ZG_Log_WarningF("GUIButton not initialized");
 		return;
 	}
 
@@ -76,7 +76,7 @@ static void  GUIButton_PostUpdateWidget(void *unused, void *gui_button){
 	ZG_Vector2i ini_pos=GUIWidget_GetPosition(button->widget,WIDGET_POSITION_WORLD);
 	ZG_Vector2i dimensions=GUIWidget_GetDimensions(button->widget);
 
-	ZG_Vector2i end_pos=Vector2i_New(
+	ZG_Vector2i end_pos=ZG_Vector2i_New(
 			 ini_pos.x+dimensions.x
 			,ini_pos.y+dimensions.y
 			);
@@ -173,7 +173,7 @@ static void  GUIButton_Draw(void *gui_button){
 	result_font_color.a=alpha;
 	//background_result.a=alpha;
 
-	Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,g_default_texture_button,NULL);
+	ZG_Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,g_default_texture_button,NULL);
 
 
 	if(data->mouse_collide){
@@ -189,7 +189,7 @@ static void  GUIButton_Draw(void *gui_button){
 	}
 
 	if(data->icon.texture!=NULL){ // draw icon
-		Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
+		ZG_Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
 	}
 
 	ZG_Transform_SetPosition2i(&transform,position.x,position.y);

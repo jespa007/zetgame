@@ -2,9 +2,9 @@
 #define __ZG_ECS_H__
 
 
-#include "graphics/zg_graphics.h"
-#include "mmedia/zg_mmedia.h"
-#include "animation/zg_animation.h"
+#include "graphics/_zg_graphics_.h"
+#include "mmedia/_zg_mmedia_.h"
+#include "animation/_zg_animation_.h"
 
 typedef unsigned int ComponentId;
 
@@ -16,36 +16,36 @@ typedef struct Entity Entity;
 
 
 // base
-#include "ecs/entity/component/EComponent.h"
-#include "ecs/animation/component/AComponent.h"
+#include "ecs/entity/component/ZG_EComponent.h"
+#include "ecs/animation/component/ZG_AComponent.h"
 
 // entity
-#include "ecs/entity/EntitySystem.h"
-#include "ecs/entity/EntityManager.h"
-#include "ecs/entity/Entity.h"
+#include "ecs/entity/ZG_EntitySystem.h"
+#include "ecs/entity/ZG_EntityManager.h"
+#include "ecs/entity/ZG_Entity.h"
 
 
 
 // Entity Component
-#include "ecs/entity/component/ECTransform.h"
-#include "ecs/entity/component/ECGeometry.h"
-#include "ecs/entity/component/ECMaterial.h"
-#include "ecs/entity/component/ECTexture.h"
-#include "ecs/entity/component/ECSpriteRenderer.h"
-#include "ecs/entity/component/ECTextBoxRenderer.h"
+#include "ecs/entity/component/ZG_ECTransform.h"
+#include "ecs/entity/component/ZG_ECGeometry.h"
+#include "ecs/entity/component/ZG_ECMaterial.h"
+#include "ecs/entity/component/ZG_ECTexture.h"
+#include "ecs/entity/component/ZG_ECSpriteRenderer.h"
+#include "ecs/entity/component/ZG_ECTextBoxRenderer.h"
 
 
 // Animation
-#include "ecs/animation/AnimationSystem.h"
+#include "ecs/animation/ZG_AnimationSystem.h"
 
 // Animation Component
-#include "ecs/animation/component/ACTransformAnimation.h"
-#include "ecs/animation/component/ACMaterialAnimation.h"
+#include "ecs/animation/component/ZG_ACTransformAnimation.h"
+#include "ecs/animation/component/ZG_ACMaterialAnimation.h"
 
 
 
 // Collision
-#include "ecs/collision/CollisionSystem.h"
+#include "ecs/collision/ZG_CollisionSystem.h"
 
 
 //#include "component/ECCamera.h"

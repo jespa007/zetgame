@@ -1,7 +1,7 @@
 #include "zg_gui.h"
 
 typedef struct{
-	MapString 			* 	windows;
+	ZG_MapString 			* 	windows;
 	ZG_TextureManager   	*   texture_manager;
 	//ZG_TTFontManager   	*   ttfont_manager;
 }GUIWindowManagerData;
@@ -63,7 +63,7 @@ GUIWindowManager *GUIWindowManager_New(
 	GUIWindowManager *window_manager=ZG_NEW(GUIWindowManager);
 	GUIWindowManagerData *data=ZG_NEW(GUIWindowManagerData);
 
-	data->windows = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->windows = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
 	//data->ttfont_manager = _ttfont_manager;
 
@@ -89,30 +89,30 @@ bool GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,GUIWidget *_parent,
 	 if(attribute != NULL){
 		 do{
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
-			 if(STRCMP(attribute->name,==,"id")){
+			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
-			 }else if(STRCMP(attribute->name,==,"left")){
+			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionX(frame->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"top")){
+			 }else if(ZG_STRCMP(attribute->name,==,"top")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionY(frame->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"width")){
+			 }else if(ZG_STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetWidth(frame->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"height")){
+			 }else if(ZG_STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetHeight(frame->widget,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"font-size")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"font-file")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
 				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
@@ -139,44 +139,44 @@ bool GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,GUIWidget *_paren
 	 if(attribute != NULL){
 		 do{
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
-			 if(STRCMP(attribute->name,==,"id")){
+			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
-			 }else if(STRCMP(attribute->name,==,"left")){
+			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionX(gui_texture->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"top")){
+			 }else if(ZG_STRCMP(attribute->name,==,"top")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionY(gui_texture->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"width")){
+			 }else if(ZG_STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetWidth(gui_texture->widget,int_value);
 					 ZG_TextBox_SetWidth(gui_texture->textbox,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"height")){
+			 }else if(ZG_STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetHeight(gui_texture->widget,int_value);
 					 ZG_TextBox_SetHeight(gui_texture->textbox,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"text")){
+			 }else if(ZG_STRCMP(attribute->name,==,"text")){
 				 ZG_TextBox_SetText(gui_texture->textbox,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
+			 }else if(ZG_STRCMP(attribute->name,==,"horizontal-alignment")){
 				 ZG_TextBox_SetHorizontalAlignment(gui_texture->textbox,ZG_TextBox_ParseTextAlign(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
+			 }else if(ZG_STRCMP(attribute->name,==,"vertical-alignment")){
 				 ZG_TextBox_SetVerticalAlignment(gui_texture->textbox,ZG_TextBox_ParseVerticalAlignment(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"font-size")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 ZG_TextBox_SetFontSize(gui_texture->textbox,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"font-file")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
 				 ZG_TextBox_SetFontFile(gui_texture->textbox,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"color")){
+			 }else if(ZG_STRCMP(attribute->name,==,"color")){
 				 GUIWidget_SetColor4f(gui_texture->widget,ZG_Color4f_FromHtml(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"source")){
+			 }else if(ZG_STRCMP(attribute->name,==,"source")){
 				 GUITexture_SetTexture(gui_texture,attribute->value);
 			 }else{
 				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
@@ -210,30 +210,30 @@ bool GUIWindowManager_NewButton(GUIWMWindowData *_window_data,GUIWidget *_parent
 		 do{
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
 
-			 if(STRCMP(attribute->name,==,"id")){
+			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
-			 }else if(STRCMP(attribute->name,==,"left")){
+			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionX(button->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"top")){
+			 }else if(ZG_STRCMP(attribute->name,==,"top")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionY(button->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"width")){
+			 }else if(ZG_STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetWidth(button->widget,int_value);
 				 }
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"height")){
+			 }else if(ZG_STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetHeight(button->widget,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"font-size")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"font-file")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
 				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
@@ -265,44 +265,44 @@ bool GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,GUIWidget *_paren
 		 do{
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
 
-			 if(STRCMP(attribute->name,==,"id")){
+			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
-			 }else if(STRCMP(attribute->name,==,"left")){
+			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionX(gui_textbox->widget,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"top")){
+			 }else if(ZG_STRCMP(attribute->name,==,"top")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetPositionY(gui_textbox->widget,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"width")){
+			 }else if(ZG_STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetWidth(gui_textbox->widget,int_value);
 					 ZG_TextBox_SetWidth(gui_textbox->textbox,int_value);
 
 				 }
-			 }else if(STRCMP(attribute->name,==,"height")){
+			 }else if(ZG_STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWidget_SetHeight(gui_textbox->widget,int_value);
 					 ZG_TextBox_SetHeight(gui_textbox->textbox,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"font-size")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 ZG_TextBox_SetFontSize(gui_textbox->textbox,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"font-file")){
+			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
 				 ZG_TextBox_SetFontFile(gui_textbox->textbox,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"text")){
+			 }else if(ZG_STRCMP(attribute->name,==,"text")){
 				 ZG_TextBox_SetText(gui_textbox->textbox,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"horizontal-alignment")){
+			 }else if(ZG_STRCMP(attribute->name,==,"horizontal-alignment")){
 				 ZG_TextBox_SetHorizontalAlignment(gui_textbox->textbox,ZG_TextBox_ParseTextAlign(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"vertical-alignment")){
+			 }else if(ZG_STRCMP(attribute->name,==,"vertical-alignment")){
 				 ZG_TextBox_SetVerticalAlignment(gui_textbox->textbox,ZG_TextBox_ParseVerticalAlignment(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"border-thickness")){
+			 }else if(ZG_STRCMP(attribute->name,==,"border-thickness")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 ZG_TextBox_SetBorderThickness(gui_textbox->textbox,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"border-color")){
+			 }else if(ZG_STRCMP(attribute->name,==,"border-color")){
 				 ZG_TextBox_SetBorderColor4f(gui_textbox->textbox,ZG_Color4f_FromHtml(attribute->value));
 			 }else{
 				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
@@ -345,13 +345,13 @@ bool GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,GUIWidget *_paren
 	 Log_Debug("[tag]: %s", e->name);
 
 	 // create widget from its tag name
-	 if(STRCMP(e->name,==,"textbox")){
+	 if(ZG_STRCMP(e->name,==,"textbox")){
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
-	 }else if(STRCMP(e->name,==,"button")){
+	 }else if(ZG_STRCMP(e->name,==,"button")){
 		 return GUIWindowManager_NewButton(_window_data,_parent,e);
-	 }else if(STRCMP(e->name,==,"texture")){
+	 }else if(ZG_STRCMP(e->name,==,"texture")){
 		 return GUIWindowManager_NewTexture(_window_data,_parent,e);
-	 }else if(STRCMP(e->name,==,"textbox")){
+	 }else if(ZG_STRCMP(e->name,==,"textbox")){
 		 return GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else{
 		ZG_Log_Error("unexpected tag '%s'",e->name);
@@ -378,7 +378,7 @@ bool GUIWindowManager_LoadFromMemory(
 		,size_t _xml_len
 	){
 
-	UNUSUED_PARAM(_xml_len);
+	ZG_UNUSUED_PARAM(_xml_len);
 
 	bool ok=false;
 	GUIWindowManagerData *data=_this->data;
@@ -393,7 +393,7 @@ bool GUIWindowManager_LoadFromMemory(
 		goto wm_load_from_memmory_exit;
 	}
 
-	 if(STRCMP(doc->root->name,!=,"window")){
+	 if(ZG_STRCMP(doc->root->name,!=,"window")){
 			ZG_Log_Error("Expected first tag as 'window' but it was '%s'",doc->root->name);
 			goto wm_load_from_memmory_exit;
 	 }
@@ -409,7 +409,7 @@ bool GUIWindowManager_LoadFromMemory(
 	 window_data->gui_window_manager_data=data;
 
 
-	 window_data->window=GUIWindow_New(0,0,Graphics_GetWidth(),Graphics_GetHeight()-DEFAULT_WINDOW_CAPTION_HEIGHT,_this);
+	 window_data->window=GUIWindow_New(0,0,ZG_Graphics_GetWidth(),ZG_Graphics_GetHeight()-DEFAULT_WINDOW_CAPTION_HEIGHT,_this);
 	 XmlAttribute *attribute=doc->root->attributes;
 	 XmlElement *children=doc->root->children;
 
@@ -418,19 +418,19 @@ bool GUIWindowManager_LoadFromMemory(
 		 do{
 			 int int_value=0;
 			 Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
-			 if(STRCMP(attribute->name,==,"background-color")){
+			 if(ZG_STRCMP(attribute->name,==,"background-color")){
 				 GUIWindow_SetBackgroundColor4f(window_data->window,ZG_Color4f_FromHtml(attribute->value));
-			 }else if(STRCMP(attribute->name,==,"window-style")){
-				 if(STRCMP(attribute->value,==,"none")){
+			 }else if(ZG_STRCMP(attribute->name,==,"window-style")){
+				 if(ZG_STRCMP(attribute->value,==,"none")){
 					 GUIWindow_SetWindowStyle(window_data->window,WINDOW_STYLE_NONE);
 				 }
-			 }else if(STRCMP(attribute->name,==,"caption")){
+			 }else if(ZG_STRCMP(attribute->name,==,"caption")){
 				 GUIWindow_SetCaptionTitle(window_data->window,attribute->value);
-			 }else if(STRCMP(attribute->name,==,"width")){
+			 }else if(ZG_STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWindow_SetWidth(window_data->window,int_value);
 				 }
-			 }else if(STRCMP(attribute->name,==,"height")){
+			 }else if(ZG_STRCMP(attribute->name,==,"height")){
 				 //GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 GUIWindow_SetHeight(window_data->window,int_value);

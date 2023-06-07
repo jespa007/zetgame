@@ -148,7 +148,7 @@ bool ZG_Graphics_Init(
 	g_graphics_vars->one_over_height=1.0f/(g_graphics_vars->height);
 	g_graphics_vars->aspect_ratio=((float)_width/(float)_height);
 	g_graphics_vars->one_over_aspect_ratio=1.0f/g_graphics_vars->aspect_ratio;
-	g_graphics_vars->scale=Vector2f_New(1,1);
+	g_graphics_vars->scale=ZG_Vector2f_New(1,1);
 
 
 	ZG_Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
@@ -182,7 +182,7 @@ bool ZG_Graphics_Init(
 
 	// created default rectangle/s for drawing
 	g_graphics_vars->geometry_rectangle_default=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
-	g_graphics_vars->appearance_rectangle_default=Appearance_New();
+	g_graphics_vars->appearance_rectangle_default=ZG_Appearance_New();
 	g_graphics_vars->material_rectangle_default=ZG_Material_New(0);
 	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
 
@@ -192,7 +192,7 @@ bool ZG_Graphics_Init(
 	return true;
 }
 
-Vector2f ZG_Graphics_GetScale(){
+ZG_Vector2f ZG_Graphics_GetScale(){
 	return g_graphics_vars->scale;
 }
 
@@ -280,33 +280,31 @@ unsigned ZG_Graphics_GetNumMonitors(void){
 	return SDL_GetNumVideoDisplays();
 }
 
-float CZG_Graphics_GetAdapterPhysicalWidth(unsigned idx_monitor){
+float ZG_Graphics_GetAdapterPhysicalWidth(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
 		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
-	return ((AdapterInfo *)g_graphics_vars->adapters->items[idx_monitor])->physical_width;
-
-
+	return ((ZG_AdapterInfo *)g_graphics_vars->adapters->items[idx_monitor])->physical_width;
 }
 
-float CZG_Graphics_GetAdapterPhysicalHeight(unsigned idx_monitor){
+float ZG_Graphics_GetAdapterPhysicalHeight(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
 		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
-	return ((AdapterInfo *)g_graphics_vars->adapters->items[idx_monitor])->physical_height;
+	return ((ZG_AdapterInfo *)g_graphics_vars->adapters->items[idx_monitor])->physical_height;
 }
 
-const char *CZG_Graphics_GetAdapterMonitorModel(unsigned idx_monitor){
+const char *ZG_Graphics_GetAdapterMonitorModel(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
 		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
-	return ((AdapterInfo *)g_graphics_vars->adapters->items[idx_monitor])->monitor_model;
+	return ((ZG_AdapterInfo *)g_graphics_vars->adapters->items[idx_monitor])->monitor_model;
 }
 
 static void ZG_Graphics_PrintAdapterInformation(void){
@@ -318,7 +316,7 @@ static void ZG_Graphics_PrintAdapterInformation(void){
 	}
 
 	for(unsigned i = 0;i < g_graphics_vars->adapters->count; i++){
-		AdapterInfo *adapter=(void *)g_graphics_vars->adapters->items[i];
+		ZG_AdapterInfo *adapter=(void *)g_graphics_vars->adapters->items[i];
 		ZG_Log_InfoF("--------------------------------------");
 		ZG_Log_Info("MonitorModel: %s",adapter->monitor_model);
 		ZG_Log_Info("Width: %i",adapter->pixels_width);
@@ -379,7 +377,7 @@ void 	ZG_Graphics_SetFullscreen(bool _fullscreen){
 		return;
 	}
 
-	g_graphics_vars->scale = Vector2f_New(
+	g_graphics_vars->scale = ZG_Vector2f_New(
 		1
 		,1
 	);
@@ -399,7 +397,7 @@ void 	ZG_Graphics_SetFullscreen(bool _fullscreen){
 		SDL_SetWindowFullscreen(g_graphics_vars->sdl_window,SDL_WINDOW_FULLSCREEN_DESKTOP);
 		// FULLSCREEN
 		//calculeScaleFactors();
-		g_graphics_vars->scale = Vector2f_New(
+		g_graphics_vars->scale = ZG_Vector2f_New(
 			(float)g_graphics_vars->width/(float)g_graphics_vars->rect_display[g_graphics_vars->active_display].w
 			,(float)g_graphics_vars->height/(float)g_graphics_vars->rect_display[g_graphics_vars->active_display].h
 		);
@@ -608,7 +606,7 @@ void ZG_Graphics_EndRender(void)
 					}
 				}
 
-				List_ClearAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
+				ZG_List_ClearAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
 			}
 
 			SDL_FreeSurface(srf_screen_shoot);
@@ -678,8 +676,8 @@ void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_
 
 void ZG_Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, ZG_Color4f color){
 
-	ZG_Vector2i p1_2d=Vector2i_New(x,y);
-	ZG_Vector2i p2_2d=Vector2i_New(x+width,y+height);
+	ZG_Vector2i p1_2d=ZG_Vector2i_New(x,y);
+	ZG_Vector2i p2_2d=ZG_Vector2i_New(x+width,y+height);
 
 	ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
@@ -704,8 +702,8 @@ void ZG_Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y
 
 void ZG_Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
 
-	ZG_Vector2i p1_2d=Vector2i_New(_x-(_width>>1),_y+(_height>>1));
-	ZG_Vector2i p2_2d=Vector2i_New(_x+(_width>>1),_y-(_height>>1));
+	ZG_Vector2i p1_2d=ZG_Vector2i_New(_x-(_width>>1),_y+(_height>>1));
+	ZG_Vector2i p2_2d=ZG_Vector2i_New(_x+(_width>>1),_y-(_height>>1));
 
 	ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
 	ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
@@ -825,7 +823,7 @@ void ZG_Graphics_DeInit(void) {
 
 	// deinit gl vars first
 	ZG_Geometry_Delete(g_graphics_vars->geometry_rectangle_default);
-	Appearance_Delete(g_graphics_vars->appearance_rectangle_default);
+	ZG_Appearance_Delete(g_graphics_vars->appearance_rectangle_default);
 	ZG_Material_Delete(g_graphics_vars->material_rectangle_default);
 
 	// ...then deini gl context

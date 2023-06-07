@@ -4,7 +4,7 @@
  *  Created on: Sep 22, 2014
  *      Author: jespada
  */
-#include "../../mmedia/audio/zg_audio.h"
+#include "_zg_mmedia_audio_.h"
 
 #define SPLAYER_FREQUENCY	44100
 #define SPLAYER_N_CHANNELS  2
@@ -112,7 +112,7 @@ uint_t Mixer_TimeToLengthSamples(uint_t time){
 
 void Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
 {
-	UNUSUED_PARAM(udata);
+	ZG_UNUSUED_PARAM(udata);
 	// extern const uint8_t *mixData;
 	SDL_memset(stream, 0, len);  // make sure this is silence.
 	//SDL_memset(stream_aux, 0, SPLAYER_FRAME_SIZE);
@@ -222,7 +222,7 @@ void Mixer_PrintListSoundDriver(void){
 
 bool Mixer_Init(void){
 
-	//UNUSUED_PARAM(format);
+	//ZG_UNUSUED_PARAM(format);
 
 	if(g_mixer_vars != NULL){
 		ZG_Log_ErrorF("Mixer already init");
@@ -377,5 +377,5 @@ void Mixer_DeInit(void){
 }
 
 
-#include "../../mmedia/audio/Sample.c"
-#include "../../mmedia/audio/music/Music.c"
+#include "ZG_Sample.c"
+#include "music/ZG_Music.c"

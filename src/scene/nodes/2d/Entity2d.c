@@ -16,7 +16,7 @@ typedef enum{
 
 
 typedef struct{
-	Action * action;
+	ZG_Action * action;
 	uint32_t start_time;
 }Sprite2dAction;
 

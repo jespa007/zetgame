@@ -1,4 +1,4 @@
-#include "MoviePlayer.h"
+#include "ZG_MoviePlayer.h"
 
 /*#include "../../mmedia/movie/Movie.h"
 #include "../../mmedia/movie/MovieFFMPEG.h"

@@ -24,10 +24,10 @@ void convert_to_displacement2d_y(float *vy, size_t count){
 
 int main(int argc, char *argv[]){
 
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
-	ZetGame_Init(NULL);
+	ZG_Init(NULL);
 	float scale=1;
 	float x=0.2,y=0.1;
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 	ZG_Texture * text_png = ZG_Texture_NewFromFile("../../../test/data/images/test.png");
 	ZG_Texture * text_jpg = ZG_Texture_NewFromFile("../../../test/data/images/test.jpg");
 	TransformAnimation 			*trs_animation=TransformAnimation_New();
-	TransformAction	    		*act_translate=TransformAction_New();
+	ZG_TransformAction	    		*act_translate=TransformAction_New();
 
 
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
 	TransformAction_SetKeyframesTrack(
 		act_translate
 		,ZG_TRANSFORM_COMPONENT_TRANSLATE_X
-		,EASE_IN_OUT_SINE
+		,ZG_EASE_IN_OUT_SINE
 		,tr_values_x
 		,ZG_ARRAY_SIZE(tr_values_x)
 	);
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
 	TransformAction_SetKeyframesTrack(
 		act_translate
 		,ZG_TRANSFORM_COMPONENT_TRANSLATE_Y
-		,EASE_IN_OUT_SINE
+		,ZG_EASE_IN_OUT_SINE
 		,tr_values_y
 		,ZG_ARRAY_SIZE(tr_values_y)
 	);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 			,SDL_GetTicks()
 			,1);
 
-	ZG_Appearance *appearance=Appearance_New();
+	ZG_Appearance *appearance=ZG_Appearance_New();
 	Appearance_SetColor3i(appearance,1,0,0);
 	appearance->texture=text_png;
 
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
 	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 		TransformAnimation_Update(trs_animation,&transform);
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]){
 				 trs_animation
 				, SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_ROTATE_Z
-				, EASE_LINEAR
+				, ZG_EASE_LINEAR
 				, 0
 				, 90
 				, 2000
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]){
 			Graphics_ToggleFullscreen();
 		}
 
-		Graphics_EndRender();
+		ZG_Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]){
 	ZG_Texture_Delete(text_png);
 	ZG_Texture_Delete(text_jpg);
 	//ZG_TTFont_Delete(font);
-	Appearance_Delete(appearance);
+	ZG_Appearance_Delete(appearance);
 
 
 	ZetGame_DeInit();

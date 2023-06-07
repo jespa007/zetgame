@@ -34,7 +34,7 @@ void ECSpriteRenderer_Setup(void *_this,ComponentId _id){
 	ECGeometry *ec_geometry=_entity->components[EC_GEOMETRY];
 	ECMaterial *ec_material=_entity->components[EC_MATERIAL];
 
-	data->appearance=Appearance_New();
+	data->appearance=ZG_Appearance_New();
 	ec_geometry->geometry=data->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
 	ec_material->material=data->appearance->material=ZG_Material_New(0); // Mat by default ?
 
@@ -106,6 +106,6 @@ void ECSpriteRenderer_Update(void *_this){
 
 void ECSpriteRenderer_Destroy(void *_this){
 	ECSpriteRendererData * data= ((ECSpriteRenderer *)_this)->data;
-	Appearance_Delete(data->appearance);
+	ZG_Appearance_Delete(data->appearance);
 	ZG_FREE(data);
 }

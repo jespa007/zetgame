@@ -1,5 +1,5 @@
-#ifndef __GEOMETRY_H__
-#define __GEOMETRY_H__
+#ifndef __ZG_GEOMETRY_H__
+#define __ZG_GEOMETRY_H__
 
 // Meshes are constrained by these values
 #define ZG_VERTEX_COORDS_LEN 	3	// XYZ

@@ -17,7 +17,7 @@ void	ACMaterialAnimation_Setup(void *_this, ComponentId _id){
 
 void			ACMaterialAnimation_StartAction(
 	void *_this
-	, MaterialAction *action
+	, ZG_MaterialAction *action
 	, int repeat
 ){
 	ACMaterialAnimation *ec_material_animation=_this;

@@ -1,18 +1,18 @@
 
 // Entity
-#include "ecs/animation/AnimationSystem.c"
-#include "ecs/animation/component/ACMaterialAnimation.c"
-#include "ecs/animation/component/ACTransformAnimation.c"
-#include "ecs/collision/CollisionSystem.c"
-#include "ecs/entity/component/ECGeometry.c"
-#include "ecs/entity/component/ECMaterial.c"
-#include "ecs/entity/component/ECSpriteRenderer.c"
-#include "ecs/entity/component/ECTextBoxRenderer.c"
-#include "ecs/entity/component/ECTexture.c"
-#include "ecs/entity/component/ECTransform.c"
-#include "ecs/entity/Entity.c"
-#include "ecs/entity/EntityManager.c"
-#include "ecs/entity/EntitySystem.c"
+#include "ecs/animation/ZG_AnimationSystem.c"
+#include "ecs/animation/component/ZG_ACMaterialAnimation.c"
+#include "ecs/animation/component/ZG_ACTransformAnimation.c"
+#include "ecs/collision/ZG_CollisionSystem.c"
+#include "ecs/entity/component/ZG_ECGeometry.c"
+#include "ecs/entity/component/ZG_ECMaterial.c"
+#include "ecs/entity/component/ZG_ECSpriteRenderer.c"
+#include "ecs/entity/component/ZG_ECTextBoxRenderer.c"
+#include "ecs/entity/component/ZG_ECTexture.c"
+#include "ecs/entity/component/ZG_ECTransform.c"
+#include "ecs/entity/ZG_Entity.c"
+#include "ecs/entity/ZG_EntityManager.c"
+#include "ecs/entity/ZG_EntitySystem.c"
 
 
 
@@ -25,12 +25,12 @@
 //#include "component/ECViewer2d.c"
 //#include "entity/EntityManager.c"
 
-bool ECS_Init(void){
-	if(!EntitySystem_Init()){
+bool ZN_ECS_Init(void){
+	if(!ZN_EntitySystem_Init()){
 		return false;
 	}
 
-	if(!AnimationSystem_Init()){
+	if(!ZN_AnimationSystem_Init()){
 		return false;
 	}
 
@@ -39,10 +39,10 @@ bool ECS_Init(void){
 	return true;
 }
 
-void ECS_DeInit(void){
-	EntitySystem_DeInit();
+void ZN_ECS_DeInit(void){
+	ZN_EntitySystem_DeInit();
 
-	AnimationSystem_DeInit();
+	ZN_AnimationSystem_DeInit();
 
 
 }

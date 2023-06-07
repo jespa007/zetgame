@@ -29,14 +29,14 @@ struct ZG_KeyframeTrack{
 
 //--------------------------------------------------------------------------------------------------------
 // STATIC
-void ZG_KeyframeTrack_CalculeFx(KeyframePoint * result
-	, const float  ini_point[I1D_POINT_SIZE]
-	, const float  ini_control_point_1[I1D_POINT_SIZE]
-	, const float  ini_control_point_2[I1D_POINT_SIZE]
+void ZG_KeyframeTrack_CalculeFx(ZG_KeyframePoint * result
+	, const float  ini_point[ZG_I1D_POINT_SIZE]
+	, const float  ini_control_point_1[ZG_I1D_POINT_SIZE]
+	, const float  ini_control_point_2[ZG_I1D_POINT_SIZE]
 	, float iv_ini
-	, const float end_point[I1D_POINT_SIZE]
-	, const float end_control_point_1[I1D_POINT_SIZE]
-	, const float end_control_point_2[I1D_POINT_SIZE]
+	, const float end_point[ZG_I1D_POINT_SIZE]
+	, const float end_control_point_1[ZG_I1D_POINT_SIZE]
+	, const float end_control_point_2[ZG_I1D_POINT_SIZE]
 	, float iv_end);
 
 //--------------------------------------------------------------------------------------------------------

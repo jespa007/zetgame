@@ -2,7 +2,7 @@
 
 
 typedef struct{
-	MapString 			* 	particle_emitters;	// it saves its layers
+	ZG_MapString 			* 	particle_emitters;	// it saves its layers
 	ZG_TextureManager   	*   texture_manager;
 }ParticleEmitterManagerData;
 
@@ -11,7 +11,7 @@ ParticleEmitterManager *ParticleEmitterManager_New(ZG_TextureManager	* _texture_
 	ParticleEmitterManager *tmm=ZG_NEW(ParticleEmitterManager);
 	ParticleEmitterManagerData *data=ZG_NEW(ParticleEmitterManagerData);
 
-	data->particle_emitters = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->particle_emitters = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
 
 	data->particle_emitters->on_delete=ParticleEmitterManager_OnDeleteParticleEmitter;
@@ -150,7 +150,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 		size_t tilemap_dim= tilemap_width->valueint*tilemap_height->valueint;
 
 		if(tilemap_data_len == 0){
-			Log_WarningF("JsonParse: empty tilemap");
+			ZG_Log_WarningF("JsonParse: empty tilemap");
 			continue;
 		}
 

@@ -75,7 +75,7 @@ ZG_TTFontManager *	ZG_TTFontManager_New(void){
 	g_font_embedded=NULL;
 	strcpy(data->default_font_name,ZG_DEFAULT_FONT_FAMILY);
 
-	data->fonts = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->fonts = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 
 	data->fonts->on_delete=ZG_TTFontManager_OnDeleteNode;
 
@@ -148,7 +148,7 @@ ZG_TTFont * 		ZG_TTFontManager_NewFont(ZG_TTFontManager *_this){
 	ZG_TTFontManagerData *data=_this->data;
 	ZG_TTFont *font=NULL;
 
-	if(STRCMP(data->default_font_name,==,ZG_DEFAULT_FONT_FAMILY)){
+	if(ZG_STRCMP(data->default_font_name,==,ZG_DEFAULT_FONT_FAMILY)){
 		font=ZG_TTFont_New();
 	}else{
 		char filename[ZG_MAX_PATH]={0};
@@ -216,7 +216,7 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
 
 	if((font=ZG_MapString_GetValue(data->fonts,id,NULL))==NULL){
-		if(STRCMP(ttf_font_file_to_lower,==,ZG_DEFAULT_FONT_FAMILY)){
+		if(ZG_STRCMP(ttf_font_file_to_lower,==,ZG_DEFAULT_FONT_FAMILY)){
 			new_font=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 		}
 		else{

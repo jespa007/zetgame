@@ -1,6 +1,6 @@
 #include "zetgame.h"
 
-static ZetGameSetupParams default_setup={
+static ZG_SetupParams default_setup={
 		.graphics_api=ZG_GRAPHICS_API_GL
 		,.width=ZG_DEFAULT_SCREEN_WIDTH
 		,.height=ZG_DEFAULT_SCREEN_HEIGHT
@@ -13,12 +13,12 @@ static ZetGameSetupParams default_setup={
 static bool debug_mode=false;
 
 
-void SetupInfo_SetupInfo(ZetGameSetupParams *si){
+void SetupInfo_SetupInfo(ZG_SetupParams *si){
 	si->width=ZG_DEFAULT_SCREEN_WIDTH;
 	si->height=ZG_DEFAULT_SCREEN_HEIGHT;
 }
 
-void ZetGame_Init(ZetGameSetupParams * info){
+void ZG_Init(ZG_SetupParams * info){
 
 	if(info == NULL){
 		info=&default_setup;
@@ -26,7 +26,7 @@ void ZetGame_Init(ZetGameSetupParams * info){
 
 	//setlocale(LC_ALL, ""); // set utf-8 by default
 
-	Luts_Init();
+	ZG_Luts_Init();
 
 #ifdef __WITH_FFMPEG__
 	av_register_all();
@@ -57,12 +57,12 @@ void ZetGame_Init(ZetGameSetupParams * info){
 	GUI_Init();
 }
 
-void ZetGame_SetDebugMode(bool _debug_mode){
+void ZG_SetDebugMode(bool _debug_mode){
 	debug_mode=_debug_mode;
 }
 
 
-bool ZetGame_IsDebugMode(void){
+bool ZG_IsDebugMode(void){
 	return debug_mode;
 }
 

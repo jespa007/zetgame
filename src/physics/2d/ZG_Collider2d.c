@@ -1,7 +1,7 @@
 #include "physics/zg_physics.h"
 
 typedef struct{
-	Vector2f dim;
+	ZG_Vector2f dim;
 	Collider2dType type;
 }Collider2dData;
 
@@ -124,7 +124,7 @@ bool Collider2d_TestIntersectionCircleCircle(
 }
 
 void Collider2d_Draw(ZG_Transform _t3d, Collider2dType _collider_type, ZG_Color4f _color){
-	Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
+	ZG_Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
 	switch(_collider_type){
 	case COLLIDER2D_TYPE_POINT:
 		Graphics_DrawPoint2f(_t3d.translate.x,_t3d.translate.y,_color,1);

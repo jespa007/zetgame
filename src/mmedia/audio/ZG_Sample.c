@@ -1,4 +1,4 @@
-#include "../../mmedia/audio/zg_audio.h"
+#include "_zg_mmedia_audio_.h"
 
 
 typedef struct{
@@ -124,7 +124,7 @@ SAMPLE Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 
 SAMPLE Sample_Load(const char *_filename){
 	SAMPLE idx_sound=INVALID_SOUND_IDX;
-	ZG_BufferByte *buffer=FileSystem_ReadFile(_filename);
+	ZG_BufferByte *buffer=ZG_FileSystem_ReadFile(_filename);
 
 	if(buffer!=NULL){
 		idx_sound=Sample_LoadFromMemory(buffer->ptr, buffer->len);

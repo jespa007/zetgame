@@ -1,5 +1,5 @@
-#ifndef __VIEW_PORT_H__
-#define __VIEW_PORT_H__
+#ifndef __ZG_VIEW_PORT_H__
+#define __ZG_VIEW_PORT_H__
 
 typedef struct ZG_ViewPort ZG_ViewPort;
 

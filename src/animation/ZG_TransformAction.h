@@ -9,7 +9,7 @@ struct ZG_TransformAction{
 };
 
 // STATIC
-Action 				*	ZG_TransformAction_NewAction(void);
+ZG_Action 				*	ZG_TransformAction_NewAction(void);
 
 
 // PUBLIC
@@ -17,14 +17,14 @@ ZG_TransformAction 	*	ZG_TransformAction_New(void);
 
 void					ZG_TransformAction_SetKeyframesTrack(
 		ZG_TransformAction *_this
-		, TransformComponent _transform_component
+		, ZG_TransformComponent _transform_component
 		, Ease ease
 		,float *keyframe_points
 		, size_t keyframe_points_count
 
 );
 
-Action *ZG_TransformAction_GetAction(ZG_TransformAction 	*_this);
+ZG_Action *ZG_TransformAction_GetAction(ZG_TransformAction 	*_this);
 
 
 void 	ZG_TransformAction_Delete(ZG_TransformAction 	*_this);

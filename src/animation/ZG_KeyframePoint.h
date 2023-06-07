@@ -5,9 +5,9 @@
 #define ZG_I1D_IDX_VALUE 		1 // independent variable (t)
 #define ZG_I1D_POINT_SIZE		2 // T + value
 
-typedef struct ZG_KeyFramePoint ZG_KeyFramePoint;
+typedef struct ZG_KeyframePoint ZG_KeyframePoint;
 
-struct ZG_KeyFramePoint{
+struct ZG_KeyframePoint{
 
 	// By reference
 	float 		point[ZG_I1D_POINT_SIZE],
@@ -21,8 +21,8 @@ struct ZG_KeyFramePoint{
 	//--------------------------------------------------------------
 };
 
-ZG_KeyFramePoint * ZG_KeyFramePoint_New(void);
-void 			ZG_KeyFramePoint_Delete(ZG_KeyFramePoint * _this);
+ZG_KeyframePoint * ZG_KeyframePoint_New(void);
+void 			ZG_KeyframePoint_Delete(ZG_KeyframePoint * _this);
 
 
 #endif

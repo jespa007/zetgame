@@ -11,14 +11,14 @@ void			ACTransformAnimation_Init(void *_this);
 
 void			ACTransformAnimation_StartAction(
 	void *_this
-	, TransformAction *action
+	, ZG_TransformAction *action
 	, int repeat
 );
 
 
 void 			ACTransformAnimation_StartTween(
 	void *_this
-	, TransformComponent _transform_component
+	, ZG_TransformComponent _transform_component
 	, Ease _ease
 	, float _from
 	, float _to

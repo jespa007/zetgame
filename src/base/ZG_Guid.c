@@ -4,7 +4,7 @@ const char *ZG_GUID_EMPTY="00000000-0000-0000-0000-000000000000";
 
 ZG_Guid * ZG_Guid_New(void)
 {
-	ZG_Guid *guid=ZG_NEW(Guid);
+	ZG_Guid *guid=ZG_NEW(ZG_Guid);
 #ifdef _WIN32
     UUID uuid;
     UuidCreate ( &uuid );
@@ -24,8 +24,8 @@ ZG_Guid * ZG_Guid_New(void)
     return guid;
 }
 
-void ZG_Guid_Delete(ZG_Guid * guid){
-	if(guid==NULL) return;
+void ZG_Guid_Delete(ZG_Guid * _this){
+	if(_this==NULL) return;
 
-	ZG_FREE(guid);
+	ZG_FREE(_this);
 }

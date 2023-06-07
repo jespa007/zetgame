@@ -1,4 +1,4 @@
-#include "graphics/zg_graphics.h"
+#include "graphics/_zg_graphics_.h"
 #include "input/zg_input.h"
 
 #define PBO_COUNT 2
@@ -32,12 +32,12 @@ typedef struct{
 
 	//SDL_RWops *rw;
 
-	HttpServerMPS * http_server_mps;
+	ZN_HttpServerMPS * http_server_mps;
 }JpegMPSData;
 
 void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data);
 
-#include "JpegMPS_GL.c"
+#include "ZG_JpegMPS_GL.c"
 
 void fill_circle2(SDL_Surface *surface, int cx, int cy, int radius, uint32_t pixel)
 {
@@ -109,13 +109,13 @@ JpegMPS * JpegMPS_New(void){
 	fill_circle2( data->srf_circle, RADIUS_CIRCLE_CURSOR,RADIUS_CIRCLE_CURSOR,RADIUS_CIRCLE_CURSOR, COLOR_CIRCLE_CURSOR);//(0xff<<24)|(r<<16)|(g<<8)|(b<<0) );
 	SDL_SetColorKey(data->srf_circle, SDL_TRUE, 0);
 
-	data->scale_x=(float)STREAM_WIDTH/(float)Graphics_GetWidth();
-	data->scale_y=(float)STREAM_HEIGHT/(float)Graphics_GetHeight();
+	data->scale_x=(float)STREAM_WIDTH/(float)ZG_Graphics_GetWidth();
+	data->scale_y=(float)STREAM_HEIGHT/(float)ZG_Graphics_GetHeight();
 
 	if(JpegMPS_GfxSetup(data)){
 
-		data->http_server_mps = HttpServerMPS_New();
-		HttpServerMPS_SetTimeDelay(data->http_server_mps,16);
+		data->http_server_mps = ZN_HttpServerMPS_New();
+		ZN_HttpServerMPS_SetTimeDelay(data->http_server_mps,16);
 		data->init=true;
 	}
 
@@ -128,15 +128,15 @@ void JpegMPS_GfxSetup_Start(JpegMPS *_this,int port){
 	JpegMPSData *data= _this->data;
 
 	if(data->init){
-		HttpServerMPS_Start(data->http_server_mps,port);
+		ZN_HttpServerMPS_Start(data->http_server_mps,port);
 	}
 }
 
-void JpegMPS_GfxSetup_Stop(JpegMPS *_this){
+void ZG_JpegMPS_GfxSetup_Stop(JpegMPS *_this){
 	if(_this == NULL) return;
 	JpegMPSData *data= _this->data;
 	if(data->init){
-		HttpServerMPS_Stop(data->http_server_mps);
+		ZN_HttpServerMPS_Stop(data->http_server_mps);
 	}
 }
 
@@ -245,7 +245,7 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 
 
 	// if we can write ...
-	if(HttpServerMPS_CanWrite(data->http_server_mps)){
+	if(ZN_HttpServerMPS_CanWrite(data->http_server_mps)){
 
 		ZG_Vector2i mp=Input_GetMousePosition();
 
@@ -284,7 +284,7 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 
 		uint8_t *jpeg_bin = jpeg_encode_mem((uint8_t *)data->srf_clone->pixels,STREAM_WIDTH,STREAM_HEIGHT,IMAGE_QUALITY , &jpeg_len);
 
-		HttpServerMPS_Write(data->http_server_mps,jpeg_bin,(size_t)jpeg_len);
+		ZN_HttpServerMPS_Write(data->http_server_mps,jpeg_bin,(size_t)jpeg_len);
 
 		free(jpeg_bin);
 	}
@@ -347,7 +347,7 @@ void JpegMPS_Delete(JpegMPS *_this){
 
 	JpegMPSData *data=_this->data;
 
-	HttpServerMPS_Delete(data->http_server_mps);
+	ZN_HttpServerMPS_Delete(data->http_server_mps);
 
 	//SDL_RWclose(rw);
 	switch(ZG_Graphics_GetGraphicsApi()){

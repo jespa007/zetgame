@@ -1,5 +1,5 @@
-#ifndef __ZG_SYSTEM_H__
-#define __ZG_SYSTEM_H__
+#ifndef __ZG_BASE_H__
+#define __ZG_BASE_H__
 
 
 

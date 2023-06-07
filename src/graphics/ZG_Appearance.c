@@ -27,7 +27,7 @@ void ZG_Appearance_Apply(ZG_Appearance *_this){
 		default:
 			break;
 		case ZG_GRAPHICS_API_GL:
-			Appearance_GL_Apply(_this);
+			ZG_Appearance_GL_Apply(_this);
 			break;
 	}
 }
@@ -42,7 +42,7 @@ void ZG_Appearance_Restore(ZG_Appearance *_this){
 		default:
 			break;
 		case ZG_GRAPHICS_API_GL:
-			Appearance_GL_Restore(_this);
+			ZG_Appearance_GL_Restore(_this);
 			break;
 	}
 }

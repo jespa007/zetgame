@@ -1,7 +1,7 @@
 
-#include "zg_math.h"
+#include "_zg_math_.h"
 
-ZG_BoundingBox  BoundingBox_New(void){
+ZG_BoundingBox  ZG_BoundingBox_New(void){
 	return (ZG_BoundingBox){
 		 .minx=0
 		,.miny=0

@@ -1,12 +1,12 @@
 #include "_zg_graphics_.h"
 
 typedef struct{
-	MapString 	* 	images;
+	ZG_MapString 	* 	images;
 	const char 	*	image_resource_path;
-	Image		* 	image_embedded;
+	ZG_Image	* 	image_embedded;
 }ZG_ImageManagerData;
 
-static Image		* 	g_default_image=NULL;
+static ZG_Image		* 	g_default_image=NULL;
 
 //-------------
 // STATIC
@@ -40,7 +40,7 @@ ZG_ImageManager *ZG_ImageManager_New(void){
 	ZG_ImageManagerData 	*data=ZG_NEW(ZG_ImageManagerData);
 
 	data->image_resource_path=".";
-	data->images = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->images = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->images->on_delete=ZG_ImageManager_OnDeleteNode;
 
 	tm->data=data;
@@ -53,7 +53,7 @@ void 		ZG_ImageManager_SetImageResourcePath(ZG_ImageManager *_this,const char * 
 	data->image_resource_path=path;
 }
 
-Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
+ZG_Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
 	ZG_ImageManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};

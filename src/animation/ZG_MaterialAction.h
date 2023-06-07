@@ -9,7 +9,7 @@ struct ZG_MaterialAction{
 };
 
 // STATIC
-Action 				*	ZG_MaterialAction_NewAction(void);
+ZG_Action 				*	ZG_MaterialAction_NewAction(void);
 
 
 // PUBLIC
@@ -24,7 +24,7 @@ void					ZG_MaterialAction_SetKeyframesTrack(
 
 );
 
-Action *ZG_MaterialAction_GetAction(ZG_MaterialAction 	*_this);
+ZG_Action *ZG_MaterialAction_GetAction(ZG_MaterialAction 	*_this);
 
 
 void 	ZG_MaterialAction_Delete(ZG_MaterialAction 	*_this);

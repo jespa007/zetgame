@@ -1,12 +1,12 @@
-#include "zg_animation.h"
+#include "_zg_animation_.h"
 
-ZG_KeyFramePoint * ZG_KeyFramePoint_New(void){
-	ZG_KeyFramePoint * bp = ZG_NEW(ZG_KeyFramePoint);
-	memset(bp, 0, sizeof(ZG_KeyFramePoint));
+ZG_KeyframePoint * ZG_KeyframePoint_New(void){
+	ZG_KeyframePoint * bp = ZG_NEW(ZG_KeyframePoint);
+	memset(bp, 0, sizeof(ZG_KeyframePoint));
 	return bp;
 }
 
-void ZG_KeyFramePoint_Delete(ZG_KeyFramePoint * _this){
+void ZG_KeyframePoint_Delete(ZG_KeyframePoint * _this){
 	if(_this){
 		ZG_FREE(_this);
 	}

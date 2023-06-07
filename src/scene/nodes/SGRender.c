@@ -106,8 +106,8 @@ void SGRender_AddNodeToDraw(SGRender *_this, TransformNode *sg_node){
 
 	transform_camera=TransformNode_GetTransform(sg_camera->node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
 	transform_node=TransformNode_GetTransform(sg_node,TRANSFORM_NODE_TRANSFORM_TYPE_WORLD);
-	origin = Vector3f_Sub(transform_node->translate,transform_camera->translate);
-	camera_space=Quaternion_InverseTransformV3f(transform_camera->quaternion,origin);
+	origin = ZG_Vector3f_Sub(transform_node->translate,transform_camera->translate);
+	camera_space=ZG_Quaternion_InverseTransformV3f(transform_camera->quaternion,origin);
 	// get z with resolution 10
 	idx_z = -camera_space.z;
 
@@ -139,7 +139,7 @@ void SGRender_End(SGRender *_this){
 			Graphics_Draw(transform_node, node->geometry, node->appearance);
 		}
 
-		List_Clear(sg_nodes);
+		ZG_List_Clear(sg_nodes);
 	}
 
 }

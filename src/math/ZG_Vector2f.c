@@ -1,16 +1,16 @@
-#include "zg_math.h"
+#include "_zg_math_.h"
 
-Vector2f Vector2f_New(float x, float y){
-	Vector2f v={.x=x,.y=y};
+ZG_Vector2f ZG_Vector2f_New(float x, float y){
+	ZG_Vector2f v={.x=x,.y=y};
 	return v;
 }
 
-Vector2f Vector2f_Zeros(void){
-	Vector2f v={.x=0,.y=0};
+ZG_Vector2f ZG_Vector2f_Zeros(void){
+	ZG_Vector2f v={.x=0,.y=0};
 	return v;
 }
 
-float Vector2f_Distance(Vector2f *p1, Vector2f *p2){
+float ZG_Vector2f_Distance(ZG_Vector2f *p1, ZG_Vector2f *p2){
 
 	float ox=fabs(p2->x - p1->x);
 	float oy=fabs(p2->y - p1->y);
@@ -18,7 +18,7 @@ float Vector2f_Distance(Vector2f *p1, Vector2f *p2){
 	return sqrt(ox*ox + oy*oy);
 }
 
-void  		Vector2f_LeastSquaresFitLinear(ZG_List *lst_points2d,float * gain, float *offset){
+void  		ZG_Vector2f_LeastSquaresFitLinear(ZG_List *lst_points2d,float * gain, float *offset){
 	//Gives best fit of data to line Y = MC + B
 	float x1, y1, xy, x2, J;
 	int n_points = lst_points2d->count;
@@ -33,7 +33,7 @@ void  		Vector2f_LeastSquaresFitLinear(ZG_List *lst_points2d,float * gain, float
 
 	for (i = 0; i < n_points; i++)
 	{
-		Vector2f *p=lst_points2d->items[i];
+		ZG_Vector2f *p=lst_points2d->items[i];
 		x1 = x1 + p->x;
 		y1 = y1 + p->y;
 		xy = xy + p->x * p->y;

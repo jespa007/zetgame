@@ -1,10 +1,10 @@
 #include "zetgame.h"
 
 int main(int argc, char *argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
 
-	ZetGame_Init(NULL);
+	ZG_Init(NULL);
 
 	ZG_Shader *s=Shader_Load(
 		"../../../test/data/shaders/sample"
@@ -13,12 +13,12 @@ int main(int argc, char *argv[]){
 
 
 	do{
-		Graphics_BeginRender();
+		ZG_Graphics_BeginRender();
 
 	if(s!=NULL){
 	Shader_Use(s);
 	}
-	   Graphics_EndRender();
+	   ZG_Graphics_EndRender();
 
 		Input_Update();
 	}while(!K_ESC);

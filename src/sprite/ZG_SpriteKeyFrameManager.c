@@ -3,7 +3,7 @@
 
 
 typedef struct{
-	MapString 	* 	sprite_keyframes;
+	ZG_MapString 	* 	sprite_keyframes;
 	ZG_List 		* 	sprite_keyframe_resources;
 	ZG_TextureManager	* texture_manager;
 }SpriteKeyFrameManagerData;
@@ -31,7 +31,7 @@ SpriteKeyFrameManager *SpriteKeyFrameManager_New(ZG_TextureManager	* _texture_ma
 	SpriteKeyFrameManager *skfm=ZG_NEW(SpriteKeyFrameManager);
 	SpriteKeyFrameManagerData *data=ZG_NEW(SpriteKeyFrameManagerData);
 
-	data->sprite_keyframes = MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->sprite_keyframes = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 
 	data->sprite_keyframe_resources= ZG_List_New();
 	data->texture_manager=_texture_manager;
@@ -215,7 +215,7 @@ bool SpriteKeyFrameManager_LoadFromMemory(
  * @_extra_json_filename: Json file where it adds some extra information per frame (for instance collider)
  */
 bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this,const char *_key_id_prefix, const char *_json_ase_filename){
-	//UNUSUED_PARAM(_extra_json);
+	//ZG_UNUSUED_PARAM(_extra_json);
 
 	ZG_BufferByte *ase_json_buffer=NULL;
 	char *_path=NULL;

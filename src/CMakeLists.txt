@@ -306,17 +306,17 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	base/_zg_base_.c
 	
 	#-- Graphics -- 
-	#graphics/_zg_graphics_.c
+	graphics/_zg_graphics_.c
 	
 	
 	#-- Animation --
-	#animation/_zg_animation_.c
+	animation/_zg_animation_.c
 	
 	#-- Multimedia -- 
-	#mmedia/_zg_mmedia_.c
+	mmedia/_zg_mmedia_.c
 	
 	#-- Math --
-	#math/_zg_math_.c
+	math/_zg_math_.c
 	
 	#-- Input --
 	#input/_zg_input_.c

@@ -1,4 +1,4 @@
-#include "zg_graphics.h"
+#include "_zg_graphics_.h"
 
 void ZG_Material_GL_Apply(ZG_Material * material){
 	// _GL_FRONT: affect only front facing triangles

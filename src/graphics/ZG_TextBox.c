@@ -277,13 +277,13 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 ZG_HorizontalAlignment ZG_TextBox_ParseTextAlign(const char *_text_align){
 	ZG_HorizontalAlignment horizontal_alignment=ZG_HORIZONTAL_ALIGNMENT_LEFT; // by default
 	char *str_text_align=ZG_String_ToLower(_text_align);
-	if(STRCMP(str_text_align,==,"left")){
+	if(ZG_STRCMP(str_text_align,==,"left")){
 		horizontal_alignment=ZG_HORIZONTAL_ALIGNMENT_LEFT;
-	}else if(STRCMP(str_text_align,==,"center")){
+	}else if(ZG_STRCMP(str_text_align,==,"center")){
 		horizontal_alignment=ZG_HORIZONTAL_ALIGNMENT_CENTER;
-	}else if(STRCMP(str_text_align,==,"right")){
+	}else if(ZG_STRCMP(str_text_align,==,"right")){
 		horizontal_alignment=ZG_HORIZONTAL_ALIGNMENT_RIGHT;
-	}else if(STRCMP(str_text_align,==,"justify")){
+	}else if(ZG_STRCMP(str_text_align,==,"justify")){
 		horizontal_alignment=ZG_HORIZONTAL_ALIGNMENT_JUSTIFY;
 	}else{
 		ZG_Log_Error("Unknow align text '%s' ",_text_align);
@@ -297,9 +297,9 @@ ZG_HorizontalAlignment ZG_TextBox_ParseTextAlign(const char *_text_align){
 ZG_VerticalAlignment ZG_TextBox_ParseVerticalAlignment(const char *_vertical_text){
 	ZG_VerticalAlignment vertical_alignment=ZG_VERTICAL_ALIGNMENT_TOP; // by default
 	char *str_vertical_align=ZG_String_ToLower(_vertical_text);
-	if(STRCMP(str_vertical_align,==,"top")){
+	if(ZG_STRCMP(str_vertical_align,==,"top")){
 		vertical_alignment=ZG_VERTICAL_ALIGNMENT_TOP;
-	}else if(STRCMP(str_vertical_align,==,"center")){
+	}else if(ZG_STRCMP(str_vertical_align,==,"center")){
 		vertical_alignment=ZG_VERTICAL_ALIGNMENT_CENTER;
 	}else{
 		ZG_Log_Error("Unknow vertical text '%s' ",_vertical_text);
@@ -473,7 +473,7 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 		);
 	}
 
-	if(ZetGame_IsDebugMode()){
+	if(ZG_IsDebugMode()){
 		int x_center=0;// default text_align_center
 		int y_center=0;// default vertical_align_center
 

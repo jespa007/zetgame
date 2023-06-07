@@ -1,4 +1,4 @@
-#include "../zg_audio.h"
+#include "../_zg_mmedia_audio_.h"
 
 typedef struct{
 	uint32_t wav_length;
@@ -55,7 +55,7 @@ bool MusicWav_LoadFromMemory(MixerSound *sp_info,uint8_t *ptr, size_t size){
 
 bool MusicWav_Load(MixerSound *sp_info,const char *file){
 
-	ZG_BufferByte *buffer=FileSystem_ReadFile(file);
+	ZG_BufferByte *buffer=ZG_FileSystem_ReadFile(file);
 
 	if(buffer!=NULL){
 		bool res=MusicWav_LoadFromMemory(sp_info, buffer->ptr, buffer->len);

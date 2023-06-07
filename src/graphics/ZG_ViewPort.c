@@ -22,7 +22,7 @@ static float 		ZG_ViewPort_ScreenToWorldPosY_BuiltIn(ZG_ViewPort *view_port,int 
 
 void 		ZG_ViewPort_Init(uint16_t _width, uint16_t _height){
 	if(g_viewport_vars!=NULL){
-		Log_WarningF("ZG_ViewPort status already initialized");
+		ZG_Log_WarningF("ZG_ViewPort status already initialized");
 	}
 
 	g_viewport_vars=ZG_NEW(ZG_ViewPortVars);
@@ -155,7 +155,7 @@ float ZG_ViewPort_ScreenToWorldPosY_BuiltIn(ZG_ViewPort * view_port,int y2d){
 }
 
 int ZG_ViewPort_WorldToScreenPosX_BuiltIn(ZG_ViewPort * view_port,float x3d){
-	return (x3d+ZG_Graphics_GetAspectRatio())*Graphics_GetOneOverAspectRatio()*0.5f*view_port->width;
+	return (x3d+ZG_Graphics_GetAspectRatio())*ZG_Graphics_GetOneOverAspectRatio()*0.5f*view_port->width;
 }
 
 int ZG_ViewPort_WorldToScreenPosY_BuiltIn(ZG_ViewPort * view_port,float y3d){

@@ -1,5 +1,5 @@
 #include "zg_input.h"
-#include "graphics/zg_graphics.h"
+#include "graphics/_zg_graphics_.h"
 
 
 /*
@@ -71,12 +71,12 @@ void Input_Init(void) {
 	//memset(zg_keyR,0,sizeof(zg_keyR));
 	//memset(zg_key,0,sizeof(zg_key));
 
-	g_input_vars->on_key_up=MapInt_New();
-	g_input_vars->on_key_down=MapInt_New();
-	g_input_vars->on_mouse_button_down=MapInt_New();
-	g_input_vars->on_mouse_motion=MapInt_New();
-	g_input_vars->on_mouse_button_up=MapInt_New();
-	g_input_vars->on_drop_file=MapInt_New();
+	g_input_vars->on_key_up=ZG_MapInt_New();
+	g_input_vars->on_key_down=ZG_MapInt_New();
+	g_input_vars->on_mouse_button_down=ZG_MapInt_New();
+	g_input_vars->on_mouse_motion=ZG_MapInt_New();
+	g_input_vars->on_mouse_button_up=ZG_MapInt_New();
+	g_input_vars->on_drop_file=ZG_MapInt_New();
 	g_input_vars->enable_mouse_events=true;
 	g_input_vars->second_mouse_motion = SDL_RegisterEvents(1);
 
@@ -139,7 +139,7 @@ uint32_t 	Input_AddEventOnKeyUp(CallbackKeyEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
 	CallbackKeyEvent *cf=ZG_NEW(CallbackKeyEvent);
 	*cf=_callback;
-	MapInt_Set(g_input_vars->on_key_up,idx_handle,cf);
+	ZG_MapInt_Set(g_input_vars->on_key_up,idx_handle,cf);
 	return idx_handle;
 }
 
@@ -147,7 +147,7 @@ uint32_t 	Input_AddEventOnKeyDown(CallbackKeyEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
 	CallbackKeyEvent *cf=ZG_NEW(CallbackKeyEvent);
 	*cf=_callback;
-	MapInt_Set(g_input_vars->on_key_down,idx_handle,cf);
+	ZG_MapInt_Set(g_input_vars->on_key_down,idx_handle,cf);
 	return idx_handle;
 }
 
@@ -155,7 +155,7 @@ uint32_t 	Input_AddEventOnMouseButtonUp(CallbackMouseEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
 	CallbackMouseEvent *cf=ZG_NEW(CallbackMouseEvent);
 	*cf=_callback;
-	MapInt_Set(g_input_vars->on_mouse_button_up,idx_handle,cf);
+	ZG_MapInt_Set(g_input_vars->on_mouse_button_up,idx_handle,cf);
 	return idx_handle;
 }
 
@@ -163,7 +163,7 @@ uint32_t 	Input_AddEventOnMouseMotion(CallbackMouseEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
 	CallbackMouseEvent *cf=ZG_NEW(CallbackMouseEvent);
 	*cf=_callback;
-	MapInt_Set(g_input_vars->on_mouse_motion,idx_handle,cf);
+	ZG_MapInt_Set(g_input_vars->on_mouse_motion,idx_handle,cf);
 	return idx_handle;
 }
 
@@ -171,7 +171,7 @@ uint32_t 	Input_AddEventOnMouseButtonDown(CallbackMouseEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
 	CallbackMouseEvent *cf=ZG_NEW(CallbackMouseEvent);
 	*cf=_callback;
-	MapInt_Set(g_input_vars->on_mouse_button_down,idx_handle,cf);
+	ZG_MapInt_Set(g_input_vars->on_mouse_button_down,idx_handle,cf);
 	return idx_handle;
 }
 
@@ -179,7 +179,7 @@ uint32_t	Input_AddEventOnDropFile(CallbackDropEvent _callback){
 	uint32_t idx_handle=Input_NewHandleId();
 	CallbackDropEvent *cf=ZG_NEW(CallbackDropEvent);
 	*cf=_callback;
-	MapInt_Set(g_input_vars->on_drop_file,idx_handle,cf);
+	ZG_MapInt_Set(g_input_vars->on_drop_file,idx_handle,cf);
 	return idx_handle;
 }
 
@@ -210,7 +210,7 @@ void		Input_RemoveEventOnDropFile(uint32_t idx_handle){
 //------------------------------------------------------------------------------------------------
 void Input_UpdateDropEvents(DropEvent *drop_event) {
 	for(unsigned i = 0; i < g_input_vars->on_drop_file->list->count; i++){
-			MapIntNode *node=g_input_vars->on_drop_file->list->items[i];
+			ZG_MapIntNode *node=g_input_vars->on_drop_file->list->items[i];
 			CallbackDropEvent * e=(CallbackDropEvent *)node->val;
 			((DropEventCallback)(e->ptr_function))(drop_event,e->user_data);
 		}
@@ -219,7 +219,7 @@ void Input_UpdateDropEvents(DropEvent *drop_event) {
 void Input_UpdateMouseEvents(ZG_MapInt *mouse_events,MouseEvent *mouse_event) {
 
 	for(unsigned i = 0; i < mouse_events->list->count; i++){
-		MapIntNode *node=mouse_events->list->items[i];
+		ZG_MapIntNode *node=mouse_events->list->items[i];
 		CallbackMouseEvent * e=(CallbackMouseEvent *)node->val;
 		((MouseEventCallback)(e->ptr_function))(mouse_event,e->user_data);
 	}
@@ -229,7 +229,7 @@ void Input_UpdateMouseEvents(ZG_MapInt *mouse_events,MouseEvent *mouse_event) {
 void Input_UpdateKeyEvents(ZG_MapInt *key_events,KeyEvent *key_event) {
 
 	for(unsigned i = 0; i < key_events->list->count; i++){
-		MapIntNode *node=key_events->list->items[i];
+		ZG_MapIntNode *node=key_events->list->items[i];
 		CallbackKeyEvent * e=(CallbackKeyEvent *)node->val;
 		((KeyEventCallback)(e->ptr_function))(key_event,e->user_data);
 	}
@@ -268,7 +268,7 @@ void Input_Update() {
 			SDL_MouseMotionEvent *mouse_motion_2=&event.motion;
 
 
-			mouse_event.position=Vector2i_Mulv2f(Vector2i_New(
+			mouse_event.position=Vector2i_Mulv2f(ZG_Vector2i_New(
 					mouse_motion_2->x
 					,mouse_motion_2->y
 			),Graphics_GetScale());

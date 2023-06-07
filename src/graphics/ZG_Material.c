@@ -1,4 +1,4 @@
-#include "Material_GL.c"
+#include "ZG_Material_GL.c"
 
 ZG_Material * ZG_Material_New(uint32_t properties){
 	ZG_Material *material=ZG_NEW(ZG_Material);

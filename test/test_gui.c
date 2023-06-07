@@ -3,15 +3,15 @@
 #define WINDOW_NAME "window"
 
 int main(int argc, char *argv[]){
-	UNUSUED_PARAM(argc);
-	UNUSUED_PARAM(argv);
-	ZetGameSetupParams params;
+	ZG_UNUSUED_PARAM(argc);
+	ZG_UNUSUED_PARAM(argv);
+	ZG_SetupParams params;
 	memset(&params,0,sizeof(params));
 	params.width=1024;
 	params.height=768;
 
-	ZetGame_Init(&params);
-	ZetGame_SetDebugMode(true);
+	ZG_Init(&params);
+	ZG_SetDebugMode(true);
 
 	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
 	//ZG_TTFontManager * ttfont_manager= ZG_TTFontManager_New();
@@ -42,12 +42,12 @@ int main(int argc, char *argv[]){
 		//ZG_TextBox_SetText(gui_viewer->widget->textbox,"1");
 		//GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
-			Graphics_BeginRender();
+			ZG_Graphics_BeginRender();
 
 
 			GUIWidget_Update(window->widget);
 
-			Graphics_EndRender();
+			ZG_Graphics_EndRender();
 
 			Input_Update();
 

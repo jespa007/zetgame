@@ -12,13 +12,13 @@ typedef struct {
 	bool		loop;
 	ChannelOperator channel_operator;
 
-	Action *actions;
-	Tween  *tweens;
+	ZG_Action *actions;
+	ZG_Tween  *tweens;
 }InfoAction;*/
 
 struct ZG_Animation{
 
-	//ChannelsInfo 	*	channels;
+	//ZG_ChannelsInfo 	*	channels;
 
 	// ani controlled components...
 	//ZG_List 			*	ani_controlled_components;
@@ -27,7 +27,7 @@ struct ZG_Animation{
 
 	//ZG_List			* 	info_ani_triggered_actions;
 	//InfoAction *info_ani_action;
-	// Tween
+	// ZG_Tween
 
 	void 			* data;
 
@@ -45,25 +45,25 @@ typedef struct{
 ZG_Animation * ZG_Animation_New(uint8_t n_channels);
 
 void ZG_Animation_SetCallbackZG_AnimationTime(ZG_Animation * _this,CallbackZG_AnimationTime cf);
-void ZG_Animation_AddChannel(ZG_Animation * _this, ChannelsInfo *ac);
+void ZG_Animation_AddChannel(ZG_Animation * _this, ZG_ChannelsInfo *ac);
 
-void ZG_Animation_OnResetChannels(ZG_Animation * _this,void (*)(ChannelsInfo *_channels_info,void * _user_data), void *_user_data);
-void ZG_Animation_OnSetChannels(ZG_Animation * _this,void (*)(ChannelsInfo *_channels_info, void *_user_data), void *_user_data);
+void ZG_Animation_OnResetChannels(ZG_Animation * _this,void (*)(ZG_ChannelsInfo *_channels_info,void * _user_data), void *_user_data);
+void ZG_Animation_OnSetChannels(ZG_Animation * _this,void (*)(ZG_ChannelsInfo *_channels_info, void *_user_data), void *_user_data);
 
 /**
  * Erase component
  */
-void ZG_Animation_EraseChannel(ZG_Animation *_this, ChannelsInfo *ac);
+void ZG_Animation_EraseChannel(ZG_Animation *_this, ZG_ChannelsInfo *ac);
 
 /**
  * Add action to time line
  */
-void ZG_Animation_StartAction(ZG_Animation *_this, Action *_action,uint32_t _start_time, int _repeat);
+void ZG_Animation_StartAction(ZG_Animation *_this, ZG_Action *_action,uint32_t _start_time, int _repeat);
 
 /**
  * Add action to time line
  */
-void ZG_Animation_ClearAction(ZG_Animation *_this, Action *_action);
+void ZG_Animation_ClearAction(ZG_Animation *_this, ZG_Action *_action);
 
 /**
  * Trigger action (independent to time line)

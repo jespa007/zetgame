@@ -53,7 +53,7 @@ static ZG_List * ZG_String_SplitCharByAnyCharInDelim(const char *str_in, const c
 char *ZG_String_New(const char *in_str){
 
 	if(in_str==NULL){
-		Log_WarningF("input string as NULL");
+		ZG_Log_WarningF("input string as NULL");
 		return NULL;
 	}
 
@@ -64,7 +64,7 @@ char *ZG_String_New(const char *in_str){
 		memset(out_str,0,size+1);
 		strcpy(out_str,in_str);
 	}else{
-		Log_WarningF("input lenght string 0");
+		ZG_Log_WarningF("input lenght string 0");
 	}
 
 	return out_str;
@@ -72,7 +72,7 @@ char *ZG_String_New(const char *in_str){
 
 char *			ZG_String_CloneN(const char *in_str, size_t len){
 	if(in_str==NULL){
-		Log_WarningF("input string as NULL");
+		ZG_Log_WarningF("input string as NULL");
 		return NULL;
 	}
 
@@ -83,7 +83,7 @@ char *			ZG_String_CloneN(const char *in_str, size_t len){
 		memset(out_str,0,size+1);
 		strncpy(out_str,in_str,MIN(size,len));
 	}else{
-		Log_WarningF("input lenght string 0");
+		ZG_Log_WarningF("input lenght string 0");
 	}
 
 	return out_str;
