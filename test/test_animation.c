@@ -141,11 +141,11 @@ int main(int argc, char *argv[]){
 		y+=inc_y;
 		scale+=inc_scale;
 
-		if(K_LEFT){
+		if(ZG_KEY_LEFT){
 			transform.rotate.z-=4;
 		}
 
-		if(K_RIGHT){
+		if(ZG_KEY_RIGHT){
 			transform.rotate.z+=4;
 		}
 
@@ -163,7 +163,7 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
 	TransformAnimation_Delete(trs_animation);
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]){
 	ZG_Appearance_Delete(appearance);
 
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

@@ -23,7 +23,7 @@ typedef struct{
 	uint8_t *pBufferIO;
 	AVIOContext* pIOCtx;
 
-}MusicFFmpeg;
+}ZG_MusicFFmpeg;
 
 
 
@@ -35,13 +35,13 @@ static AVSampleFormat GetFFMPEGFormat();
 
 
 
-AVSampleFormat MusicFFmpeg_GetFormat(){
+AVSampleFormat ZG_MusicFFmpeg_GetFormat(){
 
 	switch(current_format){
-	case AudioFormat::FORMAT_INT16:
+	case ZG_AudioFormat::FORMAT_INT16:
 		return AV_SAMPLE_FMT_S16;
 		break;
-	case AudioFormat::FORMAT_FLOAT32:
+	case ZG_AudioFormat::FORMAT_FLOAT32:
 		return AV_SAMPLE_FMT_FLT;
 		break;
 	}
@@ -50,7 +50,7 @@ AVSampleFormat MusicFFmpeg_GetFormat(){
 	return AV_SAMPLE_FMT_S16;
 }
 
-bool MusicFFmpeg_IsFileSupported(){
+bool ZG_MusicFFmpeg_IsFileSupported(){
 	long int str_len=strlen(file);
 
 	if(str_len < 4) return false;
@@ -61,7 +61,7 @@ bool MusicFFmpeg_IsFileSupported(){
 }
 
 
-int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
+int ZG_MusicFFmpeg_Load(ZG_MixerSound *sp_info,const char *file){
 
 	unsigned i;
 	AVFormatContext *pFormatCtx = avformat_alloc_context();
@@ -94,9 +94,9 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 	}
 
 	if(audioStream != NULL){
-		MusicFFmpeg *sffmpeg= (MusicFFmpeg*)malloc(sizeof(MusicFFmpeg));
+		ZG_MusicFFmpeg *sffmpeg= (ZG_MusicFFmpeg*)malloc(sizeof(ZG_MusicFFmpeg));
 
-		memset(sffmpeg,0,sizeof(MusicFFmpeg));
+		memset(sffmpeg,0,sizeof(ZG_MusicFFmpeg));
 
 		sffmpeg->pFormatCtx = pFormatCtx;
 		sffmpeg->audioFrame = av_frame_alloc();
@@ -128,7 +128,7 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 		av_opt_set_int(sffmpeg->swr_ctx, "in_sample_rate",       sffmpeg->aCodecCtx->sample_rate, 0);
 		av_opt_set_sample_fmt(sffmpeg->swr_ctx, "in_sample_fmt", sffmpeg->aCodecCtx->sample_fmt, 0);
 		av_opt_set_int(sffmpeg->swr_ctx, "out_channel_layout",    AV_CH_LAYOUT_STEREO, 0);
-		av_opt_set_int(sffmpeg->swr_ctx, "out_sample_rate",       SPLAYER_FREQUENCY, 0);
+		av_opt_set_int(sffmpeg->swr_ctx, "out_sample_rate",       ZG_MIXER_FREQUENCY, 0);
 		av_opt_set_sample_fmt(sffmpeg->swr_ctx, "out_sample_fmt", GetFFMPEGFormat(), 0);
 
 		if(swr_init(sffmpeg->swr_ctx) < 0){
@@ -147,7 +147,7 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 		sp_info->paused = false;
 		sp_info->type=MIXER_TYPE_FFMPEG;
 		sp_info->duration = (pFormatCtx->duration/1000);
-		sp_info->length_bytes = (sp->duration * SPLAYER_FREQUENCY * SPLAYER_N_CHANNELS * BYTES_PER_SAMPLE)/1000;
+		sp_info->length_bytes = (sp->duration * ZG_MIXER_FREQUENCY * SPLAYER_N_CHANNELS * BYTES_PER_SAMPLE)/1000;
 		sp_info->volume = 1;
 
 
@@ -159,7 +159,7 @@ int MusicFFmpeg_Load(MixerSound *sp_info,const char *file){
 
 
 
-bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, size_t len){
+bool ZG_MusicFFmpeg_LoadFromMemory(ZG_MixerSound *sp_info,const unsigned char *ptr, size_t len){
 
 	unsigned i;
 	// Allocate the AVFormatContext:
@@ -230,9 +230,9 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 	}
 
 	if(audioStream != NULL){
-		MusicFFmpeg *sffmpeg= (MusicFFmpeg*)malloc(sizeof(MusicFFmpeg));
+		ZG_MusicFFmpeg *sffmpeg= (ZG_MusicFFmpeg*)malloc(sizeof(ZG_MusicFFmpeg));
 
-		memset(sffmpeg,0,sizeof(MusicFFmpeg));
+		memset(sffmpeg,0,sizeof(ZG_MusicFFmpeg));
 
 		sffmpeg->pInStream = pInStream;
 		sffmpeg->pBufferIO = pBufferIO;
@@ -267,7 +267,7 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 		av_opt_set_int(sffmpeg->swr_ctx, "in_sample_rate",       sffmpeg->aCodecCtx->sample_rate, 0);
 		av_opt_set_sample_fmt(sffmpeg->swr_ctx, "in_sample_fmt", sffmpeg->aCodecCtx->sample_fmt, 0);
 		av_opt_set_int(sffmpeg->swr_ctx, "out_channel_layout",    AV_CH_LAYOUT_STEREO, 0);
-		av_opt_set_int(sffmpeg->swr_ctx, "out_sample_rate",       SPLAYER_FREQUENCY, 0);
+		av_opt_set_int(sffmpeg->swr_ctx, "out_sample_rate",       ZG_MIXER_FREQUENCY, 0);
 		av_opt_set_sample_fmt(sffmpeg->swr_ctx, "out_sample_fmt", GetFFMPEGFormat(), 0);
 
 		if(swr_init(sffmpeg->swr_ctx) < 0){
@@ -289,7 +289,7 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 		sp_info->paused = false;
 		sp_info->type=MIXER_TYPE_FFMPEG;
 		sp_info->duration = (pFormatCtx->duration/1000);
-		sp_info->length_bytes = (sp->duration * SPLAYER_FREQUENCY * SPLAYER_N_CHANNELS * BYTES_PER_SAMPLE)/1000;
+		sp_info->length_bytes = (sp->duration * ZG_MIXER_FREQUENCY * SPLAYER_N_CHANNELS * BYTES_PER_SAMPLE)/1000;
 		sp_info->volume=1;
 
 
@@ -300,11 +300,11 @@ bool MusicFFmpeg_LoadFromMemory(MixerSound *sp_info,const unsigned char *ptr, si
 }
 
 
-void MusicFFmpeg_Seek(MusicFFmpeg *sffmpeg){
+void ZG_MusicFFmpeg_Seek(ZG_MusicFFmpeg *sffmpeg){
 
 	sp_info->request_seek = t_seek;
 
-	if(sp_info->type ==SOUND_TYPE_FFMPEG  && !sp_info->playing){
+	if(sp_info->type ==ZG_SOUND_TYPE_FFMPEG  && !sp_info->playing){
 
 		uint64_t request_seek = 0;
 		request_seek = av_rescale(request_seek, sffmpeg->audioStream->time_base.den, sffmpeg->audioStream->time_base.num);
@@ -319,10 +319,10 @@ void MusicFFmpeg_Seek(MusicFFmpeg *sffmpeg){
 	}
 }
 
-void MusicFFmpeg_Update(MixerSound *sp_info){
-	MusicFFmpeg = *sffmpeg= (MusicFFmpeg*)sp_info->data;
-	BufferWaveMusic *wave_buffer = sp_info->wave_buffer;
-	uint8_t n_current_block = wave_buffer->n_write_block&MASK_MAX_FFM_BLOCKS;
+void ZG_MusicFFmpeg_Update(ZG_MixerSound *sp_info){
+	ZG_MusicFFmpeg = *sffmpeg= (ZG_MusicFFmpeg*)sp_info->data;
+	ZG_BufferWaveMusic *wave_buffer = sp_info->wave_buffer;
+	uint8_t n_current_block = wave_buffer->n_write_block&ZG_MSK_MAX_FFM_BLOCKS;
 
 
 	if(sp_info->request_seek!=-1){
@@ -419,7 +419,7 @@ void MusicFFmpeg_Update(MixerSound *sp_info){
 							if(wave_buffer->block_len[n_current_block]==SPLAYER_FRAME_SIZE){ // next block
 
 								int rest_fill = sffmpeg->audioFrame->nb_samples*SPLAYER_N_CHANNELS*BYTES_PER_SAMPLE - to_fill;
-								wave_buffer->n_write_block= (wave_buffer->n_write_block+1)&MASK_MAX_FFM_BLOCKS;
+								wave_buffer->n_write_block= (wave_buffer->n_write_block+1)&ZG_MSK_MAX_FFM_BLOCKS;
 								n_current_block = wave_buffer->n_write_block;
 
 								wave_buffer->block_len[n_current_block]=0;
@@ -446,10 +446,10 @@ void MusicFFmpeg_Update(MixerSound *sp_info){
 	}
 }
 
-void MusicFFmpeg_Unload(MixerSound *sp_info){
+void ZG_MusicFFmpeg_Unload(ZG_MixerSound *sp_info){
 	printf("unloading ffmpeg %s \n", sp_info->file);
 
-	MusicFFmpeg *sffmpeg=(MusicFFmpeg *)sp_info->data;
+	ZG_MusicFFmpeg *sffmpeg=(ZG_MusicFFmpeg *)sp_info->data;
 
 	// Some codecs will cause frames to be buffered up in the decoding process. If the CODEC_CAP_DELAY flag
 	// is set, there can be buffered up frames that need to be flushed, so we'll do that

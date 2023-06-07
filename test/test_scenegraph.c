@@ -414,8 +414,8 @@ int main(int argc, char *argv[]){
 		}*/
 
 
-		if(Input_IsLeftButtonPressed()){
-			printf("Mouse coordinates: %i %i\n",Input_GetMousePositionPtr()->x, Input_GetMousePositionPtr()->y);
+		if(ZG_Input_IsLeftButtonPressed()){
+			printf("Mouse coordinates: %i %i\n",ZG_Input_GetMousePositionPtr()->x, ZG_Input_GetMousePositionPtr()->y);
 		}
 
 		if(K_T){
@@ -424,7 +424,7 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 
 	}while(!K_ESC);
 
@@ -437,7 +437,7 @@ int main(int argc, char *argv[]){
 	MaterialAction_Delete(mat_act_fade_in_out);
 
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

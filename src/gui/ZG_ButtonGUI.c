@@ -80,9 +80,9 @@ static void  GUIButton_PostUpdateWidget(void *unused, void *gui_button){
 			 ini_pos.x+dimensions.x
 			,ini_pos.y+dimensions.y
 			);
-	ZG_Vector2i mouse_pos=Input_GetMousePosition();
+	ZG_Vector2i mouse_pos=ZG_Input_GetMousePosition();
 
-	if(Input_IsLeftButtonPressed() && Vector2i_PointRectCollision(mouse_pos,ini_pos,end_pos)){
+	if(ZG_Input_IsLeftButtonPressed() && Vector2i_PointRectCollision(mouse_pos,ini_pos,end_pos)){
 		ZG_Log_Info("clicked");
 		// handle on even click
 		for(unsigned i=0; i < data->on_click_events->count; i++){
@@ -114,7 +114,7 @@ void GUIButton_PostUpdate(void *gui_button){
 		return;
 	}
 
-	data->mouse_collide=GUIWidget_IsPointCollision(_this->widget,Input_GetMousePosition());
+	data->mouse_collide=GUIWidget_IsPointCollision(_this->widget,ZG_Input_GetMousePosition());
 	bool auto_click_on_over=false;
 
 	// manage click on over?
@@ -134,16 +134,16 @@ void GUIButton_PostUpdate(void *gui_button){
 		}
 	}
 
-	if((Input_IsLeftButtonPressed() && data->mouse_collide) || auto_click_on_over){
+	if((ZG_Input_IsLeftButtonPressed() && data->mouse_collide) || auto_click_on_over){
 		ZG_Log_InfoF("clicked");
 		// handle on even click
-		MouseEvent mouse_event={0};
+		ZG_MouseEvent mouse_event={0};
 
 		mouse_event.left_press=true;
-		mouse_event.position=Input_GetMousePosition();
+		mouse_event.position=ZG_Input_GetMousePosition();
 
 		for(unsigned i=0; i < data->on_click_events->count; i++){
-			CallbackMouseEvent *cf=data->on_click_events->items[i];
+			ZG_CallbackMouseEvent *cf=data->on_click_events->items[i];
 			cf->ptr_function(&mouse_event,cf->user_data);
 		}
 	}
@@ -211,9 +211,9 @@ void GUIButton_SetIcon(GUIButton *_this, Icon icon){
 	data->icon=icon;
 }
 
-void GUIButton_AddEventOnClick(GUIButton *_this,CallbackMouseEvent on_click){
+void GUIButton_AddEventOnClick(GUIButton *_this,ZG_CallbackMouseEvent on_click){
 	GUIButtonData *data=_this->data;
-	CallbackMouseEvent *_cf=ZG_NEW(CallbackMouseEvent);
+	ZG_CallbackMouseEvent *_cf=ZG_NEW(ZG_CallbackMouseEvent);
 	*_cf=on_click;
 	ZG_List_Add(data->on_click_events,_cf);
 }

@@ -20,13 +20,13 @@ int main(int argc, char *argv[]){
 	}
 	   ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
 
 	Shader_Delete(s);
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

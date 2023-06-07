@@ -41,7 +41,7 @@ void ZG_SetDebugMode(bool _debug_mode);
 bool ZG_IsDebugMode(void);
 
 
-void ZetGame_DeInit(void);
+void ZG_DeInit(void);
 
 
 

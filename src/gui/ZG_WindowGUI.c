@@ -26,9 +26,9 @@ typedef struct{
 void GUIWidget_AttachWidgetBase(GUIWidget *_this, GUIWidget *widget);
 //void GUIWindow_OnMousePressDown();
 
-void GUIWindow_OnMouseButtonUp(MouseEvent * mouse_event,void *gui_window);
-void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event,void *gui_window);
-void GUIWindow_OnMouseMotion(MouseEvent * mouse_event,void *gui_window);
+void GUIWindow_OnMouseButtonUp(ZG_MouseEvent * mouse_event,void *gui_window);
+void GUIWindow_OnMouseButtonDown(ZG_MouseEvent * mouse_event,void *gui_window);
+void GUIWindow_OnMouseMotion(ZG_MouseEvent * mouse_event,void *gui_window);
 void GUIWindow_OnSetWidth(void *gui_window,uint16_t width);
 void GUIWindow_OnSetHeight(void *gui_window,uint16_t width);
 void GUIWindow_AttachChild(void *gui_window, GUIWidget * widget_to_attach);
@@ -84,17 +84,17 @@ GUIWindow * GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, GUIWi
 	data->window_style=WINDOW_STYLE_NORMAL;
 
 
-	Input_AddEventOnMouseButtonDown((CallbackMouseEvent){
+	ZG_Input_AddEventOnMouseButtonDown((ZG_CallbackMouseEvent){
 		.ptr_function=GUIWindow_OnMouseButtonDown
 		,.user_data=window
 	});
 
-	Input_AddEventOnMouseButtonUp((CallbackMouseEvent){
+	ZG_Input_AddEventOnMouseButtonUp((ZG_CallbackMouseEvent){
 		.ptr_function=GUIWindow_OnMouseButtonUp
 		,.user_data=window
 	});
 
-	Input_AddEventOnMouseMotion((CallbackMouseEvent){
+	ZG_Input_AddEventOnMouseMotion((ZG_CallbackMouseEvent){
 		.ptr_function=GUIWindow_OnMouseMotion
 		,.user_data=window
 	});
@@ -236,7 +236,7 @@ void GUIWindow_OnSetHeight(void *gui_window,uint16_t height){
 }
 
 
-void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
+void GUIWindow_OnMouseButtonDown(ZG_MouseEvent * mouse_event, void *gui_window){
 
 	GUIWindow *_this=gui_window;
 	GUIWindowData *data=_this->data;
@@ -245,7 +245,7 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 		return;
 	}
 
-	//mouse_position=Input_GetMousePosition();
+	//mouse_position=ZG_Input_GetMousePosition();
 
 	if(GUIWidget_IsPointCollision(data->button_close->widget,mouse_event->position))
 	{
@@ -256,15 +256,15 @@ void GUIWindow_OnMouseButtonDown(MouseEvent * mouse_event, void *gui_window){
 
 	if(GUIWidget_IsPointCollision(data->frame_caption->widget,mouse_event->position))
 	{
-		if(Input_IsLeftButtonPressed()) {
+		if(ZG_Input_IsLeftButtonPressed()) {
 			ZG_Log_InfoF("start dragging");
 			data->start_dragging = true;
-			data->start_mouse_position=Input_GetMousePosition();
+			data->start_mouse_position=ZG_Input_GetMousePosition();
 		}
 	 }
 }
 
-void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
+void  GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 
 	ZG_UNUSUED_PARAM(event);
 
@@ -282,20 +282,20 @@ void  GUIWindow_OnMouseMotion(MouseEvent * event, void *gui_window){
 
 		ZG_Vector2i position = ZG_Vector2i_Add(
 			GUIWidget_GetPosition(_this->widget,WIDGET_POSITION_LOCAL)
-			,ZG_Vector2i_Sub(Input_GetMousePosition(),data->start_mouse_position)
+			,ZG_Vector2i_Sub(ZG_Input_GetMousePosition(),data->start_mouse_position)
 		);
 
 		GUIWidget_SetPosition2i(_this->widget,position.x,position.y);
 
 
-		data->start_mouse_position=Input_GetMousePosition();
+		data->start_mouse_position=ZG_Input_GetMousePosition();
 
 	}
 
 	return;
 }
 
- void GUIWindow_OnMouseButtonUp(MouseEvent * event, void *gui_window){
+ void GUIWindow_OnMouseButtonUp(ZG_MouseEvent * event, void *gui_window){
 	 ZG_UNUSUED_PARAM(event);
 
 	 GUIWindow *_this=gui_window;

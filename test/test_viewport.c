@@ -40,13 +40,13 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
 	ZG_Texture_Delete(text_png);
 	ZG_TextBox_Delete(textbox);
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

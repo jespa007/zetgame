@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
 	// unload all textures...
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
 
 	ZG_List_Delete(textures);
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

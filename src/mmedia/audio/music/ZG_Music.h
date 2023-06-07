@@ -1,41 +1,41 @@
-#ifndef __MUSIC_H__
-#define __MUSIC_H__
+#ifndef __ZG_MUSIC_H__
+#define __ZG_MUSIC_H__
 
 
-typedef int MUSIC;
+typedef int ZG_MUSIC;
 
-MUSIC Music_Load(const char *file);
-MUSIC Music_LoadFromMemory(unsigned char *ptr,size_t size);
-bool Music_Play(MUSIC id);
-bool Music_Pause(MUSIC id);
-bool Music_Resume(MUSIC id);
-bool Music_IsPlaying(MUSIC id);
-bool Music_IsPaused(MUSIC id);
-bool Music_Stop(MUSIC id);
+ZG_MUSIC ZG_Music_Load(const char *file);
+ZG_MUSIC ZG_Music_LoadFromMemory(unsigned char *ptr,size_t size);
+bool ZG_Music_Play(ZG_MUSIC id);
+bool ZG_Music_Pause(ZG_MUSIC id);
+bool ZG_Music_Resume(ZG_MUSIC id);
+bool ZG_Music_IsPlaying(ZG_MUSIC id);
+bool ZG_Music_IsPaused(ZG_MUSIC id);
+bool ZG_Music_Stop(ZG_MUSIC id);
 
 /**
  * Set volume
  * vol: 0 - 1
  */
-bool Music_SetVolume(MUSIC id, float vol);
+bool ZG_Music_SetVolume(ZG_MUSIC id, float vol);
 
 /**
  * Get current time in ms
  */
 
-uint_t	Music_GetCurrentTime(MUSIC id);
-float	Music_GetVolume(MUSIC id);
-uint_t 	Music_GetDuration(MUSIC id);
+uint_t	ZG_Music_GetCurrentTime(ZG_MUSIC id);
+float	ZG_Music_GetVolume(ZG_MUSIC id);
+uint_t 	ZG_Music_GetDuration(ZG_MUSIC id);
 
 /**
  * Request time to seek in ms.
  */
- bool Music_Seek(MUSIC id, uint_t t_seek);
+ bool ZG_Music_Seek(ZG_MUSIC id, uint_t t_seek);
 
 
 /**
 * unload music
 */
-void Mixer_Unload(MUSIC id);
+void ZG_Mixer_Unload(ZG_MUSIC id);
 
 #endif

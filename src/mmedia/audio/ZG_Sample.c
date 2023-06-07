@@ -8,7 +8,7 @@ typedef struct{
 } AudioSamplePlay;
 
 typedef struct{
-	AudioSamplePlay current_play[MAX_PLAY_SAMPLES]; // max playing samples at same time..
+	AudioSamplePlay current_play[ZG_MAX_PLAY_SAMPLES]; // max playing samples at same time..
 	bool is_converted;
 	uint32_t wav_length;
 	uint8_t *wav_buffer;
@@ -16,16 +16,16 @@ typedef struct{
 
 
 
-void Sample_AudioCallback(uint8_t *stream, uint_t len){
+void ZG_Sample_AudioCallback(uint8_t *stream, uint_t len){
 
 	uint_t i=0,length;
 	int j=0;
 
 
-	for(i=0; i < MAX_SAMPLES; i++){
-		if(g_mixer_vars->samples.loaded[i].type != SOUND_TYPE_NONE){
+	for(i=0; i < ZG_MAX_SAMPLES; i++){
+		if(g_mixer_vars->samples.loaded[i].type != ZG_SOUND_TYPE_NONE){
 			AudioSample *eff = (AudioSample *)g_mixer_vars->samples.loaded[i].data;
-			for(j=0; j < MAX_PLAY_SAMPLES;j++){
+			for(j=0; j < ZG_MAX_PLAY_SAMPLES;j++){
 
 				if(eff->current_play[j].is_playing){
 					length = MIN(eff->wav_length - eff->current_play[j].position,len);
@@ -42,50 +42,50 @@ void Sample_AudioCallback(uint8_t *stream, uint_t len){
 	}
 }
 
-bool Sample_IsValid(SAMPLE id){
-	if((id >= 0) && ((id) < MAX_SAMPLES)){
-		return g_mixer_vars->samples.loaded[id].type == SOUND_TYPE_SAMPLE;
+bool ZG_Sample_IsValid(ZG_SAMPLE id){
+	if((id >= 0) && ((id) < ZG_MAX_SAMPLES)){
+		return g_mixer_vars->samples.loaded[id].type == ZG_SOUND_TYPE_SAMPLE;
 	}
 	return false;
 }
 
 
-int Sample_GetFreeBlock(void){
+int ZG_Sample_GetFreeBlock(void){
 	int i = 0;
-	for(i=0; i < MAX_SAMPLES; i++){
-		if(g_mixer_vars->samples.loaded[i].type == SOUND_TYPE_NONE)
+	for(i=0; i < ZG_MAX_SAMPLES; i++){
+		if(g_mixer_vars->samples.loaded[i].type == ZG_SOUND_TYPE_NONE)
 			return i;
 	}
-	return INVALID_SOUND_IDX;
+	return ZG_INVALID_SOUND_IDX;
 }
 
-SAMPLE Sample_GetFreeSlotToPlay(AudioSamplePlay * ep){
+ZG_SAMPLE ZG_Sample_GetFreeSlotToPlay(AudioSamplePlay * ep){
 	int i = 0;
-	for(i=0; i < MAX_PLAY_SAMPLES; i++){
+	for(i=0; i < ZG_MAX_PLAY_SAMPLES; i++){
 		if(!ep[i].is_playing) return i;
 	}
-	return INVALID_SOUND_IDX;
+	return ZG_INVALID_SOUND_IDX;
 }
 
 
-SAMPLE Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
+ZG_SAMPLE ZG_Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 	// to be implemented...
 	int n_loaded_sample;
 
 	if(strncmp((char *)ptr+0, "RIFF",4) != 0){
 		ZG_Log_ErrorF( "No valid wave format!");
-		return INVALID_SOUND_IDX;
+		return ZG_INVALID_SOUND_IDX;
 	}
 
-	if((n_loaded_sample = Sample_GetFreeBlock())==INVALID_SOUND_IDX){
+	if((n_loaded_sample = ZG_Sample_GetFreeBlock())==ZG_INVALID_SOUND_IDX){
 		ZG_Log_ErrorF( "Max sounds reached!");
-		return INVALID_SOUND_IDX;
+		return ZG_INVALID_SOUND_IDX;
 	}
 
 
 	if(size > 1024L*512L){
 		ZG_Log_ErrorF( "Max size reached (Max is 512Kb!");
-		return INVALID_SOUND_IDX;
+		return ZG_INVALID_SOUND_IDX;
 	}
 
 	SDL_AudioSpec wav_spec;
@@ -96,11 +96,11 @@ SAMPLE Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 	/* Load the WAV */
 	if (SDL_LoadWAV_RW(SDL_RWFromMem(ptr,size), 1,&wav_spec, &wav_buffer, &wav_length) == NULL) {
 		ZG_Log_Error( "Could not open effect from memory: %s", SDL_GetError());
-		return INVALID_SOUND_IDX;
+		return ZG_INVALID_SOUND_IDX;
 	} else {
 		//printf(" loaded effect from memory - %iHz %ich  ",wav_spec.freq, wav_spec.keyframe_tracks);
 
-		int is_converted = Mixer_ConvertAudio(&wav_spec, &wav_buffer, &wav_length);
+		int is_converted = ZG_Mixer_ConvertAudio(&wav_spec, &wav_buffer, &wav_length);
 
 		AudioSample * eff = (AudioSample *)malloc(sizeof(AudioSample));
 		memset(eff,0,sizeof(AudioSample));
@@ -111,10 +111,10 @@ SAMPLE Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 
 		g_mixer_vars->samples.loaded[n_loaded_sample].data=eff;
 		g_mixer_vars->samples.loaded[n_loaded_sample].length_bytes = wav_length;
-		g_mixer_vars->samples.loaded[n_loaded_sample].duration = Mixer_LengthSamplesToTime(wav_length);
-		MixerSound *sp = &g_mixer_vars->samples.loaded[n_loaded_sample];
+		g_mixer_vars->samples.loaded[n_loaded_sample].duration = ZG_Mixer_LengthSamplesToTime(wav_length);
+		ZG_MixerSound *sp = &g_mixer_vars->samples.loaded[n_loaded_sample];
 		strcpy(sp->file, "from_mem");
-		sp->type=SOUND_TYPE_SAMPLE;
+		sp->type=ZG_SOUND_TYPE_SAMPLE;
 		sp->position_play=0;
 		sp->volume = 1;
 	}
@@ -122,30 +122,30 @@ SAMPLE Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 	return n_loaded_sample;
 }
 
-SAMPLE Sample_Load(const char *_filename){
-	SAMPLE idx_sound=INVALID_SOUND_IDX;
+ZG_SAMPLE ZG_Sample_Load(const char *_filename){
+	ZG_SAMPLE idx_sound=ZG_INVALID_SOUND_IDX;
 	ZG_BufferByte *buffer=ZG_FileSystem_ReadFile(_filename);
 
 	if(buffer!=NULL){
-		idx_sound=Sample_LoadFromMemory(buffer->ptr, buffer->len);
+		idx_sound=ZG_Sample_LoadFromMemory(buffer->ptr, buffer->len);
 		ZG_BufferByte_Delete(buffer);
 	}
 	return idx_sound;
 }
 
-bool Sample_Play(int id){
+bool ZG_Sample_Play(int id){
 
-	if(!Sample_IsValid(id)){
+	if(!ZG_Sample_IsValid(id)){
 		ZG_Log_ErrorF("ID not valid!");
 		return false;
 	}
 
-	MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
+	ZG_MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
 	sp_info->volume = 1;
 	AudioSample *eff = (AudioSample *)sp_info->data;
-	SAMPLE idx = Sample_GetFreeSlotToPlay(eff->current_play);
+	ZG_SAMPLE idx = ZG_Sample_GetFreeSlotToPlay(eff->current_play);
 
-	if(idx!=INVALID_SOUND_IDX){ // start play
+	if(idx!=ZG_INVALID_SOUND_IDX){ // start play
 		eff->current_play[idx].position=0;
 		eff->current_play[idx].is_playing=1;
 	}
@@ -153,18 +153,18 @@ bool Sample_Play(int id){
 	return true;
 }
 
-bool Sample_Stop(SAMPLE id){
-	if(!Sample_IsValid(id)){
+bool ZG_Sample_Stop(ZG_SAMPLE id){
+	if(!ZG_Sample_IsValid(id)){
 		ZG_Log_ErrorF("ID not valid!");
 		return false;
 	}
 
 	int i=0;
-	MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
+	ZG_MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
 	AudioSample *eff = (AudioSample *)sp_info->data;
-	//int idx = Mixer_GetFreeSlotEffectToPlay(eff->current_play);
+	//int idx = ZG_Mixer_GetFreeSlotEffectToPlay(eff->current_play);
 
-	for(i=0; i < MAX_PLAY_SAMPLES; i++){
+	for(i=0; i < ZG_MAX_PLAY_SAMPLES; i++){
 		eff->current_play[i].is_playing=0;
 	}
 
@@ -172,30 +172,30 @@ bool Sample_Stop(SAMPLE id){
 
 }
 
-bool Sample_SetVolume(SAMPLE id, float vol){
-	if(!Sample_IsValid(id)){
+bool ZG_Sample_SetVolume(ZG_SAMPLE id, float vol){
+	if(!ZG_Sample_IsValid(id)){
 		ZG_Log_ErrorF("ID not valid!");
 		return false;
 	}
 
-	MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
+	ZG_MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
 	sp_info->volume = MAX(MIN(vol,1),0);
 
 	return true;
 }
 
-float Sample_GetVolume(SAMPLE id){
-	if(!Sample_IsValid(id)){
+float ZG_Sample_GetVolume(ZG_SAMPLE id){
+	if(!ZG_Sample_IsValid(id)){
 		ZG_Log_ErrorF("ID not valid!");
 		return 1;
 	}
 
-	MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
+	ZG_MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
 	return sp_info->volume;
 }
 
-uint32_t Sample_GetDuration(SAMPLE id){
-	if(!Sample_IsValid(id)){
+uint32_t ZG_Sample_GetDuration(ZG_SAMPLE id){
+	if(!ZG_Sample_IsValid(id)){
 		ZG_Log_ErrorF("ID not valid!");
 		return 0;
 	}
@@ -204,17 +204,17 @@ uint32_t Sample_GetDuration(SAMPLE id){
 }
 
 
-void Sample_Unload(SAMPLE id){
+void ZG_Sample_Unload(ZG_SAMPLE id){
 
-	if(!Sample_IsValid(id)){
+	if(!ZG_Sample_IsValid(id)){
 		ZG_Log_ErrorF("ID not valid!");
 		return;
 	}
 	//
-	MixerSound *sp_info=&g_mixer_vars->samples.loaded[id];
-	SOUND_TYPE type =sp_info->type;
+	ZG_MixerSound *sp_info=&g_mixer_vars->samples.loaded[id];
+	ZG_SoundType type =sp_info->type;
 
-	if(type == SOUND_TYPE_SAMPLE){
+	if(type == ZG_SOUND_TYPE_SAMPLE){
 		AudioSample *s_effect;
 		sp_info->type=0; // make it unusued...
 		SDL_Delay(25);
@@ -232,25 +232,25 @@ void Sample_Unload(SAMPLE id){
 	}
 }
 
-void Sample_StopAll(void){
+void ZG_Sample_StopAll(void){
 	//MIXER_stopThread();
-	SAMPLE s;
+	ZG_SAMPLE s;
 
-	for(s = 0; s < MAX_SAMPLES; s++){
-		if(g_mixer_vars->samples.loaded[s].type != SOUND_TYPE_NONE){
-			Sample_Stop(s);
+	for(s = 0; s < ZG_MAX_SAMPLES; s++){
+		if(g_mixer_vars->samples.loaded[s].type != ZG_SOUND_TYPE_NONE){
+			ZG_Sample_Stop(s);
 		}
 	}
 
 }
 
-void Sample_UnloadAll(void){
+void ZG_Sample_UnloadAll(void){
 	//MIXER_stopThread();
-	SAMPLE s;
+	ZG_SAMPLE s;
 
-	for(s = 0; s < MAX_SAMPLES; s++){
-		if(g_mixer_vars->samples.loaded[s].type != SOUND_TYPE_NONE){
-			Sample_Unload(s);
+	for(s = 0; s < ZG_MAX_SAMPLES; s++){
+		if(g_mixer_vars->samples.loaded[s].type != ZG_SOUND_TYPE_NONE){
+			ZG_Sample_Unload(s);
 		}
 	}
 

@@ -1,20 +1,20 @@
 #include "xmp_common.h"
 #include "xmp_s.c"
 
-#define 	AUDIO_MODULE_MAX_SAMPLES	32
-#define 	AUDIO_MODULE_MAX_CHANNELS	64
-#define 	AUDIO_MODULE_MAX_EVENTS		64
+#define 	ZG_AUDIO_MODULE_MAX_SAMPLES	32
+#define 	ZG_AUDIO_MODULE_MAX_CHANNELS	64
+#define 	ZG_AUDIO_MODULE_MAX_EVENTS		64
 
 
 typedef struct{
 	uint8_t instrument,channel;
-}MusicXmpEventInfo;
+}ZG_MusicXmpEventInfo;
 
 typedef struct{
-	MusicXmpEventInfo event[AUDIO_MODULE_MAX_EVENTS];
+	ZG_MusicXmpEventInfo event[ZG_AUDIO_MODULE_MAX_EVENTS];
 	uint8_t pattern;
 	int n_events;
-}MusicXmpEvents;
+}ZG_MusicXmpEvents;
 
 typedef struct{
 	xmp_context ctx;
@@ -22,17 +22,17 @@ typedef struct{
 	struct xmp_frame_info mi;
 	Sint32 current_playing_row;
 	Sint32 last_played_row;
-	int event_play_channel_instrument[AUDIO_MODULE_MAX_CHANNELS][AUDIO_MODULE_MAX_SAMPLES];
-	int last_played[AUDIO_MODULE_MAX_CHANNELS][AUDIO_MODULE_MAX_SAMPLES];
+	int event_play_channel_instrument[ZG_AUDIO_MODULE_MAX_CHANNELS][ZG_AUDIO_MODULE_MAX_SAMPLES];
+	int last_played[ZG_AUDIO_MODULE_MAX_CHANNELS][ZG_AUDIO_MODULE_MAX_SAMPLES];
 
 	//---- callback on event...
-	void (* callback_on_event)(void *user_data, MusicXmpEvents *m_event_ch_instrumen);
+	void (* callback_on_event)(void *user_data, ZG_MusicXmpEvents *m_event_ch_instrumen);
 	void *user_data;
 
-}MusicXmp;
+}ZG_MusicXmp;
 
 
-bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size_t len){
+bool ZG_MusicXmp_LoadFromMemory(ZG_MixerSound *sp_info, const unsigned char *ptr, size_t len){
 
 	xmp_context ctx;
 	int error;
@@ -62,12 +62,12 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 		return false;
 	}
 
-	MusicXmp *sp_xmp = (MusicXmp *)malloc(sizeof(MusicXmp));
-	memset(sp_xmp,0,sizeof(MusicXmp));
+	ZG_MusicXmp *sp_xmp = (ZG_MusicXmp *)malloc(sizeof(ZG_MusicXmp));
+	memset(sp_xmp,0,sizeof(ZG_MusicXmp));
 
 	if(sp_xmp == 0){
 		xmp_free_context(ctx);
-		ZG_Log_Error("Error allocating %i bytes from memory!", sizeof(MusicXmp));
+		ZG_Log_Error("Error allocating %i bytes from memory!", sizeof(ZG_MusicXmp));
 		return false;
 	}
 
@@ -75,12 +75,12 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 	xmp_get_module_info (sp_xmp->ctx, &sp_xmp->module_info);
 
 	sp_info->data=sp_xmp;
-	sp_info->wave_buffer = Music_NewWaveBuffer();
+	sp_info->wave_buffer = ZG_Music_NewWaveBuffer();
 
 	//sp_loaded_music[n_loadedSpMusics].length = wav_length;
 
 	strcpy(sp_info->file, "from memory");
-	sp_info->type=SOUND_TYPE_XMP;
+	sp_info->type=ZG_SOUND_TYPE_XMP;
 	sp_info->duration = sp_xmp->module_info.seq_data->duration;
 	sp_info->position_play=0;
 	sp_info->playing = false;
@@ -90,7 +90,7 @@ bool MusicXmp_LoadFromMemory(MixerSound *sp_info, const unsigned char *ptr, size
 	return true;
 }
 
-bool MusicXmp_IsFileSupported(const char * file){
+bool ZG_MusicXmp_IsFileSupported(const char * file){
 
 	long int str_len=strlen(file);
 
@@ -103,11 +103,11 @@ bool MusicXmp_IsFileSupported(const char * file){
 
 }
 
-bool MusicXmp_Load(MixerSound *sp_info, const char *file){
+bool ZG_MusicXmp_Load(ZG_MixerSound *sp_info, const char *file){
 	ZG_BufferByte *buffer=ZG_FileSystem_ReadFile(file);
 
 	if(buffer!=NULL){
-		bool res=MusicXmp_LoadFromMemory(sp_info, buffer->ptr, buffer->len);
+		bool res=ZG_MusicXmp_LoadFromMemory(sp_info, buffer->ptr, buffer->len);
 
 		ZG_BufferByte_Delete(buffer);
 
@@ -116,13 +116,13 @@ bool MusicXmp_Load(MixerSound *sp_info, const char *file){
 	return false;
 }
 
-void MusicXmp_Seek(MixerSound *sp_info, long t_seek){
+void ZG_MusicXmp_Seek(ZG_MixerSound *sp_info, long t_seek){
 	int pos;
-	MusicXmp * s_xmp;
+	ZG_MusicXmp * s_xmp;
 
 	printf(" seek time to %lu...",t_seek);
 	//printf(" request time to %i...",t_seek);
-	s_xmp=(MusicXmp *)sp_info->data;
+	s_xmp=(ZG_MusicXmp *)sp_info->data;
 #ifndef _WIN32
 	if((pos = xmp_seek_time2(s_xmp->ctx,t_seek)) == XMP_ERROR_STATE)
 #else
@@ -133,36 +133,36 @@ void MusicXmp_Seek(MixerSound *sp_info, long t_seek){
 	}
 }
 
-void MusicXmp_Play(MixerSound *sp_info){
+void ZG_MusicXmp_Play(ZG_MixerSound *sp_info){
 
-	MusicXmp *s_xmp=(MusicXmp *)sp_info->data;
-	if(xmp_start_player(s_xmp->ctx,SPLAYER_FREQUENCY,0) != 0){
+	ZG_MusicXmp *s_xmp=(ZG_MusicXmp *)sp_info->data;
+	if(xmp_start_player(s_xmp->ctx,ZG_MIXER_FREQUENCY,0) != 0){
 		ZG_Log_ErrorF("Error starting module");
 	}
 }
 
 /*
-bool MusicXmp_SetCallbackOnEvent(int id, void (* callback_on_event)(void *data, MusicXmpFrameInfo *event_ch_ins), void *user_data){
+bool ZG_MusicXmp_SetCallbackOnEvent(int id, void (* callback_on_event)(void *data, MusicXmpFrameInfo *event_ch_ins), void *user_data){
 
-	MixerSound *info = &sp_loaded_music[id-1];
+	ZG_MixerSound *info = &sp_loaded_music[id-1];
 
 
 	if(info->type == MIXER_TYPE_XMP){
-		MusicXmp *s_xmp=(MusicXmp *)info->data;
+		ZG_MusicXmp *s_xmp=(ZG_MusicXmp *)info->data;
 		s_xmp->callback_on_event = callback_on_event;
 		s_xmp->user_data = user_data;
 	}else
-		Mixer_SetError("Id %i not type xmp", id);
+		ZG_Mixer_SetError("Id %i not type xmp", id);
 
 	return true;
 
 }*/
 
-bool MusicXmp_UpdateEvents(MusicXmp *s_xmp){
+bool ZG_MusicXmp_UpdateEvents(ZG_MusicXmp *s_xmp){
 	struct xmp_frame_info frame_info;
 	signed ch;
 	int event=0;
-	MusicXmpEvents module_event;
+	ZG_MusicXmpEvents module_event;
 	memset(&module_event,0,sizeof(module_event));
 
 	xmp_get_frame_info( s_xmp->ctx, &frame_info);
@@ -177,15 +177,15 @@ bool MusicXmp_UpdateEvents(MusicXmp *s_xmp){
 	// process samples played
 	module_event.pattern = frame_info.pattern;
 
-	for( ch=0; ch < AUDIO_MODULE_MAX_CHANNELS; ch++) {
+	for( ch=0; ch < ZG_AUDIO_MODULE_MAX_CHANNELS; ch++) {
 		uint8_t ins = frame_info.channel_info[ch].event.ins;
 
 		if(ins > 0)
 			ins-=1;
 
 		//int current_channel = frame_info.xmp_channel_info[ch].
-		if(ch < AUDIO_MODULE_MAX_CHANNELS && ins < AUDIO_MODULE_MAX_SAMPLES) {
-			if(frame_info.channel_info[ch].volume && !s_xmp->last_played[ch][ins] && module_event.n_events < AUDIO_MODULE_MAX_EVENTS){ // and event ocurrs!
+		if(ch < ZG_AUDIO_MODULE_MAX_CHANNELS && ins < ZG_AUDIO_MODULE_MAX_SAMPLES) {
+			if(frame_info.channel_info[ch].volume && !s_xmp->last_played[ch][ins] && module_event.n_events < ZG_AUDIO_MODULE_MAX_EVENTS){ // and event ocurrs!
 				// maark as event ...
 				s_xmp->event_play_channel_instrument[ch][ins] = 1;
 				module_event.event[module_event.n_events].instrument = ins;
@@ -207,16 +207,16 @@ bool MusicXmp_UpdateEvents(MusicXmp *s_xmp){
 	return true;
 }
 
-void MusicXmp_Update(MixerSound *sp_info){
-	BufferWaveMusic *wave_buffer = sp_info->wave_buffer;
-	uint8_t n_current_block = wave_buffer->n_write_block&MASK_MAX_FFM_BLOCKS;
-	MusicXmp *s_xmp = (MusicXmp *)sp_info->data;
+void ZG_MusicXmp_Update(ZG_MixerSound *sp_info){
+	ZG_BufferWaveMusic *wave_buffer = sp_info->wave_buffer;
+	uint8_t n_current_block = wave_buffer->n_write_block&ZG_MSK_MAX_FFM_BLOCKS;
+	ZG_MusicXmp *s_xmp = (ZG_MusicXmp *)sp_info->data;
 	struct xmp_frame_info frame_info;
 	int error=0;
 	const char *error_str=NULL;
 
 
-	MusicXmp_UpdateEvents(s_xmp);
+	ZG_MusicXmp_UpdateEvents(s_xmp);
 
 	xmp_get_frame_info(s_xmp->ctx, &frame_info);
 	if(g_mixer_vars->cvt_16b_to_audio != NULL){ // need reconvert audio ...
@@ -250,15 +250,15 @@ void MusicXmp_Update(MixerSound *sp_info){
 	}
 
 	wave_buffer->block_len[n_current_block]=g_mixer_vars->frame_size;
-	wave_buffer->n_write_block= (wave_buffer->n_write_block+1)&MASK_MAX_FFM_BLOCKS;
+	wave_buffer->n_write_block= (wave_buffer->n_write_block+1)&ZG_MSK_MAX_FFM_BLOCKS;
 
 	// maybe update also frame ??!?!?!
 	// updates play intruments and add to stack...
 }
 
-void MusicXmp_Unload(MixerSound *sp_info){
-	printf("unloading xmp %s \n", sp_info->file);
-	MusicXmp *s_xmp=(MusicXmp *)sp_info->data;
+void ZG_MusicXmp_Unload(ZG_MixerSound *sp_info){
+	ZG_Log_Info("unloading xmp %s \n", sp_info->file);
+	ZG_MusicXmp *s_xmp=(ZG_MusicXmp *)sp_info->data;
 	xmp_release_module(s_xmp->ctx);
 	xmp_free_context(s_xmp->ctx);
 	free(s_xmp);

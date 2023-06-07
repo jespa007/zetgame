@@ -319,7 +319,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	math/_zg_math_.c
 	
 	#-- Input --
-	#input/_zg_input_.c
+	input/_zg_input_.c
 	
 	
 	#-- Scene --

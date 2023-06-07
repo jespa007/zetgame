@@ -33,7 +33,7 @@ void ZG_Init(ZG_SetupParams * info){
 #endif
 	ZetNet_Init();
 
-	Mixer_Init();
+	ZG_Mixer_Init();
 
 	if(!Graphics_Init(
 			 info->wposx
@@ -49,7 +49,7 @@ void ZG_Init(ZG_SetupParams * info){
 		exit(EXIT_FAILURE);
 	}
 
-	Input_Init();
+	ZG_Input_Init();
 	if(!ECS_Init()){
 		exit(EXIT_FAILURE);
 	}
@@ -66,13 +66,13 @@ bool ZG_IsDebugMode(void){
 	return debug_mode;
 }
 
-void ZetGame_DeInit(void){
+void ZG_DeInit(void){
 
 	GUI_DeInit();
 	//SGRender_DeInit();
 
-	Mixer_DeInit();
-	Input_DeInit();
+	ZG_Mixer_DeInit();
+	ZG_Input_DeInit();
 	Graphics_DeInit();
 	ECS_DeInit();
 

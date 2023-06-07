@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
 
 	   ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 	ZG_TextureManager_Delete(texture_manager);
 
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

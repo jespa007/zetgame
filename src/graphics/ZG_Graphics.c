@@ -154,7 +154,7 @@ bool ZG_Graphics_Init(
 	ZG_Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
 	ZG_Log_Info("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
 
-	//Input_SetupCursors();
+	//ZG_Input_SetupCursors();
 	switch(g_graphics_vars->graphics_api){
 	case ZG_GRAPHICS_API_GL:
 		if(ZG_Graphics_GL_Init()==false){
@@ -197,7 +197,7 @@ ZG_Vector2f ZG_Graphics_GetScale(){
 }
 
 void ZG_Graphics_SetProjectionMode(ZG_ProjectionMode _projection_mode){
-	//Input_SetupCursors();
+	//ZG_Input_SetupCursors();
 	g_graphics_vars->projection_mode=_projection_mode;
 
 	switch(g_graphics_vars->graphics_api){

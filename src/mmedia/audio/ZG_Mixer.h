@@ -5,42 +5,42 @@
  *      Author: jespada
  */
 
-#ifndef __MIXER_H__
-#define __MIXER_H__
+#ifndef __ZG_MIXER_H__
+#define __ZG_MIXER_H__
 
 
-#define INVALID_SOUND_IDX -1
+#define ZG_INVALID_SOUND_IDX -1
 
 /**
  *  Get error on load/play sound
  */
 
 typedef enum{
-	AUDIO_FORMAT_INT_16=0,
-	AUDIO_FORMAT_FLOAT_32
-}AudioFormat;
+	ZG_AUDIO_FORMAT_INT_16=0,
+	ZG_AUDIO_FORMAT_FLOAT_32
+}ZG_AudioFormat;
 
 
-bool Mixer_Init(void);//int freq, int keyframe_tracks);
+bool ZG_Mixer_Init(void);//int freq, int keyframe_tracks);
 
 /**
 * unload music
 */
-void Mixer_Update(void);
+void ZG_Mixer_Update(void);
 
 
 /**
  * stop and unload all sounds.
  */
- void Mixer_UnloadAll(void);
+ void ZG_Mixer_UnloadAll(void);
 
 
- void Mixer_StopAll(void);
+ void ZG_Mixer_StopAll(void);
 
 /**
  * Deinit splayer
  */
- void Mixer_DeInit(void);
+ void ZG_Mixer_DeInit(void);
 
 
 #endif

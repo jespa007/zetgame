@@ -6,38 +6,38 @@
  */
 #include "_zg_mmedia_audio_.h"
 
-#define SPLAYER_FREQUENCY	44100
-#define SPLAYER_N_CHANNELS  2
-#define SPLAYER_SAMPLES		4096
+#define ZG_MIXER_FREQUENCY	44100
+#define ZG_MIXER_N_CHANNELS  2
+#define ZG_MIXER_SAMPLES		4096
 
-#define MAX_FFM_BLOCKS 4
-#define MASK_MAX_FFM_BLOCKS (MAX_FFM_BLOCKS-1)
+#define ZG_MAX_FFM_BLOCKS 4
+#define ZG_MSK_MAX_FFM_BLOCKS (ZG_MAX_FFM_BLOCKS-1)
 
-#define MAX_SAMPLES 20
-#define MAX_PLAY_SAMPLES 10
+#define ZG_MAX_SAMPLES 20
+#define ZG_MAX_PLAY_SAMPLES 10
 
 
-#define MAX_MUSICS 20
-#define MAX_PLAY_MUSICS 8
+#define ZG_MAX_MUSICS 20
+#define ZG_MAX_PLAY_MUSICS 8
 
 
 typedef enum{
-	SOUND_TYPE_NONE=0,
-	SOUND_TYPE_SAMPLE,
-	SOUND_TYPE_WAV,
-	SOUND_TYPE_FFMPEG,
-	SOUND_TYPE_XMP
-}SOUND_TYPE;
+	ZG_SOUND_TYPE_NONE=0,
+	ZG_SOUND_TYPE_SAMPLE,
+	ZG_SOUND_TYPE_WAV,
+	ZG_SOUND_TYPE_FFMPEG,
+	ZG_SOUND_TYPE_XMP
+}ZG_SoundType;
 
 typedef struct {
 	//---------------------------
 	// buffer to fill audio mix..
-	uint8_t *		block_ptr[MAX_FFM_BLOCKS];//[SPLAYER_FRAME_SIZE];
-	SOUND_TYPE  block_len[MAX_FFM_BLOCKS];
+	uint8_t *		block_ptr[ZG_MAX_FFM_BLOCKS];//[ZG_MIXER_FRAME_SIZE];
+	ZG_SoundType  block_len[ZG_MAX_FFM_BLOCKS];
 	uint8_t 		n_read_block;
 	uint8_t 		n_write_block;
 	//-------------------------
-}BufferWaveMusic;
+}ZG_BufferWaveMusic;
 
 typedef struct{
 	int 	type;
@@ -52,73 +52,73 @@ typedef struct{
 	bool 	stop_request;
 	int 	n_slot_play;
 	// only for musics...
-	BufferWaveMusic *wave_buffer;
+	ZG_BufferWaveMusic *wave_buffer;
 
 	char file[512];
 
-}MixerSound;
+}ZG_MixerSound;
 
 typedef struct{
 	uint8_t 			n_playing;
-	MixerSound 		loaded[MAX_MUSICS];
-	MixerSound *	playing[MAX_PLAY_MUSICS];
-}MixerMusics;
+	ZG_MixerSound 		loaded[ZG_MAX_MUSICS];
+	ZG_MixerSound *	playing[ZG_MAX_PLAY_MUSICS];
+}ZG_MixerMusics;
 
 typedef struct{
-	MixerSound 		loaded[MAX_SAMPLES];
-}MixerSamples;
+	ZG_MixerSound 		loaded[ZG_MAX_SAMPLES];
+}ZG_MixerSamples;
 
 typedef struct{
 
 	SDL_AudioCVT * 	cvt_16b_to_audio;
-	AudioFormat 	current_format;
+	ZG_AudioFormat 	current_format;
 	int 			bytes_per_sample;
 	uint_t 			frame_size;
 
 	SDL_AudioSpec 	sdl_player_settings;
 
-	MixerMusics 	musics;
-	MixerSamples 	samples;
+	ZG_MixerMusics 	musics;
+	ZG_MixerSamples 	samples;
 
-}MixerVars;
+}ZG_MixerVars;
 
-MixerVars *g_mixer_vars=NULL;
+ZG_MixerVars *g_mixer_vars=NULL;
 
 
 
-bool Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t *wav_length);
-int Mixer_GetSDLFormat(void);
-void Mixer_AudioCallback(void *udata, uint8_t *stream, int len);
-void Mixer_ConfigureAudioFormat(AudioFormat format);
+bool 	ZG_Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t *wav_length);
+int 	ZG_Mixer_GetSDLFormat(void);
+void 	ZG_Mixer_AudioCallback(void *udata, uint8_t *stream, int len);
+void 	ZG_Mixer_ConfigureAudioFormat(ZG_AudioFormat format);
 
 //int MIXER_isEffect(int id);
-void Sample_AudioCallback(uint8_t *stream, uint_t len);
-void Music_AudioCallback(uint8_t *stream, uint_t len);
-void Music_Update(void);
-void Sample_StopAll(void);
-void Music_StopAll(void);
-void Sample_UnloadAll(void);
-void Music_UnloadAll(void);
+void 	ZG_Sample_AudioCallback(uint8_t *stream, uint_t len);
+void 	ZG_Music_AudioCallback(uint8_t *stream, uint_t len);
+void 	ZG_Music_Update(void);
+void 	ZG_Sample_StopAll(void);
+void 	ZG_Music_StopAll(void);
+void 	ZG_Sample_UnloadAll(void);
+void 	ZG_Music_UnloadAll(void);
 
 
-uint_t Mixer_LengthSamplesToTime(uint_t time){
-	return (((((time)*1000)/(SPLAYER_N_CHANNELS*g_mixer_vars->bytes_per_sample))/SPLAYER_FREQUENCY));
+uint_t ZG_Mixer_LengthSamplesToTime(uint_t time){
+	return (((((time)*1000)/(ZG_MIXER_N_CHANNELS*g_mixer_vars->bytes_per_sample))/ZG_MIXER_FREQUENCY));
 }
 
-uint_t Mixer_TimeToLengthSamples(uint_t time){
-	return ((time)*SPLAYER_FREQUENCY*SPLAYER_N_CHANNELS*g_mixer_vars->bytes_per_sample)/1000;
+uint_t ZG_Mixer_TimeToLengthSamples(uint_t time){
+	return ((time)*ZG_MIXER_FREQUENCY*ZG_MIXER_N_CHANNELS*g_mixer_vars->bytes_per_sample)/1000;
 }
 
 
-void Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
+void ZG_Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
 {
 	ZG_UNUSUED_PARAM(udata);
 	// extern const uint8_t *mixData;
 	SDL_memset(stream, 0, len);  // make sure this is silence.
-	//SDL_memset(stream_aux, 0, SPLAYER_FRAME_SIZE);
+	//SDL_memset(stream_aux, 0, ZG_MIXER_FRAME_SIZE);
 
-	Sample_AudioCallback(stream, len);
-	Music_AudioCallback(stream,len);
+	ZG_Sample_AudioCallback(stream, len);
+	ZG_Music_AudioCallback(stream,len);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //
@@ -126,7 +126,7 @@ void Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
 //
 
 
-bool Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t *wav_length) {
+bool ZG_Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t *wav_length) {
 
 	if(g_mixer_vars == NULL){
 		ZG_Log_ErrorF("Mixer not init");
@@ -177,13 +177,13 @@ bool Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t
 // INIT AUDIO
 //
 
-int Mixer_GetSDLFormat(void){
+int ZG_Mixer_GetSDLFormat(void){
 
 	switch(g_mixer_vars->current_format){
-	case AUDIO_FORMAT_INT_16:
+	case ZG_AUDIO_FORMAT_INT_16:
 		return AUDIO_S16;
 		break;
-	case AUDIO_FORMAT_FLOAT_32:
+	case ZG_AUDIO_FORMAT_FLOAT_32:
 		return AUDIO_F32;
 		break;
 	}
@@ -192,21 +192,21 @@ int Mixer_GetSDLFormat(void){
 	return AUDIO_S16;
 }
 
-void Mixer_ConfigureAudioFormat(AudioFormat format){
+void ZG_Mixer_ConfigureAudioFormat(ZG_AudioFormat format){
 	switch(format){
-	case AUDIO_FORMAT_INT_16:
+	case ZG_AUDIO_FORMAT_INT_16:
 		g_mixer_vars->bytes_per_sample=2;
 		break;
-	case AUDIO_FORMAT_FLOAT_32:
+	case ZG_AUDIO_FORMAT_FLOAT_32:
 		g_mixer_vars->bytes_per_sample=4;
 		break;
 	}
 
 	g_mixer_vars->current_format = format;
-	g_mixer_vars->frame_size =  (SPLAYER_SAMPLES*SPLAYER_N_CHANNELS*g_mixer_vars->bytes_per_sample);
+	g_mixer_vars->frame_size =  (ZG_MIXER_SAMPLES*ZG_MIXER_N_CHANNELS*g_mixer_vars->bytes_per_sample);
 }
 
-void Mixer_PrintListSoundDriver(void){
+void ZG_Mixer_PrintListSoundDriver(void){
 	for (uint8_t i = 0; i < SDL_GetNumAudioDrivers(); ++i) {
 		ZG_Log_Info("Audio driver %d: %s", i, SDL_GetAudioDriver(i));
 	}
@@ -220,7 +220,7 @@ void Mixer_PrintListSoundDriver(void){
 	}
 }
 
-bool Mixer_Init(void){
+bool ZG_Mixer_Init(void){
 
 	//ZG_UNUSUED_PARAM(format);
 
@@ -241,35 +241,35 @@ bool Mixer_Init(void){
 		}
 	}
 
-	//Mixer_PrintListSoundDriver();
+	//ZG_Mixer_PrintListSoundDriver();
 
-	g_mixer_vars = (MixerVars *)malloc(sizeof(MixerVars));
-	memset(g_mixer_vars,0,sizeof(MixerVars));
+	g_mixer_vars = (ZG_MixerVars *)malloc(sizeof(ZG_MixerVars));
+	memset(g_mixer_vars,0,sizeof(ZG_MixerVars));
 
 
 	SDL_AudioSpec  have;
 
 	SDL_zero(g_mixer_vars->sdl_player_settings);
-	g_mixer_vars->sdl_player_settings.freq = SPLAYER_FREQUENCY;
-	g_mixer_vars->sdl_player_settings.format = Mixer_GetSDLFormat();//AUDIO_S16;
-	g_mixer_vars->sdl_player_settings.channels = SPLAYER_N_CHANNELS;
-	g_mixer_vars->sdl_player_settings.samples = SPLAYER_SAMPLES;
-	g_mixer_vars->sdl_player_settings.callback = Mixer_AudioCallback;  // you wrote this function elsewhere.
+	g_mixer_vars->sdl_player_settings.freq = ZG_MIXER_FREQUENCY;
+	g_mixer_vars->sdl_player_settings.format = ZG_Mixer_GetSDLFormat();//AUDIO_S16;
+	g_mixer_vars->sdl_player_settings.channels = ZG_MIXER_N_CHANNELS;
+	g_mixer_vars->sdl_player_settings.samples = ZG_MIXER_SAMPLES;
+	g_mixer_vars->sdl_player_settings.callback = ZG_Mixer_AudioCallback;  // you wrote this function elsewhere.
 
 	if (SDL_OpenAudio(&g_mixer_vars->sdl_player_settings, &have) < 0) {
 		ZG_Log_Error("Failed to open audio: %s", SDL_GetError());
 	} else {
 		if (have.format != g_mixer_vars->sdl_player_settings.format){
-			ZG_Log_Error( "Cannot init the audio at (%iHZ %iCH ).",SPLAYER_FREQUENCY, SPLAYER_N_CHANNELS);
+			ZG_Log_Error( "Cannot init the audio at (%iHZ %iCH ).",ZG_MIXER_FREQUENCY, ZG_MIXER_N_CHANNELS);
 		}
 
-		Mixer_ConfigureAudioFormat(g_mixer_vars->current_format);
+		ZG_Mixer_ConfigureAudioFormat(g_mixer_vars->current_format);
 
 
 		if(have.format != AUDIO_S16){
 			g_mixer_vars->cvt_16b_to_audio = (SDL_AudioCVT * )malloc(sizeof(SDL_AudioCVT));
 			// prepare configure for conversion from audio16 to another audio  type for run time conversion ...
-			SDL_BuildAudioCVT(g_mixer_vars->cvt_16b_to_audio, AUDIO_S16, 2, SPLAYER_FREQUENCY,have.format, have.channels, have.freq);
+			SDL_BuildAudioCVT(g_mixer_vars->cvt_16b_to_audio, AUDIO_S16, 2, ZG_MIXER_FREQUENCY,have.format, have.channels, have.freq);
 
 			// set length as constant...
 			g_mixer_vars->cvt_16b_to_audio->len = g_mixer_vars->frame_size/g_mixer_vars->cvt_16b_to_audio->len_mult;
@@ -282,10 +282,10 @@ bool Mixer_Init(void){
 			SDL_assert(g_mixer_vars->cvt_16b_to_audio->needed); // obviously, this one is always needed.
 		}
 
-		ZG_Log_Info("Init %s %i channels at %iHz",CONST_INT_TO_STRING(AUDIO_S16),have.channels,SPLAYER_FREQUENCY);
+		ZG_Log_Info("Init %s %i channels at %iHz",CONST_INT_TO_STRING(AUDIO_S16),have.channels,ZG_MIXER_FREQUENCY);
 
 		g_mixer_vars->frame_size=have.size;
-		//Mixer_StartThread();
+		//ZG_Mixer_StartThread();
 		SDL_PauseAudio(0);
 		return true;
 	}
@@ -296,27 +296,27 @@ bool Mixer_Init(void){
 // GENERAL UPDATE
 //
 
-void Mixer_Update(void){
+void ZG_Mixer_Update(void){
 	if(g_mixer_vars == NULL){
 		ZG_Log_ErrorF("Mixer not init");
 		return;
 	}
-	Music_Update();
+	ZG_Music_Update();
 
 }
 
 
 
-/*void Mixer_startThread(){
+/*void ZG_Mixer_startThread(){
 	if(sp_update_thread == NULL){
 		SDL_PauseAudio(0);  // start audio playing.
 
 		end_sp_audio_thread=false;
-		sp_update_thread = SDL_CreateThread(Mixer_update, "sp_audio_update", NULL); // start thread ....
+		sp_update_thread = SDL_CreateThread(ZG_Mixer_update, "sp_audio_update", NULL); // start thread ....
 	}
 }
 
-void Mixer_StopThread(){
+void ZG_Mixer_StopThread(){
 	if(sp_update_thread != NULL){
 
 		SDL_PauseAudio(1);  // stop audio playing.
@@ -335,34 +335,34 @@ void Mixer_StopThread(){
 		sp_update_thread = NULL;
 	}
 }*/
-void Mixer_StopAll(void){
+void ZG_Mixer_StopAll(void){
 	if(g_mixer_vars == NULL){
 		ZG_Log_ErrorF("Mixer not init");
 		return;
 	}
-	Sample_StopAll();
-	Music_StopAll();
+	ZG_Sample_StopAll();
+	ZG_Music_StopAll();
 }
 
-void Mixer_UnloadAll(void){
+void ZG_Mixer_UnloadAll(void){
 	if(g_mixer_vars == NULL){
 		ZG_Log_ErrorF("Mixer not init");
 		return;
 	}
-	Music_UnloadAll();
-	Sample_UnloadAll();
+	ZG_Music_UnloadAll();
+	ZG_Sample_UnloadAll();
 
 }
 
-void Mixer_DeInit(void){
+void ZG_Mixer_DeInit(void){
 
 	if(g_mixer_vars == NULL){
 		ZG_Log_ErrorF("Mixer not init");
 		return;
 	}
 
-	Mixer_UnloadAll();
-	//Mixer_stopThread();
+	ZG_Mixer_UnloadAll();
+	//ZG_Mixer_stopThread();
 
 	if(g_mixer_vars->cvt_16b_to_audio != NULL){
 		free(g_mixer_vars->cvt_16b_to_audio);

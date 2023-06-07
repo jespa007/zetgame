@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 	//ZG_Transform_Delete(transform);
 //	Shape2d_Delete(shape2d);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
 	ZG_Appearance_Delete(appearance);
 
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }

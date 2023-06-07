@@ -247,7 +247,7 @@ void JpegMPS_SaveFrame(JpegMPSData * data,uint8_t *gpu_data){
 	// if we can write ...
 	if(ZN_HttpServerMPS_CanWrite(data->http_server_mps)){
 
-		ZG_Vector2i mp=Input_GetMousePosition();
+		ZG_Vector2i mp=ZG_Input_GetMousePosition();
 
 		SDL_Rect rect=(SDL_Rect){
 				.x=(int)((mp.x-RADIUS_CIRCLE_CURSOR)*data->scale_x)

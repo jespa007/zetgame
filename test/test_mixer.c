@@ -19,10 +19,10 @@ int main(int argc, char *argv[]){
 
 	ZG_Init(&default_setup);
 
-	SAMPLE 	id_effect = INVALID_SOUND_IDX;
-	MUSIC 	id_wav = INVALID_SOUND_IDX
-			 ,id_ogg = INVALID_SOUND_IDX
-			 ,id_xm = INVALID_SOUND_IDX;
+	ZG_SAMPLE 	id_effect = ZG_INVALID_SOUND_IDX;
+	ZG_MUSIC 	id_wav = ZG_INVALID_SOUND_IDX
+			 ,id_ogg = ZG_INVALID_SOUND_IDX
+			 ,id_xm = ZG_INVALID_SOUND_IDX;
 
 
 	if(argc == 2 && !strcmp(argv[1],"from_mem")){
@@ -34,10 +34,10 @@ int main(int argc, char *argv[]){
 		ZG_BufferByte *bb_ogg = ZG_File_Read("../../../test/data/musics/music.ogg");
 		ZG_BufferByte *bb_xm = ZG_File_Read("../../../test/data/musics/music.xm");
 
-		id_effect = Sample_LoadFromMemory(bb_effect->ptr, bb_effect->len);
-		id_wav = Music_LoadFromMemory(bb_wav->ptr, bb_wav->len);
-		id_ogg = Music_LoadFromMemory(bb_ogg->ptr, bb_ogg->len);
-		id_xm = Music_LoadFromMemory(bb_xm->ptr, bb_xm->len);
+		id_effect = ZG_Sample_LoadFromMemory(bb_effect->ptr, bb_effect->len);
+		id_wav = ZG_Music_LoadFromMemory(bb_wav->ptr, bb_wav->len);
+		id_ogg = ZG_Music_LoadFromMemory(bb_ogg->ptr, bb_ogg->len);
+		id_xm = ZG_Music_LoadFromMemory(bb_xm->ptr, bb_xm->len);
 
 		if(bb_effect!=NULL)ZG_BufferByte_Delete(bb_effect);
 		if(bb_wav!=NULL)ZG_BufferByte_Delete(bb_wav);
@@ -45,17 +45,17 @@ int main(int argc, char *argv[]){
 		if(bb_xm!=NULL)ZG_BufferByte_Delete(bb_xm);
 
 	}else{
-		id_effect = Sample_Load("../../../test/data/samples/sample.wav");
-		id_wav = Music_Load("../../../test/data/musics/music.wav");
-		id_ogg = Music_Load("../../../test/data/musics/music.ogg");
-		id_xm = Music_Load("../../../test/data/musics/music.xm");
+		id_effect = ZG_Sample_Load("../../../test/data/samples/sample.wav");
+		id_wav = ZG_Music_Load("../../../test/data/musics/music.wav");
+		id_ogg = ZG_Music_Load("../../../test/data/musics/music.ogg");
+		id_xm = ZG_Music_Load("../../../test/data/musics/music.xm");
 
 	}
 
-	ZG_Log_Info("duration 0: %2i:%02i s",Sample_GetDuration(id_effect)/60000		,(int)(((float)(Sample_GetDuration(id_effect))/60000.0f)*60.0f));
-	ZG_Log_Info("duration 1: %2i:%02i s",Music_GetDuration(id_wav)/60000		,(int)(((float)(Music_GetDuration(id_wav))/60000.0f)*60.0f));
-	ZG_Log_Info("duration 2: %2i:%02i s",Music_GetDuration(id_xm)/60000		,(int)(((float)(Music_GetDuration(id_xm))/60000.0f)*60.0f));
-	ZG_Log_Info("duration 3: %2i:%02i s",Music_GetDuration(id_ogg)/60000	,(int)(((float)(Music_GetDuration(id_ogg))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 0: %2i:%02i s",ZG_Sample_GetDuration(id_effect)/60000		,(int)(((float)(ZG_Sample_GetDuration(id_effect))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 1: %2i:%02i s",ZG_Music_GetDuration(id_wav)/60000		,(int)(((float)(ZG_Music_GetDuration(id_wav))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 2: %2i:%02i s",ZG_Music_GetDuration(id_xm)/60000		,(int)(((float)(ZG_Music_GetDuration(id_xm))/60000.0f)*60.0f));
+	ZG_Log_Info("duration 3: %2i:%02i s",ZG_Music_GetDuration(id_ogg)/60000	,(int)(((float)(ZG_Music_GetDuration(id_ogg))/60000.0f)*60.0f));
 
 	do{
 		ZG_Graphics_BeginRender();
@@ -65,52 +65,52 @@ int main(int argc, char *argv[]){
 
 		if(K_0){
 			ZG_Log_InfoF("play effect");
-			Sample_Play(id_effect);
+			ZG_Sample_Play(id_effect);
 
 		}
 		if(K_1){
 
-			if(Music_IsPlaying(id_wav)&& !Music_IsPaused(id_wav)){
+			if(ZG_Music_IsPlaying(id_wav)&& !ZG_Music_IsPaused(id_wav)){
 				ZG_Log_InfoF("Pause wav");
-				Music_Pause(id_wav);
+				ZG_Music_Pause(id_wav);
 			}else{
-				if(Music_IsPaused(id_wav)){
-					Music_Resume(id_wav);
+				if(ZG_Music_IsPaused(id_wav)){
+					ZG_Music_Resume(id_wav);
 					ZG_Log_InfoF("Resume wav");
 				}
 				else{
 					ZG_Log_InfoF("Play wav");
-					Music_Play(id_wav);
+					ZG_Music_Play(id_wav);
 				}
 			}
 		}
 		if(K_2){
-			if(Music_IsPlaying(id_xm)&& !Music_IsPaused(id_xm)){
+			if(ZG_Music_IsPlaying(id_xm)&& !ZG_Music_IsPaused(id_xm)){
 				ZG_Log_InfoF("Pause xm");
-				Music_Pause(id_xm);
+				ZG_Music_Pause(id_xm);
 			}else{
-				if(Music_IsPaused(id_xm)){
-					Music_Resume(id_xm);
+				if(ZG_Music_IsPaused(id_xm)){
+					ZG_Music_Resume(id_xm);
 					ZG_Log_InfoF("Resume xm");
 				}
 				else{
 					ZG_Log_InfoF("Play xm");
-					Music_Play(id_xm);
+					ZG_Music_Play(id_xm);
 				}
 			}
 		}
 		if(K_3){
-			if(Music_IsPlaying(id_ogg)&& !Music_IsPaused(id_ogg)){
+			if(ZG_Music_IsPlaying(id_ogg)&& !ZG_Music_IsPaused(id_ogg)){
 				ZG_Log_InfoF("Pause ogg");
-				Music_Stop(id_ogg);
+				ZG_Music_Stop(id_ogg);
 			}else{
-				if(Music_IsPaused(id_ogg)){
-					Music_Resume(id_ogg);
+				if(ZG_Music_IsPaused(id_ogg)){
+					ZG_Music_Resume(id_ogg);
 					ZG_Log_InfoF("Resume ogg");
 				}
 				else{
 					ZG_Log_InfoF("Play ogg");
-					Music_Play(id_ogg);
+					ZG_Music_Play(id_ogg);
 				}
 			}
 		}
@@ -121,24 +121,24 @@ int main(int argc, char *argv[]){
 
 
 		if(request_forward_seek){
-			Music_Seek(id_wav,Music_GetCurrentTime(id_wav)+1000);
-			Music_Seek(id_ogg,Music_GetCurrentTime(id_ogg)+1000);
-			Music_Seek(id_xm,Music_GetCurrentTime(id_xm)+1000);
+			ZG_Music_Seek(id_wav,ZG_Music_GetCurrentTime(id_wav)+1000);
+			ZG_Music_Seek(id_ogg,ZG_Music_GetCurrentTime(id_ogg)+1000);
+			ZG_Music_Seek(id_xm,ZG_Music_GetCurrentTime(id_xm)+1000);
 		}
 
 		if(request_backward_seek){
-			Music_Seek(id_wav,Music_GetCurrentTime(id_wav)-1000);
-			Music_Seek(id_ogg,Music_GetCurrentTime(id_ogg)-1000);
-			Music_Seek(id_xm,Music_GetCurrentTime(id_xm)-1000);
+			ZG_Music_Seek(id_wav,ZG_Music_GetCurrentTime(id_wav)-1000);
+			ZG_Music_Seek(id_ogg,ZG_Music_GetCurrentTime(id_ogg)-1000);
+			ZG_Music_Seek(id_xm,ZG_Music_GetCurrentTime(id_xm)-1000);
 		}
 
-		Mixer_Update();
+		ZG_Mixer_Update();
 
 		ZG_Graphics_EndRender();
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 
     return 0;

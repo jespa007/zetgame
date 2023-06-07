@@ -1,5 +1,5 @@
-#ifndef LIBXMP_COMMON_H
-#define LIBXMP_COMMON_H
+#ifndef ZG_LIBXMP_COMMON_H
+#define ZG_LIBXMP_COMMON_H
 
 #ifdef __AROS__
 #define __AMIGA__

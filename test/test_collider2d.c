@@ -18,8 +18,8 @@ void update_options(
 		, ZG_Vector3f		*_mouse_scale
 
 	){
-	ZG_Vector2i m=Input_GetMousePosition();
-	bool is_pressed=Input_IsLeftButtonPressed();
+	ZG_Vector2i m=ZG_Input_GetMousePosition();
+	bool is_pressed=ZG_Input_IsLeftButtonPressed();
 	int x=BUTTON_GROUP_OFFSET_X-(BUTTON_GROUP_SIZE>>1); // because draws are centered we have to start at -middle
 	int y=BUTTON_GROUP_OFFSET_Y-(BUTTON_GROUP_SIZE>>1); // because draws are centered we have to start at -middle
 
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
 	do{
 		ZG_Graphics_BeginRender();
 
-		ZG_Vector2i m=Input_GetMousePosition();
+		ZG_Vector2i m=ZG_Input_GetMousePosition();
 		mouse_transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(m.x);
 		mouse_transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(m.y);
 		colliding="None";
@@ -213,11 +213,11 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_EndRender();
 
-		Input_Update();
+		ZG_Input_Update();
 	}while(!K_ESC);
 
 
-	ZetGame_DeInit();
+	ZG_DeInit();
 
 	return 0;
 }
