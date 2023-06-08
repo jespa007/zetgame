@@ -14,17 +14,17 @@ typedef struct {
 	uint16_t 	n_entities;
 	uint16_t 	active_entities;
 
-	Entity 		*entities;			// entity reference
-	ComponentId	*entity_component_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
+	ZG_Entity 		*entities;			// entity reference
+	ZG_ComponentId	*entity_component_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
 
-}EntityManagerData;
-
-
+}ZG_EntityManagerData;
 
 
-Entity  *EntityManager_NewEntity(EntityManager *_this){
-	EntityManagerData *entity_manager_data=_this->data;
-	Entity *entity=NULL;
+
+
+ZG_Entity  *ZG_ZG_EntityManager_NewEntity(ZG_EntityManager *_this){
+	ZG_EntityManagerData *entity_manager_data=_this->data;
+	ZG_Entity *entity=NULL;
 	if(
 		entity_manager_data->active_entities>=entity_manager_data->max_entities
 	){ // extend entity
@@ -38,10 +38,10 @@ Entity  *EntityManager_NewEntity(EntityManager *_this){
 	return entity;
 }
 
-void 	*EntityManager_GetComponent(EntityManager *_this,Entity *_entity, ComponentId _component_id){
-	EntityManagerData *data=_this->data;
+void 	*ZG_EntityManager_GetComponent(ZG_EntityManager *_this,ZG_Entity *_entity, ZG_ComponentId _component_id){
+	ZG_EntityManagerData *data=_this->data;
 
-	ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_this,_entity);
+	ZG_ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_this,_entity);
 
 	size_t entity_idx=_entity-data->entities;
 	size_t entity_component_idx=data->entity_component_ref[entity_idx];

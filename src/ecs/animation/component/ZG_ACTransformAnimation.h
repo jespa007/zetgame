@@ -1,12 +1,12 @@
-#ifndef _AC_TRANSFORM_ANIMATION_H__
-#define _AC_TRANSFORM_ANIMATION_H__
+#ifndef _ZG_ACTRANSFORM_ANIMATION_H__
+#define _ZG_ACTRANSFORM_ANIMATION_H__
 
-struct ACTransformAnimation{
-	AComponentHeader header;
+struct ZG_ACTransformAnimation{
+	ZG_AComponentHeader header;
 	void 			*data;
 };
 
-void			ACTransformAnimation_Setup(void *_this, ComponentId _idx);
+void			ACTransformAnimation_Setup(void *_this, ZG_ComponentId _idx);
 void			ACTransformAnimation_Init(void *_this);
 
 void			ACTransformAnimation_StartAction(
@@ -16,10 +16,10 @@ void			ACTransformAnimation_StartAction(
 );
 
 
-void 			ACTransformAnimation_StartTween(
+void 			ZG_ACTransformAnimation_StartTween(
 	void *_this
 	, ZG_TransformComponent _transform_component
-	, Ease _ease
+	, ZG_Ease _ease
 	, float _from
 	, float _to
 	, uint32_t _duration

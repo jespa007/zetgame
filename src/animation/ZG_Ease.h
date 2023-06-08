@@ -34,7 +34,7 @@ typedef enum{
 	ZG_EASE_OUT_BOUNCE,
 	ZG_EASE_IN_OUT_BOUNCE,
 
-}Ease;
+}ZG_Ease;
 
 
 float ZG_Ease_Linear( float t );

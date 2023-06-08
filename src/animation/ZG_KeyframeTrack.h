@@ -21,7 +21,7 @@ struct ZG_KeyframeTrack{
 
 	uint32_t	rangex_interval_pow2;
 	bool 		configured_interpolator;
-	Ease 		ease;
+	ZG_Ease 		ease;
 
 	uint32_t 	properties;
 
@@ -41,15 +41,15 @@ void ZG_KeyframeTrack_CalculeFx(ZG_KeyframePoint * result
 
 //--------------------------------------------------------------------------------------------------------
 // STATIC
-Ease 	ZG_KeyframeTrack_ParseInterpolatorType(const char * _ease);
+ZG_Ease 	ZG_KeyframeTrack_ParseInterpolatorType(const char * _ease);
 
 //--------------------------------------------------------------------------------------------------------
 // PUBLIC
 ZG_KeyframeTrack *ZG_KeyframeTrack_New(void);
 
-void			ZG_KeyframeTrack_SetEase(ZG_KeyframeTrack * _this, Ease _ease);
+void			ZG_KeyframeTrack_SetEase(ZG_KeyframeTrack * _this, ZG_Ease _ease);
 void 			ZG_KeyframeTrack_Clear(ZG_KeyframeTrack * _this);
-void			ZG_KeyframeTrack_SetEase(ZG_KeyframeTrack * _this, Ease _ease);
+void			ZG_KeyframeTrack_SetEase(ZG_KeyframeTrack * _this, ZG_Ease _ease);
 void 			ZG_KeyframeTrack_SetKeyframes(ZG_KeyframeTrack * _this,float * _point, size_t _point_count);
 void 			ZG_KeyframeTrack_AddKeyframesFloat(ZG_KeyframeTrack * _this,const float * _points, size_t _points_count);
 void 			ZG_KeyframeTrack_AddKeyframesBezier(ZG_KeyframeTrack * _this,ZG_List * _point);

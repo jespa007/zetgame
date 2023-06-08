@@ -111,7 +111,7 @@ void ZG_Animation_StartTween(
 		ZG_Animation *_this
 		, uint32_t _start_time
 		, uint8_t _idx_channel
-		, Ease _ease
+		, ZG_Ease _ease
 		, float _from
 		, float _to
 		, uint32_t _duration

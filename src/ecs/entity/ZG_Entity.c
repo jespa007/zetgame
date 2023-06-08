@@ -1,13 +1,13 @@
 #include "../zg_ecs.h"
 
 typedef struct{
-	EntityManager *entity_manager;
+	ZG_EntityManager *entity_manager;
 }EntityData;
 
-Entity *Entity_New(EntitySystem *_entity_system){
-	Entity *entity=ZG_NEW(Entity);
+ZG_Entity *ZG_Entity_New(ZG_EntitySystem *_entity_system){
+	ZG_Entity *entity=ZG_NEW(ZG_Entity);
 	EntityData *data=ZG_NEW(EntityData);
-	size_t components_length=sizeof(void *)*EntitySystem_NumComponents();
+	size_t components_length=sizeof(void *)*ZG_EntitySystem_NumComponents();
 	entity->components=malloc(components_length);
 	memset(entity->components,0,components_length);
 	entity->active=false;
@@ -18,58 +18,58 @@ Entity *Entity_New(EntitySystem *_entity_system){
 }
 
 /*
-void Entity_Ini(Entity *_this){
+void Entity_Ini(ZG_Entity *_this){
 	EntityData *data=(EntityData *)_this->data;
 	data->is_active=true;
 }
 */
-void Entity_Die(Entity *_this){
+void ZG_Entity_Die(ZG_Entity *_this){
 	/*EntityData *data=(EntityData *)_this->data;
 	data->is_active=false;*/
 	_this->active=false;
 }
 
 
-EntitySystem *Entity_GetEntitySystem(Entity *_this){
+ZG_EntitySystem *ZG_Entity_GetEntitySystem(ZG_Entity *_this){
  EntityData *data=(EntityData *)_this->data;
- return EntityManager_GetEntitySystem(data->entity_system);
+ return ZG_EntityManager_GetEntitySystem(data->entity_system);
 }
 
-EntityManager *Entity_GetEntityManager(Entity *_this){
+ZG_EntityManager *ZG_Entity_GetEntityManager(ZG_Entity *_this){
 	EntityData *data=(EntityData *)_this->data;
 	return data->entity_manager;
 }
 
-void *Entity_GetComponent(Entity *_this, ComponentId _component_id){
+void *ZG_Entity_GetComponent(ZG_Entity *_this, ZG_ComponentId _component_id){
 	EntityData *data=(EntityData *)_this->data;
-	return EntityManager_GetComponent(data->entity_manager,_this, _component_id);
+	return ZG_EntityManager_GetComponent(data->entity_manager,_this, _component_id);
 }
 /*
-void Entity_Reset(Entity *_this){
+void ZG_Entity_Reset(ZG_Entity *_this){
 }*/
 
-void Entity_Delete(Entity *_this){
+void ZG_Entity_Delete(ZG_Entity *_this){
 	EntityData *data=_this->data;
 	ZG_FREE(_this->components);
 	ZG_FREE(data);
 	ZG_FREE(_this);
 }
 /*
-void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_component){
+void Entity_AttachComponent(ZG_Entity *_this, uint16_t idx_component, void *ptr_component){
 
 	if(_this->components[idx_component] == NULL){
 		_this->components[idx_component]=ptr_component;
 	}else{
-		ZG_Log_Error("Entity component not null");
+		ZG_Log_Error("ZG_Entity component not null");
 	}
 }
 
-void Entity_DeAttachComponent(Entity *_this, uint16_t idx_component){
+void Entity_DeAttachComponent(ZG_Entity *_this, uint16_t idx_component){
 
 	if(_this->components[idx_component] != NULL){
 		_this->components[idx_component]=NULL;
 	}else{
-		ZG_Log_Error("Entity component already null");
+		ZG_Log_Error("ZG_Entity component already null");
 	}
 }
 */

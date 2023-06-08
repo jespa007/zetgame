@@ -2,14 +2,14 @@
 #define __TEXTURE_NODE_H__
 
 struct TextureNode{
-	ECTransform 			*ec_transform;
-	ECMaterial 				*ec_material;
-	ECTexture 				*ec_texture;
-	ECSpriteRenderer 		*ec_sprite_renderer;
+	ZG_ECTransform 			*ec_transform;
+	ZG_ECMaterial 				*ec_material;
+	ZG_ECTexture 				*ec_texture;
+	ZG_ECSpriteRenderer 		*ec_sprite_renderer;
 	void 					*data;
 };
 
-TextureNode * 	TextureNode_New(Scene *_scene, Entity *_entity);
+TextureNode * 	TextureNode_New(Scene *_scene, ZG_Entity *_entity);
 void	   		TextureNode_Delete(TextureNode *_this);
 
 #endif

@@ -12,7 +12,7 @@ typedef struct{
 void ZG_MapStringIterator_FindNextListNotEmpty(ZG_MapStringIterator *_this);
 
 
-ZG_MapStringIterator *ZG_MapStringIterator_New(ZG_MapString *_map){
+ZG_MapStringIterator *ZG_ZG_MapStringIterator_New(ZG_MapString *_map){
 	ZG_MapStringIterator *_this=ZG_NEW(ZG_MapStringIterator);
 	ZG_MapStringIteratorData *data=ZG_NEW(ZG_MapStringIteratorData);
 	data->map=_map;
@@ -31,7 +31,7 @@ const char *ZG_MapStringIterator_GetKey(ZG_MapStringIterator *_this){
 	return data->key;
 }
 
-void *ZG_MapStringIterator_GetValue(ZG_MapStringIterator *_this){
+void *ZG_ZG_MapStringIterator_GetValue(ZG_MapStringIterator *_this){
 	ZG_MapStringIteratorData *data=_this->data;
 	return data->value;
 }
@@ -77,7 +77,7 @@ bool ZG_MapStringIterator_End(ZG_MapStringIterator *_this){
 	return data->idx_current_hash == ZG_HASH_MAP_SIZE;
 }
 
-void				ZG_MapStringIterator_Delete(ZG_MapStringIterator *_this){
+void				ZG_ZG_MapStringIterator_Delete(ZG_MapStringIterator *_this){
 	ZG_MapStringIteratorData *data=_this->data;
 	ZG_FREE(data);
 	ZG_FREE(_this);

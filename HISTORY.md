@@ -15,7 +15,7 @@ Zetgame 1.0.0
 > #8 Adapt zetgame for RetroFW RS-97 
 #9 ZG_Texture manager 
 > #10 Port to Emmscripten 
-> #11 Implement Physics Entity-Tilemap colliding 
+> #11 Implement Physics ZG_Entity-Tilemap colliding 
 #12 Implement Tilemap rendering
 > #13 Implement particle system  
 > #14 Adapt zetgame for Android (NDK) 

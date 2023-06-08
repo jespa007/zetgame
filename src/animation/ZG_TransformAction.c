@@ -22,7 +22,7 @@ ZG_TransformAction 	*	ZG_TransformAction_New(void){
 void					ZG_TransformAction_SetKeyframesTrack(
 		ZG_TransformAction *_this
 		, ZG_TransformComponent _transform_component
-		, Ease _ease
+		, ZG_Ease _ease
 		,float *_keyframe_points
 		, size_t _keyframe_points_count
 ){

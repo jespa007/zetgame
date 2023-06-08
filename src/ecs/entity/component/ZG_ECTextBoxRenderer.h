@@ -1,18 +1,18 @@
-#ifndef _EC_TEXTBOX_RENDER_H__
-#define _EC_TEXTBOX_RENDER_H__
+#ifndef _ZG_ECTEXTBOX_RENDER_H__
+#define _ZG_ECTEXTBOX_RENDER_H__
 
-typedef struct ECTextBoxRenderer ECTextBoxRenderer;
+typedef struct ZG_ECTextBoxRenderer ZG_ECTextBoxRenderer;
 
-struct ECTextBoxRenderer{
-	EComponentHeader header;
+struct ZG_ECTextBoxRenderer{
+	ZG_EComponentHeader header;
 	ZG_TextBox 		*	textbox;
 	void 			*	data;
 };
 
-EComponentList ECTextBoxRenderer_RequiredComponents(void);
-void ECTextBoxRenderer_Setup(void *_this,ComponentId _id);
-void ECTextBoxRenderer_Update(void *_this);
-void ECTextBoxRenderer_Destroy(void *_this);
+ZG_EComponentList ZG_ECTextBoxRenderer_RequiredComponents(void);
+void ZG_ECTextBoxRenderer_Setup(void *_this,ZG_ComponentId _id);
+void ZG_ECTextBoxRenderer_Update(void *_this);
+void ZG_ECTextBoxRenderer_Destroy(void *_this);
 
 
 

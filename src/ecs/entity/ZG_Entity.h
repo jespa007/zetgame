@@ -1,5 +1,5 @@
-#ifndef __ENTITY_H__
-#define __ENTITY_H__
+#ifndef __ZG_ENTITY_H__
+#define __ZG_ENTITY_H__
 
 // entityid it has lower 16 as the number of entity and upper 16 bits the type of entity
 //typedef uint32_t EntityId;
@@ -7,32 +7,32 @@
 #define ZG_INVALID_ENTITY_ID 0
 
 #define ZG_ENTITY_GET_COMPONENT(_entity, _type_data) \
-(_type_data *)Entity_GetComponent(Entity_GetEntitySystem(_entity, __g_entity_system_component#_type_data);\
+(_type_data *)ZG_Entity_GetComponent(ZG_Entity_GetEntitySystem(_entity, __g_entity_system_component#_type_data);\
 
 
-#define ASSERT_ENTITY_BELONGS_TO_SYSTEM(_entity,_entity_system) assert(Entity_GetEntitySystem(_entity)==_entity_system)
-#define ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_entity,_entity_manager) assert(Entity_GetEntityManager(_entity)==_entity_manager)
+#define ZG_ASSERT_ENTITY_BELONGS_TO_SYSTEM(_entity,_entity_system) assert(ZG_Entity_GetEntitySystem(_entity)==_entity_system)
+#define ZG_ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_entity,_entity_manager) assert(ZG_Entity_GetEntityManager(_entity)==_entity_manager)
 
-struct Entity{
-//EntityManager 		*entity_manager;//[ENTITY_COMPONENT_MAX];
+struct ZG_Entity{
+//ZG_EntityManager 		*entity_manager;//[ENTITY_COMPONENT_MAX];
 //	bool		active;
 	void 		*data;
 
 };
 
-Entity *Entity_New(EntityManager *_entity_manager);
-void Entity_Start(Entity *_this);
-void Entity_Die(Entity *_this);
-void Entity_Reset(Entity *_this);
-EntitySystem *Entity_GetEntitySystem(Entity *_this);
-EntityManager *Entity_GetEntityManager(Entity *_this);
-void *Entity_GetComponent(Entity *_this, ComponentId _component_id);
+ZG_Entity *ZG_Entity_New(ZG_EntityManager *_entity_manager);
+void ZG_Entity_Start(ZG_Entity *_this);
+void ZG_Entity_Die(ZG_Entity *_this);
+void ZG_Entity_Reset(ZG_Entity *_this);
+ZG_EntitySystem *ZG_Entity_GetEntitySystem(ZG_Entity *_this);
+ZG_EntityManager *ZG_Entity_GetEntityManager(ZG_Entity *_this);
+void *ZG_Entity_GetComponent(ZG_Entity *_this, ZG_ComponentId _component_id);
 
-//void Entity_AttachComponent(Entity *_this, uint16_t idx_component, void *ptr_component);
-//void Entity_DeAttachComponent(Entity *_this, uint16_t idx_component);
+//void Entity_AttachComponent(ZG_Entity *_this, uint16_t idx_component, void *ptr_component);
+//void Entity_DeAttachComponent(ZG_Entity *_this, uint16_t idx_component);
 // Helper functions
 
-void Entity_Delete(Entity *_this);
+void ZG_Entity_Delete(ZG_Entity *_this);
 
 
 #endif

@@ -21,8 +21,8 @@ ZG_MaterialAction 	*	ZG_MaterialAction_New(void){
 
 void					ZG_MaterialAction_SetKeyframesTrack(
 		ZG_MaterialAction *_this
-		, MaterialComponent _material_component
-		, Ease _ease
+		, ZG_MaterialComponent _material_component
+		, ZG_Ease _ease
 		,float *_keyframe_points
 		, size_t _keyframe_points_count
 ){

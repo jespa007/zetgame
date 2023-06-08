@@ -1,16 +1,16 @@
-#ifndef __EC_TEXTURE_H__
-#define __EC_TEXTURE_H__
+#ifndef __ZG_ECTEXTURE_H__
+#define __ZG_ECTEXTURE_H__
 
-typedef struct ECTexture ECTexture;
+typedef struct ZG_ECTexture ZG_ECTexture;
 
-struct ECTexture{
-	EComponentHeader header;
+struct ZG_ECTexture{
+	ZG_EComponentHeader header;
 	ZG_Texture 		*texture;
 };
 
 
-//void ECTexture_Setup(void *_this,ComponentId _id);
-//void ECTexture_SetTexture(ECTexture *_this,ZG_Texture *_texture);
+//void ZG_ECTexture_Setup(void *_this,ZG_ComponentId _id);
+//void ZG_ECTexture_SetTexture(ZG_ECTexture *_this,ZG_Texture *_texture);
 
 
 #endif

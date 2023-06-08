@@ -4,10 +4,10 @@ typedef struct{
 	Scene *scene;
 }TransformNodeData;
 
-TransformNode *	TransformNode_New(Scene *_scene,Entity *_entity){
+TransformNode *	TransformNode_New(Scene *_scene,ZG_Entity *_entity){
 
 	if(_entity == NULL){
-		ZG_Log_ErrorF("TransformNode_New : Cannot create transform_node. Entity == NULL");
+		ZG_Log_ErrorF("TransformNode_New : Cannot create transform_node. ZG_Entity == NULL");
 		return NULL;
 	}
 

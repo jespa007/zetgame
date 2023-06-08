@@ -30,7 +30,7 @@ void Scene_Clean(void);
 //void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player);
 //void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter);
 
-EntitySystem 	*Scene_GetEntitySystem(
+ZG_EntitySystem 	*Scene_GetEntitySystem(
 		Scene *_this
 );
 
@@ -41,8 +41,8 @@ TextBoxNode 	*	Scene_NewTextBoxNode(Scene *_this);
 void Scene_StartTweenTransform(
 
 );
-//Entity* Scene_NewEntity(Scene *_this,EComponent * entity_components, size_t entity_components_len);
-//Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);
+//ZG_Entity* Scene_NewEntity(Scene *_this,ZG_EComponent * entity_components, size_t entity_components_len);
+//ZG_Entity* Scene_NewEntityFromType(Scene *_this, const char *_str_entity_manager);
 
 bool Scene_IsRunning(Scene *_this);
 void Scene_SetBackgroundColor3i(Scene *_this,uint8_t r,uint8_t g,uint8_t b);

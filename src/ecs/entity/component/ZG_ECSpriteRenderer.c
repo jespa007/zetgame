@@ -6,33 +6,33 @@ typedef struct{
 	ZG_Geometry 		*	geometry;
 	ZG_Appearance	 	*  	appearance;
 	uint16_t 			width, height;
-}ECSpriteRendererData;
+}ZG_ECSpriteRendererData;
 
-static EComponent g_ec_sprite_renderer_required_components[]={
+static ZG_EComponent g_ec_sprite_renderer_required_components[]={
 		EC_TRANSFORM
 		,EC_GEOMETRY
 		,EC_MATERIAL
 		,EC_TEXTURE
 };
 
-EComponentList ECSpriteRenderer_RequiredComponents(void){
-	EComponentList cl;
+ZG_EComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
+	ZG_EComponentList cl;
 	cl.components=g_ec_sprite_renderer_required_components;
 	cl.n_components=ZG_ARRAY_SIZE(g_ec_sprite_renderer_required_components);
 
 	return cl;
 }
 
-void ECSpriteRenderer_Setup(void *_this,ComponentId _id){
-	ECSpriteRenderer *ec_sprite_renderer=_this;
+void ZG_ECSpriteRenderer_Setup(void *_this,ZG_ComponentId _id){
+	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
 	ec_sprite_renderer->header.entity=_entity;
 	ec_sprite_renderer->header.id=_id;
 	_entity->components[EC_SPRITE_RENDERER]=_this;
 
-	ECSpriteRendererData *data=ZG_NEW(ECSpriteRendererData);
+	ZG_ECSpriteRendererData *data=ZG_NEW(ZG_ECSpriteRendererData);
 
-	ECGeometry *ec_geometry=_entity->components[EC_GEOMETRY];
-	ECMaterial *ec_material=_entity->components[EC_MATERIAL];
+	ZG_ECGeometry *ec_geometry=_entity->components[EC_GEOMETRY];
+	ZG_ECMaterial *ec_material=_entity->components[EC_MATERIAL];
 
 	data->appearance=ZG_Appearance_New();
 	ec_geometry->geometry=data->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
@@ -40,14 +40,14 @@ void ECSpriteRenderer_Setup(void *_this,ComponentId _id){
 
 	ec_sprite_renderer->data=data;
 
-	ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
+	ZG_ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 }
 
-void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height){
+void ZG_ECSpriteRenderer_SetDimensions(ZG_ECSpriteRenderer *_this,uint16_t width, uint16_t height){
 
 	if(_this == NULL) return;
 
-	ECSpriteRendererData * data= _this->data;
+	ZG_ECSpriteRendererData * data= _this->data;
 	if(!(data->width == width && data->height == height)){
 		// project dimensions
 		ZG_Vector3f p=ZG_ViewPort_ScreenToWorldDimension2i(width>>1,height>>1);
@@ -71,28 +71,28 @@ void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint
 	}
 }
 
-void ECSpriteRenderer_SetAlpha(ECSpriteRenderer *_this, float _alpha){
+void ZG_ECSpriteRenderer_SetAlpha(ZG_ECSpriteRenderer *_this, float _alpha){
 	if(_this == NULL) return;
 
-	ECSpriteRendererData *data=_this->data;
+	ZG_ECSpriteRendererData *data=_this->data;
 	data->appearance->material->color.a=_alpha;
 }
 
-void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,ZG_Texture *texture){
+void ZG_ECSpriteRenderer_SetTexture(ZG_ECSpriteRenderer *_this,ZG_Texture *texture){
 
 	if(_this == NULL) return;
 
-	ECSpriteRendererData * data= _this->data;
+	ZG_ECSpriteRendererData * data= _this->data;
 	data->appearance->texture=texture;
 }
 
 
-void ECSpriteRenderer_Update(void *_this){
-	ECSpriteRenderer *ec_sprite_renderer=_this;
-	ECSpriteRendererData * data= ec_sprite_renderer->data;
+void ZG_ECSpriteRenderer_Update(void *_this){
+	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
+	ZG_ECSpriteRendererData * data= ec_sprite_renderer->data;
 	ZG_Transform *transform = NULL;
-	ECTransform *ec_transform=ec_sprite_renderer->header.entity->components[EC_TRANSFORM];
-	ECTexture *ec_texture=ec_sprite_renderer->header.entity->components[EC_TEXTURE];
+	ZG_ECTransform *ec_transform=ec_sprite_renderer->header.entity->components[EC_TRANSFORM];
+	ZG_ECTexture *ec_texture=ec_sprite_renderer->header.entity->components[EC_TEXTURE];
 	if(ec_transform){
 		transform=&ec_transform->transform;
 	}
@@ -104,8 +104,8 @@ void ECSpriteRenderer_Update(void *_this){
 	Graphics_Draw(transform,data->geometry,data->appearance);
 }
 
-void ECSpriteRenderer_Destroy(void *_this){
-	ECSpriteRendererData * data= ((ECSpriteRenderer *)_this)->data;
+void ZG_ECSpriteRenderer_Destroy(void *_this){
+	ZG_ECSpriteRendererData * data= ((ZG_ECSpriteRenderer *)_this)->data;
 	ZG_Appearance_Delete(data->appearance);
 	ZG_FREE(data);
 }

@@ -6,7 +6,7 @@ typedef struct{
 }TextBoxNodeData;
 
 
-TextBoxNode * TextBoxNode_New(Scene *_scene,Entity *_entity){
+TextBoxNode * TextBoxNode_New(Scene *_scene,ZG_Entity *_entity){
 	TextBoxNode *textbox_node = ZG_NEW(TextBoxNode);
 
 

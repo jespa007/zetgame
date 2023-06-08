@@ -1,42 +1,33 @@
-#ifndef __TRANSFORM_NODE_H__
-#define __TRANSFORM_NODE_H__
+#ifndef __ZG_ECTRANSFORM_NODE_H__
+#define __ZG_ECTRANSFORM_NODE_H__
 
 
-#define  TRANSFORM_NODE_PROPERTY_FACE_TO_CAMERA		0x1 << 0
-#define  TRANSFORM_NODE_PROPERTY_SCALE				0x1 << 1
-#define  TRANSFORM_NODE_PROPERTY_TRANSLATE			0x1 << 2
-#define  TRANSFORM_NODE_PROPERTY_ROTATE				0x1 << 4
+#define  ZG_ECTRANSFORM_NODE_PROPERTY_FACE_TO_CAMERA		0x1 << 0
+#define  ZG_ECTRANSFORM_NODE_PROPERTY_SCALE				0x1 << 1
+#define  ZG_ECTRANSFORM_NODE_PROPERTY_TRANSLATE			0x1 << 2
+#define  ZG_ECTRANSFORM_NODE_PROPERTY_ROTATE				0x1 << 4
 
 typedef enum{
-	 TRANSFORM_NODE_TYPE_LOCAL=0
-	,TRANSFORM_NODE_TYPE_WORLD
-}TransformNodeType;
+	 ZG_ECTRANSFORM_NODE_TYPE_LOCAL=0
+	,ZG_ECTRANSFORM_NODE_TYPE_WORLD
+}ZG_ECTransformNodeType;
 
-typedef struct TransformNode TransformNode;
+typedef struct ZG_TransformNode ZG_TransformNode;
 
 
-struct TransformNode{
-	ZG_Transform  		transform; // world coordinates
-	void 			*data;
+struct ZG_ECTransformNode{
+	ZG_ECTransform  		transform; // world coordinates
+	void 					*data;
 };
 
-TransformNode *	TransformNode_New(void);
-bool		TransformNode_AttachNode(TransformNode *_this, TransformNode *node);
-bool		TransformNode_DetachNode(TransformNode *_this, TransformNode *node);
-void 		TransformNode_SetTranslate3f(TransformNode *_this,float x, float y, float z);
+ZG_TransformNode *	ZG_ECTransformNode_New(void);
+bool		ZG_ECTransformNode_AttachNode(ZG_TransformNode *_this, ZG_TransformNode *node);
+bool		ZG_TransformNode_DetachNode(ZG_TransformNode *_this, ZG_TransformNode *node);
+ZG_TransformNode	*	ZG_TransformNode_GetParent(ZG_TransformNode *_this);
 
-// 2D Stuff
-void 		TransformNode_SetPosition2i(TransformNode *_this,int x, int y);
-ZG_Vector2i	TransformNode_GetPosition2i(TransformNode *_this);
-
-TransformNode	*	TransformNode_GetParent(TransformNode *_this);
-
-ZG_Transform *TransformNode_GetTransform(TransformNode *node, TransformNodeType sgtransform);
-
-void 		TransformNode_SetRotate3f(TransformNode *_this,float x, float y, float z);
-void 		TransformNode_SetScale3f(TransformNode *_this,float x, float y, float z);
-void		TransformNode_Update(TransformNode *_this);
-void 	 	TransformNode_Delete(TransformNode *_this);
+ZG_Transform *ZG_ECTransformNode_GetTransform(ZG_TransformNode *node, TransformNodeType sgtransform);
+void		ZG_ECTransformNode_Update(ZG_TransformNode *_this);
+void 	 	ZG_ECTransformNode_Delete(ZG_TransformNode *_this);
 
 
 #endif

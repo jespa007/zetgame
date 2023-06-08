@@ -2,17 +2,17 @@
 
 
 typedef struct{
-	TransformNode		*parent;
+	ZG_ECTransformNode		*parent;
 	ZG_List		*child_nodes;
 	ZG_Transform 	transform_default;
 	ZG_Transform 	*transform_local;
 	uint16_t	transform_attributes;
-}ECTransformData;
+}ZG_ECTransformData;
 
-void SetParent(TransformNode *_this, TransformNode *_parent);
+void SetParent(ZG_ECTransformNode *_this, ZG_ECTransformNode *_parent);
 
-void ClearChilds(TransformNode * node){
-	ECTransformData *data=node->data;
+void ClearChilds(ZG_ECTransformNode * node){
+	ZG_ECTransformData *data=node->data;
 	for(unsigned i = 0; i < data->child_nodes->count; i++){
 		ClearChilds(data->child_nodes->items[i]);
 	}
@@ -22,10 +22,10 @@ void ClearChilds(TransformNode * node){
 }
 //------------------------------------------------------------------------------------
 
-TransformNode * New(void){
+ZG_ECTransformNode * ZG_ECTransformNode_New(void){
 
-	TransformNode * sg_node = ZG_NEW(TransformNode);
-	ECTransformData *data= ZG_NEW(ECTransformData);
+	ZG_ECTransformNode * sg_node = ZG_NEW(ZG_ECTransformNode);
+	ZG_ECTransformData *data= ZG_NEW(ZG_ECTransformData);
 	sg_node->data=data;
 
 	data->transform_local=&data->transform_default;
@@ -38,17 +38,17 @@ TransformNode * New(void){
 			| 	TRANSFORM_TRANSLATE
 			|	TRANSFORM_ROTATE;
 
-	//sg_node->sgnode_type=ECTransformTypeNode;
+	//sg_node->sgnode_type=ZG_ECTransformTypeNode;
 
 	return sg_node;
 }
 
 
-void ClearNodes(TransformNode *_this){
+void ZG_ECTransformNode_ClearNodes(ZG_ECTransformNode *_this){
 
 	if(_this == NULL) return;
 
-	ECTransformData *data = _this->data;
+	ZG_ECTransformData *data = _this->data;
 
 
 	for(unsigned i=0; i < data->child_nodes->count; i++){
@@ -58,14 +58,14 @@ void ClearNodes(TransformNode *_this){
 	ZG_List_Clear(data->child_nodes);
 }
 
-void SetTranslate3f(TransformNode *_this,float x, float y, float z){
+void ZG_ECTransformNode_SetTranslate3f(ZG_ECTransformNode *_this,float x, float y, float z){
 	ZG_Transform_SetTranslate3f(&_this->transform,x,y,z);
 }
 
-bool IsParentNodeRoot(TransformNode *_this){
-	ECTransformData *data=_this->data;
+bool ZG_ECTransformNode_IsParentNodeRoot(ZG_ECTransformNode *_this){
+	ZG_ECTransformData *data=_this->data;
 	if(data->parent != NULL){
-		ECTransformData *parent_data = data->parent->data;
+		ZG_ECTransformData *parent_data = data->parent->data;
 
 		return (parent_data->parent==NULL);
 
@@ -75,65 +75,38 @@ bool IsParentNodeRoot(TransformNode *_this){
 	return false;
 }
 
-void SetPosition2i(TransformNode *_this,int x, int y){
-	ECTransformData *data=_this->data;
-	ZG_Vector3f v=ZG_ViewPort_ScreenToWorldDimension2i(x,y);
-	ZG_Transform_SetPosition2i(data->transform_local,v.x,v.y);
-}
-
-ZG_Vector2i	GetPosition2i(TransformNode *_this){
-
-	return ZG_Transform_GetPosition2i(&_this->transform);
-}
-
-void SetRotateZ(TransformNode *_this,float z){
-	ECTransformData *data=_this->data;
-	ZG_Transform_SetRotateZ(data->transform_local,z);
-}
-
-void SetRotate3f(TransformNode *_this,float x, float y, float z){
-	ECTransformData *data=_this->data;
-	ZG_Transform_SetRotate3f(data->transform_local,x,y,z);
-}
-
-void SetScale3f(TransformNode *_this,float x, float y, float z){
-	ECTransformData *data=_this->data;
-	ZG_Transform_SetScale3f(data->transform_local,x,y,z);
-}
-
-void	SetParent(TransformNode *_this, TransformNode *parent_node){
-	ECTransformData *data = _this->data;
+void	ZG_ECTransformNode_SetParent(ZG_ECTransformNode *_this, ZG_ECTransformNode *parent_node){
+	ZG_ECTransformData *data = _this->data;
 	data->parent=parent_node;
 }
 
-TransformNode	*	GetParent(TransformNode *_this){
-	ECTransformData *data = _this->data;
+ZG_ECTransformNode	*	ZG_ECTransformNode_GetParent(ZG_ECTransformNode *_this){
+	ZG_ECTransformData *data = _this->data;
 	return data->parent;
 }
 
+bool ZG_ECTransformNode_DetachNode(ZG_ECTransformNode *_this,ZG_ECTransformNode * obj) {
 
-bool DetachNode(TransformNode *_this,TransformNode * obj) {
-
-	ECTransformData *obj_data = obj->data;
+	ZG_ECTransformData *obj_data = obj->data;
 
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
-		ECTransformData *parent_data = obj_data->parent->data;
+		ZG_ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
 			ZG_Log_Error("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
 
-	SetParent(obj,NULL);
+	ZG_ECTransformNode_SetParent(obj,NULL);
 
 	// already deattached
 	return true;
 
 }
 
-bool AttachNode(TransformNode *_this,TransformNode * obj) {
+bool ZG_ECTransformNode_AttachNode(ZG_ECTransformNode *_this,ZG_ECTransformNode * obj) {
 
-	ECTransformData *data = _this->data;
+	ZG_ECTransformData *data = _this->data;
 	if(obj == NULL){
 		return false;
 	}
@@ -148,9 +121,9 @@ bool AttachNode(TransformNode *_this,TransformNode * obj) {
 	return false;
 }
 
-bool Detach(TransformNode *_this){
+bool ZG_ECTransformNode_Detach(ZG_ECTransformNode *_this){
 
-	TransformNode * parent = GetParent(_this);
+	ZG_ECTransformNode * parent = GetParent(_this);
 	if(parent != NULL){
 		DetachNode(parent,_this);
 	}
@@ -159,10 +132,10 @@ bool Detach(TransformNode *_this){
 
 }
 
-void UpdateChilds(TransformNode *_this) {
+void ZG_ECTransformNode_UpdateChilds(ZG_ECTransformNode *_this) {
 
-	ECTransformData *data = _this->data;
-	TransformNode *o;
+	ZG_ECTransformData *data = _this->data;
+	ZG_ECTransformNode *o;
 	//-------- UPDATE TRANFORMS OF THEIR CHILDS ----
 	for(unsigned i=0; i < data->child_nodes->count; i++) {
 		o = data->child_nodes->items[i];
@@ -170,14 +143,14 @@ void UpdateChilds(TransformNode *_this) {
 	}
 }
 
-void PostUpdate(TransformNode *_this){
-	UpdateChilds(_this);
+void ZG_ECTransformNode_PostUpdate(ZG_ECTransformNode *_this){
+	ZG_ECTransformNode_UpdateChilds(_this);
 }
 
 //--------------------------- MAIN UPDATE SCENEGRAPH ----------------------------
-void UpdateSceneGraph(TransformNode *_this) {
+void UpdateSceneGraph(ZG_ECTransformNode *_this) {
 
-	ECTransformData *data = _this->data;
+	ZG_ECTransformData *data = _this->data;
 
 	ZG_Quaternion local_quaternion;
 	ZG_Transform *transform_world=&_this->transform;
@@ -190,15 +163,15 @@ void UpdateSceneGraph(TransformNode *_this) {
 	_this->transform.quaternion = transform_world->quaternion = local_quaternion = ZG_Quaternion_FromEulerV3f(transform_local->rotate);
 
 	//----------- ADD TRANSFORMATIONS ACCORD ITS PARENT ----------------
-	if(!IsParentNodeRoot(_this)) { // Conditioned to transformations of m_scrParent....
+	if(!ZG_TransformNodeIsParentNodeRoot(_this)) { // Conditioned to transformations of m_scrParent....
 
-		TransformNode *parent=data->parent;
+		ZG_ECTransformNode *parent=data->parent;
 		if(parent == NULL){
 			ZG_Log_Error("Expected parent not null!!");
 			return;
 		}
 
-		//ECTransformData *parent_data = parent->data;
+		//ZG_ECTransformData *parent_data = parent->data;
 		ZG_Transform *parent_transform_world=&parent->transform;
 
 		// todo: quaternions
@@ -208,7 +181,7 @@ void UpdateSceneGraph(TransformNode *_this) {
 		ZG_Vector3f transform_child_from_parent=transform_local->translate;
 
 		// the is propagated ...
-		if(((data->transform_attributes & TRANSFORM_SCALE) == TRANSFORM_SCALE)) {
+		if(((data->transform_attributes & ZG_ECTRANSFORM_NODE_SCALE) == ZG_ECTRANSFORM_NODE_SCALE)) {
 			// transforms the scale ...
 			transform_world->scale=ZG_Vector3f_Mul(transform_world->scale,parent_transform_world->scale);
 		}
@@ -245,21 +218,21 @@ void UpdateSceneGraph(TransformNode *_this) {
 	}
 }
 
-void Update(TransformNode *_this) {
+void ZG_ECTransformNode_Update(ZG_ECTransformNode *_this) {
 
-	ECTransformData *data = _this->data;
+	ZG_ECTransformData *data = _this->data;
 	if(data->parent!=NULL){ // it has parent, is not update
 		return;
 	}
 
 
 	// update coord3d  scene graph...
-	UpdateSceneGraph(_this);
-	PostUpdate(_this);
+	ZG_ECTransformNode_UpdateSceneGraph(_this);
+	ZG_ECTransformNode_PostUpdate(_this);
 }
 
-ZG_Transform *GetTransform(TransformNode *_this, TransformNodeType sgtransform){
-	ECTransformData *data=_this->data;
+ZG_Transform *ZG_ECTransformNode_GetTransform(ZG_ECTransformNode *_this, TransformNodeType sgtransform){
+	ZG_ECTransformData *data=_this->data;
 	if(sgtransform == TRANSFORM_NODE_TYPE_WORLD){
 		return &_this->transform;
 	}
@@ -269,13 +242,13 @@ ZG_Transform *GetTransform(TransformNode *_this, TransformNodeType sgtransform){
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------v
 
-void 	 Delete(TransformNode *_this){
+void 	 ZG_ECTransformNode_Delete(ZG_ECTransformNode *_this){
 
 	if(_this==NULL) return;
 
-	ECTransformData *_data = _this->data;
+	ZG_ECTransformData *_data = _this->data;
 
-	ClearNodes(_this);
+	ZG_ECTransformNode_ClearNodes(_this);
 	ZG_List_Delete(_data->child_nodes);
 
 	ZG_FREE(_data);

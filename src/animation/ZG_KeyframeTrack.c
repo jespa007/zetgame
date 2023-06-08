@@ -24,8 +24,8 @@ ZG_KeyframeTrack * ZG_KeyframeTrack_New(void)
 //---------------------------------------------------------------------------------------------------
 // STATIC
 
-Ease 	ZG_KeyframeTrack_ParseInterpolatorType(const char * interpolator_type_str){
-	Ease ease=ZG_EASE_LINEAR;
+ZG_Ease 	ZG_KeyframeTrack_ParseInterpolatorType(const char * interpolator_type_str){
+	ZG_Ease ease=ZG_EASE_LINEAR;
 
 	if(ZG_STRCMP(interpolator_type_str,==,"LINEAR")) {
 		ease=ZG_EASE_LINEAR;
@@ -68,7 +68,7 @@ void ZG_KeyframeTrack_CalculeFx(
 }
 //---------------------------------------------------------------------------------------------------
 // PRIVATE
-void ZG_KeyframeTrack_SetEase(ZG_KeyframeTrack * _this, Ease _ease){
+void ZG_KeyframeTrack_SetEase(ZG_KeyframeTrack * _this, ZG_Ease _ease){
 	_this->ease=_ease;
 }
 //---

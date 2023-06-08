@@ -1,23 +1,23 @@
-#ifndef _EC_SPRITE_RENDER_H__
-#define _EC_SPRITE_RENDER_H__
+#ifndef _ZG_ECSPRITE_RENDER_H__
+#define _ZG_ECSPRITE_RENDER_H__
 
-typedef struct ECSpriteRenderer ECSpriteRenderer;
+typedef struct ZG_ECSpriteRenderer ZG_ECSpriteRenderer;
 
-struct ECSpriteRenderer{
-	EComponentHeader header;
+struct ZG_ECSpriteRenderer{
+	ZG_EComponentHeader header;
 	void 			*data;
 };
 
-EComponentList ECSpriteRenderer_RequiredComponents(void);
-void ECSpriteRenderer_Setup(void *_this,ComponentId _id);
+ZG_EComponentList ZG_ECSpriteRenderer_RequiredComponents(void);
+void ZG_ECSpriteRenderer_Setup(void *_this,ZG_ComponentId _id);
 
-//void ECSpriteRenderer_SetQuadPixels(uint16 width, uint16 height);
-void ECSpriteRenderer_SetDimensions(ECSpriteRenderer *_this,uint16_t width, uint16_t height);
-void ECSpriteRenderer_SetTexture(ECSpriteRenderer *_this,ZG_Texture *texture);
-void ECSpriteRenderer_SetAlpha(ECSpriteRenderer *_this, float _alpha);
+//void ZG_ECSpriteRenderer_SetQuadPixels(uint16 width, uint16 height);
+void ZG_ECSpriteRenderer_SetDimensions(ZG_ECSpriteRenderer *_this,uint16_t width, uint16_t height);
+void ZG_ECSpriteRenderer_SetTexture(ZG_ECSpriteRenderer *_this,ZG_Texture *texture);
+void ZG_ECSpriteRenderer_SetAlpha(ZG_ECSpriteRenderer *_this, float _alpha);
 
-void ECSpriteRenderer_Update(void *_this);
-void ECSpriteRenderer_Destroy(void *_this);
+void ZG_ECSpriteRenderer_Update(void *_this);
+void ZG_ECSpriteRenderer_Destroy(void *_this);
 
 
 

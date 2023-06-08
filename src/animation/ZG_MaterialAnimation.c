@@ -42,8 +42,8 @@ void					ZG_MaterialAnimation_StartAction(
 void ZG_MaterialAnimation_StartTween(
 		ZG_MaterialAnimation *_this
 		, uint32_t _start_time
-		, MaterialComponent _material_component
-		, Ease _ease
+		, ZG_MaterialComponent _material_component
+		, ZG_Ease _ease
 		, float _from
 		, float _to
 		, uint32_t _duration

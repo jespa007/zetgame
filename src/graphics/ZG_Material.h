@@ -32,7 +32,7 @@ typedef enum{
 
 	ZG_MATERIAL_COMPONENT_SHININESS	,
 	ZG_MATERIAL_COMPONENT_MAX
-}MaterialComponent;
+}ZG_MaterialComponent;
 
 
 typedef struct ZG_Material ZG_Material;

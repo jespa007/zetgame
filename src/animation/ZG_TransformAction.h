@@ -18,7 +18,7 @@ ZG_TransformAction 	*	ZG_TransformAction_New(void);
 void					ZG_TransformAction_SetKeyframesTrack(
 		ZG_TransformAction *_this
 		, ZG_TransformComponent _transform_component
-		, Ease ease
+		, ZG_Ease ease
 		,float *keyframe_points
 		, size_t keyframe_points_count
 

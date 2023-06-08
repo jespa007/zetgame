@@ -2,22 +2,22 @@
 
 typedef struct{
 	void *void_data;
-}ECTextBoxRendererData;
+}ZG_ECTextBoxRendererData;
 
-static EComponent g_ec_textbox_renderer_required_components[]={
-		EC_TRANSFORM
+static const char *g_ec_textbox_renderer_required_components[]={
+		ZG_NAMEOF(ZG_ZG_ECTransform)
 };
 
-EComponentList ECTextBoxRenderer_RequiredComponents(void){
-	EComponentList cl;
+ZG_EComponentList ZG_ECTextBoxRenderer_RequiredComponents(void){
+	ZG_EComponentList cl;
 	cl.components=g_ec_textbox_renderer_required_components;
 	cl.n_components=ZG_ARRAY_SIZE(g_ec_textbox_renderer_required_components);
 
 	return cl;
 }
 
-void ECTextBoxRenderer_Setup(void *_this,ComponentId _id, Entity *_entity){
-	ECTextBoxRenderer *ec_textbox_renderer=_this;
+void ZG_ECTextBoxRenderer_Setup(void *_this,ZG_ComponentId _id, ZG_Entity *_entity){
+	ZG_ECTextBoxRenderer *ec_textbox_renderer=_this;
 	ec_textbox_renderer->header.entity=_entity;
 	ec_textbox_renderer->header.id=_id;
 	ec_textbox_renderer->textbox=ZG_TextBox_New();
@@ -25,18 +25,18 @@ void ECTextBoxRenderer_Setup(void *_this,ComponentId _id, Entity *_entity){
 	_entity->components[EC_TEXTBOX_RENDERER]=_this;
 
 
-	ECTextBoxRendererData *data=ZG_NEW(ECTextBoxRendererData);
+	ZG_ECTextBoxRendererData *data=ZG_NEW(ZG_ECTextBoxRendererData);
 	//data->ec_textbox_renderer=_entity->components[EC_TEXTBOX_RENDERER];
 
 	ec_textbox_renderer->data=data;
 
-	//ECTextBoxRenderer_SetDimensions(ec_textbox_renderer,100,100); // default with/height
+	//ZG_ECTextBoxRenderer_SetDimensions(ec_textbox_renderer,100,100); // default with/height
 }
 
-void ECTextBoxRenderer_Update(void *_this){
-	ECTextBoxRenderer *ec_textbox_renderer=_this;
+void ZG_ECTextBoxRenderer_Update(void *_this){
+	ZG_ECTextBoxRenderer *ec_textbox_renderer=_this;
 	ZG_Transform *transform = NULL;
-	ECTransform *ec_transform=ec_textbox_renderer->header.entity->components[EC_TRANSFORM];
+	ZG_ECTransform *ec_transform=ec_textbox_renderer->header.entity->components[EC_TRANSFORM];
 
 
 	if(ec_transform){
@@ -49,9 +49,9 @@ void ECTextBoxRenderer_Update(void *_this){
 
 }
 
-void ECTextBoxRenderer_Destroy(void *_this){
-	ECTextBoxRenderer *ec_textbox_renderer=_this;
-	ECTextBoxRendererData * data= ((ECTextBoxRenderer *)_this)->data;
+void ZG_ECTextBoxRenderer_Destroy(void *_this){
+	ZG_ECTextBoxRenderer *ec_textbox_renderer=_this;
+	ZG_ECTextBoxRendererData * data= ((ZG_ECTextBoxRenderer *)_this)->data;
 	ZG_TextBox_Delete(ec_textbox_renderer->textbox);
 	ZG_FREE(data);
 }

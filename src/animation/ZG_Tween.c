@@ -12,7 +12,7 @@ ZG_Tween *ZG_Tween_New(Uint8 n_channels){
 void ZG_Tween_Start(ZG_Tween *_this
 		, uint32_t _start_time
 		, uint8_t _idx_channel
-		, Ease _ease
+		, ZG_Ease _ease
 		, float _from
 		, float _to
 		, uint32_t _duration

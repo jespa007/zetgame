@@ -6,12 +6,12 @@
 #include "mmedia/_zg_mmedia_.h"
 #include "animation/_zg_animation_.h"
 
-typedef unsigned int ComponentId;
+typedef unsigned int ZG_ComponentId;
 
-// Entity
-typedef struct EntitySystem EntitySystem;
-typedef struct EntityManager EntityManager;
-typedef struct Entity Entity;
+// ZG_Entity
+typedef struct ZG_EntitySystem ZG_EntitySystem;
+typedef struct ZG_EntityManager ZG_EntityManager;
+typedef struct ZG_Entity ZG_Entity;
 
 
 
@@ -26,13 +26,13 @@ typedef struct Entity Entity;
 
 
 
-// Entity Component
-#include "ecs/entity/component/ZG_ECTransform.h"
-#include "ecs/entity/component/ZG_ECGeometry.h"
-#include "ecs/entity/component/ZG_ECMaterial.h"
-#include "ecs/entity/component/ZG_ECTexture.h"
-#include "ecs/entity/component/ZG_ECSpriteRenderer.h"
-#include "ecs/entity/component/ZG_ECTextBoxRenderer.h"
+// ZG_Entity Component
+#include "ecs/entity/component/ZG_ZG_ECTransform.h"
+#include "ecs/entity/component/ZG_ZG_ECGeometry.h"
+#include "ecs/entity/component/ZG_ZG_ECMaterial.h"
+#include "ecs/entity/component/ZG_ZG_ECTexture.h"
+#include "ecs/entity/component/ZG_ZG_ECSpriteRenderer.h"
+#include "ecs/entity/component/ZG_ZG_ECTextBoxRenderer.h"
 
 
 // Animation
@@ -45,16 +45,16 @@ typedef struct Entity Entity;
 
 
 // Collision
-#include "ecs/collision/ZG_CollisionSystem.h"
+#include "ecs/collision/ZG_ZG_CollisionSystem.h"
 
 
-//#include "component/ECCamera.h"
-//#include "component/ECText2d.h"
+//#include "component/ZG_ECCamera.h"
+//#include "component/ZG_ECText2d.h"
 
 // TWEENS
 //#include "component/ECTweenTransform.h"
 //#include "component/ECViewer2d.h"
-//#include "entity/EntityManager.h"
+//#include "entity/ZG_EntityManager.h"
 
 bool ZG_ECS_Init(void);
 void ZG_ECS_DeInit(void);

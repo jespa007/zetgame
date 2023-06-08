@@ -1,24 +1,22 @@
-#ifndef __ENTITY_MANAGER_H__
-#define __ENTITY_MANAGER_H__
+#ifndef __ZG_ENTITY_MANAGER_H__
+#define __ZG_ENTITY_MANAGER_H__
 
-typedef uint16_t EntityManagerId;
-
-struct EntityManager{
+struct ZG_EntityManager{
 
 	void *data;
 };
 
 // Static functions
-EntityManager 	*		EntityManager_New(
-		EntitySystem *_this
+ZG_EntityManager 	*		ZG_EntityManager_New(
+		ZG_EntitySystem *_this
 		, const char *_id
 		,uint16_t max_entities
-		, EComponent * entity_components
+		, ZG_EComponent * entity_components
 		, size_t entity_components_len
 );
 
-Entity  		*		EntityManager_NewEntity(EntityManager *_this);
-EntitySystem	* 		EntityManager_GetEntitySystem(EntityManager *_this);
-void 			*		EntityManager_GetComponent(EntityManager *_this,Entity *_entity, ComponentId _component_id);
+ZG_Entity  		*		ZG_ZG_EntityManager_NewEntity(ZG_EntityManager *_this);
+ZG_EntitySystem	* 		ZG_EntityManager_GetEntitySystem(ZG_EntityManager *_this);
+void 			*		ZG_EntityManager_GetComponent(ZG_EntityManager *_this,ZG_Entity *_entity, ZG_ComponentId _component_id);
 
 #endif

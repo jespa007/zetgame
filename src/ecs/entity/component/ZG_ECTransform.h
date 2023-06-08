@@ -1,64 +1,64 @@
-#ifndef _EC_TRANSFORM_H__
-#define _EC_TRANSFORM_H__
+#ifndef _ZG_ECTRANSFORM_H__
+#define _ZG_ECTRANSFORM_H__
 
-typedef struct ECTransform 	ECTransform;
+typedef struct ZG_ECTransform 	ZG_ECTransform;
 
-#define EC_TRANSFORM_SCALE					0x0001
-#define EC_TRANSFORM_TRANSLATE			 	0x0002
-#define EC_TRANSFORM_ROTATE				 	0x0004
+#define ZG_ECTRANSFORM_SCALE					0x0001
+#define ZG_ECTRANSFORM_TRANSLATE			 	0x0002
+#define ZG_ECTRANSFORM_ROTATE				 	0x0004
 //#define EC_TRANSFORM_POSITION_RELATIVE_X 	0x0008
 //#define EC_TRANSFORM_POSITION_RELATIVE_Y 	0x0010
 
 typedef enum{
-	 EC_TRANSFORM_TYPE_LOCAL=0
-	,EC_TRANSFORM_TYPE_WORLD
-}ECTransformType;
+	 ZG_ECTRANSFORM_TYPE_LOCAL=0
+	,ZG_ECTRANSFORM_TYPE_WORLD
+}ZG_ECTransformType;
 
-struct ECTransform{
-	EComponentHeader 		header;
+struct ZG_ECTransform{
+	ZG_EComponentHeader 		header;
 	ZG_Transform				transform; // world coordinates
 	ZG_Quaternion				quaternion;
 	void 					*data;
 };
 
-void			ECTransform_Setup(void *_this, ComponentId _id);
+void			ZG_ECTransform_Setup(void *_this, ZG_ComponentId _id);
 
-bool			ECTransform_Attach(ECTransform *_this, ECTransform *node);
-bool			ECTransform_Detach(ECTransform *_this, ECTransform *node);
-void 			ECTransform_SetTranslate3f(ECTransform *_this,float x, float y, float z);
+bool			ZG_ECTransform_Attach(ZG_ECTransform *_this, ZG_ECTransform *node);
+bool			ZG_ECTransform_Detach(ZG_ECTransform *_this, ZG_ECTransform *node);
+void 			ZG_ECTransform_SetTranslate3f(ZG_ECTransform *_this,float x, float y, float z);
 
 /**
  * Sets 2d position from pixel position xy
  */
-void 			ECTransform_SetPosition2i(ECTransform *_this,int x, int y);
+void 			ZG_ECTransform_SetPosition2i(ZG_ECTransform *_this,int x, int y);
 
-ZG_Vector2i		ECTransform_GetPosition2i(ECTransform *_this);
+ZG_Vector2i		ZG_ECTransform_GetPosition2i(ZG_ECTransform *_this);
 
 /**
  * Sets 2d displacement from offset position xy
  */
-void 			ECTransform_SetDisplacement2i(ECTransform *_this,int offset_x, int offset_y);
+void 			ZG_ECTransform_SetDisplacement2i(ZG_ECTransform *_this,int offset_x, int offset_y);
 
 
 
-ECTransform	*	ECTransform_GetParent(ECTransform *_this);
+ZG_ECTransform	*	ZG_ECTransform_GetParent(ZG_ECTransform *_this);
 
-ZG_Transform *		ECTransform_GetTransform(ECTransform *node, ECTransformType ec_transform_type);
+ZG_Transform *		ZG_ECTransform_GetTransform(ZG_ECTransform *node, ZG_ECTransformType ec_transform_type);
 
-void 			ECTransform_SetRotate3f(ECTransform *_this,float x, float y, float z);
-void 			ECTransform_SetScale3f(ECTransform *_this,float x, float y, float z);
+void 			ZG_ECTransform_SetRotate3f(ZG_ECTransform *_this,float x, float y, float z);
+void 			ZG_ECTransform_SetScale3f(ZG_ECTransform *_this,float x, float y, float z);
 
 
 /**
  * ZG_Transform animation
  */
-void ECTransform_SetTransformAnimation(ECTransform *_this, ACTransformAnimation * _ac_transform_animation);
-ACTransformAnimation * ECTransform_GetTransformAnimation(ECTransform *_this);
+void ZG_ECTransform_SetTransformAnimation(ZG_ECTransform *_this, ZG_ACTransformAnimation * _ac_transform_animation);
+ZG_ACTransformAnimation * ZG_ECTransform_GetTransformAnimation(ZG_ECTransform *_this);
 
 
 
-void			ECTransform_Update(void *_this);
-void 	 		ECTransform_Destroy(void *_this);
+void			ZG_ECTransform_Update(void *_this);
+void 	 		ZG_ECTransform_Destroy(void *_this);
 
 
 

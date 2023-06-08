@@ -6,7 +6,7 @@ typedef struct{
 }TextureNodeData;
 
 
-TextureNode * TextureNode_New(Scene *_scene, Entity *_entity){
+TextureNode * TextureNode_New(Scene *_scene, ZG_Entity *_entity){
 	TextureNode *texture_node = ZG_NEW(TextureNode);
 
 	texture_node->ec_transform=_entity->components[EC_TRANSFORM];

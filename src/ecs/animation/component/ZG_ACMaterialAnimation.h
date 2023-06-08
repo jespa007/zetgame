@@ -1,31 +1,31 @@
-#ifndef _AC_MATERIAL_ANIMATION_H__
-#define _AC_MATERIAL_ANIMATION_H__
+#ifndef _ZG_ACMATERIAL_ANIMATION_H__
+#define _ZG_ACMATERIAL_ANIMATION_H__
 
-struct ACMaterialAnimation{
-	AComponentHeader header;
+struct ZG_ACMaterialAnimation{
+	ZG_AComponentHeader header;
 	void 			*data;
 };
 
-void			ACMaterialAnimation_Setup(void *_this, ComponentId _idx);
-void			ACMaterialAnimation_Init(void *_this);
+void			ZG_ACMaterialAnimation_Setup(void *_this, ZG_ComponentId _idx);
+void			ZG_ACMaterialAnimation_Init(void *_this);
 
-void			ACMaterialAnimation_StartAction(
+void			ZG_ACMaterialAnimation_StartAction(
 		void *_this
 		, ZG_MaterialAction *action
 		, int repeat
 );
 
-void 			ACMaterialAnimation_StartTween(
+void 			ZG_ACMaterialAnimation_StartTween(
 	void *_this
-	, MaterialComponent _material_component
-	, Ease _ease
+	, ZG_MaterialComponent _material_component
+	, ZG_Ease _ease
 	, float _from
 	, float _to
 	, uint32_t _duration
 	, int _repeat
 );
 
-void 			ACMaterialAnimation_Update(void *_this);
-void 			ACMaterialAnimation_Destroy(void *_this);
+void 			ZG_ACMaterialAnimation_Update(void *_this);
+void 			ZG_ACMaterialAnimation_Destroy(void *_this);
 
 #endif

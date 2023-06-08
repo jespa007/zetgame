@@ -18,7 +18,7 @@ ZG_Action * 			ZG_Action_New(uint8_t n_channels){
 
 void 	ZG_Action_SetKeyframesTrack(ZG_Action *_this
 		, uint8_t idx_channel
-		, Ease ease
+		, ZG_Ease ease
 		,float *keyframe_points
 		, size_t keyframe_points_count){
 
@@ -41,7 +41,7 @@ void 	ZG_Action_SetKeyframesTrack(ZG_Action *_this
 }
 
 /*
-void 				ZG_Action_SetKeyframesTrackGroup(ZG_Action *_this, uint8_t idx_channel_first ,uint32_t msk_keyframe_track_group, Ease _ease,const float *keyframe_points, size_t keyframe_points_count){
+void 				ZG_Action_SetKeyframesTrackGroup(ZG_Action *_this, uint8_t idx_channel_first ,uint32_t msk_keyframe_track_group, ZG_Ease _ease,const float *keyframe_points, size_t keyframe_points_count){
 	KeyframeTrackGroup *x=NULL, *y=NULL, *z=NULL, *w=NULL;
 
 	if(_this == NULL) return;

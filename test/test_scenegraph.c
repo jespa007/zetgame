@@ -6,26 +6,26 @@ void MS_OnDeleteTexture(void *text){
 	ZG_Texture_Delete(text);
 }
 
-Entity *NewEntityTransform(
-		EntityManager *_em_transforms
+ZG_Entity *NewEntityTransform(
+		ZG_EntityManager *_em_transforms
 		, int _posx
 		, int _posy
 		, bool _set_displacement
 ){
 
-	Entity *entity_transform=EntityManager_NewEntity(_em_transforms);
+	ZG_Entity *entity_transform=ZG_ZG_EntityManager_NewEntity(_em_transforms);
 
 	if(_set_displacement){
-		ECTransform_SetDisplacement2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
+		ZG_ECTransform_SetDisplacement2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
 	}else{
-		ECTransform_SetPosition2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
+		ZG_ECTransform_SetPosition2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
 	}
 
 	return entity_transform;
 }
 
-Entity *NewEntityTexture(
-	EntityManager *_em_textures
+ZG_Entity *NewEntityTexture(
+	ZG_EntityManager *_em_textures
 	,int _posx
 	, int _posy
 	, uint16_t _width
@@ -33,22 +33,22 @@ Entity *NewEntityTexture(
 	, ZG_Texture *_texture
 	, bool _set_displacement
 ){
-	Entity *entity_texture=EntityManager_NewEntity(_em_textures);
+	ZG_Entity *entity_texture=ZG_ZG_EntityManager_NewEntity(_em_textures);
 
 	if(_set_displacement){
-		ECTransform_SetDisplacement2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
+		ZG_ECTransform_SetDisplacement2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
 	}else{
-		ECTransform_SetPosition2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
+		ZG_ECTransform_SetPosition2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
 	}
 
-	ECTexture_SetTexture(entity_texture->components[EC_TEXTURE],_texture);
-	ECSpriteRenderer_SetDimensions(entity_texture->components[EC_SPRITE_RENDERER],_width, _height);
+	ZG_ECTexture_SetTexture(entity_texture->components[EC_TEXTURE],_texture);
+	ZG_ECSpriteRenderer_SetDimensions(entity_texture->components[EC_SPRITE_RENDERER],_width, _height);
 
 	return entity_texture;
 }
 
-Entity *NewEntityTextBox(
-	EntityManager *_em_textboxes
+ZG_Entity *NewEntityTextBox(
+	ZG_EntityManager *_em_textboxes
 	,int _posx
 	, int _posy
 	, uint16_t _width
@@ -57,15 +57,15 @@ Entity *NewEntityTextBox(
 	, bool _set_displacement
 ){
 
-	Entity *entity_textbox=EntityManager_NewEntity(_em_textboxes);
+	ZG_Entity *entity_textbox=ZG_ZG_EntityManager_NewEntity(_em_textboxes);
 
 	if(_set_displacement){
-		ECTransform_SetDisplacement2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);
+		ZG_ECTransform_SetDisplacement2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);
 	}else{
-		ECTransform_SetPosition2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);
+		ZG_ECTransform_SetPosition2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);
 	}
 
-	ECTextBoxRenderer *ec_textbox_renderer=entity_textbox->components[EC_TEXTBOX_RENDERER];
+	ZG_ECTextBoxRenderer *ec_textbox_renderer=entity_textbox->components[EC_TEXTBOX_RENDERER];
 	ZG_TextBox_SetText(ec_textbox_renderer->textbox,_text);
 	ZG_TextBox_SetDimensions(ec_textbox_renderer->textbox,_width,_height);
 
@@ -202,15 +202,15 @@ int main(int argc, char *argv[]){
 			}
 		};
 
-	EComponent transform_components[]={
+	ZG_EComponent transform_components[]={
 		EC_TRANSFORM,
 	};
 
-	EComponent texture_components[]={
+	ZG_EComponent texture_components[]={
 		EC_SPRITE_RENDERER
 	};
 
-	EComponent textbox_components[]={
+	ZG_EComponent textbox_components[]={
 			EC_TEXTBOX_RENDERER
 	};
 	//----------------------------------------------------------------------------------------------------
@@ -224,10 +224,10 @@ int main(int argc, char *argv[]){
 	// Initializes zetgame with viewport as 640x480 by default
 	ZG_Init(NULL);
 
-	EntitySystem  *entity_system=EntitySystem_New();
+	ZG_EntitySystem  *entity_system=ZG_EntitySystem_New();
 
 
-	EntityManager *em_transforms=EntitySystem_NewEntityManager(
+	ZG_EntityManager *em_transforms=ZG_EntitySystem_NewEntityManager(
 		entity_system
 		,"nodes"
 		,MAX_ENTITIES
@@ -235,7 +235,7 @@ int main(int argc, char *argv[]){
 		,ZG_ARRAY_SIZE(transform_components)
 	);//TextureNode_New());
 
-	EntityManager *em_textures=EntitySystem_NewEntityManager(
+	ZG_EntityManager *em_textures=ZG_EntitySystem_NewEntityManager(
 		entity_system
 		,"textures"
 		,MAX_ENTITIES
@@ -246,7 +246,7 @@ int main(int argc, char *argv[]){
 
 
 
-	EntityManager *em_textboxes=EntitySystem_NewEntityManager(
+	ZG_EntityManager *em_textboxes=ZG_EntitySystem_NewEntityManager(
 		entity_system
 		,"textboxes"
 		,MAX_ENTITIES
@@ -257,13 +257,13 @@ int main(int argc, char *argv[]){
 
 	ZG_TextureManager *tm=ZG_TextureManager_New();
 	//ZG_TTFontManager *ttfm=ZG_TTFontManager_New();
-	Entity
+	ZG_Entity
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
 				,*spr_image_car_part2=NULL
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
-	Entity *spr_base_car=NULL,*spr_track_car=NULL;
+	ZG_Entity *spr_base_car=NULL,*spr_track_car=NULL;
 
 
 	ZG_TTFont_SetFontResourcePath("../../../test/data/fonts");
@@ -293,8 +293,8 @@ int main(int argc, char *argv[]){
 	// SETUP FAN...
 	for(unsigned i=0; i < ZG_ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		Entity *spr_image_fan_base=NULL;
-		Entity *spr_base_van=NULL;
+		ZG_Entity *spr_image_fan_base=NULL;
+		ZG_Entity *spr_base_van=NULL;
 
 		spr_image_fan_base=NewEntityTexture(
 				em_textures
@@ -315,7 +315,7 @@ int main(int argc, char *argv[]){
 				,true
 		);
 
-		ECTransform_Attach(
+		ZG_ECTransform_Attach(
 			spr_image_fan_base->components[EC_TRANSFORM]
 			,spr_base_van->components[EC_TRANSFORM]
 		);
@@ -332,7 +332,7 @@ int main(int argc, char *argv[]){
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
-			Entity *spr_image_van=NewEntityTexture(
+			ZG_Entity *spr_image_van=NewEntityTexture(
 				em_textures
 				,info->vane_disp.info_vane[j].x
 				,info->vane_disp.info_vane[j].y
@@ -342,8 +342,8 @@ int main(int argc, char *argv[]){
 				,true
 			);
 
-			ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
-			ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
+			ZG_ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
+			ZG_ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
 
 		}
 	}
@@ -358,11 +358,11 @@ int main(int argc, char *argv[]){
 	spr_image_car_left_wheel=NewEntityTexture(em_textures,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
 	spr_image_car_right_wheel=NewEntityTexture(em_textures,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
 
-	ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_track_car->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
-	ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);
+	ZG_ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_track_car->components[EC_TRANSFORM]);
+	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
+	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
+	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
+	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);
 
 	/*TransformNode_StartTween(
 		spr_base_car
@@ -387,7 +387,7 @@ int main(int argc, char *argv[]){
 	//----
 	// SUN
 	spr_image_sun=NewEntityTexture(em_textures,ZG_Graphics_GetWidth()-200,100,100,100,text_sun,false);
-	ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ZG_ALPHA_VALUE_TRANSPARENT);
+	ZG_ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ZG_ALPHA_VALUE_TRANSPARENT);
 
 	// ani
 	/*MaterialAction_SetKeyframesTrack(
@@ -430,7 +430,7 @@ int main(int argc, char *argv[]){
 
 
 	ZG_TextureManager_Delete(tm);
-	EntitySystem_Delete(entity_system);
+	ZG_EntitySystem_Delete(entity_system);
 	//ZG_TTFontManager_Delete(ttfm);
 
 

@@ -1,27 +1,17 @@
-#ifndef _ACOMPONENT_H__
-#define _ACOMPONENT_H__
+#ifndef _ZG_ACOMPONENT_H__
+#define _ZG_ACOMPONENT_H__
 
-typedef struct ACTransformAnimation ACTransformAnimation;
-typedef struct ACMaterialAnimation ACMaterialAnimation;
+typedef struct ZG_ACTransformAnimation ZG_ACTransformAnimation;
+typedef struct ZG_ACMaterialAnimation ZG_ACMaterialAnimation;
 
-// Builtin components
-typedef enum{
-	AC_INVALID=0,			// reserver for invalid component
-	AC_TRANSFORM_ANIMATION,
-	AC_MATERIAL_ANIMATION,
-	// AC_TEXTURE_ANIMATION,
-	// AC_GEOMETRY_ANIMATION,
-
-	AC_MAX_COMPONENTS
-}AComponent;
 
 typedef struct{
-	ComponentId	id;
-	Entity		*entity; // if NULL -> no entity associated -> inactive
-}AComponentHeader;
+	ZG_ComponentId	id;
+	ZG_Entity		*entity; // if NULL -> no entity associated -> inactive
+}ZG_AComponentHeader;
 
 
-
+typedef int ZG_AComponent;
 
 /*
 int EntityComponent_Register(const char *_name);

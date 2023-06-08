@@ -1,10 +1,10 @@
-#ifndef _ECOMPONENT_H__
-#define _ECOMPONENT_H__
+#ifndef _ZG_ECOMPONENT_H__
+#define _ZG_ECOMPONENT_H__
 
 
 // Builtin components
 /*typedef enum{
-	EC_INVALID=0,			// reserver for invalid component
+	ZG_EC_INVALID=0,			// reserver for invalid component
 	EC_TRANSFORM,			// entity transform
 
 	// to render...
@@ -22,24 +22,23 @@
 	ENTITY_COMPONENT_TEXT2D, 			// entity dimension + texture + appearance
 
 	EC_MAX_COMPONENTS
-}EComponent;*/
+}ZG_EComponent;*/
 
-#define EC_INVALID -1
+#define ZG_EC_INVALID -1
 
-typedef int EComponent;
-
-typedef struct{
-	ComponentId		entity_components_id; //
-	EntityManager	*entity_manager;
-}EComponentHeader;
-
+typedef int ZG_EComponent;
 
 typedef struct{
-	EComponent *	components;
+	ZG_ComponentId		entity_components_id; //
+	ZG_EntityManager	*entity_manager;
+}ZG_EComponentHeader;
+
+
+typedef struct{
+	ZG_EComponent *	components;
 	size_t			n_components;
-}EComponentList;
+}ZG_EComponentList;
 
-extern unsigned int __zg_ecs_n_component__;
 
 /*
 int EntityComponent_Register(const char *_name);

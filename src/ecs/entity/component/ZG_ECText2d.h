@@ -1,10 +1,10 @@
-#ifndef _EC_TEXT2D_H__
-#define _EC_TEXT2D_H__
+#ifndef _ZG_ECTEXT2D_H__
+#define _ZG_ECTEXT2D_H__
 
-typedef struct ECText2d ECText2d;
+typedef struct ZG_ECText2d ZG_ECText2d;
 
-struct ECText2d{
-	EComponent 	id;
+struct ZG_ECText2d{
+	ZG_EComponent 	id;
 	void 		*data;
 };
 
