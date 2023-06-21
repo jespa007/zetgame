@@ -90,8 +90,8 @@ void ZG_Input_Win32_CheckKey(unsigned int code){
 			g_zg_key_pressed[id_key]=true;
 		}
 
-		for(unsigned i = 0; i < g_input_vars->on_key_up->list->count; i++){
-			ZG_Callback * e=(ZG_Callback *)g_input_vars->on_key_up->list->items[i];
+		for(unsigned i = 0; i < g_zg_input_vars->on_key_up->list->count; i++){
+			ZG_Callback * e=(ZG_Callback *)g_zg_input_vars->on_key_up->list->items[i];
 			e->ptr_function(&key_event,e->user_data);
 		}
 

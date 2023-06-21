@@ -3,14 +3,13 @@
 
 #define ZG_UNLIMITIED_ENTITIES	-1
 
-#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _type_data, _required_components,_update_function,_on_create,_on_destroy) \
-ZG_ComponentId __g_entity_system_component#_type_data=__g_entity_system_component++;\
-ZG_ZG_EntitySystem_RegisterComponentBuiltin(__g_entity_system_component#_type_data,\
-		sizeof(_type_data)\
-		,_required_components\
-		,_update\
-		,_on_create\
-		,_on_destroy\
+#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _type_data, _update_function,_on_create,_on_destroy) \
+ZG_EntitySystem_RegisterComponent(\
+	""#_type_data,\
+	sizeof(_type_data)\
+	,_update\
+	,_on_create\
+	,_on_destroy\
 );
 
 
@@ -56,6 +55,14 @@ bool				ZG_EntitySystem_Init(void);
 		,void   (*EComponent_OnUpdate)(void *_component_data) // function component
 		,void   (*EComponent_OnDestroy)(void *_component_data)
 );*/
+bool ZG_EntitySystem_RegisterComponent(
+	const char *_component_id,
+	size_t __type_data
+	,const char * _required_components_ids[]
+	,void   (*_on_create)(void *_component_data)
+	,void   (*_on_update)(void *_component_data)
+	,void   (*_on_Destroy)(void *_component_data)
+);
 
 size_t				ZG_EntitySystem_NumComponents(void);
 void 				ZG_EntitySystem_DeInit(void);

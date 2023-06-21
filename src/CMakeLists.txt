@@ -332,13 +332,13 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	gui/_zg_gui_.c
 	
 	#-- Sprite --
-	#sprite/_zg_sprite_.c
+	sprite/_zg_sprite_.c
 
-	#-- Tilemap --
-	#tilemap/_zg_tilemap_.c
+	#-- ZG_Tilemap --
+	tilemap/_zg_tilemap_.c
 	
 	#-- ZG_Entity Component System --
-	#ecs/_zg_ecs_.c
+	ecs/_zg_ecs_.c
 	
 	#-- Zetgame --
 	zetgame.c		

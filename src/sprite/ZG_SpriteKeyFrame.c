@@ -1,9 +1,9 @@
-#include "zg_sprite.h"
+#include "_zg_sprite_.h"
 
 
 
-/*SpriteKeyFrame *	SpriteKeyFrame_New(ZG_Texture *_texture, SpriteKeyFrameInfo *_frames, size_t _frames_len){
-	SpriteKeyFrame *skf=ZG_NEW(SpriteKeyFrame);
+/*ZG_SpriteKeyFrame *	ZG_SpriteKeyFrame_New(ZG_Texture *_texture, ZG_SpriteKeyFrameInfo *_frames, size_t _frames_len){
+	ZG_SpriteKeyFrame *skf=ZG_NEW(ZG_SpriteKeyFrame);
 
 
 	skf->frames=_frames;
@@ -14,7 +14,7 @@
 }*/
 
 
-void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame){
+void				ZG_SpriteKeyFrame_Render(ZG_SpriteKeyFrame *_this, unsigned idx_frame){
 	if(idx_frame>= _this->frames_len){
 		ZG_Log_ErrorF("idx_frame out of bounds");
 		return;
@@ -24,8 +24,8 @@ void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame){
 }
 
 // TODO: support colliders per frame
-// 					SpriteKeyFrame_SetCollider(const char *_key, Collider XXXXX)
-/*void 				SpriteKeyFrame_Delete(SpriteKeyFrame *_this){
+// 					ZG_SpriteKeyFrame_SetCollider(const char *_key, Collider XXXXX)
+/*void 				ZG_SpriteKeyFrame_Delete(ZG_SpriteKeyFrame *_this){
 	ZG_FREE(_this->frames);
 	ZG_FREE(_this);
 }*/

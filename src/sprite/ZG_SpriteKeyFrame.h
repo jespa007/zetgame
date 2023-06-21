@@ -1,28 +1,28 @@
-#ifndef __SPRITE_KEYFRAME_H__
-#define __SPRITE_KEYFRAME_H__
+#ifndef __ZG_SPRITE_KEYFRAME_H__
+#define __ZG_SPRITE_KEYFRAME_H__
 
 #define MAX_SPRITE_KEYFRAME_NAME	25
 
-typedef struct SpriteKeyFrame SpriteKeyFrame;
+typedef struct ZG_SpriteKeyFrame ZG_SpriteKeyFrame;
 
 typedef struct {
 	ZG_TextureRect frame;
 	uint32_t	duration;
-}SpriteKeyFrameInfo;
+}ZG_SpriteKeyFrameInfo;
 
-struct SpriteKeyFrame{
+struct ZG_SpriteKeyFrame{
 	char				name[MAX_SPRITE_KEYFRAME_NAME];
-	SpriteKeyFrameInfo 	*frames;
+	ZG_SpriteKeyFrameInfo 	*frames;
 	size_t				frames_len;
 	ZG_Texture				*texture;
 };
 
 
-//SpriteKeyFrame *	SpriteKeyFrame_New(ZG_Texture *texture, SpriteKeyFrameInfo *frames, size_t length);
-void				SpriteKeyFrame_Render(SpriteKeyFrame *_this, unsigned idx_frame);
+//ZG_SpriteKeyFrame *	ZG_SpriteKeyFrame_New(ZG_Texture *texture, ZG_SpriteKeyFrameInfo *frames, size_t length);
+void				ZG_SpriteKeyFrame_Render(ZG_SpriteKeyFrame *_this, unsigned idx_frame);
 // TODO: support colliders per frame
-// 					SpriteKeyFrame_SetCollider(const char *_key, Collider XXXXX)
-//void 				SpriteKeyFrame_Delete(SpriteKeyFrame *_this);
+// 					ZG_SpriteKeyFrame_SetCollider(const char *_key, Collider XXXXX)
+//void 				ZG_SpriteKeyFrame_Delete(ZG_SpriteKeyFrame *_this);
 
 
 #endif

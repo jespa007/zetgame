@@ -1,4 +1,4 @@
-#include "../zg_ecs.h"
+#include "../_zg_ecs_.h"
 
 
 ZG_List *	g_animation_system_registered_components=NULL;
@@ -92,17 +92,17 @@ bool ZG_AnimationSystem_Init(void){
 	return true;
 }
 
-int	ZG_AnimationSystem_RegisterComponent(ZG_AnimationSystemRegisterComponent es_component_register){
+bool	ZG_AnimationSystem_RegisterComponent(ZG_RegisterComponent _register_component){
 	int idx_component=0;
 
 	if(g_animation_system_registered_components != NULL){
 		idx_component=g_animation_system_registered_components->count;
 	}
 
-	if(ZG_AnimationSystem_RegisterComponentBuiltin(idx_component,es_component_register)==false){
-		return ZG_EC_INVALID;
+	if(ZG_AnimationSystem_RegisterComponentBuiltin(idx_component,_register_component)==false){
+		return false;
 	}
-	return idx_component;
+	return true;
 }
 
 size_t					ZG_AnimationSystem_NumComponents(void){

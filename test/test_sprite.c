@@ -7,18 +7,18 @@ int main(int argc, char *argv[]){
 	ZG_Init(NULL);
 
 	ZG_TextureManager *texture_manager = ZG_TextureManager_New();
-	SpriteKeyFrameManager *skfm=SpriteKeyFrameManager_New(texture_manager);
-	SpriteKeyFrame *skf_current=NULL;
+	ZG_ZG_SpriteKeyFrameManager *skfm=ZG_ZG_SpriteKeyFrameManager_New(texture_manager);
+	ZG_SpriteKeyFrame *skf_current=NULL;
 	Uint32 next_time=0;
 	Uint32 idx_frame=0;
 
-	if(SpriteKeyFrameManager_Load(
+	if(ZG_ZG_SpriteKeyFrameManager_Load(
 			skfm
 			,"mario_small"
 			,"../../../test/data/sprites/mario_small.json"
 	)){
 
-		skf_current=SpriteKeyFrameManager_Get(skfm,"mario_small_walk");
+		skf_current=ZG_ZG_SpriteKeyFrameManager_Get(skfm,"mario_small_walk");
 	}
 
 
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
 	}while(!ZG_KP_ESC);
 
 
-	SpriteKeyFrameManager_Delete(skfm);
+	ZG_ZG_SpriteKeyFrameManager_Delete(skfm);
 	ZG_TextureManager_Delete(texture_manager);
 
 

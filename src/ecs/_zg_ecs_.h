@@ -27,12 +27,12 @@ typedef struct ZG_Entity ZG_Entity;
 
 
 // ZG_Entity Component
-#include "ecs/entity/component/ZG_ZG_ECTransform.h"
-#include "ecs/entity/component/ZG_ZG_ECGeometry.h"
-#include "ecs/entity/component/ZG_ZG_ECMaterial.h"
-#include "ecs/entity/component/ZG_ZG_ECTexture.h"
-#include "ecs/entity/component/ZG_ZG_ECSpriteRenderer.h"
-#include "ecs/entity/component/ZG_ZG_ECTextBoxRenderer.h"
+#include "ecs/entity/component/ZG_ECTransform.h"
+#include "ecs/entity/component/ZG_ECGeometry.h"
+#include "ecs/entity/component/ZG_ECMaterial.h"
+#include "ecs/entity/component/ZG_ECTexture.h"
+#include "ecs/entity/component/ZG_ECSpriteRenderer.h"
+#include "ecs/entity/component/ZG_ECTextBoxRenderer.h"
 
 
 // Animation
@@ -45,7 +45,7 @@ typedef struct ZG_Entity ZG_Entity;
 
 
 // Collision
-#include "ecs/collision/ZG_ZG_CollisionSystem.h"
+#include "ecs/collision/ZG_CollisionSystem.h"
 
 
 //#include "component/ZG_ECCamera.h"

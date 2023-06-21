@@ -1,4 +1,4 @@
-#include "../zg_ecs.h"
+#include "../_zg_ecs_.h"
 
 ZG_List *g_entity_system_registered_components=NULL;
 bool  g_entity_system_user_can_register_components=true;
@@ -63,22 +63,24 @@ bool ZG_EntitySystem_Init(void){
 	ECS_ADD_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update);
 
 	// invalid (0)
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(ZG_EC_INVALID,(ZG_ESRegisterComponent){
+	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(ZG_EC_INVALID,(ZG_ESRegisterComponent){
 		.size_data				=0
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=NULL
 		,.ZG_EComponent_Update		=NULL
 		,.ZG_EComponent_Destroy	=NULL
-	});
+	});*/
+
+	ZG_ECS_REGISTER_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update,ZG_ECTransform_Setup,ZG_ECTransform_Destroy);
 
 	// transform
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM,(ZG_ESRegisterComponent){
+	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECTransform)
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=ZG_ECTransform_Setup
 		,.ZG_EComponent_Update		=ZG_ECTransform_Update
 		,.ZG_EComponent_Destroy	=ZG_ECTransform_Destroy
-	});
+	});*/
 
 
 	// geometry
@@ -139,6 +141,17 @@ bool ZG_EntitySystem_Init(void){
 	}
 
 	g_entity_system_user_can_register_components=true;
+	return true;
+}
+
+bool ZG_EntitySystem_RegisterComponent(
+	const char *_component_id,
+	size_t __type_data
+	,const char * _required_components_ids[]
+	,void   (*_on_update)(void *_component_data)
+	,void   (*_on_create)(void *_component_data)
+	,void   (*_on_destroy)(void *_component_data)
+){
 	return true;
 }
 /*

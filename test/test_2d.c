@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 
 	appearance->texture=text_png;
 
-	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
+	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
 
 	const char * s="Test font";
 	printf("size text %i\n",ZG_TTFont_GetWidth(font2,s));
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_DrawRectangleTextured4i(100,200,100,100,ZG_COLOR4F_WHITE,text_default,NULL);
 
 
-		Graphics_Print(50,50,ZG_COLOR4F_WHITE,"%s %i",s,ZG_TTFont_GetWidth(font2,s));
+		ZG_Graphics_Print(50,50,ZG_COLOR4F_WHITE,"%s %i",s,ZG_TTFont_GetWidth(font2,s));
 
 		//Shape_SetAppearance(v2d->shape2d->shape,appearance); // 10000 sprites at 4FPS
 		//ZG_Appearance_Apply(appearance);// 10000 sprites at 20FPS
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
 		// test max draw sprites ...
 		for(int i=0; i<10;i++){
 			ZG_Transform_SetPosition2i(&transform,rand()%ZG_Graphics_GetWidth(),rand()%ZG_Graphics_GetHeight());
-			Graphics_Draw(&transform,geometry,NULL);
+			ZG_Graphics_Draw(&transform,geometry,NULL);
 		}
 
 		ZG_Graphics_EndRender();

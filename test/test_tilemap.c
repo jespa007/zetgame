@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
 		.graphics_api=ZG_GRAPHICS_API_GL
 		,.width=224
 		,.height=144
-		,.wcaption_title="Tilemap"
+		,.wcaption_title="ZG_Tilemap"
 		,.wposx=SDL_WINDOWPOS_CENTERED
 		,.wposy=SDL_WINDOWPOS_CENTERED
 		,.graphic_properties=0 //MSK_GRAPHIC_PROPERTY_DESKTOP | MSK_GRAPHIC_PROPERTY_NO_SHOW_ICON_TASKBAR
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 
 	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
 	TilemapManager *tilemap_manager=TilemapManager_New(texture_manager);
-	Tilemap *tilemap=NULL;
+	ZG_Tilemap *tilemap=NULL;
 
 	if(TilemapManager_Load(
 			tilemap_manager

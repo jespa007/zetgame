@@ -2,6 +2,15 @@
 #define __ZG_ANIMATION_SYSTEM_H__
 
 
+#define ZG_ACS_REGISTER_COMPONENT(_animation_system, _type_data, _update_function,_on_create,_on_destroy) \
+ZG_AnimationSystem_RegisterComponent(\
+	""#_type_data,\
+	sizeof(_type_data)\
+	,_update\
+	,_on_create\
+	,_on_destroy\
+);
+
 typedef struct ZG_AnimationSystem ZG_AnimationSystem;
 
 struct ZG_AnimationSystem{
@@ -10,7 +19,7 @@ struct ZG_AnimationSystem{
 //---------------------------------------------------
 // STATIC FUNCTIONS
 bool				ZG_AnimationSystem_Init(void);
-int					ZG_AnimationSystem_RegisterComponent(ZG_ASRegisterComponent as_component_register);
+bool				ZG_AnimationSystem_RegisterComponent(ZG_RegisterComponent _register_component);
 size_t				ZG_AnimationSystem_NumComponents(void);
 void 				ZG_AnimationSystem_DeInit(void);
 

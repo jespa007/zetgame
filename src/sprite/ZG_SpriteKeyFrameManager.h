@@ -1,29 +1,29 @@
-#ifndef __SPRITE_KEYFRAME_MANAGER_H__
-#define __SPRITE_KEYFRAME_MANAGER_H__
+#ifndef __ZG_SPRITE_KEYFRAME_MANAGER_H__
+#define __ZG_SPRITE_KEYFRAME_MANAGER_H__
 
-typedef struct SpriteKeyFrameManager SpriteKeyFrameManager;
+typedef struct ZG_SpriteKeyFrameManager ZG_SpriteKeyFrameManager;
 
-struct SpriteKeyFrameManager{
+struct ZG_SpriteKeyFrameManager{
 	void *data;
 };
 
-SpriteKeyFrameManager *SpriteKeyFrameManager_New(ZG_TextureManager	* _texture_manager);
+ZG_SpriteKeyFrameManager *ZG_SpriteKeyFrameManager_New(ZG_TextureManager	* _texture_manager);
 
-bool SpriteKeyFrameManager_LoadFromMemory(
-		SpriteKeyFrameManager *_this
+bool ZG_SpriteKeyFrameManager_LoadFromMemory(
+		ZG_SpriteKeyFrameManager *_this
 		,const char *_path
 		,const char *_key_id_prefix
 		,uint8_t * _buf_ase_json
 		,size_t _buf_ase_json_len
 );
 
-bool SpriteKeyFrameManager_Load(SpriteKeyFrameManager *_this
+bool ZG_SpriteKeyFrameManager_Load(ZG_SpriteKeyFrameManager *_this
 		,const char *_key_id_prefix
 		,const char *_ase_json_filename
 );
-SpriteKeyFrame *SpriteKeyFrameManager_Get(SpriteKeyFrameManager *_this,const char *_skf_id);
+ZG_SpriteKeyFrame *ZG_SpriteKeyFrameManager_Get(ZG_SpriteKeyFrameManager *_this,const char *_skf_id);
 
-void SpriteKeyFrameManager_Delete(SpriteKeyFrameManager *_this);
+void ZG_ZG_SpriteKeyFrameManager_Delete(ZG_SpriteKeyFrameManager *_this);
 
 
 #endif

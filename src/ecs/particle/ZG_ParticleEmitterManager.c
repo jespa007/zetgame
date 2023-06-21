@@ -255,7 +255,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 					continue;
 				}
 
-				TileAnimation *tile_animation=ZG_NEW(TileAnimation);
+				ZG_TileAnimation *tile_animation=ZG_NEW(ZG_TileAnimation);
 				ZG_List_Add(tm_tilesets->animations,tile_animation);
 
 				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*image->w;
@@ -280,7 +280,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 							continue;
 						}
 
-						TileAnimationFrame *tileset_animation_frame=ZG_NEW(TileAnimationFrame);
+						ZG_TileAnimationFrame *tileset_animation_frame=ZG_NEW(ZG_TileAnimationFrame);
 
 						tileset_animation_frame->duration=tilesets_tile_animation_duration->valueint;
 						tileset_animation_frame->tile_id=tilesets_tile_animation_tileid->valueint;
@@ -292,7 +292,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 							v1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id/(tilemap_width->valueint))*image->w;
 
 
-							TileImage *tile_image=ZG_NEW(TileImage);
+							ZG_TileImage *tile_image=ZG_NEW(ZG_TileImage);
 							tile_image->image=SDL_Crop(image,(SDL_Rect){u1,v1,tm_tilesets->tile_width,tm_tilesets->tile_height});
 
 							tm_tilesets->tile_images[tileset_animation_frame->tile_id]=tile_image;

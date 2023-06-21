@@ -1,31 +1,31 @@
-#ifndef __TILEMAP_H__
-#define __TILEMAP_H__
+#ifndef __ZG_TILEMAP_H__
+#define __ZG_TILEMAP_H__
 
 
-typedef struct Tilemap Tilemap;
+typedef struct ZG_Tilemap ZG_Tilemap;
 
-struct Tilemap{
+struct ZG_Tilemap{
 	void *data;
 };
 
 typedef struct{
 	int			tile_id;
 	int 		duration;
-}TileAnimationFrame;
+}ZG_TileAnimationFrame;
 
 typedef struct{
 	ZG_List		*frames;
 	int			u1,v1;
 	Uint32		time_change_frame;
 	int			current_frame;
-}TileAnimation;
+}ZG_TileAnimation;
 
 typedef struct{
 	SDL_Surface *image;
-}TileImage;
+}ZG_TileImage;
 
 typedef struct{
-	TileImage	 **tile_images;
+	ZG_TileImage	 **tile_images;
 	int			tile_width;
 	int			tile_height;
 	int			tile_margin;
@@ -38,7 +38,7 @@ typedef struct{
 	ZG_List		*animations;
 }Tilesets;
 
-Tilemap *Tilemap_New(short *_tiles
+ZG_Tilemap *Tilemap_New(short *_tiles
 		, size_t _width
 		, size_t _height
 		, size_t _tile_width
@@ -46,9 +46,9 @@ Tilemap *Tilemap_New(short *_tiles
 		, ZG_Texture *_texture
 		, Tilesets *_tilesets
 );
-void Tilemap_Update(Tilemap *_this);
-void Tilemap_Draw(Tilemap *_this);
-void Tilemap_Delete(Tilemap *_this);
+void ZG_Tilemap_Update(ZG_Tilemap *_this);
+void ZG_Tilemap_Draw(ZG_Tilemap *_this);
+void ZG_Tilemap_Delete(ZG_Tilemap *_this);
 
 
 #endif
