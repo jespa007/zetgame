@@ -215,7 +215,7 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 
 	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
 
-	if((font=ZG_MapString_GetValue(data->fonts,id,NULL))==NULL){
+	if((font=ZG_MapString_Get(data->fonts,id,NULL))==NULL){
 		if(ZG_STRCMP(ttf_font_file_to_lower,==,ZG_DEFAULT_FONT_FAMILY)){
 			new_font=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 		}
@@ -231,7 +231,7 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 			if((new_font=ZG_TTFont_NewFromFile(filename,_font_size))==NULL){
 				// load default font but configured by font size
 				sprintf(id,"%s_s%i_hl",ZG_DEFAULT_FONT_FAMILY,_font_size);
-				if((font=ZG_MapString_GetValue(data->fonts,id,NULL))==NULL){ // create new
+				if((font=ZG_MapString_Get(data->fonts,id,NULL))==NULL){ // create new
 					new_font=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 				}
 			}
@@ -239,7 +239,7 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 
 		if(new_font != NULL){
 			font=new_font;
-			ZG_MapString_SetValue(data->fonts,id,new_font);
+			ZG_MapString_Set(data->fonts,id,new_font);
 		}
 
 	}
@@ -264,12 +264,12 @@ ZG_TTFont * 		TTFontManager_GetFontFromMemory(ZG_TTFontManager *_this, const uin
 	free(allocated_int_str);
 	free(ttf_font_file_to_lower);
 
-	font = ZG_MapString_GetValue(data->fonts,id,&exists);
+	font = ZG_MapString_Get(data->fonts,id,&exists);
 
 	if(exists == false){
 		font=ZG_TTFont_NewFromMemory(ptr,ptr_len,font_size);
 		if(font!=NULL){
-			ZG_MapString_SetValue(data->fonts,id,font);
+			ZG_MapString_Set(data->fonts,id,font);
 		}
 	}
 

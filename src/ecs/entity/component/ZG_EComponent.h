@@ -29,7 +29,7 @@
 typedef int ZG_EComponent;
 
 typedef struct{
-	ZG_ComponentId		entity_components_id; //
+	ZG_ComponentId		id; //
 	ZG_EntityManager	*entity_manager;
 }ZG_EComponentHeader;
 

@@ -1,16 +1,16 @@
 #ifndef __ZG_TILEMAP_MANAGER_H__
 #define __ZG_TILEMAP_MANAGER_H__
 
-typedef struct TilemapManager TilemapManager;
+typedef struct ZG_TilemapManager ZG_TilemapManager;
 
-struct TilemapManager{
+struct ZG_TilemapManager{
 	void *data;
 };
 
-TilemapManager *TilemapManager_New(ZG_TextureManager	* _texture_manager);
-bool 			TilemapManager_Load(TilemapManager *_this,const char *_tmx_filename);
-ZG_Tilemap 	  *	TilemapManager_Get(TilemapManager *_this,const char *_tm_id);
+ZG_TilemapManager *ZG_TilemapManager_New(ZG_TextureManager	* _texture_manager);
+bool 			ZG_TilemapManager_Load(ZG_TilemapManager *_this,const char *_tmx_filename);
+ZG_Tilemap 	  *	ZG_TilemapManager_Get(ZG_TilemapManager *_this,const char *_tm_id);
 
-void TilemapManager_Delete(TilemapManager *_this);
+void ZG_TilemapManager_Delete(ZG_TilemapManager *_this);
 
 #endif

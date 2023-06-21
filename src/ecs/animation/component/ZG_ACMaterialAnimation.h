@@ -6,7 +6,7 @@ struct ZG_ACMaterialAnimation{
 	void 			*data;
 };
 
-void			ZG_ACMaterialAnimation_Setup(void *_this, ZG_ComponentId _idx);
+void			ZG_ACMaterialAnimation_Setup(void *_this, ZG_ComponentId _id);
 void			ZG_ACMaterialAnimation_Init(void *_this);
 
 void			ZG_ACMaterialAnimation_StartAction(

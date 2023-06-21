@@ -1,4 +1,4 @@
-#include "../zg_ecs.h"
+#include "../_zg_ecs_.h"
 
 //------------------------------------------------------------
 // entities are simply a pointer that hides its entity manager.
@@ -22,7 +22,7 @@ typedef struct {
 
 
 
-ZG_Entity  *ZG_ZG_EntityManager_NewEntity(ZG_EntityManager *_this){
+ZG_Entity  *ZG_EntityManager_NewEntity(ZG_EntityManager *_this){
 	ZG_EntityManagerData *entity_manager_data=_this->data;
 	ZG_Entity *entity=NULL;
 	if(

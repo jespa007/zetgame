@@ -22,12 +22,12 @@ void ZG_ECTransform_ClearChilds(ZG_ECTransform * node){
 }
 //------------------------------------------------------------------------------------
 
-void ZG_ECTransform_Setup(void *_this, ZG_ComponentId _id){
+void ZG_ECTransform_Init(void *_this, ZG_ComponentId _id){
 
 	ZG_ECTransform * ec_transform = _this;
 	ec_transform->header.entity=_entity;
 	ec_transform->header.id=_id;
-	_entity->components[EC_TRANSFORM]=_this;
+	//_entity->components[EC_TRANSFORM]=_this;
 
 
 

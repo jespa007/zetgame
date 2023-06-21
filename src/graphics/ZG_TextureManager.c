@@ -83,7 +83,7 @@ ZG_Texture * 		ZG_TextureManager_Get(ZG_TextureManager *_this,const char * _file
 	free(texture_file_to_lower);
 
 	// if texture not set yet, try to load
-	if((texture=ZG_MapString_GetValue(data->textures,id,NULL)) == NULL){
+	if((texture=ZG_MapString_Get(data->textures,id,NULL)) == NULL){
 		char filename[ZG_PATH_MAX]={0};
 
 		strcpy(filename,_filename);
@@ -98,7 +98,7 @@ ZG_Texture * 		ZG_TextureManager_Get(ZG_TextureManager *_this,const char * _file
 		}
 
 		if((texture=ZG_Texture_NewFromFile(filename))!=NULL){
-			ZG_MapString_SetValue(data->textures,id,texture);
+			ZG_MapString_Set(data->textures,id,texture);
 		}
 		else{
 			texture=ZG_TextureManager_GetDefaultTexture();

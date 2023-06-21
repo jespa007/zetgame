@@ -132,7 +132,7 @@ bool ZG_ZG_SpriteKeyFrameManager_LoadFromMemory(
 				skp->sprite_keyframes[i].texture=skp->texture;
 				strcpy(skp->sprite_keyframes[i].name,layer_element->valuestring);
 
-				ZG_MapString_SetValue(data->sprite_keyframes,sprite_keyframe_key,&skp->sprite_keyframes[i]);
+				ZG_MapString_Set(data->sprite_keyframes,sprite_keyframe_key,&skp->sprite_keyframes[i]);
 
 				i++;
 
@@ -241,7 +241,7 @@ bool ZG_SpriteKeyFrameManager_Load(ZG_SpriteKeyFrameManager *_this,const char *_
 ZG_SpriteKeyFrame *ZG_SpriteKeyFrameManager_Get(ZG_SpriteKeyFrameManager *_this, const char *key){
 	ZG_SpriteKeyFrameManagerData *data=_this->data;
 
-	return ZG_MapString_GetValue(data->sprite_keyframes,key,NULL);
+	return ZG_MapString_Get(data->sprite_keyframes,key,NULL);
 }
 
 void  ZG_SpriteKeyFrameManager_Delete(ZG_SpriteKeyFrameManager *_this){

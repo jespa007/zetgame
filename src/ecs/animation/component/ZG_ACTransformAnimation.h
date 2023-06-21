@@ -6,10 +6,10 @@ struct ZG_ACTransformAnimation{
 	void 			*data;
 };
 
-void			ACTransformAnimation_Setup(void *_this, ZG_ComponentId _idx);
-void			ACTransformAnimation_Init(void *_this);
+void			ZG_ACTransformAnimation_Setup(void *_this, ZG_ComponentId _idx);
+void			ZG_ACTransformAnimation_Init(void *_this);
 
-void			ACTransformAnimation_StartAction(
+void			ZG_ACTransformAnimation_StartAction(
 	void *_this
 	, ZG_TransformAction *action
 	, int repeat
@@ -26,7 +26,7 @@ void 			ZG_ACTransformAnimation_StartTween(
 	, int _repeat
 );
 
-void 			ACTransformAnimation_Update(void *_this);
-void 			ACTransformAnimation_Destroy(void *_this);
+void 			ZG_ACTransformAnimation_Update(void *_this);
+void 			ZG_ACTransformAnimation_Destroy(void *_this);
 
 #endif

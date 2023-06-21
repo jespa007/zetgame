@@ -453,7 +453,7 @@ bool ZG_GUIWindowManager_LoadFromMemory(
 
 	 ok=true;
 
-	ZG_MapString_SetValue(data->windows,_id,window_data);
+	ZG_MapString_Set(data->windows,_id,window_data);
 
 wm_load_from_memmory_exit:
 
@@ -508,7 +508,7 @@ ZG_TTFontManager		*	ZG_GUIWindowManager_GetTTFontManager(ZG_GUIWindowManager *_t
 ZG_GUIWindow *ZG_GUIWindowManager_Get(ZG_GUIWindowManager *_this, const char *key){
 	ZG_GUIWindowManagerData *data=_this->data;
 
-	GUIWMWindowData *window_data= ZG_MapString_GetValue(data->windows,key,NULL);
+	GUIWMWindowData *window_data= ZG_MapString_Get(data->windows,key,NULL);
 
 	if(window_data != NULL){
 		return window_data->window;

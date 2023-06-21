@@ -18,10 +18,15 @@ struct ZG_ECTransform{
 	ZG_EComponentHeader 		header;
 	ZG_Transform				transform; // world coordinates
 	ZG_Quaternion				quaternion;
-	void 					*data;
+	void 						*data;
 };
 
-void			ZG_ECTransform_Setup(void *_this, ZG_ComponentId _id);
+//------------------------------------------------
+// Component create/update/destroy
+void			ZG_ECTransform_Init(void *_this, ZG_ComponentId _idx);
+void			ZG_ECTransform_Update(void *_this);
+void 	 		ZG_ECTransform_Destroy(void *_this);
+//------------------------------------------------
 
 bool			ZG_ECTransform_Attach(ZG_ECTransform *_this, ZG_ECTransform *node);
 bool			ZG_ECTransform_Detach(ZG_ECTransform *_this, ZG_ECTransform *node);
@@ -57,8 +62,7 @@ ZG_ACTransformAnimation * ZG_ECTransform_GetTransformAnimation(ZG_ECTransform *_
 
 
 
-void			ZG_ECTransform_Update(void *_this);
-void 	 		ZG_ECTransform_Destroy(void *_this);
+
 
 
 

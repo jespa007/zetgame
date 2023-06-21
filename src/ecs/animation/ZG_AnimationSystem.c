@@ -1,13 +1,18 @@
 #include "../_zg_ecs_.h"
 
 
-ZG_List *	g_animation_system_registered_components=NULL;
+ZG_List 		*	g_animation_system_registered_components=NULL;
+ZG_MapString 	*	g_map_animation_system_registered_components=NULL;
+int 				g_animation_system_num_registered_component=0;
+
 bool  		g_animation_system_user_can_register_components=true;
 
+/*
 typedef struct{
 	ZG_AComponent id;
-	ZG_AnimationSystemRegisterComponent data;
+	ZG_RegisterComponent data;
 }ZG_AnimationSystemRegisteredComponentData;
+*/
 
 typedef struct{
 	uint8_t				*ptr_data; // we want to keep pointer in order to support future reallocs
@@ -27,7 +32,10 @@ typedef struct{
 // PRIVATE FUNCTIONS
 
 //---------------------------------------------------
-bool	ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AComponent _idx_component,ZG_AnimationSystemRegisterComponent as_component_register){
+/*bool	ZG_AnimationSystem_RegisterComponent(
+		ZG_AComponent _idx_component
+		,ZG_AnimationSystemRegisterComponent as_component_register
+){
 
 	if(g_animation_system_user_can_register_components==false){
 		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
@@ -45,6 +53,43 @@ bool	ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AComponent _idx_component,ZG
 	ZG_List_Add(g_animation_system_registered_components,new_component_register);
 
 	return true;
+}*/
+
+bool	ZG_AnimationSystem_AddComponent(
+		const char *_name
+		//,ZG_ESRegisterComponent es_component_register
+		//ZG_EComponent id;
+		,size_t 	_size_data // len data component
+		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
+		,void   (* _on_update)(void *_component_data) // function component
+		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
+		,void   (* _on_destroy)(void *_component_data)
+){
+
+	if(g_animation_system_user_can_register_components==false){
+		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
+		return false; //
+	}
+
+	if(g_animation_system_registered_components == NULL){
+		g_animation_system_registered_components=ZG_List_New();
+		g_map_animation_system_registered_components=ZG_MapString_New();
+	}
+
+	//ZG_EComponent idx_component=_idx_component;//g_entity_system_registered_components->count;
+	ZG_RegisterComponent *new_component_register=ZG_NEW(ZG_RegisterComponent);
+
+	new_component_register->id=g_animation_system_num_registered_component++;
+	new_component_register->name=_name;
+	new_component_register->size_data=_size_data;
+	new_component_register->on_update=_on_update;
+	new_component_register->on_create=_on_create;
+	new_component_register->on_destroy=_on_destroy;
+
+
+	ZG_MapString_Set(g_map_animation_system_registered_components,_name,new_component_register);
+	ZG_List_Add(g_animation_system_registered_components,new_component_register);
+	return true;
 }
 
 //---------------------------------------------------
@@ -54,23 +99,29 @@ bool ZG_AnimationSystem_Init(void){
 	unsigned min_iter=0;
 
 	// invalid (0)
-	ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AC_INVALID,(ZG_AnimationSystemRegisterComponent){
+	/*ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AC_INVALID,(ZG_AnimationSystemRegisterComponent){
 		.size_data				=0
 		,.ZG_AComponent_Setup		=NULL
 		,.ZG_AComponent_Update		=NULL
 		,.ZG_AComponent_Destroy	=NULL
-	});
+	});*/
+
+	ZG_ACS_ADD_COMPONENT(ZG_ACTransformAnimation
+			,ZG_ACTransformAnimation_Update
+			,ZG_ACTransformAnimation_Setup
+			,ZG_ACTransformAnimation_Destroy
+	);
 
 	// Animation transform
-	ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AC_TRANSFORM_ANIMATION,(ZG_AnimationSystemRegisterComponent){
+	/*ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AC_TRANSFORM_ANIMATION,(ZG_AnimationSystemRegisterComponent){
 		.size_data				=sizeof(ZG_ACTransformAnimation)
 		,.ZG_AComponent_Setup		=ACTransformAnimation_Setup
 		,.ZG_AComponent_Update		=ACTransformAnimation_Update
 		,.ZG_AComponent_Destroy	=ACTransformAnimation_Destroy
-	});
+	});*/
 
 	// material animation
-	ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AC_MATERIAL_ANIMATION,(ZG_AnimationSystemRegisterComponent){
+	/*ZG_AnimationSystem_RegisterComponentBuiltin(ZG_AC_MATERIAL_ANIMATION,(ZG_AnimationSystemRegisterComponent){
 		.size_data				=sizeof(ZG_ACMaterialAnimation)
 		,.ZG_AComponent_Setup		=ZG_ACMaterialAnimation_Setup
 		,.ZG_AComponent_Update		=ZG_ACMaterialAnimation_Update
@@ -87,11 +138,11 @@ bool ZG_AnimationSystem_Init(void){
 			return false;
 		}
 	}
-
+*/
 	g_animation_system_user_can_register_components=true;
 	return true;
 }
-
+/*
 bool	ZG_AnimationSystem_RegisterComponent(ZG_RegisterComponent _register_component){
 	int idx_component=0;
 
@@ -103,7 +154,7 @@ bool	ZG_AnimationSystem_RegisterComponent(ZG_RegisterComponent _register_compone
 		return false;
 	}
 	return true;
-}
+}*/
 
 size_t					ZG_AnimationSystem_NumComponents(void){
 	if(g_animation_system_registered_components != NULL){
@@ -136,8 +187,8 @@ ZG_AnimationSystem *ZG_AnimationSystem_New(ZG_EntitySystem *_entity_system){
 	data->entity_system=_entity_system;
 
 	// extend 100 by default
-	ZG_AnimationSystem_ExtendComponent(system,ZG_AC_TRANSFORM_ANIMATION,100);
-	ZG_AnimationSystem_ExtendComponent(system,ZG_AC_MATERIAL_ANIMATION,100);
+	//ZG_AnimationSystem_ExtendComponent(system,ZG_AC_TRANSFORM_ANIMATION,100);
+	//ZG_AnimationSystem_ExtendComponent(system,ZG_AC_MATERIAL_ANIMATION,100);
 
 	// after first system is created, user cannot register any component anymore
 	g_animation_system_user_can_register_components=false;
@@ -146,6 +197,15 @@ ZG_AnimationSystem *ZG_AnimationSystem_New(ZG_EntitySystem *_entity_system){
 }
 
 void ZG_AnimationSystem_ExtendComponent(ZG_AnimationSystem *_this,ZG_AComponent _idx_component, size_t extend){
+
+
+	// new behaviour
+
+	// TODO
+	// 1. re/allocate new array * sizeof(component).
+	// 2. Copy old data (may be references has changed)
+	// 3. re/allocate new array of indexs for reference components that they changed its position
+	// 4. Copy old data
 
 	if(_idx_component >= g_animation_system_registered_components->count){
 		return;

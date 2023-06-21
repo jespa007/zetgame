@@ -3,14 +3,14 @@
 
 #define ZG_UNLIMITIED_ENTITIES	-1
 
-#define ZG_ECS_REGISTER_COMPONENT(_entity_system, _type_data, _update_function,_on_create,_on_destroy) \
+#define ZG_ECS_ADD_COMPONENT(_type_data, _on_update,_on_create,_on_destroy) \
 ZG_EntitySystem_RegisterComponent(\
 	""#_type_data,\
 	sizeof(_type_data)\
-	,_update\
+	,_on_update\
 	,_on_create\
 	,_on_destroy\
-);
+)
 
 
 
@@ -21,9 +21,10 @@ typedef struct{
 	ZG_ComponentId id;
 	const char *name;
 	size_t 	size_data; // len data component
-	void   (*setup)(void *); // function to Setup component
-	void   (*update)(void *); // function to update component
-	void   (*destroy)(void *); // function to destroy
+
+	void   (*on_update)(void *); // function to update component
+	void   (*on_create)(void *); // function to Setup component
+	void   (*on_destroy)(void *); // function to destroy
 }ZG_RegisterComponent;
 
 /*

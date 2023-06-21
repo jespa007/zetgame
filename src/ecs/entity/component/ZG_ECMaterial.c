@@ -1,4 +1,4 @@
-#include "ecs/zg_ecs.h"
+#include "ecs/_zg_ecs_.h"
 
 typedef struct{
 	ZG_ACMaterialAnimation 	*	material_animation_component; // in case entity it has associated material animation component

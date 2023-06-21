@@ -141,7 +141,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 			}
 		}
 
-		if(ZG_MapString_GetValue(data->particle_emitters,layer_name->valuestring,NULL)!=NULL){
+		if(ZG_MapString_Get(data->particle_emitters,layer_name->valuestring,NULL)!=NULL){
 			ZG_Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
 			continue;
 		}
@@ -320,7 +320,7 @@ bool ParticleEmitterManager_LoadFromMemory(
 				,tm_tilesets);
 
 		if(tm != NULL){
-			ZG_MapString_SetValue(data->particle_emitters,layer_name->valuestring,tm);
+			ZG_MapString_Set(data->particle_emitters,layer_name->valuestring,tm);
 			ok=true;
 		}*/
 	}
@@ -368,7 +368,7 @@ bool ParticleEmitterManager_Load(ParticleEmitterManager *_this,const char *_json
 ParticleEmitter *ParticleEmitterManager_Get(ParticleEmitterManager *_this, const char *key){
 	ParticleEmitterManagerData *data=_this->data;
 
-	return ZG_MapString_GetValue(data->particle_emitters,key,NULL);
+	return ZG_MapString_Get(data->particle_emitters,key,NULL);
 }
 */
 

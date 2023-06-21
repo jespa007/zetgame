@@ -127,7 +127,7 @@ void ZG_Collider2d_Draw(ZG_Transform _t3d, ZG_Collider2dType _collider_type, ZG_
 	ZG_Graphics_SetColor4f(_color.r, _color.g, _color.b, _color.a);
 	switch(_collider_type){
 	case ZG_COLLIDER2D_TYPE_POINT:
-		Graphics_DrawPoint2f(_t3d.translate.x,_t3d.translate.y,_color,1);
+		ZG_Graphics_DrawPoint2f(_t3d.translate.x,_t3d.translate.y,_color,1);
 		break;
 	case ZG_COLLIDER2D_TYPE_RECTANGLE:
 		ZG_Graphics_DrawRectangle4f(
@@ -138,7 +138,7 @@ void ZG_Collider2d_Draw(ZG_Transform _t3d, ZG_Collider2dType _collider_type, ZG_
 				,_color,1);
 		break;
 	case ZG_COLLIDER2D_TYPE_CIRCLE:
-		Graphics_DrawCircle3f(
+		ZG_Graphics_DrawCircle3f(
 				_t3d.translate.x
 				,_t3d.translate.y
 				,_t3d.scale.x // diameter

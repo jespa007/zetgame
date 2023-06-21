@@ -78,7 +78,7 @@ ZG_Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
 	free(image_file_to_lower);
 
 	// if image not set yet, try to load
-	if((image=ZG_MapString_GetValue(data->images,id,NULL)) == NULL){
+	if((image=ZG_MapString_Get(data->images,id,NULL)) == NULL){
 		char filename[ZG_PATH_MAX]={0};
 
 		strcpy(filename,_filename);
@@ -93,7 +93,7 @@ ZG_Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
 		}
 
 		if((image=ZG_Image_NewFromFile(filename))!=NULL){
-			ZG_MapString_SetValue(data->images,id,image);
+			ZG_MapString_Set(data->images,id,image);
 		}
 		else{
 			image=ZG_ImageManager_GetDefaultImage();

@@ -1,24 +1,24 @@
-#include "ecs/zg_ecs.h"
+#include "ecs/_zg_ecs_.h"
 
 typedef struct{
 	TransformAnimation *ani_transform;
-}ACTransformAnimationData;
+}ZG_ACTransformAnimationData;
 
 
 
-void	ACTransformAnimation_Setup(void *_this, ZG_ComponentId _id){
+void	ZG_ACTransformAnimation_Setup(void *_this, ZG_ComponentId _id){
 	ZG_ACTransformAnimation *ac_transform_animation=_this;
 	ac_transform_animation->header.id=_id;
 
-	ACTransformAnimationData *data=ZG_NEW(ACTransformAnimationData);
+	ZG_ACTransformAnimationData *data=ZG_NEW(ZG_ACTransformAnimationData);
 	data->ani_transform=TransformAnimation_New();
 
 	ac_transform_animation->data=data;
 }
 
-void			ACTransformAnimation_StartAction(void *_this, ZG_TransformAction *action, int repeat){
+void			ZG_ACTransformAnimation_StartAction(void *_this, ZG_TransformAction *action, int repeat){
 	ZG_ACTransformAnimation *ac_transform_animation=_this;
-	ACTransformAnimationData *data=ac_transform_animation->data;
+	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
 
 	// own custom time
 	uint32_t _start_time=SDL_GetTicks();
@@ -40,7 +40,7 @@ void ZG_ACTransformAnimation_StartTween(
 		, uint32_t _duration
 		, int _repeat){
 	ZG_ACTransformAnimation *ac_transform_animation=_this;
-	ACTransformAnimationData *ac_transform_animation_data=ac_transform_animation->data;
+	ZG_ACTransformAnimationData *ac_transform_animation_data=ac_transform_animation->data;
 
 	// define custom time
 	uint32_t _start_time=SDL_GetTicks();
@@ -58,9 +58,9 @@ void ZG_ACTransformAnimation_StartTween(
 }
 
 
-void 	ACTransformAnimation_Update(void *_this){
+void 	ZG_ACTransformAnimation_Update(void *_this){
 	ZG_ACTransformAnimation *ac_transform_animation =_this;
-	ACTransformAnimationData *data=ac_transform_animation->data;
+	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
 
 	ZG_ECTransform *ac_transform=ac_transform_animation->header.entity->components[EC_TRANSFORM];
 	if(ac_transform != NULL){
@@ -71,9 +71,9 @@ void 	ACTransformAnimation_Update(void *_this){
 }
 
 
-void	ACTransformAnimation_Destroy(void *_this){
+void	ZG_ACTransformAnimation_Destroy(void *_this){
 	ZG_ACTransformAnimation *ac_transform_animation =_this;
-	ACTransformAnimationData *data=ac_transform_animation->data;
-	TransformAnimation_Delete(data->ani_transform);
+	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
+	ZG_TransformAnimation_Delete(data->ani_transform);
 	ZG_FREE(data);
 }

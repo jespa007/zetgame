@@ -2,14 +2,14 @@
 #define __ZG_ANIMATION_SYSTEM_H__
 
 
-#define ZG_ACS_REGISTER_COMPONENT(_animation_system, _type_data, _update_function,_on_create,_on_destroy) \
+#define ZG_ACS_ADD_COMPONENT(_type_data, _on_update,_on_create,_on_destroy) \
 ZG_AnimationSystem_RegisterComponent(\
 	""#_type_data,\
 	sizeof(_type_data)\
-	,_update\
+	,_on_update\
 	,_on_create\
 	,_on_destroy\
-);
+)
 
 typedef struct ZG_AnimationSystem ZG_AnimationSystem;
 
@@ -19,7 +19,16 @@ struct ZG_AnimationSystem{
 //---------------------------------------------------
 // STATIC FUNCTIONS
 bool				ZG_AnimationSystem_Init(void);
-bool				ZG_AnimationSystem_RegisterComponent(ZG_RegisterComponent _register_component);
+bool	ZG_AnimationSystem_RegisterComponent(
+		const char *_name
+		//,ZG_ESRegisterComponent es_component_register
+		//ZG_EComponent id;
+		,size_t 	_size_data // len data component
+		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
+		,void   (* _on_update)(void *_component_data) // function component
+		,void   (* _on_create)(void *_component_data, ZG_ComponentId _id) // set it up if component need to init or allocate resources on its creation
+		,void   (* _on_destroy)(void *_component_data)
+);
 size_t				ZG_AnimationSystem_NumComponents(void);
 void 				ZG_AnimationSystem_DeInit(void);
 

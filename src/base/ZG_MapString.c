@@ -47,7 +47,7 @@ ZG_MapStringNode * ZG_MapString_LookUpNode(ZG_MapString *_this,const char * key)
     return NULL;
 }
 
-void ZG_MapString_SetValue(ZG_MapString *_this,const char * key,void * val){
+void ZG_MapString_Set(ZG_MapString *_this,const char * key,void * val){
 
 	ZG_MapStringNode *node = NULL;
 
@@ -74,7 +74,7 @@ void ZG_MapString_SetValue(ZG_MapString *_this,const char * key,void * val){
 	node->val = val;
 }
 
-void * 	ZG_MapString_GetValue(ZG_MapString *_this,const char * key, bool * exists){
+void * 	ZG_MapString_Get(ZG_MapString *_this,const char * key, bool * exists){
 	ZG_MapStringNode * node=ZG_MapString_LookUpNode(_this,key);
 	if(exists!=NULL){
 		*exists=false;
@@ -91,7 +91,7 @@ void * 	ZG_MapString_GetValue(ZG_MapString *_this,const char * key, bool * exist
 }
 
 bool		ZG_MapString_Exist(ZG_MapString *_this,const char * key){
-	return ZG_MapString_GetValue(_this,key,NULL) != NULL;
+	return ZG_MapString_Get(_this,key,NULL) != NULL;
 }
 
 void 		ZG_MapString_Erase(ZG_MapString *_this,const char * key){

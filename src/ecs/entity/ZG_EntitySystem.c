@@ -1,11 +1,12 @@
 #include "../_zg_ecs_.h"
 
 ZG_List *g_entity_system_registered_components=NULL;
+ZG_MapString *g_map_entity_system_registered_components=NULL;
 bool  g_entity_system_user_can_register_components=true;
 
 typedef struct{
 	ZG_EComponent id;
-	ZG_ESRegisterComponent data;
+	ZG_RegisterComponent data;
 }ZG_EntitySystemRegisteredComponentData;
 
 typedef struct{
@@ -24,11 +25,10 @@ typedef struct{
 // PRIVATE FUNCTIONS
 
 bool	ZG_EntitySystem_RegisterComponent(
-		ZG_EComponent _idx_component
+		const char *_name
 		//,ZG_ESRegisterComponent es_component_register
 		//ZG_EComponent id;
 		,size_t 	_size_data; // len data component
-		,ZG_EComponentList _required_components
 		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
 		,void   (* _on_update)(void *_component_data) // function component
 		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
@@ -41,7 +41,7 @@ bool	ZG_EntitySystem_RegisterComponent(
 	}
 
 	if(g_entity_system_registered_components == NULL){
-		g_entity_system_registered_components=ZG_List_New();
+		g_entity_system_registered_components=ZG_Map_New();
 	}
 
 	ZG_EComponent idx_component=_idx_component;//g_entity_system_registered_components->count;
@@ -60,7 +60,9 @@ bool ZG_EntitySystem_Init(void){
 
 	unsigned min_iter=0;
 
-	ECS_ADD_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update);
+	if(ZG_ECS_ADD_COMPONENT(ZG_ECTransform,ZG_ECTransform_OnUpdate,ZG_ECTransform_OnCreate,ZG_ECTransform_OnDestroy)==false){
+		return false;
+	}
 
 	// invalid (0)
 	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(ZG_EC_INVALID,(ZG_ESRegisterComponent){
@@ -71,7 +73,7 @@ bool ZG_EntitySystem_Init(void){
 		,.ZG_EComponent_Destroy	=NULL
 	});*/
 
-	ZG_ECS_REGISTER_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update,ZG_ECTransform_Setup,ZG_ECTransform_Destroy);
+	//ZG_ECS_REGISTER_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update,ZG_ECTransform_Setup,ZG_ECTransform_Destroy);
 
 	// transform
 	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM,(ZG_ESRegisterComponent){
@@ -84,7 +86,7 @@ bool ZG_EntitySystem_Init(void){
 
 
 	// geometry
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_GEOMETRY,(ZG_ESRegisterComponent){
+	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_GEOMETRY,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECGeometry)
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=ZG_ECGeometry_Setup
@@ -140,7 +142,7 @@ bool ZG_EntitySystem_Init(void){
 		}
 	}
 
-	g_entity_system_user_can_register_components=true;
+	g_entity_system_user_can_register_components=true;*/
 	return true;
 }
 
@@ -152,7 +154,32 @@ bool ZG_EntitySystem_RegisterComponent(
 	,void   (*_on_create)(void *_component_data)
 	,void   (*_on_destroy)(void *_component_data)
 ){
+
+	if(g_entity_system_user_can_register_components==false){
+		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
+		return false; //
+	}
+
+	if(g_entity_system_registered_components == NULL){
+		g_entity_system_registered_components=ZG_Lis_New();
+		g_map_entity_system_registered_components=ZG_MapString_New();
+	}
+
+	//ZG_EComponent idx_component=_idx_component;//g_entity_system_registered_components->count;
+	ZG_RegisterComponent *new_component_register=ZG_NEW(ZG_RegisterComponent);
+
+	new_component_register->id=g_entity_system_num_registered_component++;
+	new_component_register->name=_name;
+	new_component_register->size_data=_size_data;
+	new_component_register->on_update=_on_update;
+	new_component_register->on_create=_on_create;
+	new_component_register->on_destroy=_on_destroy;
+
+
+	ZG_MapString_Set(g_map_entity_system_registered_components,_name,new_component_register);
+	ZG_Lis_New(g_entity_system_registered_components,new_component_register);
 	return true;
+
 }
 /*
 int	ZG_EntitySystem_RegisterComponent(ZG_ESRegisterComponent es_component_register){
@@ -284,7 +311,7 @@ ZG_Entity *EntitySystem_NewEntity(ZG_EntitySystem *_this,ZG_EComponent *_entity_
 
 	strcat(_entity_manager_id,"_@__");
 
-	ZG_EntityManagerData *entity_manager_data=ZG_MapString_GetValue(data->map_entity_managers,_entity_manager_id,NULL);
+	ZG_EntityManagerData *entity_manager_data=ZG_MapString_Get(data->map_entity_managers,_entity_manager_id,NULL);
 
 	if(entity_manager_data == NULL){ // create ...
 		entity_manager_data=(ZG_EntityManagerData *)ZG_EntitySystem_NewEntityManager(_this,_entity_manager_id ,ZG_UNLIMITIED_ENTITIES, entity_components, entity_components_len);
@@ -297,7 +324,7 @@ ZG_Entity *EntitySystem_NewEntity(ZG_EntitySystem *_this,ZG_EComponent *_entity_
 /*
 ZG_Entity  *EntitySystem_NewEntityFromManager(ZG_EntitySystem *_this,const char *_id){
 	ZG_EntitySystemData *data=_this->data;
-	ZG_EntityManagerData *entity_manager_data=ZG_MapString_GetValue(data->map_entity_managers,_id,NULL);
+	ZG_EntityManagerData *entity_manager_data=ZG_MapString_Get(data->map_entity_managers,_id,NULL);
 
 	if(entity_manager_data == NULL){
 		ZG_Log_Error("ZG_Entity manager '%s' not exist",_id);
@@ -448,7 +475,7 @@ ZG_EntityManager * ZG_EntitySystem_NewEntityManager(
 	}
 
 	ZG_List_Add(data->lst_entity_managers,entity_manager);
-	ZG_MapString_SetValue(data->map_entity_managers,_str_entity_manager,entity_manager);
+	ZG_MapString_Set(data->map_entity_managers,_str_entity_manager,entity_manager);
 
 	// extend entities
 	entity_manager_data->max_entities=_max_entities;

@@ -1,4 +1,4 @@
-#include "ecs/zg_ecs.h"
+#include "ecs/_zg_ecs_.h"
 
 
 typedef struct{
@@ -7,13 +7,13 @@ typedef struct{
 	ZG_Appearance	 	*  	appearance;
 	uint16_t 			width, height;
 }ZG_ECSpriteRendererData;
-
+/*
 static ZG_EComponent g_ec_sprite_renderer_required_components[]={
 		EC_TRANSFORM
 		,EC_GEOMETRY
 		,EC_MATERIAL
 		,EC_TEXTURE
-};
+};*/
 
 ZG_EComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
 	ZG_EComponentList cl;
