@@ -6,18 +6,20 @@ struct ZG_ACTransformAnimation{
 	void 			*data;
 };
 
-void			ZG_ACTransformAnimation_Setup(void *_this, ZG_ComponentId _idx);
-void			ZG_ACTransformAnimation_Init(void *_this);
+void			ZG_ACTransformAnimation_Setup(ZG_AComponentHeader *_this, ZG_ComponentId _idx);
+void			ZG_ACTransformAnimation_Init(ZG_AComponentHeader *_this);
+void 			ZG_ACTransformAnimation_Update(ZG_AComponentHeader *_this);
+void 			ZG_ACTransformAnimation_Destroy(ZG_AComponentHeader *_this);
 
 void			ZG_ACTransformAnimation_StartAction(
-	void *_this
+		ZG_ACTransformAnimation *_this
 	, ZG_TransformAction *action
 	, int repeat
 );
 
 
 void 			ZG_ACTransformAnimation_StartTween(
-	void *_this
+		ZG_ACTransformAnimation *_this
 	, ZG_TransformComponent _transform_component
 	, ZG_Ease _ease
 	, float _from
@@ -26,7 +28,10 @@ void 			ZG_ACTransformAnimation_StartTween(
 	, int _repeat
 );
 
-void 			ZG_ACTransformAnimation_Update(void *_this);
-void 			ZG_ACTransformAnimation_Destroy(void *_this);
+void	ZG_ACTransformAnimation_UpdateECTransform(
+		ZG_AComponentHeader *_this
+	, ZG_EComponentHeader *_ec_transform
+);
+
 
 #endif

@@ -1,6 +1,15 @@
 #ifndef __ZG_ENTITY_MANAGER_H__
 #define __ZG_ENTITY_MANAGER_H__
 
+
+#define ZG_ENTITY_MANAGER_GET_COMPONENT(_entity_manager, _type_data,_component_id) \
+ZG_EntityManager_GetComponent(\
+	_entity_manager\
+	,""#_type_data\
+	,_component_id\
+)
+
+
 struct ZG_EntityManager{
 
 	void *data;
@@ -15,8 +24,8 @@ ZG_EntityManager 	*		ZG_EntityManager_New(
 		, size_t entity_components_len
 );
 
-ZG_Entity  		*		ZG_ZG_EntityManager_NewEntity(ZG_EntityManager *_this);
+ZG_Entity  		*		ZG_EntityManager_NewEntity(ZG_EntityManager *_this);
 ZG_EntitySystem	* 		ZG_EntityManager_GetEntitySystem(ZG_EntityManager *_this);
-void 			*		ZG_EntityManager_GetComponent(ZG_EntityManager *_this,ZG_Entity *_entity, ZG_ComponentId _component_id);
+void 			*		ZG_EntityManager_GetComponent(ZG_EntityManager *_this, const char * _component_name, ZG_ComponentId _component_id);
 
 #endif

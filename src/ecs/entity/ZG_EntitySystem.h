@@ -14,9 +14,6 @@ ZG_EntitySystem_RegisterComponent(\
 
 
 
-#define ZG_ECS_COMPONENT_GET_COMPONENT(_entity_system, _type_data) \
-
-
 typedef struct{
 	ZG_ComponentId id;
 	const char *name;

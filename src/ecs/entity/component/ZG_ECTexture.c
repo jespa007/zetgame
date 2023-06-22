@@ -1,4 +1,4 @@
-#include "ecs/zg_ecs.h"
+#include "ecs/_zg_ecs_.h"
 
 
 void ZG_ECTexture_Setup(void *_this, ZG_ComponentId _id){

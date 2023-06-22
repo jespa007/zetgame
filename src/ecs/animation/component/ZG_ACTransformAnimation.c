@@ -1,12 +1,12 @@
 #include "ecs/_zg_ecs_.h"
 
 typedef struct{
-	TransformAnimation *ani_transform;
+	ZG_TransformAnimation *ani_transform;
 }ZG_ACTransformAnimationData;
 
 
 
-void	ZG_ACTransformAnimation_Setup(void *_this, ZG_ComponentId _id){
+void	ZG_ACTransformAnimation_Setup(ZG_AComponentHeader *_this, ZG_ComponentId _id){
 	ZG_ACTransformAnimation *ac_transform_animation=_this;
 	ac_transform_animation->header.id=_id;
 
@@ -16,7 +16,14 @@ void	ZG_ACTransformAnimation_Setup(void *_this, ZG_ComponentId _id){
 	ac_transform_animation->data=data;
 }
 
-void			ZG_ACTransformAnimation_StartAction(void *_this, ZG_TransformAction *action, int repeat){
+void	ZG_ACTransformAnimation_Destroy(void *_this){
+	ZG_ACTransformAnimation *ac_transform_animation =_this;
+	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
+	ZG_TransformAnimation_Delete(data->ani_transform);
+	ZG_FREE(data);
+}
+
+void			ZG_ACTransformAnimation_StartAction(ZG_AComponentHeader *_this, ZG_TransformAction *action, int repeat){
 	ZG_ACTransformAnimation *ac_transform_animation=_this;
 	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
 
@@ -32,7 +39,7 @@ void			ZG_ACTransformAnimation_StartAction(void *_this, ZG_TransformAction *acti
 }
 
 void ZG_ACTransformAnimation_StartTween(
-		  void *_this
+		ZG_ACTransformAnimation *_this
 		, ZG_TransformComponent _transform_component
 		, ZG_Ease _ease
 		, float _from
@@ -58,22 +65,26 @@ void ZG_ACTransformAnimation_StartTween(
 }
 
 
-void 	ZG_ACTransformAnimation_Update(void *_this){
+void 	ZG_ACTransformAnimation_Update(
+		ZG_ACTransformAnimation *_this
+){
 	ZG_ACTransformAnimation *ac_transform_animation =_this;
 	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
 
 	ZG_ECTransform *ac_transform=ac_transform_animation->header.entity->components[EC_TRANSFORM];
 	if(ac_transform != NULL){
 		ZG_Transform *local=ZG_ECTransform_GetTransform(ac_transform,ZG_ECTRANSFORM_TYPE_LOCAL);
-		TransformAnimation_Update(data->ani_transform,local);
+		ZG_TransformAnimation_Update(data->ani_transform,local);
 	}
 
 }
 
 
-void	ZG_ACTransformAnimation_Destroy(void *_this){
-	ZG_ACTransformAnimation *ac_transform_animation =_this;
-	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
-	ZG_TransformAnimation_Delete(data->ani_transform);
-	ZG_FREE(data);
+
+
+void	ZG_ACTransformAnimation_UpdateECTransform(
+		ZG_AComponentHeader *_this
+	, ZG_EComponentHeader *_ec_transform
+){
+
 }

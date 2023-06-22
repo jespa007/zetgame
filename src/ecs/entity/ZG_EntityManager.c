@@ -6,16 +6,13 @@
 
 
 typedef struct {
-	char 		*name; // entity manager name
-	void 		**entity_components;// The pointer of component giving its component idx
-	size_t 		n_entity_components; // available components per entity
+	char 			*name; // entity manager name
+	void 			**components;// The pointer of component giving its component idx
+	ZG_ComponentId	**components_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
+	size_t 			n_entities; // available components per entity
 
-	uint16_t 	max_entities; // max entitites of this type (default 1)
-	uint16_t 	n_entities;
-	uint16_t 	active_entities;
+	uint16_t 		max_entities; // max entitites of this type (default 1)
 
-	ZG_Entity 		*entities;			// entity reference
-	ZG_ComponentId	*entity_component_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
 
 }ZG_EntityManagerData;
 
@@ -38,14 +35,14 @@ ZG_Entity  *ZG_EntityManager_NewEntity(ZG_EntityManager *_this){
 	return entity;
 }
 
-void 	*ZG_EntityManager_GetComponent(ZG_EntityManager *_this,ZG_Entity *_entity, ZG_ComponentId _component_id){
+void 	*ZG_EntityManager_GetComponent(ZG_EntityManager *_this, const char *_component_name, ZG_ComponentId _component_id){
 	ZG_EntityManagerData *data=_this->data;
 
-	ZG_ASSERT_ENTITY_BELONGS_TO_ENTITY_MANAGER(_this,_entity);
+	// search components array
 
-	size_t entity_idx=_entity-data->entities;
-	size_t entity_component_idx=data->entity_component_ref[entity_idx];
-	void *component_data=data->entity_components[entity_component_idx];
+
+	size_t component_idx=data->components_ref[_component_id];
+	void *component_data=data->components[component_idx];
 
 	asset(component_data!=NULL);
 
