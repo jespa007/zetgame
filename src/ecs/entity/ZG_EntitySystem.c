@@ -28,11 +28,12 @@ bool	ZG_EntitySystem_RegisterComponent(
 		const char *_name
 		//,ZG_ESRegisterComponent es_component_register
 		//ZG_EComponent id;
-		,size_t 	_size_data; // len data component
+		,size_t 	_size_data // len data component
 		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
 		,void   (* _on_update)(void *_component_data) // function component
 		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
 		,void   (* _on_destroy)(void *_component_data)
+		,ZG_EComponentList   (*required_components)(void) // function to destroy
 ){
 
 	if(g_entity_system_user_can_register_components==false){
@@ -144,6 +145,20 @@ bool ZG_EntitySystem_Init(void){
 
 	g_entity_system_user_can_register_components=true;*/
 	return true;
+}
+
+void ZG_EntitySystem_ExtendComponent(ZG_EntitySystem *_this,ZG_EComponent _idx_component, size_t extend){
+
+
+	// new behaviour
+
+	// TODO
+	// 1. Call on_destroy of all required components
+	// 2. re/allocate new array * sizeof(component).
+	// 3. Call on_create
+	// 4. re/allocate new array of indexs for reference components that they changed its position
+	// 5. Reset reference indexs
+
 }
 
 bool ZG_EntitySystem_RegisterComponent(

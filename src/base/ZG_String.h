@@ -10,6 +10,8 @@ typedef enum{
 #define	 ZG_STR_MAX			4096
 
 
+#define ZG_STR_CONCAT(s1,s2)	s1#s2
+
 #define 	ZG_STR_CAPTURE_BASE(_str_out, _first_param, _str_in)\
 {va_list  ap;\
 int max_len=(int)((sizeof(_str_out)/sizeof(char))-1);\
@@ -23,6 +25,7 @@ if(n>=(int)max_len || n==-1){\
 	_str_out[max_len-4]='.';\
 }\
 va_end(ap);}
+
 
 #define 	ZG_STR_CAPTURE_VARGS(_str_out, _str_in)\
 ZG_STR_CAPTURE_BASE(_str_out,_str_in,_str_in)\

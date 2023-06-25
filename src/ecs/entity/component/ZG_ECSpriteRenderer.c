@@ -7,13 +7,13 @@ typedef struct{
 	ZG_Appearance	 	*  	appearance;
 	uint16_t 			width, height;
 }ZG_ECSpriteRendererData;
-/*
-static ZG_EComponent g_ec_sprite_renderer_required_components[]={
-		EC_TRANSFORM
-		,EC_GEOMETRY
-		,EC_MATERIAL
-		,EC_TEXTURE
-};*/
+
+static const char * g_ec_sprite_renderer_required_components[]={
+		ECTransform
+		,ECGeometry
+		,ECMaterial
+		,ECTexture
+};
 
 ZG_EComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
 	ZG_EComponentList cl;

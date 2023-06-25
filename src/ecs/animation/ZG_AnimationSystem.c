@@ -61,9 +61,9 @@ bool	ZG_AnimationSystem_AddComponent(
 		//ZG_EComponent id;
 		,size_t 	_size_data // len data component
 		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
-		,void   (* _on_update)(void *_component_data) // function component
-		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
-		,void   (* _on_destroy)(void *_component_data)
+		,void   (* _on_update)(void *) // function component
+		,void   (* _on_create)(void *) // set it up if component need to init or allocate resources on its creation
+		,void   (* _on_destroy)(void *)
 ){
 
 	if(g_animation_system_user_can_register_components==false){
@@ -202,10 +202,11 @@ void ZG_AnimationSystem_ExtendComponent(ZG_AnimationSystem *_this,ZG_AComponent 
 	// new behaviour
 
 	// TODO
-	// 1. re/allocate new array * sizeof(component).
-	// 2. Copy old data (may be references has changed)
-	// 3. re/allocate new array of indexs for reference components that they changed its position
-	// 4. Copy old data
+	// 1. Call on_destroy of all required components
+	// 2. re/allocate new array * sizeof(component).
+	// 3. Call on_create
+	// 4. re/allocate new array of indexs for reference components that they changed its position
+	// 5. Reset reference indexs
 
 	if(_idx_component >= g_animation_system_registered_components->count){
 		return;
