@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#define basic
+ZLIB_VERSION="zlib-1.2.8"
+SDL2_VERSION="SDL2-2.0.14"
+LIBJPEG_VERSION="jpeg-9b"
+FREETYPE2_VERSION="freetype-2.5.2"
+LIBXMP_VERSION="libxmp-lite-4.5.0"
+
 THIRD_PARTY_SOURCES_DIR=$PWD"/src/3rdparty"
 
 # update path to bind generated executables in 3rd party bin
@@ -67,13 +74,6 @@ if [ $machine = "mingw" ]; then
 else
 	export CFLAGS=$CFLAGS" -fPIC"
 fi
-
-#define basic
-ZLIB_VERSION="zlib-1.2.8"
-SDL2_VERSION="SDL2-2.0.14"
-LIBJPEG_VERSION="jpeg-9b"
-FREETYPE2_VERSION="freetype-2.5.2"
-LIBXMP_VERSION="libxmp-lite-4.5.0"
 
 RESULT_FILE_Z="libz.a"
 
