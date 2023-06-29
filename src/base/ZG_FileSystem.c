@@ -9,7 +9,7 @@ static bool ZG_FileSystem_FileExistsPFS(const char * filename) {
 	PackedFile fp;
 
 	if(g_packed_file_system==NULL){
-		ZG_Log_ErrorF("Error no packed file loaded!");
+		ZG_LOG_ERRORF("Error no packed file loaded!");
 		return false;
 	}
 
@@ -25,7 +25,7 @@ static ZG_BufferByte * ZG_FileSystem_ReadFilePFS(const char * filename){
 	PackedFile fp;
 
 	if(g_packed_file_system==NULL){
-		ZG_Log_ErrorF("Error no packed file loaded!");
+		ZG_LOG_ERRORF("Error no packed file loaded!");
 		return NULL;
 	}
 
@@ -36,7 +36,7 @@ static ZG_BufferByte * ZG_FileSystem_ReadFilePFS(const char * filename){
 		return buffer;
 	}
 	else{
-		ZG_Log_Error("File \"%s\" not exist",filename);
+		ZG_LOG_ERROR("File \"%s\" not exist",filename);
 	}
 	return NULL;
 }
@@ -45,7 +45,7 @@ static int  ZG_FileSystem_FileLengthPFS(const char * filename){
 	PackedFile fp;
 
 	if(g_packed_file_system==NULL){
-		ZG_Log_ErrorF("Error no packed file loaded!");
+		ZG_LOG_ERRORF("Error no packed file loaded!");
 		return -1;
 	}
 
@@ -53,7 +53,7 @@ static int  ZG_FileSystem_FileLengthPFS(const char * filename){
 	if(ZP_PackedFileSystem_Open(g_packed_file_system,filename,&fp)){
 		return fp.size;
 	}else{
-		ZG_Log_Error("File not exist %s",filename);
+		ZG_LOG_ERROR("File not exist %s",filename);
 	}
 	return -1;
 }
@@ -61,7 +61,7 @@ static int  ZG_FileSystem_FileLengthPFS(const char * filename){
 // Normal file ops.
 bool ZG_FileSystem_InitFromFile(const char * filename) {
 	if(g_packed_file_system != NULL){
-		ZG_Log_ErrorF("Filesystem already initialized");
+		ZG_LOG_ERRORF("Filesystem already initialized");
 	}
 
 	g_packed_file_system=ZP_PackedFileSystem_New();
@@ -70,7 +70,7 @@ bool ZG_FileSystem_InitFromFile(const char * filename) {
 
 bool ZG_FileSystem_InitFromMemory(ZG_BufferByte *buffer){
 	if(g_packed_file_system != NULL){
-		ZG_Log_ErrorF("Filesystem already initialized");
+		ZG_LOG_ERRORF("Filesystem already initialized");
 	}
 
 	g_packed_file_system=ZP_PackedFileSystem_New();

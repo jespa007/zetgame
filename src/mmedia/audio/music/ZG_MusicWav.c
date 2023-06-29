@@ -17,13 +17,13 @@ bool ZG_MusicWav_LoadFromMemory(ZG_MixerSound *sp_info,uint8_t *ptr, size_t size
 	uint8_t *wav_buffer;
 
 	if(strncmp((char *)ptr+0, "RIFF",4) != 0){
-		ZG_Log_ErrorF( "No valid wave format!");
+		ZG_LOG_ERRORF( "No valid wave format!");
 		return false;
 	}
 
 	/* Load the WAV */
 	if (SDL_LoadWAV_RW(SDL_RWFromMem((void *)ptr,size), 1,&wav_spec, &wav_buffer, &wav_length) == NULL) {
-		ZG_Log_Error( "Could not open effect from memory: %s", SDL_GetError());
+		ZG_LOG_ERROR( "Could not open effect from memory: %s", SDL_GetError());
 		return false;
 	} else {
 		//printf(" loaded wav from memory - %iHz %ich  ",wav_spec.freq, wav_spec.keyframe_tracks);

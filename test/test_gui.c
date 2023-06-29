@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
 		)){
 
 		if((window=ZG_GUIWindowManager_Get(window_manager,WINDOW_NAME))==NULL) {
-			ZG_Log_Error("Cannot get window '%s'",WINDOW_NAME);
+			ZG_LOG_ERROR("Cannot get window '%s'",WINDOW_NAME);
 		}
 	}
 

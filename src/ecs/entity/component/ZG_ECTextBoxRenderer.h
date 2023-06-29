@@ -9,10 +9,10 @@ struct ZG_ECTextBoxRenderer{
 	void 			*	data;
 };
 
-ZG_EComponentList ZG_ECTextBoxRenderer_RequiredComponents(void);
-void ZG_ECTextBoxRenderer_Setup(ZG_EComponentHeader *_this,ZG_ComponentId _id);
-void ZG_ECTextBoxRenderer_Update(ZG_EComponentHeader *_this);
-void ZG_ECTextBoxRenderer_Destroy(ZG_EComponentHeader *_this);
+ZG_ComponentList ZG_ECTextBoxRenderer_RequiredComponents(void);
+void ZG_ECTextBoxRenderer_OnCreate(void *_this,ZG_ComponentId _id);
+void ZG_ECTextBoxRenderer_OnUpdate(void *_this);
+void ZG_ECTextBoxRenderer_OnDestroy(void *_this);
 
 
 

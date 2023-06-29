@@ -11,22 +11,22 @@ typedef enum{
 } ZG_LogLevel;
 
 
-#define ZG_Log_Error(s, ...) 			ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_ERROR		, s, ##__VA_ARGS__)
-#define ZG_Log_ErrorF(s) 				ZG_Log_Error(s, NULL)
+#define ZG_LOG_ERROR(s, ...) 			ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_ERROR		, s, ##__VA_ARGS__)
+#define ZG_LOG_ERRORF(s) 				ZG_LOG_ERROR(s, NULL)
 
-#define ZG_Log_Warning(s, ...)   		ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_WARNING	, s, ##__VA_ARGS__)
-#define ZG_Log_WarningF(s)   			ZG_Log_Warning(s,NULL)
+#define ZG_LOG_WARNING(s, ...)   		ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_WARNING	, s, ##__VA_ARGS__)
+#define ZG_LOG_WARNINGF(s)   			ZG_LOG_WARNING(s,NULL)
 
-#define ZG_Log_Info(s, ...)   			ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_INFO		, s, ##__VA_ARGS__)
-#define ZG_Log_InfoF(s)   				ZG_Log_Info(s, NULL)
+#define ZG_LOG_INFO(s, ...)   			ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_INFO		, s, ##__VA_ARGS__)
+#define ZG_LOG_INFOF(s)   				ZG_LOG_INFO(s, NULL)
 
 #ifdef __DEBUG__
-#define ZG_Log_Debug(s, ...)   		ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_DEBUG		, s, ##__VA_ARGS__)
+#define ZG_LOG_DEBUG(s, ...)   		ZG_Log_Print(__FILE__,__LINE__,ZG_LOG_LEVEL_DEBUG		, s, ##__VA_ARGS__)
 #else
-#define ZG_Log_Debug(s, ...)
+#define ZG_LOG_DEBUG(s, ...)
 #endif
 
-#define ZG_Log_DebugF(s)   			ZG_Log_Debug(s,NULL)
+#define ZG_LOG_DEBUGF(s)   			ZG_LOG_DEBUG(s,NULL)
 
 
 

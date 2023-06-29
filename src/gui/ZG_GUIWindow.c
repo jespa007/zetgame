@@ -249,7 +249,7 @@ void ZG_GUIWindow_OnMouseButtonDown(ZG_MouseEvent * mouse_event, void *gui_windo
 
 	if(ZG_GUIWidget_IsPointCollision(data->button_close->widget,mouse_event->position))
 	{
-	//	ZG_Log_Info("button collision");
+	//	ZG_LOG_INFO("button collision");
 		// collision with button (ignore it!)
 		return;
 	}
@@ -257,7 +257,7 @@ void ZG_GUIWindow_OnMouseButtonDown(ZG_MouseEvent * mouse_event, void *gui_windo
 	if(ZG_GUIWidget_IsPointCollision(data->frame_caption->widget,mouse_event->position))
 	{
 		if(ZG_Input_IsLeftButtonPressed()) {
-			ZG_Log_InfoF("start dragging");
+			ZG_LOG_INFOF("start dragging");
 			data->start_dragging = true;
 			data->start_mouse_position=ZG_Input_GetMousePosition();
 		}
@@ -278,7 +278,7 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 
 	if(data->start_dragging) {
 
-		//ZG_Log_Info("moving !");
+		//ZG_LOG_INFO("moving !");
 
 		ZG_Vector2i position = ZG_Vector2i_Add(
 			ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_POSITION_LOCAL)
@@ -301,7 +301,7 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 	 ZG_GUIWindow *_this=gui_window;
 	 ZG_GUIWindowData *data=_this->data;
 
-	// ZG_Log_Info("mouse up");
+	// ZG_LOG_INFO("mouse up");
 
 	if(!data->visible_caption){
 		return;

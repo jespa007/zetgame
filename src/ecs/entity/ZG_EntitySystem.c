@@ -33,23 +33,35 @@ bool	ZG_EntitySystem_RegisterComponent(
 		,void   (* _on_update)(void *_component_data) // function component
 		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
 		,void   (* _on_destroy)(void *_component_data)
-		,ZG_EComponentList   (*required_components)(void) // function to destroy
+		,ZG_ComponentList   (*_required_components)(void) // function to destroy
 ){
 
 	if(g_entity_system_user_can_register_components==false){
-		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
+		ZG_LOG_ERRORF("Components should registered before create any ZG_Entity-System");
 		return false; //
 	}
 
 	if(g_entity_system_registered_components == NULL){
-		g_entity_system_registered_components=ZG_Map_New();
+		g_entity_system_registered_components=ZG_List_New();
+		g_map_entity_system_registered_components=ZG_Map_New();
 	}
 
-	ZG_EComponent idx_component=_idx_component;//g_entity_system_registered_components->count;
+	ZG_EComponent idx_component=g_entity_system_registered_components->count;//g_entity_system_registered_components->count;
 	ZG_EntitySystemRegisteredComponentData *new_component_register=ZG_NEW(ZG_EntitySystemRegisteredComponentData);
-	new_component_register->data=es_component_register;
+	new_component_register->data=(ZG_RegisterComponent){
+		.name=_name
+		//,ZG_ESRegisterComponent es_component_register
+		//ZG_EComponent id;
+		,.size_data=	_size_data // len data component
+		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
+		,.on_update=_on_update // function component
+		,.on_create=_on_create
+		,.on_destroy=_on_create
+		,.required_components=_required_components
+	}
 	new_component_register->id=idx_component;
 	ZG_List_Add(g_entity_system_registered_components,new_component_register);
+	ZG_Map_Set(g_map_entity_system_registered_components,new_component_register,g_entity_system_registered_components->count);
 
 	return true;
 }
@@ -61,7 +73,13 @@ bool ZG_EntitySystem_Init(void){
 
 	unsigned min_iter=0;
 
-	if(ZG_ECS_ADD_COMPONENT(ZG_ECTransform,ZG_ECTransform_OnUpdate,ZG_ECTransform_OnCreate,ZG_ECTransform_OnDestroy)==false){
+	if(ZG_ECS_ADD_COMPONENT(
+		ZG_ECTransform
+		,ZG_ECTransform_OnUpdate
+		,ZG_ECTransform_OnCreate
+		,ZG_ECTransform_OnDestroy
+		,NULL
+	)==false){
 		return false;
 	}
 
@@ -138,7 +156,7 @@ bool ZG_EntitySystem_Init(void){
 	for(unsigned i=0; i < min_iter; i++){
 		ZG_EntitySystemRegisteredComponentData *component=g_entity_system_registered_components->items[i];
 		if(component->id != i){
-			ZG_Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
+			ZG_LOG_ERROR("Inconsistency idx components (enum:%i list:%i)",i,component->id);
 			return false;
 		}
 	}
@@ -171,7 +189,7 @@ bool ZG_EntitySystem_RegisterComponent(
 ){
 
 	if(g_entity_system_user_can_register_components==false){
-		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
+		ZG_LOG_ERRORF("Components should registered before create any ZG_Entity-System");
 		return false; //
 	}
 
@@ -342,7 +360,7 @@ ZG_Entity  *EntitySystem_NewEntityFromManager(ZG_EntitySystem *_this,const char 
 	ZG_EntityManagerData *entity_manager_data=ZG_MapString_Get(data->map_entity_managers,_id,NULL);
 
 	if(entity_manager_data == NULL){
-		ZG_Log_Error("ZG_Entity manager '%s' not exist",_id);
+		ZG_LOG_ERROR("ZG_Entity manager '%s' not exist",_id);
 		return NULL;
 	}
 
@@ -409,7 +427,7 @@ void ZG_EntitySystem_ExtendEntities(ZG_EntitySystem *_this, ZG_EntityManagerData
 	size_t total_extend=entity_manager_data->n_entities+extend_entities;
 
 	if(total_extend >= entity_manager_data->max_entities){
-		ZG_Log_Error("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_manager_data->name,extend_entities,entity_manager_data->max_entities);
+		ZG_LOG_ERROR("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",entity_manager_data->name,extend_entities,entity_manager_data->max_entities);
 	}
 
 	ZG_Entity **old_ptr=entity_manager_data->entities;
@@ -466,8 +484,11 @@ ZG_EntityManager * ZG_EntitySystem_NewEntityManager(
 			,_entity_components_len
 			,&req_entity_components_len);
 
+
+
 	// check and extend required components if needed ...
-	entity_manager_data->entity_components=malloc(sizeof(ZG_EComponent)*req_entity_components_len);
+	entity_manager_data->component_names=malloc(sizeof(char *)*req_entity_components_len);
+	entity_manager_data->components=malloc(sizeof(ZG_EComponent)*req_entity_components_len);
 	memset(entity_manager_data->entity_components,0,sizeof(ZG_EComponent)*req_entity_components_len);
 	entity_manager_data->n_components=req_entity_components_len;
 
@@ -480,14 +501,18 @@ ZG_EntityManager * ZG_EntitySystem_NewEntityManager(
 	memset(entity_manager_data->name,0,strlen(_str_entity_manager)*sizeof(char)+1);
 	strcpy(entity_manager_data->name,_str_entity_manager);
 
-	ZG_EComponent *dst_ptr=entity_manager_data->entity_components;
+	ZG_EComponent *dst_ptr=entity_manager_data->component_idxs;
 	ZG_EComponent *src_ptr=req_entity_components;
 
 	// add components neededs for the type...
 	for(unsigned i=0; i < req_entity_components_len;i++){
 		// register the components this type will have
+		ZG_EComponent component_id=*src_ptr;
+		char *component_name=
+		entity_manager_data->component_names[i]=malloc(sizeof(char)*src_ptr)
 		*dst_ptr++=*src_ptr++;
 	}
+
 
 	ZG_List_Add(data->lst_entity_managers,entity_manager);
 	ZG_MapString_Set(data->map_entity_managers,_str_entity_manager,entity_manager);

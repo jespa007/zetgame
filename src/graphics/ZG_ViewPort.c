@@ -22,7 +22,7 @@ static float 		ZG_ViewPort_ScreenToWorldPosY_BuiltIn(ZG_ViewPort *view_port,int 
 
 void 		ZG_ViewPort_Init(uint16_t _width, uint16_t _height){
 	if(g_viewport_vars!=NULL){
-		ZG_Log_WarningF("ZG_ViewPort status already initialized");
+		ZG_LOG_WARNINGF("ZG_ViewPort status already initialized");
 	}
 
 	g_viewport_vars=ZG_NEW(ZG_ViewPortVars);
@@ -101,7 +101,7 @@ ZG_ViewPort *		ZG_ViewPort_Push(int x, int y,uint16_t width, uint16_t height, ZG
 		ZG_ViewPort_SetView(view_port);
 
 	}else{
-		ZG_Log_Error("Max view ports reached (Max: %i)",ZG_STACK_VIEW_PORTS_MAX);
+		ZG_LOG_ERROR("Max view ports reached (Max: %i)",ZG_STACK_VIEW_PORTS_MAX);
 	}
 
 	return view_port;
@@ -135,7 +135,7 @@ ZG_ViewPort * 	ZG_ViewPort_Pop(void){
 
 
 	}else{
-		ZG_Log_ErrorF("Cannot pop view ports stack empty");
+		ZG_LOG_ERRORF("Cannot pop view ports stack empty");
 	}
 	// restore glview...
 
@@ -226,7 +226,7 @@ ZG_Vector3f ZG_ViewPort_ScreenToWorldDimension2i(int width, int height){
 
 void 		ZG_ViewPort_DeInit(void){
 	if(g_viewport_vars == NULL) {
-		ZG_Log_ErrorF("Viewport not init");
+		ZG_LOG_ERRORF("Viewport not init");
 		return;
 	}
 

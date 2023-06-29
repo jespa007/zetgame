@@ -16,7 +16,7 @@
 
 void				ZG_SpriteKeyFrame_Render(ZG_SpriteKeyFrame *_this, unsigned idx_frame){
 	if(idx_frame>= _this->frames_len){
-		ZG_Log_ErrorF("idx_frame out of bounds");
+		ZG_LOG_ERRORF("idx_frame out of bounds");
 		return;
 	}
 

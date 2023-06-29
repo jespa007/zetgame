@@ -13,7 +13,7 @@ bool 		ZG_List_AddSlot(ZG_List *v){
 	// last slot exhausted
 	if (v->size == v->count) {
 		if((v->size+10) >= ZG_MAX_ELEMENTS_VECTOR){
-			ZG_Log_ErrorF("Max elements vector");
+			ZG_LOG_ERRORF("Max elements vector");
 			return false;
 		}
 		v->size += 10;
@@ -34,7 +34,7 @@ ZG_List * ZG_List_New(){
 
 void ZG_List_Set(ZG_List *v, uint16_t idx, void *e){
 	if (idx >= v->count) {
-		ZG_Log_ErrorF("idx out of bounds");
+		ZG_LOG_ERRORF("idx out of bounds");
 		return;
 	}
 	v->items[idx] = e;
@@ -46,7 +46,7 @@ size_t ZG_List_Count(ZG_List *v){
 
 void *ZG_List_Get(ZG_List *v, uint16_t idx){
 	if (idx >= v->count) {
-		ZG_Log_ErrorF("idx out of bounds");
+		ZG_LOG_ERRORF("idx out of bounds");
 		return NULL;
 	}
 
@@ -55,7 +55,7 @@ void *ZG_List_Get(ZG_List *v, uint16_t idx){
 
 void ZG_List_Erase(ZG_List *_this, uint16_t idx){
 	if (idx >= _this->count) {
-		ZG_Log_ErrorF("idx out of bounds");
+		ZG_LOG_ERRORF("idx out of bounds");
 		return;
 	}
 
@@ -106,7 +106,7 @@ void ZG_List_Concat(ZG_List *_this, ZG_List *list){
 
 void 		ZG_List_Insert(ZG_List *v, uint16_t idx, void *e){
 	if(idx > (v->count+1)){
-		ZG_Log_Error("idx should be 0 to %i",v->count+1);
+		ZG_LOG_ERROR("idx should be 0 to %i",v->count+1);
 		return;
 	}
 
@@ -123,7 +123,7 @@ void 		ZG_List_Insert(ZG_List *v, uint16_t idx, void *e){
 void * 		ZG_List_Pop(ZG_List *_this){
 
 	if(_this->count == 0){
-		ZG_Log_ErrorF("list empty");
+		ZG_LOG_ERRORF("list empty");
 		return NULL;
 	}
 

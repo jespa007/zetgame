@@ -70,7 +70,7 @@ ZG_Matrix4f Matrix4f_Inverse(const ZG_Matrix4f *_this){
 		inverse[ZG_M4_E33] =  (mvp[ZG_M4_E11]*mvp[ZG_M4_E22]-mvp[ZG_M4_E21]*mvp[ZG_M4_E12])*invdet;
 
 	}else{
-		ZG_Log_ErrorF("Determinant zero");
+		ZG_LOG_ERRORF("Determinant zero");
 	}
 
 	return m;

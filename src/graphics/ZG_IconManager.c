@@ -20,7 +20,7 @@ ZG_IconManager *g_icon_manager_default=NULL;
 
 void ZG_IconManager_Init(void){
 	if(g_icon_manager_default != NULL){
-		ZG_Log_ErrorF("Icon manager already init");
+		ZG_LOG_ERRORF("Icon manager already init");
 	}
 
 	g_icon_manager_default=IconManager_LoadFromMemory(
@@ -36,7 +36,7 @@ void ZG_IconManager_Init(void){
 
 void ZG_IconManager_DeInit(void){
 	if(	g_icon_manager_default == NULL){
-		ZG_Log_ErrorF("Icon manager not init");
+		ZG_LOG_ERRORF("Icon manager not init");
 	}
 
 	ZG_IconManager_Delete(g_icon_manager_default);
@@ -142,7 +142,7 @@ Icon ZG_IconManager_GetIcon(ZG_IconManager *_this,uint16_t idx_icon){
 	if(_this != NULL && _this->texture != NULL){
 
 		/*if(idx_icon >= _this->n_icons){
-			ZG_Log_Error("Icon out of bounds. Max icons %i >= %i", idx_icon, _this->n_icons);
+			ZG_LOG_ERROR("Icon out of bounds. Max icons %i >= %i", idx_icon, _this->n_icons);
 			idx_icon = 0;
 			//return;
 		}*/

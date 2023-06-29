@@ -85,7 +85,7 @@ bool jpeg_decode_mem(const uint8_t *src_data_ptr, size_t src_data_len, uint8_t *
 		jpeg_start_decompress(&cinfo);
 
 		if(cinfo.output_components!=3){
-			ZG_Log_ErrorF("Expected 3 components");
+			ZG_LOG_ERRORF("Expected 3 components");
 			return false;
 		}
 

@@ -42,7 +42,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=2;
 
 		if((v_input_len % packed_channels)!=0){
-			ZG_Log_ErrorF("Error invalid dimension 1!");
+			ZG_LOG_ERRORF("Error invalid dimension 1!");
 			return false;
 		}
 
@@ -69,7 +69,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=3;
 
 		if((v_input_len % packed_channels)!=0){
-			ZG_Log_ErrorF("Error invalid dimension 2!");
+			ZG_LOG_ERRORF("Error invalid dimension 2!");
 			return false;
 		}
 
@@ -106,7 +106,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=4;
 
 		if((v_input_len % packed_channels)!=0){
-			ZG_Log_ErrorF("Error invalid dimension 3!");
+			ZG_LOG_ERRORF("Error invalid dimension 3!");
 			return false;
 		}
 
@@ -146,7 +146,7 @@ bool ZG_KeyframeTrackGroup_DecomposeXYZW(
 		int packed_channels=5;
 
 		if((v_input_len % packed_channels)!=0){
-			ZG_Log_ErrorF("Error invalid dimension 5!");
+			ZG_LOG_ERRORF("Error invalid dimension 5!");
 			return false;
 		}
 

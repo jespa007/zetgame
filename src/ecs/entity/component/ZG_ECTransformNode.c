@@ -92,7 +92,7 @@ bool ZG_ECTransformNode_DetachNode(ZG_ECTransformNode *_this,ZG_ECTransformNode 
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
 		ZG_ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
-			ZG_Log_Error("Cannot add node child because cannot deattach from parent");
+			ZG_LOG_ERROR("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
@@ -167,7 +167,7 @@ void UpdateSceneGraph(ZG_ECTransformNode *_this) {
 
 		ZG_ECTransformNode *parent=data->parent;
 		if(parent == NULL){
-			ZG_Log_Error("Expected parent not null!!");
+			ZG_LOG_ERROR("Expected parent not null!!");
 			return;
 		}
 

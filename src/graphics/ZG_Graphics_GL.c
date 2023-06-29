@@ -15,13 +15,13 @@ bool ZG_Graphics_GL_Init(void){
 #ifdef _WIN32
 	SDL_GLContext g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
 	if(g_sdl_gl_context == NULL){
-		ZG_Log_Error("Cannot create gl context:%s",SDL_GetError());
+		ZG_LOG_ERROR("Cannot create gl context:%s",SDL_GetError());
 		return false;
 	}
 
 	/*if(SDL_GL_MakeCurrent(g_graphics_vars->sdl_window,
 			g_sdl_gl_context)!=0){
-		ZG_Log_Error("Cannot make current context:%s",SDL_GetError());
+		ZG_LOG_ERROR("Cannot make current context:%s",SDL_GetError());
 		return false;
 	}*/
 #endif
@@ -40,7 +40,7 @@ bool ZG_Graphics_GL_Init(void){
 	// ini opengl core functions...
 	glExtraIni();
 
-	ZG_Log_Info("OpenGL %s Shading language:%s", glGetString(GL_VERSION),glGetString ( GL_SHADING_LANGUAGE_VERSION ));
+	ZG_LOG_INFO("OpenGL %s Shading language:%s", glGetString(GL_VERSION),glGetString ( GL_SHADING_LANGUAGE_VERSION ));
 
 	// return to modelview matrix
 	glShadeModel(GL_SMOOTH);                    // shading mathod: _GL_SMOOTH or _GL_FLAT
@@ -86,7 +86,7 @@ bool ZG_Graphics_GL_Init(void){
 	glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, pda);
 
 	glPointSize(psr[1]);
-	ZG_Log_Info("Point sizes (%f,%f) ",psr[0],psr[1]);
+	ZG_LOG_INFO("Point sizes (%f,%f) ",psr[0],psr[1]);
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable(GL_PROGRAM_POINT_SIZE);
@@ -214,9 +214,9 @@ void ZG_Graphics_GL_DeInit(void) {
 
 	GLenum e=glGetError();
 	if(e!=GL_NO_ERROR){
-		ZG_Log_Warning("OpenGL (%x): There's some OGL problems. Enable debug to check file/line",e);
+		ZG_LOG_WARNING("OpenGL (%x): There's some OGL problems. Enable debug to check file/line",e);
 	}else{
-		ZG_Log_InfoF("OpenGL: OK");
+		ZG_LOG_INFOF("OpenGL: OK");
 	}
 
 }

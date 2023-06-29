@@ -22,10 +22,10 @@ void ZG_ECTransform_ClearChilds(ZG_ECTransform * node){
 }
 //------------------------------------------------------------------------------------
 
-void ZG_ECTransform_Init(void *_this, ZG_ComponentId _id){
+void ZG_ECTransform_OnCreate(void *_this, ZG_ComponentId _id){
 
 	ZG_ECTransform * ec_transform = _this;
-	ec_transform->header.entity=_entity;
+	//ec_transform->header.entity=_entity;
 	ec_transform->header.id=_id;
 	//_entity->components[EC_TRANSFORM]=_this;
 
@@ -50,6 +50,30 @@ void ZG_ECTransform_Init(void *_this, ZG_ComponentId _id){
 	//sg_node->sgnode_type=ZG_ECTransformTypeNode;
 
 }
+
+
+void ZG_ECTransform_OnUpdate(void *_this) {
+	ZG_ECTransform *ec_transform=_this;
+	ZG_ECTransformData *data = ec_transform->data;
+	if(data->parent!=NULL){ // it has parent, not update because it was updated before
+		return;
+	}
+
+	ZG_ECTransform_UpdateChild(_this);
+
+}
+
+void 	 ZG_ECTransform_OnDestroy(void *_this){
+
+	ZG_ECTransformData *_data = ((ZG_ECTransform *)_this)->data;
+
+	ZG_ECTransform_ClearNodes(_this);
+	ZG_List_Delete(_data->child_nodes);
+
+	ZG_FREE(_data);
+}
+
+//------------------------------------------------------------------------------------------------
 
 void ZG_ECTransform_ClearNodes(ZG_ECTransform *_this){
 
@@ -149,7 +173,7 @@ bool ZG_ECTransform_Detach(ZG_ECTransform *_this,ZG_ECTransform * obj) {
 	if(obj_data->parent != NULL){ // Already parented, try to deattach from parent first
 		ZG_ECTransformData *parent_data = obj_data->parent->data;
 		if(!List_RemoveIfExist(parent_data->child_nodes,obj)){
-			ZG_Log_ErrorF("Cannot add node child because cannot deattach from parent");
+			ZG_LOG_ERRORF("Cannot add node child because cannot deattach from parent");
 			return false;
 		}
 	}
@@ -305,16 +329,6 @@ void ZG_ECTransform_UpdateChild(void *_this) {
 	}
 }
 
-void ZG_ECTransform_Update(void *_this) {
-	ZG_ECTransform *ec_transform=_this;
-	ZG_ECTransformData *data = ec_transform->data;
-	if(data->parent!=NULL){ // it has parent, not update because it was updated before
-		return;
-	}
-
-	ZG_ECTransform_UpdateChild(_this);
-
-}
 
 ZG_Transform *ZG_ECTransform_GetTransform(ZG_ECTransform *_this, ZG_ECTransformType ec_transform_type){
 	ZG_ECTransformData *data=_this->data;
@@ -327,12 +341,4 @@ ZG_Transform *ZG_ECTransform_GetTransform(ZG_ECTransform *_this, ZG_ECTransformT
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------v
 
-void 	 ZG_ECTransform_Destroy(void *_this){
 
-	ZG_ECTransformData *_data = ((ZG_ECTransform *)_this)->data;
-
-	ZG_ECTransform_ClearNodes(_this);
-	ZG_List_Delete(_data->child_nodes);
-
-	ZG_FREE(_data);
-}

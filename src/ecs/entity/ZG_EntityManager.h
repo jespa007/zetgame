@@ -9,6 +9,21 @@ ZG_EntityManager_GetComponent(\
 	,_component_id\
 )
 
+#define ZG_ENTITY_MANAGER_GET_COMPONENT_IDX(_entity_manager, _type_data,_component_id) \
+ZG_EntityManager_GetComponentIdx(\
+	_entity_manager\
+	,""#_type_data\
+	,_component_id\
+)
+
+#define ZG_ENTITY_MANAGER_GET_COMPONENT_FROM_IDX(_entity_manager, _type_data_idx, _component_id) \
+ZG_EntityManager_GetComponentFromIdx(\
+	_entity_manager\
+	,_type_data_idx\
+	,_component_id\
+)
+
+
 
 struct ZG_EntityManager{
 

@@ -18,7 +18,7 @@ void ZG_Texture_GL_New(ZG_Texture *text,GLvoid *_pixels, uint16_t _width, uint16
 
 
 	if(_width == 0 || _height == 0){
-		ZG_Log_ErrorF("height=0 width=0 texture cannot be rebuilt");
+		ZG_LOG_ERRORF("height=0 width=0 texture cannot be rebuilt");
 		return;
 	}
 
@@ -84,7 +84,7 @@ GLuint ZG_Texture_GL_BytesPerPixelToGLInternalFormat(uint8_t bytes_per_pixel){
 	switch(bytes_per_pixel)
 	{
 		default:
-			ZG_Log_Error("Unknown bytes per pixel depth format %i",bytes_per_pixel);
+			ZG_LOG_ERROR("Unknown bytes per pixel depth format %i",bytes_per_pixel);
 			return GL_INVALID_VALUE;
 			break;
 		case 1:

@@ -420,7 +420,7 @@ CParticleSystem * CParticleSystem::getStarBallPS()
 
 		//ps_starBall2->addChild(pe_tail);
 
-		ZG_Log_Info("start ball created!");
+		ZG_LOG_INFO("start ball created!");
 
 	}
 

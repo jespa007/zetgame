@@ -7,7 +7,7 @@ bool ZG_Directory_Exists(const char * path){
 
 	status = stat (path, &st_buf);
 	if (status != 0) {
-		//ZG_Log_Error ("Error, errno = %d\n", errno);
+		//ZG_LOG_ERROR ("Error, errno = %d\n", errno);
 		return false;
 	}
 
@@ -128,7 +128,7 @@ bool ZG_Directory_Create(const char * dir){
 	}
 
 	if(ZG_String_IsNullOrEmpty(dir)){
-		ZG_Log_ErrorF("empty entry");
+		ZG_LOG_ERRORF("empty entry");
 		return false;
 	}
 
@@ -143,31 +143,31 @@ bool ZG_Directory_Create(const char * dir){
 		perror("stat");
 		switch(status){
 		case EACCES:
-			ZG_Log_ErrorF("Search permission is denied on a component of the path prefix, or write permission is denied on the parent directory of the directory to be created.");
+			ZG_LOG_ERRORF("Search permission is denied on a component of the path prefix, or write permission is denied on the parent directory of the directory to be created.");
 			break;
 		case EEXIST:
-			ZG_Log_ErrorF("The named file exists.");
+			ZG_LOG_ERRORF("The named file exists.");
 			break;
 		case ELOOP:
-			ZG_Log_ErrorF("A loop exists in symbolic links encountered during resolution of the path argument.");
+			ZG_LOG_ERRORF("A loop exists in symbolic links encountered during resolution of the path argument.");
 			break;
 		case EMLINK:
-			ZG_Log_ErrorF("The link count of the parent directory would exceed {LINK_MAX}.");
+			ZG_LOG_ERRORF("The link count of the parent directory would exceed {LINK_MAX}.");
 			break;
 		case ENAMETOOLONG:
-			ZG_Log_ErrorF("The length of the path argument exceeds {PATH_MAX} or a pathname component is longer than {NAME_MAX}.");
+			ZG_LOG_ERRORF("The length of the path argument exceeds {PATH_MAX} or a pathname component is longer than {NAME_MAX}.");
 			break;
 		case ENOENT:
-			ZG_Log_ErrorF("A component of the path prefix specified by path does not name an existing directory or path is an empty std::string.");
+			ZG_LOG_ERRORF("A component of the path prefix specified by path does not name an existing directory or path is an empty std::string.");
 			break;
 		case ENOSPC:
-			ZG_Log_ErrorF("The file system does not contain enough space to hold the contents of the new directory or to extend the parent directory of the new directory.");
+			ZG_LOG_ERRORF("The file system does not contain enough space to hold the contents of the new directory or to extend the parent directory of the new directory.");
 			break;
 		case ENOTDIR:
-			ZG_Log_ErrorF("A component of the path prefix is not a directory.");
+			ZG_LOG_ERRORF("A component of the path prefix is not a directory.");
 			break;
 		case EROFS:
-			ZG_Log_ErrorF("The parent directory resides on a read-only file system.");
+			ZG_LOG_ERRORF("The parent directory resides on a read-only file system.");
 			break;
 		}
 

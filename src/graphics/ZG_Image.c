@@ -24,7 +24,7 @@ ZG_Image * ZG_Image_NewFromFile(const char *_filename){
 		ZG_BufferByte_Delete(buffer);
 
 	}else{
-		ZG_Log_Error("File '%s' not exist",_filename);
+		ZG_LOG_ERROR("File '%s' not exist",_filename);
 	}
 	return image;
 }

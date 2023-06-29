@@ -39,7 +39,7 @@ bool ZG_MusicXmp_LoadFromMemory(ZG_MixerSound *sp_info, const unsigned char *ptr
 	//current_playing_row = last_played_row = -1;
 
 	if ((ctx = xmp_create_context()) == NULL) {
-		ZG_Log_ErrorF("I can't create context!");
+		ZG_LOG_ERRORF("I can't create context!");
 		return false;
 	}
 
@@ -58,7 +58,7 @@ bool ZG_MusicXmp_LoadFromMemory(ZG_MixerSound *sp_info, const unsigned char *ptr
 		}
 
 		xmp_free_context(ctx);
-		ZG_Log_Error("Cannot open module from memory: %s!",error_str);
+		ZG_LOG_ERROR("Cannot open module from memory: %s!",error_str);
 		return false;
 	}
 
@@ -67,7 +67,7 @@ bool ZG_MusicXmp_LoadFromMemory(ZG_MixerSound *sp_info, const unsigned char *ptr
 
 	if(sp_xmp == 0){
 		xmp_free_context(ctx);
-		ZG_Log_Error("Error allocating %i bytes from memory!", sizeof(ZG_MusicXmp));
+		ZG_LOG_ERROR("Error allocating %i bytes from memory!", sizeof(ZG_MusicXmp));
 		return false;
 	}
 
@@ -137,7 +137,7 @@ void ZG_MusicXmp_Play(ZG_MixerSound *sp_info){
 
 	ZG_MusicXmp *s_xmp=(ZG_MusicXmp *)sp_info->data;
 	if(xmp_start_player(s_xmp->ctx,ZG_MIXER_FREQUENCY,0) != 0){
-		ZG_Log_ErrorF("Error starting module");
+		ZG_LOG_ERRORF("Error starting module");
 	}
 }
 
@@ -246,7 +246,7 @@ void ZG_MusicXmp_Update(ZG_MixerSound *sp_info){
 			break;
 		}
 
-		ZG_Log_Error("Error playing xmp:%s",error_str);
+		ZG_LOG_ERROR("Error playing xmp:%s",error_str);
 	}
 
 	wave_buffer->block_len[n_current_block]=g_mixer_vars->frame_size;
@@ -257,7 +257,7 @@ void ZG_MusicXmp_Update(ZG_MixerSound *sp_info){
 }
 
 void ZG_MusicXmp_Unload(ZG_MixerSound *sp_info){
-	ZG_Log_Info("unloading xmp %s \n", sp_info->file);
+	ZG_LOG_INFO("unloading xmp %s \n", sp_info->file);
 	ZG_MusicXmp *s_xmp=(ZG_MusicXmp *)sp_info->data;
 	xmp_release_module(s_xmp->ctx);
 	xmp_free_context(s_xmp->ctx);

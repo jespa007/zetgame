@@ -373,7 +373,7 @@ bool CTilemap::load(
 			}
 			else
 			{
-				ZG_Log_Error("Cannot create tilemap \"%s\" with NULL texture!",getName().c_str());
+				ZG_LOG_ERROR("Cannot create tilemap \"%s\" with NULL texture!",getName().c_str());
 				//system.exit(-1);
 			}
 

@@ -77,7 +77,7 @@ ZG_Animation *ZG_Animation_New(uint8_t n_channels){
 void ZG_Animation_StartAction(ZG_Animation *_this, ZG_Action *_action,uint32_t _start_time, int _repeat){
 	ZG_AnimationData *data = (ZG_AnimationData *)_this->data;
 	if(data->channels_info->n_channels != _action->channels_info->n_channels){
-		ZG_Log_Error("Internal error animation components (%i) != action components (%i)"
+		ZG_LOG_ERROR("Internal error animation components (%i) != action components (%i)"
 				,data->channels_info->n_channels
 				,data->channels_info->n_channels);
 		return;
@@ -104,7 +104,7 @@ void ZG_Animation_ClearAction(ZG_Animation *_this,ZG_Action *_action){
 			return;
 		}
 	}
-	ZG_Log_WarningF("action not exist");
+	ZG_LOG_WARNINGF("action not exist");
 }
 
 void ZG_Animation_StartTween(

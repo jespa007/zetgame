@@ -19,7 +19,7 @@ void	ZG_TTFontManager_Init(void){
 	if(g_ft_handler == NULL){
 		// All functions return a value different than 0 whenever an error occurred
 		if (FT_Init_FreeType(&g_ft_handler)){
-			ZG_Log_ErrorF("FREETYPE: Could not init FreeType Library");
+			ZG_LOG_ERRORF("FREETYPE: Could not init FreeType Library");
 		}
 	}
 }
@@ -162,7 +162,7 @@ ZG_TTFont * 		ZG_TTFontManager_NewFont(ZG_TTFontManager *_this){
 			font=ZG_TTFont_NewFromFile(filename);
 		}else{
 			font=ZG_TTFont_New();
-			ZG_Log_Error("Default font '%s' not exist",data->default_font_name);
+			ZG_LOG_ERROR("Default font '%s' not exist",data->default_font_name);
 		}
 	}
 
@@ -188,7 +188,7 @@ void			ZG_TTFontManager_SetFontName(
 	if(ZG_File_Exists(filename)){
 		ZG_TTFont_LoadFromFile(_font, filename);
 	}else{
-		ZG_Log_Error("Font '%s' not exist",_font_name);
+		ZG_LOG_ERROR("Font '%s' not exist",_font_name);
 	}
 }
 /*

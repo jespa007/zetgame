@@ -57,7 +57,7 @@ ZG_MUSIC ZG_Music_GetFreeSlotToPlay(void){
 			return music;
 		}
 	}
-	return ZG_INVALID_SOUND_IDX;
+	return ZG_INVALID_IDX;
 }
 
 ZG_MUSIC ZG_Music_GetFreeBlock(void){
@@ -67,7 +67,7 @@ ZG_MUSIC ZG_Music_GetFreeBlock(void){
 			return music;
 		}
 	}
-	return ZG_INVALID_SOUND_IDX;
+	return ZG_INVALID_IDX;
 }
 
 ZG_BufferWaveMusic * ZG_Music_NewWaveBuffer(void){
@@ -102,18 +102,18 @@ ZG_MUSIC ZG_Music_Load(const char *file){
 	ZG_MixerSound *sp_info;
 
 	if(strlen(file) < 4){
-		ZG_Log_ErrorF("Invalid filename");
-		return ZG_INVALID_SOUND_IDX;
+		ZG_LOG_ERRORF("Invalid filename");
+		return ZG_INVALID_IDX;
 	}
 
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
-		return ZG_INVALID_SOUND_IDX;
+		ZG_LOG_ERRORF("Mixer not init");
+		return ZG_INVALID_IDX;
 	}
 
-	if((sp_n_loaded_music = ZG_Music_GetFreeBlock())==ZG_INVALID_SOUND_IDX){
-		ZG_Log_ErrorF( "Max sounds reached!");
-		return ZG_INVALID_SOUND_IDX;
+	if((sp_n_loaded_music = ZG_Music_GetFreeBlock())==ZG_INVALID_IDX){
+		ZG_LOG_ERRORF( "Max sounds reached!");
+		return ZG_INVALID_IDX;
 	}
 
 	sp_info=&g_mixer_vars->musics.loaded[sp_n_loaded_music];
@@ -139,8 +139,8 @@ ZG_MUSIC ZG_Music_Load(const char *file){
 	}
 #endif
 
-	ZG_Log_Error("file extension \"%s\" is unsupported",(file+strlen(file)-3));
-	return ZG_INVALID_SOUND_IDX;
+	ZG_LOG_ERROR("file extension \"%s\" is unsupported",(file+strlen(file)-3));
+	return ZG_INVALID_IDX;
 }
 
 ZG_MUSIC ZG_Music_LoadFromMemory(unsigned char *ptr,size_t size){
@@ -149,13 +149,13 @@ ZG_MUSIC ZG_Music_LoadFromMemory(unsigned char *ptr,size_t size){
 	ZG_MixerSound *sp_info;
 
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
-		return ZG_INVALID_SOUND_IDX;
+		ZG_LOG_ERRORF("Mixer not init");
+		return ZG_INVALID_IDX;
 	}
 
-	if((sp_n_loaded_music = ZG_Music_GetFreeBlock())==ZG_INVALID_SOUND_IDX){
-		ZG_Log_ErrorF( "Max sounds reached!");
-		return ZG_INVALID_SOUND_IDX;
+	if((sp_n_loaded_music = ZG_Music_GetFreeBlock())==ZG_INVALID_IDX){
+		ZG_LOG_ERRORF( "Max sounds reached!");
+		return ZG_INVALID_IDX;
 	}
 
 	sp_info=&g_mixer_vars->musics.loaded[sp_n_loaded_music];
@@ -175,7 +175,7 @@ ZG_MUSIC ZG_Music_LoadFromMemory(unsigned char *ptr,size_t size){
 	}
 #endif
 
-	return ZG_INVALID_SOUND_IDX;
+	return ZG_INVALID_IDX;
 }
 
 
@@ -183,7 +183,7 @@ bool ZG_Music_Seek(ZG_MUSIC id, uint_t t_seek){
 
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -215,7 +215,7 @@ bool ZG_Music_Play(ZG_MUSIC id){
 	ZG_MUSIC idx_play;
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -225,7 +225,7 @@ bool ZG_Music_Play(ZG_MUSIC id){
 
 	idx_play = ZG_Music_GetFreeSlotToPlay();
 
-	if(idx_play != ZG_INVALID_SOUND_IDX){
+	if(idx_play != ZG_INVALID_IDX){
 
 		ZG_MixerSound *sp_info = &g_mixer_vars->musics.loaded[id];
 		//ZG_MusicXmp *s_xmp;
@@ -255,7 +255,7 @@ bool ZG_Music_Play(ZG_MUSIC id){
 
 	}
 	else{
-		ZG_Log_ErrorF( "Max playing musics!");
+		ZG_LOG_ERRORF( "Max playing musics!");
 		return false;
 	}
 
@@ -266,7 +266,7 @@ bool ZG_Music_Play(ZG_MUSIC id){
 
 bool ZG_Music_SetVolume(ZG_MUSIC id, float vol){
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 	ZG_MixerSound *sp_info = &g_mixer_vars->musics.loaded[id];
@@ -277,7 +277,7 @@ bool ZG_Music_SetVolume(ZG_MUSIC id, float vol){
 
 float ZG_Music_GetVolume(int id){
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return 1;
 	}
 
@@ -287,7 +287,7 @@ float ZG_Music_GetVolume(int id){
 
 uint32_t ZG_Music_GetDuration(ZG_MUSIC id){
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return 0;
 	}
 	return g_mixer_vars->musics.loaded[id].duration;
@@ -296,7 +296,7 @@ uint32_t ZG_Music_GetDuration(ZG_MUSIC id){
 bool ZG_Music_Pause(ZG_MUSIC id){
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -307,7 +307,7 @@ bool ZG_Music_Pause(ZG_MUSIC id){
 bool ZG_Music_Resume(ZG_MUSIC id){
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -319,7 +319,7 @@ bool ZG_Music_Resume(ZG_MUSIC id){
 bool ZG_Music_Stop(ZG_MUSIC id){
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -340,7 +340,7 @@ bool ZG_Music_IsPlaying(ZG_MUSIC id){
 	int m_found = 0;
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -353,7 +353,7 @@ bool ZG_Music_IsPlaying(ZG_MUSIC id){
 
 bool ZG_Music_IsPaused(ZG_MUSIC id){
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 	return g_mixer_vars->musics.loaded[id].paused==true;
@@ -407,7 +407,7 @@ void ZG_Music_Update(void){
 uint32_t ZG_Music_GetCurrentTime(int id){
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return 0;
 	}
 #ifdef __WITH_FFMPEG__
@@ -441,7 +441,7 @@ void ZG_Music_Unload(ZG_MUSIC id){
 	ZG_MixerSound *sp_info=NULL;
 
 	if(!ZG_Music_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return;
 	}
 
@@ -463,7 +463,7 @@ void ZG_Music_Unload(ZG_MUSIC id){
 
 	switch(type){
 	default:
-		ZG_Log_Error("Unknown type? %i",type);
+		ZG_LOG_ERROR("Unknown type? %i",type);
 		return;
 	case ZG_SOUND_TYPE_XMP:
 		ZG_MusicXmp_Unload(sp_info);

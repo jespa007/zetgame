@@ -67,7 +67,7 @@ bool ZG_Graphics_Init(
 	uint16_t _window_height=_height;
 
 	if(g_graphics_vars != NULL){
-		ZG_Log_ErrorF("Graphics already initialized");
+		ZG_LOG_ERRORF("Graphics already initialized");
 		return false;
 	}
 
@@ -78,7 +78,7 @@ bool ZG_Graphics_Init(
 
 
 	if (SDL_Init(0 ) < 0) {
-		ZG_Log_Error("Unable to init SDL: %s\n", SDL_GetError());
+		ZG_LOG_ERROR("Unable to init SDL: %s\n", SDL_GetError());
 		return false;
 	}
 
@@ -87,20 +87,20 @@ bool ZG_Graphics_Init(
 
 	if (SDL_WasInit(SDL_INIT_VIDEO) != SDL_INIT_VIDEO) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-			ZG_Log_Error("Unable to init video subsystem: %s", SDL_GetError());
+			ZG_LOG_ERROR("Unable to init video subsystem: %s", SDL_GetError());
 			return false;
 		}
 	}
 
 	g_graphics_vars->num_displays=SDL_GetNumVideoDisplays();
 	if(g_graphics_vars->num_displays < 0){
-		ZG_Log_Error("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
+		ZG_LOG_ERROR("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
 		return false;
 	}
 	g_graphics_vars->rect_display=(SDL_Rect *)malloc(sizeof(SDL_Rect)*g_graphics_vars->num_displays);
 	for(int i=0 ; i < g_graphics_vars->num_displays; i++){
 		if(SDL_GetDisplayBounds(i, &g_graphics_vars->rect_display[i])!=0){
-			ZG_Log_Error("SDL_GetDisplayBounds error : %s\n", SDL_GetError());
+			ZG_LOG_ERROR("SDL_GetDisplayBounds error : %s\n", SDL_GetError());
 			return false;
 		}
 	}
@@ -109,7 +109,7 @@ bool ZG_Graphics_Init(
 
 		/*SDL_DisplayMode current;
 		if(SDL_GetCurrentDisplayMode(0, &current) != 0){
-			ZG_Log_Error("Unable to get display mode: %s", SDL_GetError());
+			ZG_LOG_ERROR("Unable to get display mode: %s", SDL_GetError());
 			return false;
 		}
 		_window_width=current.w;
@@ -135,7 +135,7 @@ bool ZG_Graphics_Init(
 			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].h:_height
 			, video_flags);
 	if (!g_graphics_vars->sdl_window) {
-		ZG_Log_Error("Unable to create window: %s", SDL_GetError());
+		ZG_LOG_ERROR("Unable to create window: %s", SDL_GetError());
 		return false;
 	}
 
@@ -151,8 +151,8 @@ bool ZG_Graphics_Init(
 	g_graphics_vars->scale=ZG_Vector2f_New(1,1);
 
 
-	ZG_Log_Info("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
-	ZG_Log_Info("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
+	ZG_LOG_INFO("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
+	ZG_LOG_INFO("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
 
 	//ZG_Input_SetupCursors();
 	switch(g_graphics_vars->graphics_api){
@@ -181,7 +181,7 @@ bool ZG_Graphics_Init(
 	ZG_ViewPort_Init(_width,_height);
 
 	// created default rectangle/s for drawing
-	g_graphics_vars->geometry_rectangle_default=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
+	g_graphics_vars->geometry_rectangle_default=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
 	g_graphics_vars->appearance_rectangle_default=ZG_Appearance_New();
 	g_graphics_vars->material_rectangle_default=ZG_Material_New(0);
 	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
@@ -264,7 +264,7 @@ void ZG_Graphics_PrintVideoInfo(void){
 	    SDL_GetDisplayBounds( i, &rect_display);
 	    SDL_GetCurrentDisplayMode(i, &current);
 
-	    ZG_Log_Info("* Detected %i monitor [%i %i %i %i %i]",
+	    ZG_LOG_INFO("* Detected %i monitor [%i %i %i %i %i]",
 	    		i+1,
 				rect_display.x,
 				rect_display.y,
@@ -282,7 +282,7 @@ unsigned ZG_Graphics_GetNumMonitors(void){
 
 float ZG_Graphics_GetAdapterPhysicalWidth(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
-		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
+		ZG_LOG_ERROR("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
@@ -291,7 +291,7 @@ float ZG_Graphics_GetAdapterPhysicalWidth(unsigned idx_monitor){
 
 float ZG_Graphics_GetAdapterPhysicalHeight(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
-		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
+		ZG_LOG_ERROR("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
@@ -300,7 +300,7 @@ float ZG_Graphics_GetAdapterPhysicalHeight(unsigned idx_monitor){
 
 const char *ZG_Graphics_GetAdapterMonitorModel(unsigned idx_monitor){
 	if(idx_monitor >= g_graphics_vars->adapters->count){
-		ZG_Log_Error("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
+		ZG_LOG_ERROR("%i monitor out of bounds. (Max monitors:%i)",g_graphics_vars->adapters->count);
 		return 0;
 	}
 
@@ -311,21 +311,21 @@ static void ZG_Graphics_PrintAdapterInformation(void){
 
 
 	if( g_graphics_vars->adapters == NULL || g_graphics_vars->adapters->count==0){
-		ZG_Log_InfoF("No adapters information");
+		ZG_LOG_INFOF("No adapters information");
 		return;
 	}
 
 	for(unsigned i = 0;i < g_graphics_vars->adapters->count; i++){
 		ZG_AdapterInfo *adapter=(void *)g_graphics_vars->adapters->items[i];
-		ZG_Log_InfoF("--------------------------------------");
-		ZG_Log_Info("MonitorModel: %s",adapter->monitor_model);
-		ZG_Log_Info("Width: %i",adapter->pixels_width);
-		ZG_Log_Info("Height: %i",adapter->pixels_height);
-		ZG_Log_Info("PhysicalWidth: %f",adapter->physical_width);
-		ZG_Log_Info("PhysicalHeight: %f",adapter->physical_height);
+		ZG_LOG_INFOF("--------------------------------------");
+		ZG_LOG_INFO("MonitorModel: %s",adapter->monitor_model);
+		ZG_LOG_INFO("Width: %i",adapter->pixels_width);
+		ZG_LOG_INFO("Height: %i",adapter->pixels_height);
+		ZG_LOG_INFO("PhysicalWidth: %f",adapter->physical_width);
+		ZG_LOG_INFO("PhysicalHeight: %f",adapter->physical_height);
 
 	}
-	ZG_Log_InfoF("--------------------------------------");
+	ZG_LOG_INFOF("--------------------------------------");
 }
 
 
@@ -350,14 +350,14 @@ void ZG_Graphics_ToggleFullscreen(void)
 		// Swith to WINDOWED mode
 		if (SDL_SetWindowFullscreen(g_graphics_vars->sdl_window, SDL_FALSE) < 0)
 	  {
-			ZG_Log_Error("Setting windowed failed : %s",SDL_GetError());
+			ZG_LOG_ERROR("Setting windowed failed : %s",SDL_GetError());
 
 	  }
 	} else {
 		// Swith to FULLSCREEN mode
 		if (SDL_SetWindowFullscreen(g_graphics_vars->sdl_window, SDL_TRUE) < 0)
 		{
-			ZG_Log_Error("Setting fullscreen failed : %s", SDL_GetError());
+			ZG_LOG_ERROR("Setting fullscreen failed : %s", SDL_GetError());
 
 		}
 	}
@@ -465,7 +465,7 @@ void ZG_Graphics_PrintGraphicsInfo(void){
 		SDL_GetDisplayBounds( i, &screen_rect);
 		SDL_GetCurrentDisplayMode(i, &current);
 
-		ZG_Log_Info("Detected %i monitor [%i %i %i %i %i]",
+		ZG_LOG_INFO("Detected %i monitor [%i %i %i %i %i]",
 				i+1,
 				screen_rect.x,
 				screen_rect.y,
@@ -809,7 +809,7 @@ void ZG_Graphics_WPrint(int x, int y, ZG_Color4f color, const wchar_t *in, ...){
 void ZG_Graphics_DeInit(void) {
 
 	if(g_graphics_vars == NULL){
-		ZG_Log_ErrorF("Graphics not initialized");
+		ZG_LOG_ERRORF("Graphics not initialized");
 		return;
 	}
 

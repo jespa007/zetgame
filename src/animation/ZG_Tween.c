@@ -20,7 +20,7 @@ void ZG_Tween_Start(ZG_Tween *_this
 	ZG_TweenChannel *tc=NULL;
 
 	if(_idx_channel > _this->channels_info->n_channels){
-		ZG_Log_Error("reached max channels (%i > %i)",_idx_channel,_this->channels_info->n_channels);
+		ZG_LOG_ERROR("reached max channels (%i > %i)",_idx_channel,_this->channels_info->n_channels);
 		return;
 	}
 

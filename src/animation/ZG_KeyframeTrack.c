@@ -32,7 +32,7 @@ ZG_Ease 	ZG_KeyframeTrack_ParseInterpolatorType(const char * interpolator_type_s
 	}else if(ZG_STRCMP(interpolator_type_str,==,"IN_OUT_SINE")) {
 		ease=ZG_EASE_IN_OUT_SINE;
 	}else {
-		ZG_Log_ErrorF("Invalid EASE type \"%s\": Valid ones are \"LINEAR\" or \"IN_OUT_SINE\"");
+		ZG_LOG_ERRORF("Invalid EASE type \"%s\": Valid ones are \"LINEAR\" or \"IN_OUT_SINE\"");
 	}
 
 
@@ -93,7 +93,7 @@ void ZG_KeyframeTrack_AddKeyframesFloat(ZG_KeyframeTrack *_this,const float * _p
 
 	if(_points_count % ZG_I1D_POINT_SIZE != 0)
 	{
-		ZG_Log_ErrorF("Error! Data length is not equal to dimension+1");
+		ZG_LOG_ERRORF("Error! Data length is not equal to dimension+1");
 		return;
 	}
 
@@ -121,7 +121,7 @@ void ZG_KeyframeTrack_AddKeyframesFloat(ZG_KeyframeTrack *_this,const float * _p
 
 		if(x_actual < x_old)
 		{
-			ZG_Log_Error("Malformed list point at index %i (independent variable is not ascendent) (last independent x: %f,current independent x: %f)",i,x_old, x_actual);
+			ZG_LOG_ERROR("Malformed list point at index %i (independent variable is not ascendent) (last independent x: %f,current independent x: %f)",i,x_old, x_actual);
 
 			return;
 		}
@@ -196,7 +196,7 @@ void ZG_KeyframeTrack_AddKeyframesBezier(ZG_KeyframeTrack * _this,ZG_List * _key
 
 		if(x_actual < x_old)
 		{
-			ZG_Log_Error("Malformed list point at index %i (independent variable is not ascendent) (p: %i,a: %i)",i,x_old, x_actual);
+			ZG_LOG_ERROR("Malformed list point at index %i (independent variable is not ascendent) (p: %i,a: %i)",i,x_old, x_actual);
 
 			return;
 		}
@@ -284,7 +284,7 @@ bool ZG_KeyframeTrack_Interpolate(ZG_KeyframeTrack * _this,float _t, float * _va
 			switch(_this->ease)
 			{
 			/*case EASE_BEZIER:
-				ZG_Log_Error("Bezier interpolator not implemented");
+				ZG_LOG_ERROR("Bezier interpolator not implemented");
 				break;*/
 			default:
 			case ZG_EASE_LINEAR:

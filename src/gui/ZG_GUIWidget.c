@@ -44,7 +44,7 @@ ZG_GUIWidget  * ZG_GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 void ZG_GUIWidget_SetWindow(ZG_GUIWidget *_this,ZG_GUIWindow *_window){
 	ZG_GUIWidgetData *data=_this->data;
 	if(data->window!=NULL){
-		ZG_Log_ErrorF("widget already has a window");
+		ZG_LOG_ERRORF("widget already has a window");
 		return;
 	}
 
@@ -152,14 +152,14 @@ void ZG_GUIWidget_AttachWidgetBase(ZG_GUIWidget *_this, ZG_GUIWidget *widget_to_
 	ZG_GUIWidgetData *data_widget=NULL;
 
 	if(widget_to_attach==NULL){
-		ZG_Log_ErrorF("widget null");
+		ZG_LOG_ERRORF("widget null");
 		return;
 	}
 
 	data_widget=widget_to_attach->data;
 
 	if(data_widget->parent!=NULL){
-		ZG_Log_ErrorF("Widget is already added. Please detach first");
+		ZG_LOG_ERRORF("Widget is already added. Please detach first");
 		return;
 	}
 
@@ -193,7 +193,7 @@ ZG_TTFontManager 	*ZG_GUIWidget_GetTTFontManager(ZG_GUIWidget *_this){
 	ZG_GUIWindow *window=ZG_GUIWidget_GetWindow(_this);
 
 	if(window == NULL){
-		ZG_Log_ErrorF("Cannot get ZG_TTFontManager because there's not window attached in this widget");
+		ZG_LOG_ERRORF("Cannot get ZG_TTFontManager because there's not window attached in this widget");
 	}
 
 	return ZG_GUIWindow_GetTTFontManager(window);
@@ -203,7 +203,7 @@ ZG_TextureManager 	*ZG_GUIWidget_GetTextureManager(ZG_GUIWidget *_this){
 	ZG_GUIWindow *window=ZG_GUIWidget_GetWindow(_this);
 
 	if(window == NULL){
-		ZG_Log_ErrorF("Cannot get ZG_TextureManager because there's not window attached in this widget");
+		ZG_LOG_ERRORF("Cannot get ZG_TextureManager because there's not window attached in this widget");
 	}
 
 	return ZG_GUIWindow_GetTextureManager(window);

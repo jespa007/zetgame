@@ -111,7 +111,7 @@ void ZG_Input_EnableMouseEvents(bool _enable_mouse_events){
 //------------------------------------------------------------------------------------------------
 void ZG_Input_ShowCursor(bool _show_cursor){
 	if(SDL_ShowCursor(_show_cursor)<0){
-		ZG_Log_Error("SDL_ShowCursor:%s",SDL_GetError());
+		ZG_LOG_ERROR("SDL_ShowCursor:%s",SDL_GetError());
 	}
 
 }
@@ -348,7 +348,7 @@ void ZG_Input_Update() {
 			case SDL_KEYDOWN:
 				id_key = event.key.keysym.sym;
 
-				//ZG_Log_Info("UnPress");
+				//ZG_LOG_INFO("UnPress");
 
 				if(SDLK_UP ==event.key.keysym.sym) {key_event.code_key =id_key = ZG_KEY_ID_UP; key_event.press_up = true;}
 				else if(SDLK_DOWN ==event.key.keysym.sym) {key_event.code_key =id_key = ZG_KEY_ID_DOWN; key_event.press_down = true;}
@@ -396,7 +396,7 @@ void ZG_Input_Update() {
 					}
 				}
 				if(id_key >= ZG_KEY_ID_LAST) {
-					ZG_Log_Error("unhandled id key %i", id_key);
+					ZG_LOG_ERROR("unhandled id key %i", id_key);
 				}
 				else{
 					if(id_key) {
@@ -417,7 +417,7 @@ void ZG_Input_Update() {
 				}
 				break;
 			default:
-				//ZG_Log_Info("unknow event %i",event.type);
+				//ZG_LOG_INFO("unknow event %i",event.type);
 				break;
 			}
 		}

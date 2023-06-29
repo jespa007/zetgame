@@ -143,13 +143,13 @@ uint32_t Scene_CallbackGetTimeScene(void *_this){
 void Scene_AttachAnimation(Scene *_this,Animation *animation){
 
 	if(animation == NULL) {
-		ZG_Log_Error("Animation null");
+		ZG_LOG_ERROR("Animation null");
 		return;
 	}
 
 	SceneData *data = _this->data;
 	if(List_Exist(data->animations,animation)){
-		ZG_Log_Error("animation already exist in scene");
+		ZG_LOG_ERROR("animation already exist in scene");
 	}
 
 	Animation_SetCallbackAnimationTime(animation,(CallbackAnimationTime){
@@ -162,13 +162,13 @@ void Scene_AttachAnimation(Scene *_this,Animation *animation){
 
 void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player){
 	if(movie_player == NULL) {
-		ZG_Log_Error("movie_player null");
+		ZG_LOG_ERROR("movie_player null");
 		return;
 	}
 
 	SceneData *data = _this->data;
 	if(List_Exist(data->movie_players,movie_player)){
-		ZG_Log_Error("movie_player already exist in scene");
+		ZG_LOG_ERROR("movie_player already exist in scene");
 	}
 
 	ZG_List_Add(data->movie_players,movie_player);
@@ -222,13 +222,13 @@ ZG_Entity * Scene_NewEntityFromManager(Scene *_this, const char *_str_entity_man
 /*
 void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter){
 	if(sprite2d_emitter == NULL) {
-		ZG_Log_Error("sprite2d_emitter null");
+		ZG_LOG_ERROR("sprite2d_emitter null");
 		return;
 	}
 
 	SceneData *data = _this->data;
 	if(List_Exist(data->sprite2d_emitters,sprite2d_emitter)){
-		ZG_Log_Error("sprite2d_emitter already exist in scene");
+		ZG_LOG_ERROR("sprite2d_emitter already exist in scene");
 	}
 
 	ZG_List_Add(data->sprite2d_emitters,sprite2d_emitter);

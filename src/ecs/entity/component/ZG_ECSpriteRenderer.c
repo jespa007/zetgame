@@ -3,40 +3,55 @@
 
 typedef struct{
 	//Shape2d *shape2d;
-	ZG_Geometry 		*	geometry;
+	ZG_ECGeometry 		*	ec_geometry;
+	ZG_ECMaterial 		*	ec_material;
 	ZG_Appearance	 	*  	appearance;
 	uint16_t 			width, height;
 }ZG_ECSpriteRendererData;
 
 static const char * g_ec_sprite_renderer_required_components[]={
-		ECTransform
-		,ECGeometry
-		,ECMaterial
-		,ECTexture
+		ZG_STR_CONCAT("",ECTransform)
+		,ZG_STR_CONCAT("",ECGeometry)
+		,ZG_STR_CONCAT("",ECMaterial)
+		,ZG_STR_CONCAT("",ECTexture)
 };
 
-ZG_EComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
-	ZG_EComponentList cl;
+ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
+	ZG_ComponentList cl;
 	cl.components=g_ec_sprite_renderer_required_components;
 	cl.n_components=ZG_ARRAY_SIZE(g_ec_sprite_renderer_required_components);
 
 	return cl;
 }
 
-void ZG_ECSpriteRenderer_Setup(void *_this,ZG_ComponentId _id){
+void ZG_ECSpriteRenderer_OnCreate(void *_this,ZG_ComponentId _id){
 	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
-	ec_sprite_renderer->header.entity=_entity;
-	ec_sprite_renderer->header.id=_id;
-	_entity->components[EC_SPRITE_RENDERER]=_this;
+
+	//ec_sprite_renderer->header.entity=_entity;
+	//ec_sprite_renderer->header.id=_id;
+	//_entity->components[EC_SPRITE_RENDERER]=_this;
 
 	ZG_ECSpriteRendererData *data=ZG_NEW(ZG_ECSpriteRendererData);
 
-	ZG_ECGeometry *ec_geometry=_entity->components[EC_GEOMETRY];
-	ZG_ECMaterial *ec_material=_entity->components[EC_MATERIAL];
+	data->ec_geometry=ZG_ENTITY_MANAGER_GET_COMPONENT(ec_sprite_renderer->header.entity_manager,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
+
+
+	if(data->ec_geometry==NULL){
+		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : EntityManager doesn't have geometry");
+		return;
+	}
+
+	data->ec_material=ZG_ENTITY_MANAGER_GET_COMPONENT(ec_sprite_renderer->header.entity_manager,ECMaterial,_id);//_entity->components[EC_MATERIAL];
+
+	if(data->ec_material==NULL){
+		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : EntityManager doesn't have material component");
+		return;
+	}
+
 
 	data->appearance=ZG_Appearance_New();
-	ec_geometry->geometry=data->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
-	ec_material->material=data->appearance->material=ZG_Material_New(0); // Mat by default ?
+	data->ec_geometry->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
+	data->ec_material->material=data->appearance->material=ZG_Material_New(0); // Mat by default ?
 
 	ec_sprite_renderer->data=data;
 
@@ -63,7 +78,7 @@ void ZG_ECSpriteRenderer_SetDimensions(ZG_ECSpriteRenderer *_this,uint16_t width
 
 
 		//.. and set vertex to geometry
-	   ZG_Geometry_SetMeshVertex(data->geometry,vertexs,ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN);
+	   ZG_Geometry_SetMeshVertex(data->ec_geometry->geometry,vertexs,ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN);
 
 		data->width=width;
 		data->height=height;

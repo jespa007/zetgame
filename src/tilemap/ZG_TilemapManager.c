@@ -91,7 +91,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 
 	for(unsigned i=0; i < ZG_ARRAY_SIZE(tilemap_attr); i++){
 		if((*tilemap_attr[i].value = cJSON_GetObjectItem(root,tilemap_attr[i].name))== NULL){
-			ZG_Log_Error("JsonParse: Cannot get '%s'",tilemap_attr[i].name);
+			ZG_LOG_ERROR("JsonParse: Cannot get '%s'",tilemap_attr[i].name);
 			return false;
 		}
 	}
@@ -99,7 +99,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 	size_t tileset_data_len=cJSON_GetArraySize(tilesets);
 
 	if(tileset_data_len == 0){
-		ZG_Log_ErrorF("JsonParse: there's no tilesets");
+		ZG_LOG_ERRORF("JsonParse: there's no tilesets");
 		return false;
 	}
 
@@ -109,13 +109,13 @@ bool ZG_TilemapManager_LoadFromMemory(
 
 		for(unsigned i=0; i < ZG_ARRAY_SIZE(tilemap_attr); i++){
 			if((*layer_attr[i].value = cJSON_GetObjectItem(layer,layer_attr[i].name)) == NULL){
-				ZG_Log_Error("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
+				ZG_LOG_ERROR("JsonParse: Cannot get tilemap attribute '%s'",layer_attr[i].name);
 				return false;
 			}
 		}
 
 		if(ZG_MapString_Get(data->tilemaps,layer_name->valuestring,NULL)!=NULL){
-			ZG_Log_Warning("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
+			ZG_LOG_WARNING("JsonParse: layer '%s' already added in manager",layer_name->valuestring);
 			continue;
 		}
 
@@ -123,12 +123,12 @@ bool ZG_TilemapManager_LoadFromMemory(
 		size_t tilemap_dim= tilemap_width->valueint*tilemap_height->valueint;
 
 		if(tilemap_data_len == 0){
-			ZG_Log_WarningF("JsonParse: empty tilemap");
+			ZG_LOG_WARNINGF("JsonParse: empty tilemap");
 			continue;
 		}
 
 		if(tilemap_data_len != tilemap_dim){
-			ZG_Log_Error("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
+			ZG_LOG_ERROR("JsonParse: tilemap_data length doesn't match tilemap_width * tilemap_height (%i != %i)",tilemap_data_len,tilemap_dim);
 			return false;
 		}
 
@@ -138,7 +138,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 		cJSON_ArrayForEach(tileset, tilesets) {
 			for(unsigned i=0; i < ZG_ARRAY_SIZE(tileset_attr); i++){
 				if((*tileset_attr[i].value = cJSON_GetObjectItem(tileset,tileset_attr[i].name))== NULL){
-					ZG_Log_Error("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
+					ZG_LOG_ERROR("JsonParse: Cannot get '%s' attribute in 'tilesets'",tileset_attr[i].name);
 					return false;
 				}
 			}
@@ -151,12 +151,12 @@ bool ZG_TilemapManager_LoadFromMemory(
 		}
 
 		if(tileset_found == false){
-			ZG_Log_Error("JsonParse layer '%s': tileset not found",layer_name->valuestring);
+			ZG_LOG_ERROR("JsonParse layer '%s': tileset not found",layer_name->valuestring);
 			return false;
 		}
 
 		if(tileset_found == false){
-			ZG_Log_Error("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
+			ZG_LOG_ERROR("JsonParse layer '%s': firstgid >= tilecount (%i >= %i)'",layer_name->valuestring,firstgid->valueint,tilecount->valueint);
 			return false;
 		}
 
@@ -172,7 +172,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 			if(firstgid->valueint <= idx_tile_block && idx_tile_block <= tilecount->valueint){
 				*(tiles+idx_tile)=idx_tile_block;
 			}else{
-				ZG_Log_Error("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
+				ZG_LOG_ERROR("JsonParse data layer '%s': tile at position %i out of bounds (min:%i max:%i)'"
 						,layer_name->valuestring
 						,idx_tile_block
 						,firstgid->valueint
@@ -244,12 +244,12 @@ bool ZG_TilemapManager_LoadFromMemory(
 
 					cJSON_ArrayForEach(tilesets_tile_animation, tilesets_tile_animations) {
 						if((tilesets_tile_animation_duration = cJSON_GetObjectItem(tilesets_tile_animation,"duration")) == NULL){
-							ZG_Log_ErrorF("JsonParse data tilesets->animation->duration not found");
+							ZG_LOG_ERRORF("JsonParse data tilesets->animation->duration not found");
 							continue;
 						}
 
 						if((tilesets_tile_animation_tileid = cJSON_GetObjectItem(tilesets_tile_animation,"tileid")) == NULL){
-							ZG_Log_ErrorF("JsonParse data tilesets->animation->tileid not found");
+							ZG_LOG_ERRORF("JsonParse data tilesets->animation->tileid not found");
 							continue;
 						}
 
@@ -272,7 +272,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 
 						}
 
-						ZG_Log_Info("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
+						ZG_LOG_INFO("Loaded tile: %i duration: %i OK",tileset_animation_frame->tile_id,tileset_animation_frame->duration);
 
 						ZG_List_Add(tile_animation->frames,tileset_animation_frame);
 					}

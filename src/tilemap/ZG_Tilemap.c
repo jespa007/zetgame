@@ -9,7 +9,7 @@ typedef struct{
 	//short 		*tiles; // map tile ...
 	ZG_Geometry 	*geometry;
 
-	//short  		*indexs;
+	//short  		*indices;
 	//float	 	*mesh_vertexs;
 	//float 		*mesh_texture;
 	ZG_Texture 	*texture;
@@ -54,19 +54,16 @@ ZG_Tilemap *ZG_Tilemap_New(
 	int tile_count_x = _tilesets->tile_count_x;
 
 	int n_vertexs = _width*_height*3*2; // *3*2 because each tile is done by 2 triangles (each one by 3 vertexes)
-	int n_indexs = N_INDICES_TRIANGLES_FROM_N_VERTEXS(n_vertexs);
+	int n_indices = ZG_N_INDICES_TRIANGLES_FROM_N_VERTEXS(n_vertexs);
 	int mesh_vertexs_len=n_vertexs*3; // *3 because it has 3d coords (xyz)
 	int mesh_texture_len=n_vertexs*2; // *2 because it has 2d coords (uv)
 
-	short *indexs = malloc(sizeof(short)*n_indexs);
+	short *indices = malloc(sizeof(short)*n_indices);
 	float *mesh_vertexs=malloc(sizeof(float)*mesh_vertexs_len);
 	float *mesh_texture=malloc(sizeof(float)*mesh_texture_len);
 
 	geometry=data->geometry = 	ZG_Geometry_New(
-			GEOMETRY_TYPE_TRIANGLES
-			,n_indexs
-			,n_vertexs,
-			  ZG_GEOMETRY_PROPERTY_TEXTURE
+			ZG_GEOMETRY_TYPE_TRIANGLES
 	);
 
 	// mesh vertexs
@@ -76,12 +73,12 @@ ZG_Tilemap *ZG_Tilemap_New(
 		for(int x = 0; x < (int)_width; x++) // new quad...
 		{
 			// configure indices
-			*(indexs+offset_ptr_indices+0)=(offset_indices+0);
-			*(indexs+offset_ptr_indices+1)=(offset_indices+1);
-			*(indexs+offset_ptr_indices+2)=(offset_indices+2);
-			*(indexs+offset_ptr_indices+3)=(offset_indices+0);
-			*(indexs+offset_ptr_indices+4)=(offset_indices+2);
-			*(indexs+offset_ptr_indices+5)=(offset_indices+3);
+			*(indices+offset_ptr_indices+0)=(offset_indices+0);
+			*(indices+offset_ptr_indices+1)=(offset_indices+1);
+			*(indices+offset_ptr_indices+2)=(offset_indices+2);
+			*(indices+offset_ptr_indices+3)=(offset_indices+0);
+			*(indices+offset_ptr_indices+4)=(offset_indices+2);
+			*(indices+offset_ptr_indices+5)=(offset_indices+3);
 
 			// configure 4 vertexes
 
@@ -142,13 +139,13 @@ ZG_Tilemap *ZG_Tilemap_New(
 		}
 	}
 
-	ZG_Geometry_SetIndices(geometry,indexs,n_indexs);
+	ZG_Geometry_SetIndices(geometry,indices,n_indices);
 	ZG_Geometry_SetMeshVertex(geometry,mesh_vertexs,mesh_vertexs_len);
 	ZG_Geometry_SetMeshTexture(geometry,mesh_texture,mesh_texture_len);
 
 	free(mesh_vertexs);
 	free(mesh_texture);
-	free(indexs);
+	free(indices);
 
 	return tm;
 }

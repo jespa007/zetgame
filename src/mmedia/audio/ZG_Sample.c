@@ -56,7 +56,7 @@ int ZG_Sample_GetFreeBlock(void){
 		if(g_mixer_vars->samples.loaded[i].type == ZG_SOUND_TYPE_NONE)
 			return i;
 	}
-	return ZG_INVALID_SOUND_IDX;
+	return ZG_INVALID_IDX;
 }
 
 ZG_SAMPLE ZG_Sample_GetFreeSlotToPlay(AudioSamplePlay * ep){
@@ -64,7 +64,7 @@ ZG_SAMPLE ZG_Sample_GetFreeSlotToPlay(AudioSamplePlay * ep){
 	for(i=0; i < ZG_MAX_PLAY_SAMPLES; i++){
 		if(!ep[i].is_playing) return i;
 	}
-	return ZG_INVALID_SOUND_IDX;
+	return ZG_INVALID_IDX;
 }
 
 
@@ -73,19 +73,19 @@ ZG_SAMPLE ZG_Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 	int n_loaded_sample;
 
 	if(strncmp((char *)ptr+0, "RIFF",4) != 0){
-		ZG_Log_ErrorF( "No valid wave format!");
-		return ZG_INVALID_SOUND_IDX;
+		ZG_LOG_ERRORF( "No valid wave format!");
+		return ZG_INVALID_IDX;
 	}
 
-	if((n_loaded_sample = ZG_Sample_GetFreeBlock())==ZG_INVALID_SOUND_IDX){
-		ZG_Log_ErrorF( "Max sounds reached!");
-		return ZG_INVALID_SOUND_IDX;
+	if((n_loaded_sample = ZG_Sample_GetFreeBlock())==ZG_INVALID_IDX){
+		ZG_LOG_ERRORF( "Max sounds reached!");
+		return ZG_INVALID_IDX;
 	}
 
 
 	if(size > 1024L*512L){
-		ZG_Log_ErrorF( "Max size reached (Max is 512Kb!");
-		return ZG_INVALID_SOUND_IDX;
+		ZG_LOG_ERRORF( "Max size reached (Max is 512Kb!");
+		return ZG_INVALID_IDX;
 	}
 
 	SDL_AudioSpec wav_spec;
@@ -95,8 +95,8 @@ ZG_SAMPLE ZG_Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 
 	/* Load the WAV */
 	if (SDL_LoadWAV_RW(SDL_RWFromMem(ptr,size), 1,&wav_spec, &wav_buffer, &wav_length) == NULL) {
-		ZG_Log_Error( "Could not open effect from memory: %s", SDL_GetError());
-		return ZG_INVALID_SOUND_IDX;
+		ZG_LOG_ERROR( "Could not open effect from memory: %s", SDL_GetError());
+		return ZG_INVALID_IDX;
 	} else {
 		//printf(" loaded effect from memory - %iHz %ich  ",wav_spec.freq, wav_spec.keyframe_tracks);
 
@@ -123,7 +123,7 @@ ZG_SAMPLE ZG_Sample_LoadFromMemory(unsigned char *ptr,uint32_t size){
 }
 
 ZG_SAMPLE ZG_Sample_Load(const char *_filename){
-	ZG_SAMPLE idx_sound=ZG_INVALID_SOUND_IDX;
+	ZG_SAMPLE idx_sound=ZG_INVALID_IDX;
 	ZG_BufferByte *buffer=ZG_FileSystem_ReadFile(_filename);
 
 	if(buffer!=NULL){
@@ -136,7 +136,7 @@ ZG_SAMPLE ZG_Sample_Load(const char *_filename){
 bool ZG_Sample_Play(int id){
 
 	if(!ZG_Sample_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -145,7 +145,7 @@ bool ZG_Sample_Play(int id){
 	AudioSample *eff = (AudioSample *)sp_info->data;
 	ZG_SAMPLE idx = ZG_Sample_GetFreeSlotToPlay(eff->current_play);
 
-	if(idx!=ZG_INVALID_SOUND_IDX){ // start play
+	if(idx!=ZG_INVALID_IDX){ // start play
 		eff->current_play[idx].position=0;
 		eff->current_play[idx].is_playing=1;
 	}
@@ -155,7 +155,7 @@ bool ZG_Sample_Play(int id){
 
 bool ZG_Sample_Stop(ZG_SAMPLE id){
 	if(!ZG_Sample_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -174,7 +174,7 @@ bool ZG_Sample_Stop(ZG_SAMPLE id){
 
 bool ZG_Sample_SetVolume(ZG_SAMPLE id, float vol){
 	if(!ZG_Sample_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return false;
 	}
 
@@ -186,7 +186,7 @@ bool ZG_Sample_SetVolume(ZG_SAMPLE id, float vol){
 
 float ZG_Sample_GetVolume(ZG_SAMPLE id){
 	if(!ZG_Sample_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return 1;
 	}
 
@@ -196,7 +196,7 @@ float ZG_Sample_GetVolume(ZG_SAMPLE id){
 
 uint32_t ZG_Sample_GetDuration(ZG_SAMPLE id){
 	if(!ZG_Sample_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return 0;
 	}
 
@@ -207,7 +207,7 @@ uint32_t ZG_Sample_GetDuration(ZG_SAMPLE id){
 void ZG_Sample_Unload(ZG_SAMPLE id){
 
 	if(!ZG_Sample_IsValid(id)){
-		ZG_Log_ErrorF("ID not valid!");
+		ZG_LOG_ERRORF("ID not valid!");
 		return;
 	}
 	//
@@ -228,7 +228,7 @@ void ZG_Sample_Unload(ZG_SAMPLE id){
 		free(s_effect);
 	}
 	else{
-		ZG_Log_ErrorF("ID not type WAV!");
+		ZG_LOG_ERRORF("ID not type WAV!");
 	}
 }
 

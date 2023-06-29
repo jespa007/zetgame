@@ -23,9 +23,9 @@ struct ZG_ECTransform{
 
 //------------------------------------------------
 // Component create/update/destroy
-void			ZG_ECTransform_Init(void *_this, ZG_ComponentId _idx);
-void			ZG_ECTransform_Update(void *_this);
-void 	 		ZG_ECTransform_Destroy(void *_this);
+void			ZG_ECTransform_OnCreate(void *_this, ZG_ComponentId _idx);
+void			ZG_ECTransform_OnUpdate(void *_this);
+void 	 		ZG_ECTransform_OnDestroy(void *_this);
 //------------------------------------------------
 
 bool			ZG_ECTransform_Attach(ZG_ECTransform *_this, ZG_ECTransform *node);

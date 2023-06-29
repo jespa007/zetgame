@@ -22,7 +22,7 @@ static void ZG_GUIButton_PostUpdate( void *gui_button);
 void ZG_GUIButton_Init(void){
 	if(g_default_texture_button != NULL)
 	{
-		ZG_Log_WarningF("ZG_GUIButton already initialized");
+		ZG_LOG_WARNINGF("ZG_GUIButton already initialized");
 		return;
 	}
 
@@ -32,7 +32,7 @@ void ZG_GUIButton_Init(void){
 void ZG_GUIButton_DeInit(void){
 	if(g_default_texture_button == NULL)
 	{
-		ZG_Log_WarningF("ZG_GUIButton not initialized");
+		ZG_LOG_WARNINGF("ZG_GUIButton not initialized");
 		return;
 	}
 
@@ -83,7 +83,7 @@ static void  ZG_GUIButton_PostUpdateWidget(void *unused, void *gui_button){
 	ZG_Vector2i mouse_pos=ZG_Input_GetMousePosition();
 
 	if(ZG_Input_IsLeftButtonPressed() && Vector2i_PointRectCollision(mouse_pos,ini_pos,end_pos)){
-		ZG_Log_Info("clicked");
+		ZG_LOG_INFO("clicked");
 		// handle on even click
 		for(unsigned i=0; i < data->on_click_events->count; i++){
 			ZG_Callback *cf=data->on_click_events->items[i];
@@ -135,7 +135,7 @@ void ZG_GUIButton_PostUpdate(void *gui_button){
 	}
 
 	if((ZG_Input_IsLeftButtonPressed() && data->mouse_collide) || auto_click_on_over){
-		ZG_Log_InfoF("clicked");
+		ZG_LOG_INFOF("clicked");
 		// handle on even click
 		ZG_MouseEvent mouse_event={0};
 

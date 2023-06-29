@@ -37,7 +37,7 @@ typedef struct{
 typedef struct{
 	const char **	components;
 	size_t			n_components;
-}ZG_EComponentList;
+}ZG_ComponentList;
 
 
 /*

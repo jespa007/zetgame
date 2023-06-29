@@ -286,7 +286,7 @@ ZG_HorizontalAlignment ZG_TextBox_ParseTextAlign(const char *_text_align){
 	}else if(ZG_STRCMP(str_text_align,==,"justify")){
 		horizontal_alignment=ZG_HORIZONTAL_ALIGNMENT_JUSTIFY;
 	}else{
-		ZG_Log_Error("Unknow align text '%s' ",_text_align);
+		ZG_LOG_ERROR("Unknow align text '%s' ",_text_align);
 	}
 
 	ZG_FREE(str_text_align);
@@ -302,7 +302,7 @@ ZG_VerticalAlignment ZG_TextBox_ParseVerticalAlignment(const char *_vertical_tex
 	}else if(ZG_STRCMP(str_vertical_align,==,"center")){
 		vertical_alignment=ZG_VERTICAL_ALIGNMENT_CENTER;
 	}else{
-		ZG_Log_Error("Unknow vertical text '%s' ",_vertical_text);
+		ZG_LOG_ERROR("Unknow vertical text '%s' ",_vertical_text);
 	}
 
 	ZG_FREE(str_vertical_align);

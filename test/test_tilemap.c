@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
 		)){
 
 		if((tilemap=TilemapManager_Get(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
-			ZG_Log_Error("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
+			ZG_LOG_ERROR("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
 		}
 	}
 

@@ -88,7 +88,7 @@ ZG_Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
 		}
 
 		if(ZG_File_Exists(filename) == false){
-			ZG_Log_Error("File '%s' not exist either in the given path or in the resource path",_filename);
+			ZG_LOG_ERROR("File '%s' not exist either in the given path or in the resource path",_filename);
 			return NULL;
 		}
 

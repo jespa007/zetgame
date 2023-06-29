@@ -15,7 +15,7 @@ ZG_BufferByte * ZG_File_Read(const char *filename){
 			readed_elements = fread(buffer->ptr, 1, file_length, fp);
 
 			if((long int)readed_elements != file_length) {
-				ZG_Log_Warning("number elements doesn't match with length file (%s)",filename);
+				ZG_LOG_WARNING("number elements doesn't match with length file (%s)",filename);
 				ZG_BufferByte_Delete(buffer);
 				return NULL;
 			}
@@ -23,9 +23,9 @@ ZG_BufferByte * ZG_File_Read(const char *filename){
 
 			return buffer;
 		}
-		else  ZG_Log_Error("I can't read file \"%s\"",filename);
+		else  ZG_LOG_ERROR("I can't read file \"%s\"",filename);
 	}
-	else  ZG_Log_Error("I can't open file \"%s\" for reading",filename);
+	else  ZG_LOG_ERROR("I can't open file \"%s\" for reading",filename);
 
 
 	return NULL;
@@ -50,13 +50,13 @@ bool	File_Write(const char *filename, ZG_BufferByte * buf){
 		if(wrote_elements == buf->len) {
 			ok=true;
 		}else{
-			ZG_Log_Warning("number elements wrote doesn't match with length file (%s)",filename);
+			ZG_LOG_WARNING("number elements wrote doesn't match with length file (%s)",filename);
 		}
 
 		fclose(fp);
 	}
 	else  {
-		ZG_Log_Error("I can't open file \"%s\" for writting",filename);
+		ZG_LOG_ERROR("I can't open file \"%s\" for writting",filename);
 	}
 
 

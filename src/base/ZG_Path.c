@@ -31,11 +31,11 @@ char *  ZG_Path_GetDirectoryName(const char * _absolute_filename) {
 			strncpy(dst,_absolute_filename,len);
 		}
 		else{
-			ZG_Log_Error("Reached MAX_ABSOLUTE_FILENAME_LENGTH or 0 ('%s':%i)",_absolute_filename,len);
+			ZG_LOG_ERROR("Reached MAX_ABSOLUTE_FILENAME_LENGTH or 0 ('%s':%i)",_absolute_filename,len);
 		}
 	}
 	else{
-		ZG_Log_Error("Cannot get folder name on '%s'",_absolute_filename);
+		ZG_LOG_ERROR("Cannot get folder name on '%s'",_absolute_filename);
 	}
 	return dst;
 }
@@ -85,7 +85,7 @@ char *  ZG_Path_GetFilenameWithoutExtension(const char * _absolute_filename) {
 		memset(dst,0,len+1);
 		strncpy(dst,filename_aux,len);
 	}else{
-		ZG_Log_Error("Reached MAX_PATH or 0 ('%s':%i)",filename_aux,len);
+		ZG_LOG_ERROR("Reached MAX_PATH or 0 ('%s':%i)",filename_aux,len);
 	}
 
 	free(filename_aux);

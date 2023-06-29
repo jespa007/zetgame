@@ -123,7 +123,7 @@ void * 		ZG_MapInt_Get(ZG_MapInt *_this,intptr_t key){
 void ZG_MapInt_Erase(ZG_MapInt *_this,intptr_t key){
 	int pos=MapString_GetIdx(_this,key);
 	if(pos == ZG_ERROR){ // value already exist (assign)...
-		ZG_Log_ErrorF("key not found");
+		ZG_LOG_ERRORF("key not found");
 		return;
 	}
 
@@ -140,7 +140,7 @@ void	ZG_MapInt_EraseAndFreeItem(ZG_MapInt *_this,intptr_t key){
 		ZG_FREE(val);
 		ZG_MapInt_Erase(_this,key);
 	}else{
-		ZG_Log_Warning("key %i not exist in map",key);
+		ZG_LOG_WARNING("key %i not exist in map",key);
 	}
 
 }

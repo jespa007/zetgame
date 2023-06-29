@@ -16,7 +16,7 @@ void Sprite2dEmitter_Delete(Sprite2dEmitter *_this){
 			(*function_ptr)(param1);
 		}
 		catch(std::exception & ex){
-			ZG_Log_Error("%s::%s:%s",obj_name,function_ptr_name,ex.what());
+			ZG_LOG_ERROR("%s::%s:%s",obj_name,function_ptr_name,ex.what());
 		}
 
 	}
@@ -29,7 +29,7 @@ void CSprite2dEmitter::DispatchCallbackFuncionSprite2dParam2(const char * obj_na
 			(*function_ptr)(param1,param2);
 		}
 		catch(std::exception & ex){
-			ZG_Log_Error("%s::%s:%s",obj_name,function_ptr_name,ex.what());
+			ZG_LOG_ERROR("%s::%s:%s",obj_name,function_ptr_name,ex.what());
 		}
 
 	}
@@ -497,7 +497,7 @@ CSprite2d *  CSprite2dEmitter::spawn(int x, int y, double  angle_dir, double  sp
 		}
 	}
 
-	ZG_Log_Error("%s: cannot spawn more sprites. Increase max sprite number (current: %i)",SPRITE_EMITTER_NAME,max_sprites);
+	ZG_LOG_ERROR("%s: cannot spawn more sprites. Increase max sprite number (current: %i)",SPRITE_EMITTER_NAME,max_sprites);
 	return NULL;
 }
 
@@ -531,11 +531,11 @@ CSprite2d * CSprite2dEmitter::spawn(int x, int y, double  speed,CSprite2d *targe
 		CPoint2i *p2=target->getPosition();
 
 		angle = atan2_approximation1(p2->y-y, p2->x-x);
-		//ZG_Log_Info("angle: %f",angle);
+		//ZG_LOG_INFO("angle: %f",angle);
 		angle=-RADIANS_TO_DEGREES(angle);
-		//ZG_Log_Info("angle: %f",angle);
+		//ZG_LOG_INFO("angle: %f",angle);
 		if(angle < 0) angle+=360;
-		//ZG_Log_Info("angle: %f",angle);
+		//ZG_LOG_INFO("angle: %f",angle);
 
 		spr2d=spawn(x,y,angle,speed);
 	}

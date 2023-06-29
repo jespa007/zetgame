@@ -11,7 +11,7 @@ void * zg_malloc(size_t size,const char *file, int line){
 #endif
 
 	if(p==NULL){
-		ZG_Log_Error("Cannot allocate %i",size);
+		ZG_LOG_ERROR("Cannot allocate %i",size);
 		return NULL;
 	}
 

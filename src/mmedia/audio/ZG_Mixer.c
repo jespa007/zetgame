@@ -129,7 +129,7 @@ void ZG_Mixer_AudioCallback(void *udata, uint8_t *stream, int len)
 bool ZG_Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint32_t *wav_length) {
 
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
+		ZG_LOG_ERRORF("Mixer not init");
 		return false;
 	}
 
@@ -152,7 +152,7 @@ bool ZG_Mixer_ConvertAudio(SDL_AudioSpec * wav_spec, uint8_t **wav_buffer,	uint3
 				, g_mixer_vars->sdl_player_settings.freq);
 
 		if(ret == -1){
-			ZG_Log_Error("Error converting sound : %s", SDL_GetError());
+			ZG_LOG_ERROR("Error converting sound : %s", SDL_GetError());
 			return false;
 		}else{
 
@@ -188,7 +188,7 @@ int ZG_Mixer_GetSDLFormat(void){
 		break;
 	}
 
-	ZG_Log_Error("Format not supported %i. Return 16 bits (default)",g_mixer_vars->current_format);
+	ZG_LOG_ERROR("Format not supported %i. Return 16 bits (default)",g_mixer_vars->current_format);
 	return AUDIO_S16;
 }
 
@@ -208,15 +208,15 @@ void ZG_Mixer_ConfigureAudioFormat(ZG_AudioFormat format){
 
 void ZG_Mixer_PrintListSoundDriver(void){
 	for (uint8_t i = 0; i < SDL_GetNumAudioDrivers(); ++i) {
-		ZG_Log_Info("Audio driver %d: %s", i, SDL_GetAudioDriver(i));
+		ZG_LOG_INFO("Audio driver %d: %s", i, SDL_GetAudioDriver(i));
 	}
 
-	ZG_Log_Info("current audio driver is %s",SDL_GetCurrentAudioDriver());
+	ZG_LOG_INFO("current audio driver is %s",SDL_GetCurrentAudioDriver());
 
 	int nbDevice = SDL_GetNumAudioDevices(0);
 
 	for(int i = 0; i < nbDevice; ++i){
-		ZG_Log_Info("device n�%i : %s",SDL_GetAudioDeviceName(i, 0));
+		ZG_LOG_INFO("device n�%i : %s",SDL_GetAudioDeviceName(i, 0));
 	}
 }
 
@@ -225,7 +225,7 @@ bool ZG_Mixer_Init(void){
 	//ZG_UNUSUED_PARAM(format);
 
 	if(g_mixer_vars != NULL){
-		ZG_Log_ErrorF("Mixer already init");
+		ZG_LOG_ERRORF("Mixer already init");
 		return false;
 	}
 
@@ -236,7 +236,7 @@ bool ZG_Mixer_Init(void){
 		SDL_setenv("SDL_AUDIODRIVER", "directsound", true);
 #endif
 		if(SDL_InitSubSystem(SDL_INIT_AUDIO)<0){
-			ZG_Log_Error("Failed to init SDL_InitSubSystem Audio: %s", SDL_GetError());
+			ZG_LOG_ERROR("Failed to init SDL_InitSubSystem Audio: %s", SDL_GetError());
 			return false;
 		}
 	}
@@ -257,10 +257,10 @@ bool ZG_Mixer_Init(void){
 	g_mixer_vars->sdl_player_settings.callback = ZG_Mixer_AudioCallback;  // you wrote this function elsewhere.
 
 	if (SDL_OpenAudio(&g_mixer_vars->sdl_player_settings, &have) < 0) {
-		ZG_Log_Error("Failed to open audio: %s", SDL_GetError());
+		ZG_LOG_ERROR("Failed to open audio: %s", SDL_GetError());
 	} else {
 		if (have.format != g_mixer_vars->sdl_player_settings.format){
-			ZG_Log_Error( "Cannot init the audio at (%iHZ %iCH ).",ZG_MIXER_FREQUENCY, ZG_MIXER_N_CHANNELS);
+			ZG_LOG_ERROR( "Cannot init the audio at (%iHZ %iCH ).",ZG_MIXER_FREQUENCY, ZG_MIXER_N_CHANNELS);
 		}
 
 		ZG_Mixer_ConfigureAudioFormat(g_mixer_vars->current_format);
@@ -273,7 +273,7 @@ bool ZG_Mixer_Init(void){
 
 			// set length as constant...
 			g_mixer_vars->cvt_16b_to_audio->len = g_mixer_vars->frame_size/g_mixer_vars->cvt_16b_to_audio->len_mult;
-			ZG_Log_Info("mul:%i ratio:%f request:%i frame: %i"
+			ZG_LOG_INFO("mul:%i ratio:%f request:%i frame: %i"
 					,g_mixer_vars->cvt_16b_to_audio->len_mult
 					,g_mixer_vars->cvt_16b_to_audio->len_ratio
 					,g_mixer_vars->cvt_16b_to_audio->len
@@ -282,7 +282,7 @@ bool ZG_Mixer_Init(void){
 			SDL_assert(g_mixer_vars->cvt_16b_to_audio->needed); // obviously, this one is always needed.
 		}
 
-		ZG_Log_Info("Init %s %i channels at %iHz",CONST_INT_TO_STRING(AUDIO_S16),have.channels,ZG_MIXER_FREQUENCY);
+		ZG_LOG_INFO("Init %s %i channels at %iHz",CONST_INT_TO_STRING(AUDIO_S16),have.channels,ZG_MIXER_FREQUENCY);
 
 		g_mixer_vars->frame_size=have.size;
 		//ZG_Mixer_StartThread();
@@ -298,7 +298,7 @@ bool ZG_Mixer_Init(void){
 
 void ZG_Mixer_Update(void){
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
+		ZG_LOG_ERRORF("Mixer not init");
 		return;
 	}
 	ZG_Music_Update();
@@ -337,7 +337,7 @@ void ZG_Mixer_StopThread(){
 }*/
 void ZG_Mixer_StopAll(void){
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
+		ZG_LOG_ERRORF("Mixer not init");
 		return;
 	}
 	ZG_Sample_StopAll();
@@ -346,7 +346,7 @@ void ZG_Mixer_StopAll(void){
 
 void ZG_Mixer_UnloadAll(void){
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
+		ZG_LOG_ERRORF("Mixer not init");
 		return;
 	}
 	ZG_Music_UnloadAll();
@@ -357,7 +357,7 @@ void ZG_Mixer_UnloadAll(void){
 void ZG_Mixer_DeInit(void){
 
 	if(g_mixer_vars == NULL){
-		ZG_Log_ErrorF("Mixer not init");
+		ZG_LOG_ERRORF("Mixer not init");
 		return;
 	}
 
@@ -373,7 +373,7 @@ void ZG_Mixer_DeInit(void){
 	free(g_mixer_vars);
 	g_mixer_vars=NULL;
 
-	ZG_Log_InfoF("MIXER_deinit");
+	ZG_LOG_INFOF("MIXER_deinit");
 }
 
 

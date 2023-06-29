@@ -8,7 +8,7 @@ typedef struct{
 			normal; // normal object id
 }ZG_GeometryDataGL;
 
-void  ZG_Geometry_GL_New(ZG_Geometry *geometry, uint32_t properties){
+void  ZG_Geometry_GL_New(ZG_Geometry *geometry){
 
 	ZG_GeometryDataGL * data= ZG_NEW(ZG_GeometryDataGL);
 	*data=(ZG_GeometryDataGL){
@@ -23,39 +23,19 @@ void  ZG_Geometry_GL_New(ZG_Geometry *geometry, uint32_t properties){
 	glGenBuffers(1, &data->index);
 	glGenBuffers(1, &data->vertex);
 
-	// generate VBO for texture
-	if(properties & ZG_GEOMETRY_PROPERTY_TEXTURE){
-		glGenBuffers(1, &data->texture);
-	}
-
-	// generate VBO for color
-	if(properties & ZG_GEOMETRY_PROPERTY_COLOR){
-		glGenBuffers(1, &data->color);
-	}
-
-	// generate VBO for normal
-	if(properties & ZG_GEOMETRY_PROPERTY_NORMAL){
-		glGenBuffers(1, &data->normal);
-	}
-
 	geometry->data=data;
 }
 
 
-void ZG_Geometry_GL_SetIndices(ZG_Geometry * geometry, const short *indices,size_t indices_len) {
+void ZG_Geometry_GL_SetIndices(ZG_Geometry * _geometry, const short *indices,size_t indices_len) {
 
-	if(geometry==NULL) return;
+	if(_geometry==NULL) return;
 
-	ZG_GeometryDataGL * data = (ZG_GeometryDataGL *)geometry->data;
+	ZG_GeometryDataGL * data = (ZG_GeometryDataGL *)_geometry->data;
 
-
-	if(indices_len != geometry->index_length){
-		ZG_Log_Error("Index count doesn't matches (indices:%i vertexes:%i)",indices_len,geometry->index_length);
-		return;
-	}
 
 	if(data->index == GL_INVALID_VALUE) {
-		ZG_Log_ErrorF("Index VBO not build");
+		ZG_LOG_ERRORF("Index VBO not build");
 		return;
 	}
 
@@ -65,103 +45,111 @@ void ZG_Geometry_GL_SetIndices(ZG_Geometry * geometry, const short *indices,size
 }
 
 
-void ZG_Geometry_GL_SetMeshVertex(ZG_Geometry *geometry, const float *mesh_vertexs,size_t mesh_vertexs_len) {
+void ZG_Geometry_GL_SetMeshVertex(ZG_Geometry *_geometry, const float *_vertexs,size_t _vertexs_len) {
 
 	ZG_GeometryDataGL * data = NULL;
 
-	if(geometry==NULL ) return;
-	if(mesh_vertexs_len != (geometry->n_vertexs*ZG_VERTEX_COORDS_LEN)){
-		ZG_Log_ErrorF("Vertex count doesn't matches");
+	if(_geometry==NULL ) return;
+	/*if(_vertexs_len != (geometry->n_vertexs*ZG_VERTEX_COORDS_LEN)){
+		ZG_LOG_ERRORF("Vertex count doesn't matches with indices len. In case of indices has been update set indices first");
 		return;
-	}
+	}*/
 
-	data = (ZG_GeometryDataGL *)geometry->data;
+	data = (ZG_GeometryDataGL *)_geometry->data;
 
 	if(data->vertex == GL_INVALID_VALUE) {
-		ZG_Log_ErrorF("Vertex VBO not build");
+		ZG_LOG_ERRORF("Vertex VBO not build");
 		return;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, data->vertex);
-	glBufferData(GL_ARRAY_BUFFER, mesh_vertexs_len*sizeof(float), mesh_vertexs, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _vertexs_len*sizeof(float), _vertexs, GL_DYNAMIC_DRAW);
 
 }
 
 
-void ZG_Geometry_GL_SetMeshTexture(ZG_Geometry * geometry, const float *mesh_texure_vertexs,size_t mesh_texture_vertexs_len) {
+void ZG_Geometry_GL_SetMeshTexture(ZG_Geometry * _geometry, const float *_vertexs,size_t _vertexs_len) {
 	ZG_GeometryDataGL * data = NULL;
 
-	if(geometry==NULL) return;
-	if(mesh_texture_vertexs_len != (geometry->n_vertexs*ZG_TEXTURE_COORDS_LEN)){
-		ZG_Log_ErrorF("Vertex count doesn't matches");
+	if(_geometry==NULL) return;
+	/*if(mesh_texture_vertexs_len != (geometry->n_vertexs*ZG_TEXTURE_COORDS_LEN)){
+		ZG_LOG_ERRORF("Vertex count doesn't matches");
 		return;
-	}
+	}*/
 
 
-	data = (ZG_GeometryDataGL *)geometry->data;
+	data = (ZG_GeometryDataGL *)_geometry->data;
 
 	if(data->texture == GL_INVALID_VALUE) {
-		ZG_Log_ErrorF("ZG_Texture VBO not build or not set in constructor (New_Geometry)");
-		return;
+		//ZG_LOG_ERRORF("ZG_Texture VBO not build or not set in constructor (New_ZG_Geometry)");
+		//return;
+		// generate VBO for texture
+		glGenBuffers(1, &data->texture);
 	}
 
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, data->texture);
-	glBufferData(GL_ARRAY_BUFFER, mesh_texture_vertexs_len*sizeof(float), mesh_texure_vertexs, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _vertexs_len*sizeof(float), _vertexs, GL_DYNAMIC_DRAW);
 }
 
 
 
-void ZG_Geometry_GL_SetMeshColor(ZG_Geometry * geometry,const float *mesh_color_vertexs,size_t mesh_color_vertexs_len) {
+void ZG_Geometry_GL_SetMeshColor(ZG_Geometry * _geometry,const float *_vertexs,size_t _vertexs_len) {
 
 	ZG_GeometryDataGL * data = NULL;
 
-	if(geometry==NULL) return;
-	if(mesh_color_vertexs_len != (geometry->n_vertexs*(ZG_COLOR_COORDS_LEN))){
-		ZG_Log_ErrorF("Vertex count doesn't matches");
+	if(_geometry==NULL) return;
+	/*if(mesh_color_vertexs_len != (geometry->n_vertexs*(ZG_COLOR_COORDS_LEN))){
+		ZG_LOG_ERRORF("Vertex count doesn't matches");
 		return;
-	}
+	}*/
 
-	data = (ZG_GeometryDataGL *)geometry->data;
+	data = (ZG_GeometryDataGL *)_geometry->data;
 
 	if(data->color == GL_INVALID_VALUE) {
-		ZG_Log_ErrorF("Color VBO not build or not set in constructor (New_Geometry)");
-		return;
+		//ZG_LOG_ERRORF("Color VBO not build or not set in constructor (New_ZG_Geometry)");
+		//return;
+
+		// generate VBO for color
+		glGenBuffers(1, &data->color);
+		// generate VBO for normal
 	}
+
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, data->color);
-	glBufferData(GL_ARRAY_BUFFER, mesh_color_vertexs_len*sizeof(float), mesh_color_vertexs, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _vertexs_len*sizeof(float), _vertexs, GL_DYNAMIC_DRAW);
 }
 
 
-void ZG_Geometry_GL_SetMeshNormal(ZG_Geometry * geometry,const float *mesh_normal_vertexs,size_t mesh_normal_vertexs_len) {
+void ZG_Geometry_GL_SetMeshNormal(ZG_Geometry * _geometry,const float *_vertexs,size_t _vertexs_len) {
 
 	ZG_GeometryDataGL * data = NULL;
 
-	if(geometry==NULL) return;
-	if(mesh_normal_vertexs_len != (geometry->n_vertexs*ZG_NORMAL_COORDS_LEN)){
-		ZG_Log_ErrorF("Vertex count doesn't matches");
-		return;
-	}
-
-	data = (ZG_GeometryDataGL *)geometry->data;
+	data = (ZG_GeometryDataGL *)_geometry->data;
 
 	if(data->normal == GL_INVALID_VALUE) {
-		ZG_Log_ErrorF("Normal VBO not build or not set in constructor (New_Geometry)");
-		return;
+		//ZG_LOG_ERRORF("Normal VBO not build or not set in constructor (New_ZG_Geometry)");
+		//return;
+		glGenBuffers(1, &data->normal);
 	}
 
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, data->normal);
-	glBufferData(GL_ARRAY_BUFFER, mesh_normal_vertexs_len*sizeof(float), mesh_normal_vertexs, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _vertexs_len*sizeof(float), _vertexs, GL_DYNAMIC_DRAW);
 }
 
 
-void ZG_Geometry_GL_Draw(ZG_Geometry * geometry) {
-	if(geometry==NULL) return;
-	ZG_GeometryDataGL * data=(ZG_GeometryDataGL *)geometry->data;
+void ZG_Geometry_GL_Draw(ZG_Geometry * _geometry) {
+
+	if(_geometry==NULL) return;
+
+	ZG_GeometryDataGL * data=(ZG_GeometryDataGL *)_geometry->data;
 
 	if(data==NULL){
+		return;
+	}
+
+	if(_geometry->indices_length==0){
 		return;
 	}
 
@@ -198,7 +186,7 @@ void ZG_Geometry_GL_Draw(ZG_Geometry * geometry) {
 	if(data->index != GL_INVALID_VALUE) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data->index);
 		GLenum mode=GL_TRIANGLES;
-		switch(geometry->geometry_type){
+		switch(_geometry->geometry_type){
 		default:
 			break;
 		case ZG_GEOMETRY_TYPE_POINTS:
@@ -213,7 +201,7 @@ void ZG_Geometry_GL_Draw(ZG_Geometry * geometry) {
 
 		}
 
-		glDrawElements(mode,geometry->index_length,  GL_UNSIGNED_SHORT, (void *)(NULL));// indicesVertexBuffer->data_buffer);
+		glDrawElements(mode,_geometry->indices_length,  GL_UNSIGNED_SHORT, (void *)(NULL));// indicesVertexBuffer->data_buffer);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

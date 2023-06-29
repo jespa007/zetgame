@@ -32,12 +32,12 @@ ZG_Color4f ZG_Color4f_FromHex(uint32_t hex){
 ZG_Color4f ZG_Color4f_FromHtml(const char * _html){
 	char *html=(char *)_html;
 	if(_html==NULL || *_html==0) {
-		ZG_Log_ErrorF("string empty or null");
+		ZG_LOG_ERRORF("string empty or null");
 		return ZG_COLOR4F_WHITE;
 	}
 
 	if(*html!='#') {
-		ZG_Log_ErrorF("Invalid hex colorit should start by # (example #0e0e0e)");
+		ZG_LOG_ERRORF("Invalid hex colorit should start by # (example #0e0e0e)");
 		return ZG_COLOR4F_WHITE;
 	}
 

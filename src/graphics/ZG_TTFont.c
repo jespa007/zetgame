@@ -59,7 +59,7 @@ void	ZG_TTFont_Init(void){
 	if(g_ft_handler == NULL){
 		// All functions return a value different than 0 whenever an error occurred
 		if (FT_Init_FreeType(&g_ft_handler)){
-			ZG_Log_ErrorF("FREETYPE: Could not init FreeType Library");
+			ZG_LOG_ERRORF("FREETYPE: Could not init FreeType Library");
 		}
 	}
 }
@@ -122,7 +122,7 @@ ZG_TTFontCharacter *ZG_TTFont_BuildChar(ZG_TTFont *_this,unsigned long c){
 	// Load character glyph
 	if (FT_Load_Char(data->ft_face, c, FT_LOAD_RENDER))
 	{
-		ZG_Log_ErrorF("FREETYTPE: Failed to load Glyph");
+		ZG_LOG_ERRORF("FREETYTPE: Failed to load Glyph");
 		return NULL;
 	}
 
@@ -172,7 +172,7 @@ void TTFont_BuildChars(
 		, 0
 		, 0
 	)!=0){
-    	ZG_Log_ErrorF("FREETYTPE: Can't set pizel size");
+    	ZG_LOG_ERRORF("FREETYTPE: Can't set pizel size");
     }
 
    // TTFont_setStyle(_this,data->font_style);
@@ -182,7 +182,7 @@ void TTFont_BuildChars(
 	{
 		data->space_width=data->ft_face->glyph->advance.x>>6; // 1.0/64
 	}else{
-		ZG_Log_ErrorF("FREETYTPE: Failed to load Glyph");
+		ZG_LOG_ERRORF("FREETYTPE: Failed to load Glyph");
 	}
 
 	// main
@@ -208,7 +208,7 @@ ZG_TTFont * TTFont_NewEmpty(void){
     data->font_size=ZG_DEFAULT_FONT_SIZE;
 
     // data
-    data->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
+    data->geometry=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
 
     // TTF load each char flipped vertically, we define inverse uv transform as usually
 	float mesh_texture[]={
@@ -265,7 +265,7 @@ void ZG_TTFont_LoadFromMemory(
 
 	// Load font as face
 	if (FT_New_Memory_Face(g_ft_handler, _buffer, _buffer_len, 0, &data->ft_face)){
-		ZG_Log_ErrorF("FT_New_Memory_Face: Failed to load");
+		ZG_LOG_ERRORF("FT_New_Memory_Face: Failed to load");
 		return;
 	}
 
@@ -302,7 +302,7 @@ void ZG_TTFont_LoadFromFile(
 		ZG_BufferByte_Delete(buffer);
 
 	}else{
-		ZG_Log_Error("File '%s' not exist",_filename);
+		ZG_LOG_ERROR("File '%s' not exist",_filename);
 	}
 }
 

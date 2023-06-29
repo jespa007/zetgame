@@ -99,7 +99,7 @@ void 		ZG_MapString_Erase(ZG_MapString *_this,const char * key){
 	ZG_MapStringNode * node=ZG_MapString_LookUpNode(_this,key);
 
 	if(node == NULL){
-		ZG_Log_Error("Element %s not exist",key);
+		ZG_LOG_ERROR("Element %s not exist",key);
 		return;
 	}
 

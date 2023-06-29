@@ -26,7 +26,7 @@ void  MEMSDL_Init()
 	if(g_sdl_mem_init) return;
 
 	memset(&g_allocated_surfaces,0,sizeof(g_allocated_surfaces));
-    ZG_Log_InfoF("SDLMEM init OK");
+    ZG_LOG_INFOF("SDLMEM init OK");
     atexit(MEMSDL_PrintStatus);
 
     g_sdl_mem_init=true;
@@ -46,7 +46,7 @@ void  MEMSDL_PrintStatus()
 	}
 
 	if(n_unllocated==0){
-		ZG_Log_InfoF("SDLMem: ok");
+		ZG_LOG_INFOF("SDLMem: ok");
 	}
 
 }
@@ -83,7 +83,7 @@ int SDLMEM_dicotomic_search(uintptr_t key)
 bool SDLMEM_dicotomic_insert(const char * file, int line, uintptr_t key)
 {
 	if(g_n_allocated_surfaces==(MAX_CHECK_SURFACES-2)){ // array full
-		ZG_Log_ErrorF("DS Error full table");
+		ZG_LOG_ERRORF("DS Error full table");
 		return false;
 	}
 
@@ -131,7 +131,7 @@ bool SDLMEM_dicotomic_insert(const char * file, int line, uintptr_t key)
 		g_n_allocated_surfaces++;
 		return true;
 	}else{
-		ZG_Log_ErrorF("Cannot insert SDL pointer");
+		ZG_LOG_ERRORF("Cannot insert SDL pointer");
 	}
 	return false;
 }
@@ -139,7 +139,7 @@ bool SDLMEM_dicotomic_insert(const char * file, int line, uintptr_t key)
 bool SDLMEM_dicotomic_delete(uintptr_t key)
 {
 	if(g_n_allocated_surfaces==0){
-		ZG_Log_ErrorF("DS Error empty table");
+		ZG_LOG_ERRORF("DS Error empty table");
 		return false;
 	}
 

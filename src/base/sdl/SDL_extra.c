@@ -79,7 +79,7 @@ bool SDL_SaveJPG(const char * filename, SDL_Surface * srf){
 			ok=File_Write(filename,&bb);
 		}
 		else{
-			ZG_Log_Error("Error saving %s",filename);
+			ZG_LOG_ERROR("Error saving %s",filename);
 		}
 
 
@@ -136,7 +136,7 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 			ZG_BufferByte bb=(ZG_BufferByte){.ptr=out,.len=outsize};
 			ok=File_Write(filename,&bb);
 		}else{
-			ZG_Log_Error("Error saving %s",filename);
+			ZG_LOG_ERROR("Error saving %s",filename);
 		}
 
 		if(aux != NULL){
@@ -153,7 +153,7 @@ SDL_Surface *SDL_LoadImageFromMemory(const uint8_t * image_src, size_t length, u
 	size_t size_image_load_info=ZG_ARRAY_SIZE(image_load_info);
 
 	if(length < 10){
-		ZG_Log_ErrorF("Cannot load from memory. Insuficient buffer");
+		ZG_LOG_ERRORF("Cannot load from memory. Insuficient buffer");
 		return NULL;
 	}
 
@@ -200,7 +200,7 @@ SDL_Surface * SDL_CreateSurfaceFrom(
 
 	switch (bytes_per_pixel) {
 	default:
-		ZG_Log_Error("Bytes per pixel %i unsupportted", bytes_per_pixel);
+		ZG_LOG_ERROR("Bytes per pixel %i unsupportted", bytes_per_pixel);
 		return NULL;
 		break;
 	case COLOR_RGB16:
@@ -220,7 +220,7 @@ SDL_Surface * SDL_CreateSurfaceFrom(
 			bytes_per_pixel * 8, rmask, gmask, bmask, amask);
 
 	if(srf_info==NULL){
-		ZG_Log_Error("Cannot create SDL Surface %s", SDL_GetError());
+		ZG_LOG_ERROR("Cannot create SDL Surface %s", SDL_GetError());
 		return NULL;
 	}
 
@@ -555,7 +555,7 @@ SDL_Surface *	SDL_ConvertSurfaceExt(SDL_Surface *src_surface, uint32_t propertie
 					   NULL,
 					   new_surface,
 					   NULL)!=0){
-			ZG_Log_Error("SDL_BlitScaled:%s",SDL_GetError());
+			ZG_LOG_ERROR("SDL_BlitScaled:%s",SDL_GetError());
 		}
 
 	}

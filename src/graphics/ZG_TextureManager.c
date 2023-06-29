@@ -93,7 +93,7 @@ ZG_Texture * 		ZG_TextureManager_Get(ZG_TextureManager *_this,const char * _file
 		}
 
 		if(ZG_File_Exists(filename) == false){
-			ZG_Log_Error("File '%s' not exist either in the given path or in the resource path",_filename);
+			ZG_LOG_ERROR("File '%s' not exist either in the given path or in the resource path",_filename);
 			return NULL;
 		}
 

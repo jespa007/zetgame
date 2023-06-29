@@ -20,14 +20,14 @@ bool ZG_JpegMPS_GL_SetupGfx(ZG_JpegMPSData *data){
 			if(glGenFrameBufferExt(&data->fbo,ZG_STREAM_WIDTH,ZG_STREAM_HEIGHT)){
 				return true;
 			}else{
-				ZG_Log_ErrorF("Cannot create glGenFrameBufferExt");
+				ZG_LOG_ERRORF("Cannot create glGenFrameBufferExt");
 			}
 		}
 		else{
-			ZG_Log_ErrorF("This Video card doesn't support Pixel Buffer Object extension");
+			ZG_LOG_ERRORF("This Video card doesn't support Pixel Buffer Object extension");
 		}
 	}else{
-		ZG_Log_ErrorF("This video card doesn't support Frame Buffer Object");
+		ZG_LOG_ERRORF("This video card doesn't support Frame Buffer Object");
 	}
 
 	return false;
@@ -79,11 +79,11 @@ void ZG_JpegMPS_GL_FetchFrame(ZG_JpegMPSData *data){
 		//unmap the buffer again
 		//downsampleData = nullptr;
 		if(!glUnmapBufferARB(GL_PIXEL_PACK_BUFFER_ARB)){
-			ZG_Log_ErrorF("Cannot unmapbuffer");
+			ZG_LOG_ERRORF("Cannot unmapbuffer");
 		}
 	}
 	else{
-		ZG_Log_Error("Error 0x%X",glGetError());
+		ZG_LOG_ERROR("Error 0x%X",glGetError());
 	}
 
 	glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, 0);

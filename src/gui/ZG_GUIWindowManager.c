@@ -88,7 +88,7 @@ bool ZG_GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,ZG_GUIWidget *_p
 
 	 if(attribute != NULL){
 		 do{
-			 ZG_Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
 			 }else if(ZG_STRCMP(attribute->name,==,"left")){
@@ -115,7 +115,7 @@ bool ZG_GUIWindowManager_NewFrame(GUIWMWindowData *_window_data,ZG_GUIWidget *_p
 			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
 				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
-				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 			 attribute=attribute->next;
@@ -138,7 +138,7 @@ bool ZG_GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,ZG_GUIWidget *
 
 	 if(attribute != NULL){
 		 do{
-			 ZG_Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
 			 }else if(ZG_STRCMP(attribute->name,==,"left")){
@@ -179,7 +179,7 @@ bool ZG_GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,ZG_GUIWidget *
 			 }else if(ZG_STRCMP(attribute->name,==,"source")){
 				 ZG_GUITexture_SetTexture(gui_texture,attribute->value);
 			 }else{
-				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 
@@ -208,7 +208,7 @@ bool ZG_GUIWindowManager_NewButton(GUIWMWindowData *_window_data,ZG_GUIWidget *_
 
 	 if(attribute != NULL){
 		 do{
-			 ZG_Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
@@ -236,7 +236,7 @@ bool ZG_GUIWindowManager_NewButton(GUIWMWindowData *_window_data,ZG_GUIWidget *_
 			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
 				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else{
-				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 
@@ -263,7 +263,7 @@ bool ZG_GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,ZG_GUIWidget *
 
 	 if(attribute != NULL){
 		 do{
-			 ZG_Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
@@ -305,7 +305,7 @@ bool ZG_GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,ZG_GUIWidget *
 			 }else if(ZG_STRCMP(attribute->name,==,"border-color")){
 				 ZG_TextBox_SetBorderColor4f(gui_textbox->textbox,ZG_Color4f_FromHtml(attribute->value));
 			 }else{
-				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
 				 ok=false;
 			 }
 
@@ -330,7 +330,7 @@ bool ZG_GUIWindowManager_NewWindow(GUIWMWindowData *_window_data,ZG_GUIWidget *_
 
 	 if(attribute != NULL){
 		 do{
-			 ZG_Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 			 attribute=attribute->next;
 		 }while(attribute != attribute->parent->attributes);
 		// process attributes
@@ -342,7 +342,7 @@ bool ZG_GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,ZG_GUIWidget *
 	bool ok=true;
 	 XmlElement *children=e->children;
 
-	 ZG_Log_Debug("[tag]: %s", e->name);
+	 ZG_LOG_DEBUG("[tag]: %s", e->name);
 
 	 // create widget from its tag name
 	 if(ZG_STRCMP(e->name,==,"textbox")){
@@ -354,7 +354,7 @@ bool ZG_GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,ZG_GUIWidget *
 	 }else if(ZG_STRCMP(e->name,==,"textbox")){
 		 return ZG_GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else{
-		ZG_Log_Error("unexpected tag '%s'",e->name);
+		ZG_LOG_ERROR("unexpected tag '%s'",e->name);
 		ok=false;
 	 }
 
@@ -389,12 +389,12 @@ bool ZG_GUIWindowManager_LoadFromMemory(
 	 if (xmlDocError(doc) != XML_SUCCESS)
 	 {
 		/* unparsable XML was read from stdin */
-		ZG_Log_ErrorF("Cannot parse xml");
+		ZG_LOG_ERRORF("Cannot parse xml");
 		goto wm_load_from_memmory_exit;
 	}
 
 	 if(ZG_STRCMP(doc->root->name,!=,"window")){
-			ZG_Log_Error("Expected first tag as 'window' but it was '%s'",doc->root->name);
+			ZG_LOG_ERROR("Expected first tag as 'window' but it was '%s'",doc->root->name);
 			goto wm_load_from_memmory_exit;
 	 }
 
@@ -417,7 +417,7 @@ bool ZG_GUIWindowManager_LoadFromMemory(
 	 if(attribute != NULL){
 		 do{
 			 int int_value=0;
-			 ZG_Log_Debug("[attribute] %s:%s", attribute->name, attribute->value);
+			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(ZG_STRCMP(attribute->name,==,"background-color")){
 				 ZG_GUIWindow_SetBackgroundColor4f(window_data->window,ZG_Color4f_FromHtml(attribute->value));
 			 }else if(ZG_STRCMP(attribute->name,==,"window-style")){
@@ -436,7 +436,7 @@ bool ZG_GUIWindowManager_LoadFromMemory(
 					 ZG_GUIWindow_SetHeight(window_data->window,int_value);
 				 }
 			 }else{
-				 ZG_Log_Error("unexpected attribute '%s'",attribute->name);
+				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
 			 }
 
 			 attribute=attribute->next;

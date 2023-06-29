@@ -53,7 +53,7 @@ static ZG_List * ZG_String_SplitCharByAnyCharInDelim(const char *str_in, const c
 char *ZG_String_New(const char *in_str){
 
 	if(in_str==NULL){
-		ZG_Log_WarningF("input string as NULL");
+		ZG_LOG_WARNINGF("input string as NULL");
 		return NULL;
 	}
 
@@ -64,7 +64,7 @@ char *ZG_String_New(const char *in_str){
 		memset(out_str,0,size+1);
 		strcpy(out_str,in_str);
 	}else{
-		ZG_Log_WarningF("input lenght string 0");
+		ZG_LOG_WARNINGF("input lenght string 0");
 	}
 
 	return out_str;
@@ -72,7 +72,7 @@ char *ZG_String_New(const char *in_str){
 
 char *			ZG_String_CloneN(const char *in_str, size_t len){
 	if(in_str==NULL){
-		ZG_Log_WarningF("input string as NULL");
+		ZG_LOG_WARNINGF("input string as NULL");
 		return NULL;
 	}
 
@@ -83,7 +83,7 @@ char *			ZG_String_CloneN(const char *in_str, size_t len){
 		memset(out_str,0,size+1);
 		strncpy(out_str,in_str,MIN(size,len));
 	}else{
-		ZG_Log_WarningF("input lenght string 0");
+		ZG_LOG_WARNINGF("input lenght string 0");
 	}
 
 	return out_str;
@@ -210,16 +210,16 @@ bool ZG_String_StringToInt(int * i, const char *s, int base){
 	errno = 0;
 	l = strtol(s, &end, base);
 	if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX) {
-		ZG_Log_Error("\"%s\" number overflow",s);
+		ZG_LOG_ERROR("\"%s\" number overflow",s);
 		return false;
 	}
 	if ((errno == ERANGE && l == LONG_MIN) || l < INT_MIN) {
-		ZG_Log_Error("\"%s\" number underflow",s);
+		ZG_LOG_ERROR("\"%s\" number underflow",s);
 		return false;
 
 	}
 	if (*s == '\0' || *end != '\0') {
-		ZG_Log_Error("\"%s\" number inconvertible",s);
+		ZG_LOG_ERROR("\"%s\" number inconvertible",s);
 		return false;
 	}
 	*i = l;
@@ -232,15 +232,15 @@ bool ZG_String_StringToFloat(float * f, const char * s){
 	errno = 0;
 	l = strtof(s, &end);
 	if ((errno == ERANGE && l == FLT_MAX) || l > FLT_MAX) {
-		ZG_Log_Error("\"%s\" number overflow",s);
+		ZG_LOG_ERROR("\"%s\" number overflow",s);
 		return false;
 	}
 	if ((errno == ERANGE && l == FLT_MIN) || l < FLT_MIN) {
-		ZG_Log_Error("\"%s\" number underflow",s);
+		ZG_LOG_ERROR("\"%s\" number underflow",s);
 		return false;
 	}
 	if (*s == '\0' || *end != '\0') {
-		ZG_Log_Error("\"%s\" number inconvertible",s);
+		ZG_LOG_ERROR("\"%s\" number inconvertible",s);
 		return false;
 	}
 	*f = l;

@@ -9,7 +9,7 @@
 #define __ZG_MIXER_H__
 
 
-#define ZG_INVALID_SOUND_IDX -1
+//#define ZG_INVALID_IDX -1
 
 /**
  *  Get error on load/play sound

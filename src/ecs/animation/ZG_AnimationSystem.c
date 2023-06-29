@@ -38,7 +38,7 @@ typedef struct{
 ){
 
 	if(g_animation_system_user_can_register_components==false){
-		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
+		ZG_LOG_ERRORF("Components should registered before create any ZG_Entity-System");
 		return false; //
 	}
 
@@ -67,7 +67,7 @@ bool	ZG_AnimationSystem_AddComponent(
 ){
 
 	if(g_animation_system_user_can_register_components==false){
-		ZG_Log_ErrorF("Components should registered before create any ZG_Entity-System");
+		ZG_LOG_ERRORF("Components should registered before create any ZG_Entity-System");
 		return false; //
 	}
 
@@ -134,7 +134,7 @@ bool ZG_AnimationSystem_Init(void){
 	for(unsigned i=0; i < min_iter; i++){
 		ZG_AnimationSystemRegisteredComponentData *component=g_animation_system_registered_components->items[i];
 		if(component->id != i){
-			ZG_Log_Error("Inconsistency idx components (enum:%i list:%i)",i,component->id);
+			ZG_LOG_ERROR("Inconsistency idx components (enum:%i list:%i)",i,component->id);
 			return false;
 		}
 	}
@@ -288,7 +288,7 @@ void				ZG_AnimationSystem_StartTweenTransform(
 			transform_animation->header.entity=_entity;
 
 		}else{
-			ZG_Log_ErrorF("Reached max animations");
+			ZG_LOG_ERRORF("Reached max animations");
 			return;
 		}
 

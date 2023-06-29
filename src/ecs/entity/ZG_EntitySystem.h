@@ -23,8 +23,8 @@ typedef struct{
 	void   (*on_update)(void *); // function to update component
 	void   (*on_create)(void *); // function to Setup component
 	void   (*on_destroy)(void *); // function to destroy
-	ZG_EComponentList   (*required_components)(void); // function to destroy
-}ZG_ERegisterComponent;
+	ZG_ComponentList   (*required_components)(void); // function to destroy
+}ZG_RegisterComponent;
 
 /*
 

@@ -57,7 +57,7 @@ bool ZG_ZG_SpriteKeyFrameManager_LoadFromMemory(
 
 	// 1. read & parse json
 	if(key_id_prefix == NULL){
-		ZG_Log_ErrorF("key_id_prefix id NULL");
+		ZG_LOG_ERRORF("key_id_prefix id NULL");
 		return false;
 	}
 
@@ -71,26 +71,26 @@ bool ZG_ZG_SpriteKeyFrameManager_LoadFromMemory(
 
 
 		if(frames == NULL){
-			ZG_Log_Error("JsonParse '%s' : Cannot get 'frames' identifier in json",key_id_prefix);
+			ZG_LOG_ERROR("JsonParse '%s' : Cannot get 'frames' identifier in json",key_id_prefix);
 			return false;
 		}
 
 		if(meta == NULL){
-			ZG_Log_Error("JsonParse '%s' : Cannot get 'meta' identifier in json",key_id_prefix);
+			ZG_LOG_ERROR("JsonParse '%s' : Cannot get 'meta' identifier in json",key_id_prefix);
 			return false;
 		}
 
 		layers = cJSON_GetObjectItem(meta,"layers");
 
 		if(layers == NULL){
-			ZG_Log_Error("JsonParse '%s' : Cannot get 'meta.layers' identifier in json",key_id_prefix);
+			ZG_LOG_ERROR("JsonParse '%s' : Cannot get 'meta.layers' identifier in json",key_id_prefix);
 			return false;
 		}
 
 
 		image=cJSON_GetObjectItem(meta,"image");
 		if(image == NULL){
-			ZG_Log_Error("JsonParse '%s' : Cannot get 'meta.image' identifier in json",key_id_prefix);
+			ZG_LOG_ERROR("JsonParse '%s' : Cannot get 'meta.image' identifier in json",key_id_prefix);
 			return false;
 		}
 
@@ -110,7 +110,7 @@ bool ZG_ZG_SpriteKeyFrameManager_LoadFromMemory(
 
 			cJSON *layer = NULL;
 			cJSON *layer_element = NULL;
-			ZG_Log_Info("Loading '%s': %i layers detected",key_id_prefix,skp->sprite_keyframes_len);
+			ZG_LOG_INFO("Loading '%s': %i layers detected",key_id_prefix,skp->sprite_keyframes_len);
 			unsigned i=0;
 
 			cJSON_ArrayForEach(layer, layers) {
@@ -118,14 +118,14 @@ bool ZG_ZG_SpriteKeyFrameManager_LoadFromMemory(
 				layer_element = cJSON_GetObjectItem(layer,"name");
 
 				if(layer_element == NULL){
-					ZG_Log_Error("JsonParse '%s': Cannot get 'name' attribute in 'layers'",key_id_prefix);
+					ZG_LOG_ERROR("JsonParse '%s': Cannot get 'name' attribute in 'layers'",key_id_prefix);
 					return false;
 				}
 
 				sprintf(sprite_keyframe_key,"%s_%s",key_id_prefix,layer_element->valuestring);
 
 				if(strlen(layer_element->valuestring) >= MAX_SPRITE_KEYFRAME_NAME){
-					ZG_Log_Error("JsonParse '%s' name '%s': length is greater that %i",key_id_prefix,layer_element->valuestring,MAX_SPRITE_KEYFRAME_NAME);
+					ZG_LOG_ERROR("JsonParse '%s' name '%s': length is greater that %i",key_id_prefix,layer_element->valuestring,MAX_SPRITE_KEYFRAME_NAME);
 					return false;
 				}
 
@@ -192,7 +192,7 @@ bool ZG_ZG_SpriteKeyFrameManager_LoadFromMemory(
 
 				}
 
-				ZG_Log_Info("'%s': %i frames",skp->sprite_keyframes[i].name ,skp->sprite_keyframes[i].frames_len);
+				ZG_LOG_INFO("'%s': %i frames",skp->sprite_keyframes[i].name ,skp->sprite_keyframes[i].frames_len);
 
 
 			}
