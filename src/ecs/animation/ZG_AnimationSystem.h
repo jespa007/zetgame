@@ -34,8 +34,8 @@ void 				ZG_AnimationSystem_DeInit(void);
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_AnimationSystem 	*		ZG_AnimationSystem_New(ZG_EntitySystem *_entity_system);
-ZG_EntityManager 	*		ZG_AnimationSystem_NewEntityManager(
+ZG_AnimationSystem 	*		ZG_AnimationSystem_New(ZG_EntityManager *_entity_system);
+ZG_Archetype 	*		ZG_AnimationSystem_NewArchetype(
 		ZG_AnimationSystem *_this
 		, const char *_id
 		,uint16_t max_entities

@@ -4,15 +4,16 @@
 typedef struct ZG_ECSpriteRenderer ZG_ECSpriteRenderer;
 
 struct ZG_ECSpriteRenderer{
-	ZG_EComponentHeader header;
+	ZG_EntityHeader header;
 	void 			*data;
 };
 
-
-void ZG_ECSpriteRenderer_OnCreate(void *_this,ZG_ComponentId _id);
+//---
+ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void);
+void ZG_ECSpriteRenderer_OnCreate(void *_this);
 void ZG_ECSpriteRenderer_Update(void *_this);
 void ZG_ECSpriteRenderer_OnDestroy(void *_this);
-ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void);
+//---
 
 
 //void ZG_ECSpriteRenderer_SetQuadPixels(uint16 width, uint16 height);

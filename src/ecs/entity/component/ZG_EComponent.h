@@ -26,12 +26,13 @@
 
 #define ZG_EC_INVALID -1
 
-typedef int ZG_EComponent;
+//typedef int ZG_EComponent;
+
 
 typedef struct{
-	ZG_ComponentId		id; //
-	ZG_EntityManager	*entity_manager;
-}ZG_EComponentHeader;
+	ZG_EntityId			entity_id; // global position
+	ZG_Archetype	*archetype;
+}ZG_EntityHeader;
 
 
 typedef struct{

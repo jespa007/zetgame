@@ -15,7 +15,7 @@ typedef enum{
 }ZG_ECTransformType;
 
 struct ZG_ECTransform{
-	ZG_EComponentHeader 		header;
+	ZG_EntityHeader 			header;
 	ZG_Transform				transform; // world coordinates
 	ZG_Quaternion				quaternion;
 	void 						*data;
@@ -23,7 +23,7 @@ struct ZG_ECTransform{
 
 //------------------------------------------------
 // Component create/update/destroy
-void			ZG_ECTransform_OnCreate(void *_this, ZG_ComponentId _idx);
+void			ZG_ECTransform_OnCreate(void *_this);
 void			ZG_ECTransform_OnUpdate(void *_this);
 void 	 		ZG_ECTransform_OnDestroy(void *_this);
 //------------------------------------------------

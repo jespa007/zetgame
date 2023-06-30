@@ -1,4 +1,4 @@
-#include "ecs/zg_ecs.h"
+#include "ecs/_zg_ecs_.h"
 
 typedef struct{
 	ZG_ECTransform				*	parent;
@@ -9,24 +9,13 @@ typedef struct{
 	ZG_ACTransformAnimation 	*	transform_animation_component; // in case entity it has associated transform animation component
 }ZG_ECTransformData;
 
-void ZG_ECTransform_SetParent(ZG_ECTransform *_this, ZG_ECTransform *_parent);
-
-void ZG_ECTransform_ClearChilds(ZG_ECTransform * node){
-	ZG_ECTransformData *data=node->data;
-	for(uint16_t i = 0; i < data->child_nodes->count; i++){
-		ZG_ECTransform_ClearChilds(data->child_nodes->items[i]);
-	}
-
-	ZG_ECTransform_SetParent(node,NULL);
-	ZG_List_Clear(data->child_nodes);
-}
 //------------------------------------------------------------------------------------
 
-void ZG_ECTransform_OnCreate(void *_this, ZG_ComponentId _id){
+void ZG_ECTransform_OnCreate(void *_this){
 
 	ZG_ECTransform * ec_transform = _this;
 	//ec_transform->header.entity=_entity;
-	ec_transform->header.id=_id;
+	//ec_transform->header.id=_id;
 	//_entity->components[EC_TRANSFORM]=_this;
 
 
@@ -74,6 +63,18 @@ void 	 ZG_ECTransform_OnDestroy(void *_this){
 }
 
 //------------------------------------------------------------------------------------------------
+
+void ZG_ECTransform_SetParent(ZG_ECTransform *_this, ZG_ECTransform *_parent);
+
+void ZG_ECTransform_ClearChilds(ZG_ECTransform * node){
+	ZG_ECTransformData *data=node->data;
+	for(uint16_t i = 0; i < data->child_nodes->count; i++){
+		ZG_ECTransform_ClearChilds(data->child_nodes->items[i]);
+	}
+
+	ZG_ECTransform_SetParent(node,NULL);
+	ZG_List_Clear(data->child_nodes);
+}
 
 void ZG_ECTransform_ClearNodes(ZG_ECTransform *_this){
 

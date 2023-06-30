@@ -11,8 +11,8 @@
 #include "ecs/entity/component/ZG_ECTexture.c"
 #include "ecs/entity/component/ZG_ECTransform.c"
 #include "ecs/entity/ZG_Entity.c"
-#include "ecs/entity/ZG_EntityManager.c"
-#include "ecs/entity/ZG_EntitySystem.c"
+#include "entity/ZG_Archetype.c"
+#include "entity/ZG_Archetype.c"
 
 
 
@@ -23,10 +23,10 @@
 
 //#include "component/ECTweenTransform.c"
 //#include "component/ECViewer2d.c"
-//#include "entity/ZG_EntityManager.c"
+//#include "entity/ZG_Archetype.c"
 
 bool ZG_ECS_Init(void){
-	if(!ZG_EntitySystem_Init()){
+	if(!ZG_EntityManager_Init()){
 		return false;
 	}
 
@@ -40,7 +40,7 @@ bool ZG_ECS_Init(void){
 }
 
 void ZG_ECS_DeInit(void){
-	ZG_EntitySystem_DeInit();
+	ZG_EntityManager_DeInit();
 
 	ZG_AnimationSystem_DeInit();
 

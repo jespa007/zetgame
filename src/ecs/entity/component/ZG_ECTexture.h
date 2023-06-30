@@ -4,7 +4,7 @@
 typedef struct ZG_ECTexture ZG_ECTexture;
 
 struct ZG_ECTexture{
-	ZG_EComponentHeader header;
+	ZG_EntityHeader  header;
 	ZG_Texture 		*texture;
 };
 

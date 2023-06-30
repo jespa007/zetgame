@@ -9,8 +9,8 @@
 typedef unsigned int ZG_ComponentId;
 
 // ZG_Entity
-typedef struct ZG_EntitySystem ZG_EntitySystem;
 typedef struct ZG_EntityManager ZG_EntityManager;
+typedef struct ZG_Archetype ZG_Archetype;
 typedef struct ZG_Entity ZG_Entity;
 
 
@@ -20,8 +20,8 @@ typedef struct ZG_Entity ZG_Entity;
 #include "ecs/animation/component/ZG_AComponent.h"
 
 // entity
-#include "ecs/entity/ZG_EntitySystem.h"
-#include "ecs/entity/ZG_EntityManager.h"
+#include "entity/ZG_Archetype.h"
+#include "entity/ZG_Archetype.h"
 #include "ecs/entity/ZG_Entity.h"
 
 
@@ -54,7 +54,7 @@ typedef struct ZG_Entity ZG_Entity;
 // TWEENS
 //#include "component/ECTweenTransform.h"
 //#include "component/ECViewer2d.h"
-//#include "entity/ZG_EntityManager.h"
+//#include "entity/ZG_Archetype.h"
 
 bool ZG_ECS_Init(void);
 void ZG_ECS_DeInit(void);

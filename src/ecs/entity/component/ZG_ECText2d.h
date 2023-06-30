@@ -4,8 +4,8 @@
 typedef struct ZG_ECText2d ZG_ECText2d;
 
 struct ZG_ECText2d{
-	ZG_EComponent 	id;
-	void 		*data;
+	ZG_EntityHeader 	id;
+	void 				*data;
 };
 
 #endif

@@ -20,7 +20,7 @@ typedef struct{
 	//SceneState  	* 	current_state;
 	//ZG_List			*	scene_states;
 	SceneStatus 		scene_status;
-	ZG_EntitySystem	*	entity_system;
+	ZG_EntityManager	*	entity_system;
 	ZG_AnimationSystem *	animation_system;
 	ZG_CollisionSystem *	collision_system;
 
@@ -28,10 +28,10 @@ typedef struct{
 	ZG_List			* 	sg_textures;
 	ZG_List			* 	sg_textboxes;
 
-	ZG_EntityManager	* 	em_sg_nodes;
-	ZG_EntityManager	* 	em_sg_textures;
-	ZG_EntityManager	* 	em_sg_textboxes;
-	ZG_List			* 	entity_managers2d;
+	ZG_Archetype	* 	em_sg_nodes;
+	ZG_Archetype	* 	em_sg_textures;
+	ZG_Archetype	* 	em_sg_textboxes;
+	ZG_List			* 	archetypes2d;
 
 /*	ZG_List * appearances;
 	ZG_List * transforms3d;
@@ -46,7 +46,7 @@ Scene * Scene_New(void){
 	SceneData *data=ZG_NEW(SceneData);
 	scene->data=data;
 
-	data->entity_system=ZG_EntitySystem_New();
+	data->entity_system=ZG_EntityManager_New();
 	data->animation_system=ZG_AnimationSystem_New(data->entity_system);
 	data->collision_system=ZG_CollisionSystem_New(data->entity_system);
 	data->sg_nodes=ZG_List_New();
@@ -65,7 +65,7 @@ Scene * Scene_New(void){
 			EC_TRANSFORM,
 	};
 
-	data->em_sg_nodes=ZG_EntitySystem_NewEntityManager(
+	data->em_sg_nodes=ZG_EntityManager_NewArchetype(
 		data->entity_system
 		,"sg_nodes"
 		,MAX_SG_NODES
@@ -78,7 +78,7 @@ Scene * Scene_New(void){
 			,EC_TRANSFORM
 	};
 
-	data->em_sg_textures=ZG_EntitySystem_NewEntityManager(
+	data->em_sg_textures=ZG_EntityManager_NewArchetype(
 		data->entity_system,"sg_textures"
 		,MAX_SG_VIEWERS_2D
 		,sg_textures_entity_components
@@ -91,7 +91,7 @@ Scene * Scene_New(void){
 			,EC_TRANSFORM
 	};
 
-	data->em_sg_textboxes=ZG_EntitySystem_NewEntityManager(
+	data->em_sg_textboxes=ZG_EntityManager_NewArchetype(
 		data->entity_system,"sg_textboxes"
 		,MAX_SG_TEXTS_2D
 		,sg_textboxes_entity_components
@@ -175,7 +175,7 @@ void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player){
 }*/
 
 
-ZG_EntityManager * Scene_NewEntityManager(
+ZG_Archetype * Scene_NewArchetype(
 		Scene *_this
 		, const char *_id
 		,uint16_t max_entities
@@ -183,26 +183,26 @@ ZG_EntityManager * Scene_NewEntityManager(
 		, size_t entity_components_len
 ){
 	SceneData *data=_this->data;
-	return ZG_EntitySystem_NewEntityManager(data->entity_system,_id,max_entities,entity_components,entity_components_len);
+	return ZG_EntityManager_NewArchetype(data->entity_system,_id,max_entities,entity_components,entity_components_len);
 }
 
 TransformNode *Scene_NewTransformNode(Scene *_this){
 	SceneData *data=_this->data;
-	TransformNode *sg_node=TransformNode_New(_this,ZG_ZG_EntityManager_NewEntity(data->em_sg_nodes));
+	TransformNode *sg_node=TransformNode_New(_this,ZG_ZG_Archetype_NewEntity(data->em_sg_nodes));
 	ZG_List_Add(data->sg_nodes,sg_node);
 	return sg_node;
 }
 
 TextureNode *Scene_NewTextureNode(Scene *_this){
 	SceneData *data=_this->data;
-	TextureNode *sg_texture=TextureNode_New(_this,ZG_ZG_EntityManager_NewEntity(data->em_sg_textures));
+	TextureNode *sg_texture=TextureNode_New(_this,ZG_ZG_Archetype_NewEntity(data->em_sg_textures));
 	ZG_List_Add(data->sg_textures,sg_texture);
 	return sg_texture;
 }
 
 TextBoxNode *Scene_NewTextBoxNode(Scene *_this){
 	SceneData *data=_this->data;
-	TextBoxNode *sg_textbox=TextBoxNode_New(_this,ZG_ZG_EntityManager_NewEntity(data->em_sg_textboxes));
+	TextBoxNode *sg_textbox=TextBoxNode_New(_this,ZG_ZG_Archetype_NewEntity(data->em_sg_textboxes));
 	ZG_List_Add(data->sg_textboxes,sg_textbox);
 	return sg_textbox;
 }
@@ -210,12 +210,12 @@ TextBoxNode *Scene_NewTextBoxNode(Scene *_this){
 ZG_Entity * Scene_NewEntity(Scene *_this, ZG_EComponent * entity_components, size_t entity_components_len){
 	SceneData *data=_this->data;
 
-	return EntitySystem_NewEntity(data->entity_system,entity_components,entity_components_len);
+	return EntityManager_NewEntity(data->entity_system,entity_components,entity_components_len);
 }
 
-ZG_Entity * Scene_NewEntityFromManager(Scene *_this, const char *_str_entity_manager){
+ZG_Entity * Scene_NewEntityFromManager(Scene *_this, const char *_str_archetype){
 	SceneData *data=_this->data;
-	return EntitySystem_NewEntityFromManager(data->entity_system,_str_entity_manager);
+	return EntityManager_NewEntityFromManager(data->entity_system,_str_archetype);
 }
 */
 
@@ -292,7 +292,7 @@ void Scene_Update(Scene *_this){
 		Animation_Update(data->animations->items[i],_this->current_time);
 	}
 
-	ZG_EntitySystem_Update(data->entity_system);
+	ZG_EntityManager_Update(data->entity_system);
 	//TransformNode_Update(data->node_root);
 
 	/*if(data->current_state != NULL){
@@ -321,7 +321,7 @@ void Scene_Delete(Scene *_this){
 	}
 
 	ZG_List_Delete(_data->scene_states);*/
-	ZG_EntitySystem_Delete(data->entity_system);
+	ZG_EntityManager_Delete(data->entity_system);
 	ZG_AnimationSystem_Delete(data->animation_system);
 	ZG_CollisionSystem_Delete(data->collision_system);
 

@@ -86,6 +86,6 @@ va_end(ap);}
 #define ZG_ARRAY_SIZE(s) (sizeof(s)/sizeof(s[0]))
 #define ZG_STRCMP(str1,op,str2) (strcmp(str1,str2)op(0))
 #define ZG_ERROR -1
-#define ZG_INVALID_IDX
+#define ZG_INVALID_IDX	-1
 
 #endif

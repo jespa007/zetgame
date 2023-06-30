@@ -3,10 +3,10 @@
 
 typedef struct{
 	//Shape2d *shape2d;
-	ZG_ECGeometry 		*	ec_geometry;
-	ZG_ECMaterial 		*	ec_material;
-	ZG_Appearance	 	*  	appearance;
-	uint16_t 			width, height;
+	ZG_ComponentId 			ec_geometry;
+	ZG_ComponentId 			ec_material;
+	ZG_Appearance	 	  	*appearance;
+	uint16_t 				width, height;
 }ZG_ECSpriteRendererData;
 
 static const char * g_ec_sprite_renderer_required_components[]={
@@ -16,6 +16,8 @@ static const char * g_ec_sprite_renderer_required_components[]={
 		,ZG_STR_CONCAT("",ECTexture)
 };
 
+//----
+
 ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
 	ZG_ComponentList cl;
 	cl.components=g_ec_sprite_renderer_required_components;
@@ -24,7 +26,7 @@ ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
 	return cl;
 }
 
-void ZG_ECSpriteRenderer_OnCreate(void *_this,ZG_ComponentId _id){
+void ZG_ECSpriteRenderer_OnCreate(void *_this){
 	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
 
 	//ec_sprite_renderer->header.entity=_entity;
@@ -33,18 +35,18 @@ void ZG_ECSpriteRenderer_OnCreate(void *_this,ZG_ComponentId _id){
 
 	ZG_ECSpriteRendererData *data=ZG_NEW(ZG_ECSpriteRendererData);
 
-	data->ec_geometry=ZG_ENTITY_MANAGER_GET_COMPONENT(ec_sprite_renderer->header.entity_manager,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
+	data->ec_geometry=ZG_ARCHETYPE_GET_COMPONENT(ec_sprite_renderer->header.archetype,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
 
 
 	if(data->ec_geometry==NULL){
-		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : EntityManager doesn't have geometry");
+		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : Archetype doesn't have geometry");
 		return;
 	}
 
-	data->ec_material=ZG_ENTITY_MANAGER_GET_COMPONENT(ec_sprite_renderer->header.entity_manager,ECMaterial,_id);//_entity->components[EC_MATERIAL];
+	data->ec_material=ZG_ARCHETYPE_GET_COMPONENT(ec_sprite_renderer->header.archetype,ECMaterial,_id);//_entity->components[EC_MATERIAL];
 
 	if(data->ec_material==NULL){
-		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : EntityManager doesn't have material component");
+		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : Archetype doesn't have material component");
 		return;
 	}
 
@@ -57,6 +59,32 @@ void ZG_ECSpriteRenderer_OnCreate(void *_this,ZG_ComponentId _id){
 
 	ZG_ECSpriteRenderer_SetDimensions(ec_sprite_renderer,100,100); // default with/height
 }
+
+
+void ZG_ECSpriteRenderer_OnUpdate(void *_this){
+	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
+	ZG_ECSpriteRendererData * data= ec_sprite_renderer->data;
+	ZG_Transform *transform = NULL;
+	ZG_ECTransform *ec_transform=ec_sprite_renderer->header.entity->components[EC_TRANSFORM];
+	ZG_ECTexture *ec_texture=ec_sprite_renderer->header.entity->components[EC_TEXTURE];
+	if(ec_transform){
+		transform=&ec_transform->transform;
+	}
+
+	if(ec_texture){
+		data->appearance->texture=ec_texture->texture;
+	}
+
+	Graphics_Draw(transform,data->geometry,data->appearance);
+}
+
+void ZG_ECSpriteRenderer_OnDestroy(void *_this){
+	ZG_ECSpriteRendererData * data= ((ZG_ECSpriteRenderer *)_this)->data;
+	ZG_Appearance_Delete(data->appearance);
+	ZG_FREE(data);
+}
+
+//----
 
 void ZG_ECSpriteRenderer_SetDimensions(ZG_ECSpriteRenderer *_this,uint16_t width, uint16_t height){
 
@@ -102,25 +130,4 @@ void ZG_ECSpriteRenderer_SetTexture(ZG_ECSpriteRenderer *_this,ZG_Texture *textu
 }
 
 
-void ZG_ECSpriteRenderer_Update(void *_this){
-	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
-	ZG_ECSpriteRendererData * data= ec_sprite_renderer->data;
-	ZG_Transform *transform = NULL;
-	ZG_ECTransform *ec_transform=ec_sprite_renderer->header.entity->components[EC_TRANSFORM];
-	ZG_ECTexture *ec_texture=ec_sprite_renderer->header.entity->components[EC_TEXTURE];
-	if(ec_transform){
-		transform=&ec_transform->transform;
-	}
 
-	if(ec_texture){
-		data->appearance->texture=ec_texture->texture;
-	}
-
-	Graphics_Draw(transform,data->geometry,data->appearance);
-}
-
-void ZG_ECSpriteRenderer_Destroy(void *_this){
-	ZG_ECSpriteRendererData * data= ((ZG_ECSpriteRenderer *)_this)->data;
-	ZG_Appearance_Delete(data->appearance);
-	ZG_FREE(data);
-}

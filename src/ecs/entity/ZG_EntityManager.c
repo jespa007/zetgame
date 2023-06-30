@@ -1,67 +1,618 @@
 #include "../_zg_ecs_.h"
 
-//------------------------------------------------------------
-// entities are simply a pointer that hides its entity manager.
-// each entity knows its component offset by doing entity - entities
+ZG_List *g_entity_manager_registered_components=NULL;
+ZG_MapString *g_map_entity_manager_registered_components=NULL;
+bool  g_entity_manager_user_can_register_components=true;
+
+typedef struct{
+	ZG_EComponent id;
+	ZG_RegisterComponent data;
+}ZG_EntityManagerRegisteredComponentData;
+
+typedef struct{
+	uint8_t	*ptr_data; // we want to keep pointer in order to support future reallocs
+	size_t  	n_elements;
+}ZG_EntityManagerComponentData;
 
 
-typedef struct {
-	char 			*name; // entity manager name
-	void 			**component_idxs;// The pointer of component giving its component idx
-	void 			**component_names;// The name of each component
-	ZG_ComponentId	**components_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
-	size_t 			n_entities; // available components per entity
-
-	uint16_t 		max_entities; // max entitites of this type (default 1)
-
+typedef struct{
+	ZG_MapString *map_archetypes;
+	ZG_List *lst_archetypes;
+	ZG_EntityManagerComponentData **components;//[ENTITY_COMPONENT_MAX];
 }ZG_EntityManagerData;
 
+//---------------------------------------------------
+// PRIVATE FUNCTIONS
 
-ZG_Entity  *ZG_EntityManager_NewEntity(ZG_EntityManager *_this){
-	ZG_EntityManagerData *entity_manager_data=_this->data;
-	ZG_Entity *entity=NULL;
-	if(
-		entity_manager_data->active_entities>=entity_manager_data->max_entities
-	){ // extend entity
+bool	ZG_EntityManager_RegisterComponent(
+		const char *_name
+		//,ZG_ESRegisterComponent es_component_register
+		//ZG_EComponent id;
+		,size_t 	_size_data // len data component
+		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
+		,void   (* _on_update)(void *_component_data) // function component
+		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
+		,void   (* _on_destroy)(void *_component_data)
+		,ZG_ComponentList   (*_required_components)(void) // function to destroy
+){
+
+	if(g_entity_manager_user_can_register_components==false){
+		ZG_LOG_ERRORF("Components should registered before create any ZG_Entity-System");
+		return false; //
+	}
+
+	if(g_entity_manager_registered_components == NULL){
+		g_entity_manager_registered_components=ZG_List_New();
+		g_map_entity_manager_registered_components=ZG_Map_New();
+	}
+
+	ZG_EComponent idx_component=g_entity_manager_registered_components->count;//g_entity_manager_registered_components->count;
+	ZG_EntityManagerRegisteredComponentData *new_component_register=ZG_NEW(ZG_EntityManagerRegisteredComponentData);
+	new_component_register->data=(ZG_RegisterComponent){
+		.name=_name
+		//,ZG_ESRegisterComponent es_component_register
+		//ZG_EComponent id;
+		,.size_data=	_size_data // len data component
+		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
+		,.on_update=_on_update // function component
+		,.on_create=_on_create
+		,.on_destroy=_on_create
+		,.required_components=_required_components
+	}
+	new_component_register->id=idx_component;
+	ZG_List_Add(g_entity_manager_registered_components,new_component_register);
+	ZG_Map_Set(g_map_entity_manager_registered_components,new_component_register,g_entity_manager_registered_components->count);
+
+	return true;
+}
+
+
+//---------------------------------------------------
+// STATIC FUNCTIONS
+bool ZG_EntityManager_Init(void){
+
+	unsigned min_iter=0;
+
+	if(ZG_ECS_ADD_COMPONENT(
+		ZG_ECTransform
+		,ZG_ECTransform_OnUpdate
+		,ZG_ECTransform_OnCreate
+		,ZG_ECTransform_OnDestroy
+		,NULL
+	)==false){
+		return false;
+	}
+
+	// invalid (0)
+	/*ZG_ZG_EntityManager_RegisterComponentBuiltin(ZG_EC_INVALID,(ZG_ESRegisterComponent){
+		.size_data				=0
+		,.required_components	=(ZG_EComponentList){0,0}
+		,.EComponent_Setup		=NULL
+		,.ZG_EComponent_Update		=NULL
+		,.ZG_EComponent_Destroy	=NULL
+	});*/
+
+	//ZG_ECS_REGISTER_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update,ZG_ECTransform_Setup,ZG_ECTransform_Destroy);
+
+	// transform
+	/*ZG_ZG_EntityManager_RegisterComponentBuiltin(EC_TRANSFORM,(ZG_ESRegisterComponent){
+		.size_data				=sizeof(ZG_ECTransform)
+		,.required_components	=(ZG_EComponentList){0,0}
+		,.EComponent_Setup		=ZG_ECTransform_Setup
+		,.ZG_EComponent_Update		=ZG_ECTransform_Update
+		,.ZG_EComponent_Destroy	=ZG_ECTransform_Destroy
+	});*/
+
+
+	// geometry
+	/*ZG_ZG_EntityManager_RegisterComponentBuiltin(EC_GEOMETRY,(ZG_ESRegisterComponent){
+		.size_data				=sizeof(ZG_ECGeometry)
+		,.required_components	=(ZG_EComponentList){0,0}
+		,.EComponent_Setup		=ZG_ECGeometry_Setup
+		,.ZG_EComponent_Update		=NULL
+		,.ZG_EComponent_Destroy	=ZG_ECGeometry_Destroy
+	});
+
+	// material
+	ZG_ZG_EntityManager_RegisterComponentBuiltin(EC_MATERIAL,(ZG_ESRegisterComponent){
+		.size_data				=sizeof(ZG_ECMaterial)
+		,.required_components	= (ZG_EComponentList){0,0}
+		,.EComponent_Setup		=ZG_ECMaterial_Setup
+		,.ZG_EComponent_Update		=NULL
+		,.ZG_EComponent_Destroy	=ZG_ECMaterial_Destroy
+	});
+
+	// texture
+	ZG_ZG_EntityManager_RegisterComponentBuiltin(EC_TEXTURE,(ZG_ESRegisterComponent){
+		.size_data				=sizeof(ZG_ECTexture)
+		,.required_components	=(ZG_EComponentList){0,0}
+		,.EComponent_Setup		=ZG_ECTexture_Setup
+		,.ZG_EComponent_Update		=NULL
+		,.ZG_EComponent_Destroy	=NULL
+	});
+
+	// sprite renderer (1)
+	ZG_ZG_EntityManager_RegisterComponentBuiltin(EC_SPRITE_RENDERER,(ZG_ESRegisterComponent){
+		.size_data				=sizeof(ZG_ECSpriteRenderer)
+		,.required_components	=ZG_ECSpriteRenderer_RequiredComponents()
+		,.EComponent_Setup		=ZG_ECSpriteRenderer_Setup
+		,.ZG_EComponent_Update		=ZG_ECSpriteRenderer_Update
+		,.ZG_EComponent_Destroy	=ZG_ECSpriteRenderer_Destroy
+	});
+
+
+	// text box renderer (1)
+	ZG_ZG_EntityManager_RegisterComponentBuiltin(EC_TEXTBOX_RENDERER,(ZG_ESRegisterComponent){
+		.size_data				=sizeof(ZG_ECTextBoxRenderer)
+		,.required_components	=ZG_ECTextBoxRenderer_RequiredComponents()
+		,.EComponent_Setup		=ZG_ECTextBoxRenderer_Setup
+		,.ZG_EComponent_Update		=ZG_ECTextBoxRenderer_Update
+		,.ZG_EComponent_Destroy	=ZG_ECTextBoxRenderer_Destroy
+	});
+
+
+	// check component consistency
+	 min_iter=MIN(g_entity_manager_registered_components->count,EC_MAX_COMPONENTS);
+	for(unsigned i=0; i < min_iter; i++){
+		ZG_EntityManagerRegisteredComponentData *component=g_entity_manager_registered_components->items[i];
+		if(component->id != i){
+			ZG_LOG_ERROR("Inconsistency idx components (enum:%i list:%i)",i,component->id);
+			return false;
+		}
+	}
+
+	g_entity_manager_user_can_register_components=true;*/
+	return true;
+}
+
+void ZG_EntityManager_ExtendComponent(ZG_EntityManager *_this,ZG_EComponent _idx_component, size_t extend){
+
+
+	// new behaviour
+
+	// TODO
+	// 1. Call on_destroy of all required components
+	// 2. re/allocate new array * sizeof(component).
+	// 3. Call on_create
+	// 4. re/allocate new array of indexs for reference components that they changed its position
+	// 5. Reset reference indexs
+
+}
+
+bool ZG_EntityManager_RegisterComponent(
+	const char *_component_id,
+	size_t __type_data
+	,const char * _required_components_ids[]
+	,void   (*_on_update)(void *_component_data)
+	,void   (*_on_create)(void *_component_data)
+	,void   (*_on_destroy)(void *_component_data)
+){
+
+	if(g_entity_manager_user_can_register_components==false){
+		ZG_LOG_ERRORF("Components should registered before create any ZG_Entity-System");
+		return false; //
+	}
+
+	if(g_entity_manager_registered_components == NULL){
+		g_entity_manager_registered_components=ZG_Lis_New();
+		g_map_entity_manager_registered_components=ZG_MapString_New();
+	}
+
+	//ZG_EComponent idx_component=_idx_component;//g_entity_manager_registered_components->count;
+	ZG_RegisterComponent *new_component_register=ZG_NEW(ZG_RegisterComponent);
+
+	*new_component_register=(ZG_RegisterComponent){
+		.component_id=g_entity_manager_num_registered_component++;
+		.name=_name;
+		.size_data=_size_data;
+		.on_update=_on_update;
+		.on_create=_on_create;
+		.on_destroy=_on_destroy;
+	};
+
+
+
+
+	ZG_MapString_Set(g_map_entity_manager_registered_components,_name,new_component_register);
+	ZG_Lis_New(g_entity_manager_registered_components,new_component_register);
+	return true;
+
+}
+/*
+int	ZG_EntityManager_RegisterComponent(ZG_ESRegisterComponent es_component_register){
+	int idx_component=0;
+
+	if(g_entity_manager_registered_components != NULL){
+		idx_component=g_entity_manager_registered_components->count;
+	}
+
+	if(ZG_ZG_EntityManager_RegisterComponentBuiltin(idx_component,es_component_register)==false){
+		return ZG_EC_INVALID;
+	}
+	return idx_component;
+}*/
+
+size_t					ZG_EntityManager_NumComponents(void){
+	if(g_entity_manager_registered_components != NULL){
+		return g_entity_manager_registered_components->count;
+	}
+	return 0;
+}
+
+void ZG_EntityManager_DeInit(void){
+	ZG_List_DeleteAndFreeAllItems(g_entity_manager_registered_components);
+}
+
+//---------------------------------------------------
+// PUBLIC FUNCTIONS
+ZG_EntityManager *ZG_EntityManager_New(void){
+	ZG_EntityManager *system=ZG_NEW(ZG_EntityManager);
+	ZG_EntityManagerData *data=ZG_NEW(ZG_EntityManagerData);
+	data->lst_archetypes=ZG_List_New();
+	data->map_archetypes=ZG_MapString_New();
+
+	data->components=malloc(sizeof(ZG_EntityManagerComponentData)*g_entity_manager_registered_components->count);
+	memset(data->components,0,sizeof(ZG_EntityManagerComponentData)*g_entity_manager_registered_components->count);
+
+	for(unsigned i=0; i < g_entity_manager_registered_components->count;i++){
+		data->components[i]=ZG_NEW(ZG_EntityManagerComponentData);
+	}
+
+	system->data=data;
+
+	// after first system is created, user cannot register any component anymore
+	g_entity_manager_user_can_register_components=false;
+
+	return system;
+}
+
+int ZG_EntityManager_OrderComponents(const void *_a, const void *_b){
+	ZG_EComponent *a, *b;
+	a = (ZG_EComponent *) _a;
+	b = (ZG_EComponent *) _b;
+	return (*a - *b);
+}
+
+ZG_EComponent *ZG_EntityManager_GenerateComponentRequirementList(ZG_EComponent *in_data, size_t in_len, size_t *out_len){
+	// check number of whether there's no component
+	ZG_List *list=ZG_List_New();
+
+	for(unsigned i=0; i < in_len;i++){
+		ZG_EComponent entity_component=in_data[i];
+		ZG_EntityManagerRegisteredComponentData *registered_component=g_entity_manager_registered_components->items[entity_component];
+		ZG_EComponentList req_com=registered_component->data.required_components;
+		bool found=false;
+		for(uint16_t j=0; j < req_com.n_components;j++){
+			// check if exists...
+			ZG_EComponent idx_component_req_to_find=req_com.components[j];
+
+			found=false;
+			// check whether it's int the list or not
+			for(uint16_t k=0; k < list->count && found==false;k++){
+				ZG_EComponent idx_component_in_list=(intptr_t)list->items[k];
+				if(idx_component_req_to_find == idx_component_in_list){
+					found=true;
+				}
+			}
+
+			if(found==false){
+				ZG_List_Add(list,(void *)((intptr_t)idx_component_req_to_find));
+			}
+		}
+
+		// add the component if not exist
+		if(list != NULL){ // add the component itself
+			found=false;
+			for(uint16_t k=0; k < list->count && found==false;k++){
+				intptr_t idx_component_in_list=(intptr_t)list->items[k];
+				if(entity_component == idx_component_in_list){
+					found=true;
+				}
+			}
+
+			if(found==false){
+				ZG_List_Add(list,(void *)((intptr_t)entity_component));
+			}
+		}
+	}
+
+	ZG_EComponent *new_data=(ZG_EComponent *)malloc(sizeof(ZG_EComponent)*list->count);
+	for(uint16_t k=0; k < list->count;k++){
+		new_data[k]=(intptr_t)list->items[k];
+	}
+
+	*out_len=list->count;
+
+	qsort(new_data,list->count,sizeof(ZG_EComponent),ZG_EntityManager_OrderComponents);
+
+	ZG_List_Delete(list);
+
+	return new_data;
+}
+/*
+ZG_Entity *EntityManager_NewEntity(ZG_EntityManager *_this,ZG_EComponent *_entity_components, size_t _entity_components_len){
+	ZG_EntityManagerData *data=_this->data;
+	char _archetype_id[1024]="__@_comp";
+	size_t entity_components_len;
+
+	// 1. check component requirements
+	ZG_EComponent *entity_components=ZG_EntityManager_GenerateComponentRequireZmentList(_entity_components,_entity_components_len,&entity_components_len);
+
+	// internal type that is generated according used components...
+	for(uint16_t i=0; i < entity_components_len; i++){
+		char *num=ZG_String_IntToString(entity_components[i]);
+		strcat(_archetype_id,"_");
+		strcat(_archetype_id,num);
+		free(num);
+	}
+
+	strcat(_archetype_id,"_@__");
+
+	ZG_ArchetypeData *archetype_data=ZG_MapString_Get(data->map_archetypes,_archetype_id,NULL);
+
+	if(archetype_data == NULL){ // create ...
+		archetype_data=(ZG_ArchetypeData *)ZG_EntityManager_NewArchetype(_this,_archetype_id ,ZG_UNLIMITIED_ENTITIES, entity_components, entity_components_len);
+	}
+
+	// Free because we don't need it anymore
+	ZG_FREE(entity_components);
+	return EntityManager_NewEntityFromManager(_this,_archetype_id);
+}*/
+/*
+ZG_Entity  *EntityManager_NewEntityFromManager(ZG_EntityManager *_this,const char *_id){
+	ZG_EntityManagerData *data=_this->data;
+	ZG_ArchetypeData *archetype_data=ZG_MapString_Get(data->map_archetypes,_id,NULL);
+
+	if(archetype_data == NULL){
+		ZG_LOG_ERROR("ZG_Entity manager '%s' not exist",_id);
 		return NULL;
 	}
 
-	entity=entity_manager_data->entities[entity_manager_data->active_entities];
-	entity_manager_data->active_entities++;
+	ZG_Entity *entity=NULL;
+	if(
+			archetype_data->active_entities>=archetype_data->n_entities
+								&&
+			archetype_data->active_entities<archetype_data->max_entities
+	){ // extend entity
+		ZG_EntityManager_ExtendEntities(_this,archetype_data,1);
+	}else{
+		return NULL;
+	}
 
+	entity=archetype_data->entities[archetype_data->active_entities];
+	archetype_data->active_entities++;
+
+	entity->active=true;
 
 	return entity;
-}
+}*/
 
-void 	*ZG_EntityManager_GetComponent(ZG_EntityManager *_this, const char *_component_name, ZG_ComponentId _component_id){
+void ZG_EntityManager_ExtendComponent(ZG_EntityManager *_this,ZG_EComponent idx_component, ZG_Entity ** entities, size_t extend){
+
+	if(idx_component >= g_entity_manager_registered_components->count){
+		return;
+	}
+
 	ZG_EntityManagerData *data=_this->data;
+	ZG_EntityManagerComponentData *component_data=data->components[idx_component];
+	ZG_ESRegisterComponent  registered_component_data=((ZG_EntityManagerRegisteredComponentData *)g_entity_manager_registered_components->items[idx_component])->data;
+	int current_component_data_len=component_data->n_elements;
+	size_t n_new_elements=current_component_data_len+extend;
+	void *old_ptr=component_data->ptr_data;
+	uint8_t *ptr_com=NULL;
+	ZG_Entity **ptr_entities=NULL;
+	size_t size_component_data=registered_component_data.size_data;
 
-	// search components array
+	// do a realloc...
+	component_data->ptr_data=malloc(n_new_elements*registered_component_data.size_data);
+	memset(component_data->ptr_data,0,n_new_elements*registered_component_data.size_data);
 
+	if(old_ptr != NULL){
+		memcpy(component_data->ptr_data,old_ptr,component_data->n_elements*registered_component_data.size_data);
+		ZG_FREE(old_ptr);
+	}
 
-	size_t component_idx=data->components_ref[_component_id];
-	void *component_data=data->components[component_idx];
+	// initialize new components
+	ptr_entities=entities+component_data->n_elements;
+	ptr_com=component_data->ptr_data+component_data->n_elements*size_component_data;
+	for(unsigned i=component_data->n_elements; i < n_new_elements; i++){
+		registered_component_data.EComponent_Setup(ptr_com,i,*ptr_entities);
+		ptr_com+=size_component_data;
+		ptr_entities++;
+	}
 
-	asset(component_data!=NULL);
-
-	return component_data;
+	// update new elements
+	component_data->n_elements=n_new_elements;
 
 }
 
-void 	*ZG_EntityManager_GetComponentIdx(ZG_EntityManager *_this, const char *_component_name, ZG_ComponentId _component_position_idx){
+void ZG_EntityManager_ExtendEntities(ZG_EntityManager *_this, ZG_ArchetypeData *archetype_data, size_t extend_entities){
+
+	size_t total_extend=archetype_data->n_entities+extend_entities;
+
+	if(total_extend >= archetype_data->max_entities){
+		ZG_LOG_ERROR("cannot extend entity type '%s' up to '%i': Max entities reached (max: %i)",archetype_data->name,extend_entities,archetype_data->max_entities);
+	}
+
+	ZG_Entity **old_ptr=archetype_data->entities;
+
+	archetype_data->entities=malloc(sizeof(ZG_Entity *)*total_extend);
+	memset(archetype_data->entities,0,sizeof(ZG_Entity *)*total_extend);
+
+	// copy old ones
+	if(old_ptr != NULL){
+		memcpy(archetype_data->entities,old_ptr,sizeof(ZG_Entity *)*archetype_data->n_entities);
+		ZG_FREE(old_ptr);
+	}
+
+	// extend as many entities we need
+	for(unsigned i=archetype_data->n_entities; i < total_extend;i++){
+		archetype_data->entities[i]=ZG_Entity_New(_this);
+	}
+
+	// extend components
+	for(unsigned i=0; i < archetype_data->n_components;i++){
+		ZG_EComponent idx_ec=archetype_data->entity_components[i];
+		// extend components this type will have
+		ZG_EntityManager_ExtendComponent(
+			_this
+			,idx_ec
+			//,archetype_data->entities+archetype_data->n_entities
+			,extend_entities
+		);
+	};
+
+	// realloc set all entity types as this type
+	archetype_data->n_entities=total_extend;
+}
+
+ZG_Archetype * ZG_EntityManager_NewArchetype(
+	ZG_EntityManager *_this
+	, const char *_str_archetype
+	, uint16_t _max_entities
+	, ZG_EComponent *_entity_components
+	, size_t _entity_components_len
+){
 	ZG_EntityManagerData *data=_this->data;
+	ZG_ArchetypeData *archetype_data=ZG_NEW(ZG_ArchetypeData);
+	ZG_Archetype *archetype=ZG_NEW(ZG_Archetype);
+	archetype->data=archetype_data;
+	size_t	req_entity_components_len=0;
 
-	// search components array
-	data->
+	if(_entity_components_len == 0){
+		return NULL;
+	}
+	// get required components (it has to free after use)
+	ZG_EComponent *req_entity_components=ZG_EntityManager_GenerateComponentRequireZmentList(
+			_entity_components
+			,_entity_components_len
+			,&req_entity_components_len);
 
 
-	size_t component_idx=data->components_ref[_component_position_idx];
-	void *component_data=data->components[component_idx];
 
-	asset(component_data!=NULL);
+	// check and extend required components if needed ...
+	archetype_data->component_names=malloc(sizeof(char *)*req_entity_components_len);
+	archetype_data->components=malloc(sizeof(ZG_EComponent)*req_entity_components_len);
+	memset(archetype_data->entity_components,0,sizeof(ZG_EComponent)*req_entity_components_len);
+	archetype_data->n_components=req_entity_components_len;
 
-	return component_data;
+	//archetype_data->es_system=_this;
+	archetype_data->n_entities=0;
+	archetype_data->max_entities=0;
+	archetype_data->active_entities=0;
 
+	archetype_data->name=malloc(strlen(_str_archetype)*sizeof(char)+1);
+	memset(archetype_data->name,0,strlen(_str_archetype)*sizeof(char)+1);
+	strcpy(archetype_data->name,_str_archetype);
+
+	ZG_EComponent *dst_ptr=archetype_data->component_idxs;
+	ZG_EComponent *src_ptr=req_entity_components;
+
+	// add components neededs for the type...
+	for(unsigned i=0; i < req_entity_components_len;i++){
+		// register the components this type will have
+		ZG_EComponent component_id=*src_ptr;
+		char *component_name=
+		archetype_data->component_names[i]=malloc(sizeof(char)*src_ptr)
+		*dst_ptr++=*src_ptr++;
+	}
+
+
+	ZG_List_Add(data->lst_archetypes,archetype);
+	ZG_MapString_Set(data->map_archetypes,_str_archetype,archetype);
+
+	// extend entities
+	archetype_data->max_entities=_max_entities;
+	if(_max_entities != (uint16_t)ZG_UNLIMITIED_ENTITIES){
+		ZG_EntityManager_ExtendEntities(
+			_this
+			,archetype_data
+			,_max_entities
+		);
+	}
+
+	ZG_FREE(req_entity_components);
+	return archetype;
 }
 
+void ZG_EntityManager_Update(ZG_EntityManager * _this){
+	ZG_EntityManagerData *data=(ZG_EntityManagerData *)_this->data;
+	ZG_EntityManagerRegisteredComponentData  **ptr_registered_component_data=(ZG_EntityManagerRegisteredComponentData  **)g_entity_manager_registered_components->items;
+	ZG_EntityManagerComponentData **components=data->components;
+	ZG_EntityManagerComponentData *component=NULL;
+	uint8_t *ptr_component_data=NULL;
+	size_t size_data=0;
+	//ZG_EComponentHeader * component_data=NULL;
 
+
+	for(unsigned i=0; i < g_entity_manager_registered_components->count; i++){
+		void (*ZG_EComponent_Update)(void *) =ptr_registered_component_data[i]->data.ZG_EComponent_Update;
+		if(ZG_EComponent_Update != NULL){
+			size_data=ptr_registered_component_data[i]->data.size_data;
+			component=*components;
+			ptr_component_data=component->ptr_data;
+			for(unsigned i=0; i < component->n_elements; i++){
+				if(((ZG_EComponentHeader * )ptr_component_data)->entity->active){
+					ZG_EComponent_Update(ptr_component_data);
+				}
+				ptr_component_data+=size_data;
+			}
+		}
+		ptr_registered_component_data++;
+		components++;
+	}
+}
+
+void ZG_EntityManager_Delete(ZG_EntityManager *_this){
+	ZG_EntityManagerData *data=(ZG_EntityManagerData *)_this->data;
+	ZG_EntityManagerRegisteredComponentData  **ptr_registered_component_data=(ZG_EntityManagerRegisteredComponentData  **)g_entity_manager_registered_components->items;
+	ZG_EntityManagerComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
+	ZG_MapStringIterator *iterator=ZG_MapStringIterator_New(data->map_archetypes);
+
+	for(; !ZG_MapStringIterator_End(iterator);ZG_MapStringIterator_Next(iterator)){
+		//const char *key=MapStringIterator_GetKey(iterator);
+		ZG_Archetype *archetype=ZG_MapStringIterator_GetValue(iterator);
+		ZG_ArchetypeData *archetype_data=archetype->data;
+
+		for(unsigned i=0; i < archetype_data->n_entities; i++){
+			ZG_Entity_Delete(archetype_data->entities[i]);
+		}
+
+		ZG_FREE(archetype_data->entities);
+		ZG_FREE(archetype_data->entity_components);
+		ZG_FREE(archetype_data->name);
+		ZG_FREE(archetype_data);
+		ZG_FREE(archetype);
+	}
+
+	ZG_MapStringIterator_Delete(iterator);
+
+	// release all entities
+	for(unsigned i=0; i < g_entity_manager_registered_components->count; i++){
+		uint8_t *ptr_data=(*component_data)->ptr_data;
+		void (*ZG_EComponent_Destroy)(void *) =(*ptr_registered_component_data)->data.ZG_EComponent_Destroy;
+		size_t size_data=(*ptr_registered_component_data)->data.size_data;
+		if( ptr_data != NULL){
+			for(unsigned j=0; j < (*component_data)->n_elements; j++){
+				if(ZG_EComponent_Destroy != NULL){
+					ZG_EComponent_Destroy(ptr_data);
+				}
+				ptr_data+=size_data;
+			}
+			ZG_FREE((*component_data)->ptr_data);
+		}
+		ptr_registered_component_data++;
+		component_data++;
+	}
+
+	ZG_List_Delete(data->lst_archetypes);
+	ZG_MapString_Delete(data->map_archetypes);
+
+	for(unsigned i=0; i < g_entity_manager_registered_components->count;i++){
+		ZG_FREE(data->components[i]);
+	}
+
+	ZG_FREE(data->components);
+	ZG_FREE(data);
+	ZG_FREE(_this);
+}
