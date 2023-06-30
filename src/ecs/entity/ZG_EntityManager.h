@@ -68,9 +68,15 @@ bool ZG_EntityManager_RegisterComponent(
 size_t				ZG_EntityManager_NumComponents(void);
 void 				ZG_EntityManager_DeInit(void);
 
+// it returns a handle of entity manager (it creates internally its pointers but all are referenced by an integer (like opengl)
+int								ZG_EntityManager_New(void);
+void							ZG_EntityManager_Delete(int _entity_manager_id);
+void							ZG_EntityManager_Destroy(void);
+
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_EntityManager 	*		ZG_EntityManager_New(void);
+
+
 ZG_Archetype 	*		ZG_EntityManager_NewArchetype(
 		ZG_EntityManager *_this
 		, const char *_id
