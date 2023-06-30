@@ -25,15 +25,12 @@ typedef unsigned int ZG_Entity;
 ZG_Entity ZG_Entity_New(ZG_Archetype *_archetype);
 void ZG_Entity_Start(ZG_Entity _entity);
 void ZG_Entity_Die(ZG_Entity _entity);
-void ZG_Entity_Reset(ZG_Entity *_this);
-ZG_EntityManager *ZG_Entity_GetEntityManager(ZG_Entity *_this);
-ZG_Archetype *ZG_Entity_GetArchetype(ZG_Entity *_this);
+void ZG_Entity_Reset(ZG_Entity _this);
 void *ZG_Entity_GetComponent(ZG_Entity *_this, ZG_ComponentId _component_id);
 
 //void Entity_AttachComponent(ZG_Entity *_this, uint16_t idx_component, void *ptr_component);
 //void Entity_DeAttachComponent(ZG_Entity *_this, uint16_t idx_component);
 // Helper functions
-
 void ZG_Entity_Delete(ZG_Entity *_this);
 
 

@@ -80,6 +80,7 @@ ZG_Archetype 	*		ZG_EntityManager_NewArchetype(
 );
 
 
+// The new entity is a handle of flags that locates its archetype and entity offset
 ZG_Entity  				EntityManager_NewEntity(ZG_EntityManager *_this, const char *_archetype);
 void					EntityManager_DestroyEntity(ZG_EntityManager *_this, ZG_Entity _entity);
 void					ZG_EntityManager_Update(ZG_EntityManager *_this);

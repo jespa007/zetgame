@@ -39,8 +39,9 @@ ZG_Archetype 	*		ZG_Archetype_New(
 		, size_t entity_components_len
 );
 
-ZG_Entity  		*		ZG_Archetype_NewEntity(ZG_Archetype *_this);
-ZG_EntityManager	* 		ZG_Archetype_GetEntityManager(ZG_Archetype *_this);
-void 			*		ZG_Archetype_GetComponent(ZG_Archetype *_this, const char * _component_name, ZG_ComponentId _component_id);
+
+// The new entity is a handle of flags that locates its archetype and entity offset
+ZG_Entity  					ZG_Archetype_NewEntity(ZG_Archetype *_this);
+void 				*		ZG_Archetype_GetComponent(ZG_Archetype *_this, ZG_Entity _entity,const char * _component_name);
 
 #endif
