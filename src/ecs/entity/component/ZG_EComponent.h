@@ -28,12 +28,12 @@
 
 //typedef int ZG_EComponent;
 
-
+/*
 typedef struct{
 	ZG_EntityId			entity_id; // global position
 	ZG_Archetype	*archetype;
 }ZG_EntityHeader;
-
+*/
 
 typedef struct{
 	const char **	components;

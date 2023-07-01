@@ -14,7 +14,7 @@ ZG_Geometry	* ZG_Geometry_GetDefaultPoint(void){
 	if(g_geometry_default_point == NULL){
 		short index=0;
 		float pos[]={0,0,0};
-		g_geometry_default_point=ZG_Geometry_NewPoints(1);
+		g_geometry_default_point=ZG_Geometry_NewPoints();
 		ZG_Geometry_SetIndices(g_geometry_default_point,&index,1);
 		ZG_Geometry_SetMeshVertex(g_geometry_default_point,pos,3);
 	}

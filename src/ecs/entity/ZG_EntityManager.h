@@ -3,6 +3,11 @@
 
 #define ZG_UNLIMITIED_ENTITIES	-1
 
+#define ZG_BITS_ENTITY_MANAGERS			4
+#define ZG_BITS_ENTITY_ARCHETYPES		10
+#define ZG_BITS_ENTITY_PER_ARCHETYPE	18
+
+
 #define ZG_ECS_ADD_COMPONENT(_type_data, _on_create,_on_destroy, _on_update,_required_components) \
 ZG_EntityManager_RegisterComponent(\
 	""#_type_data,\

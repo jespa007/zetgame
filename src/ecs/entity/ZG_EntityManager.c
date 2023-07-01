@@ -4,6 +4,8 @@ ZG_List *g_entity_manager_registered_components=NULL;
 ZG_MapString *g_map_entity_manager_registered_components=NULL;
 bool  g_entity_manager_user_can_register_components=true;
 
+ZG_List *g_entity_manager_registered=NULL;
+
 typedef struct{
 	ZG_EComponent id;
 	ZG_RegisterComponent data;
@@ -30,9 +32,9 @@ bool	ZG_EntityManager_RegisterComponent(
 		//ZG_EComponent id;
 		,size_t 	_size_data // len data component
 		//void   (*EComponent_Setup)(void *, ZG_ComponentId _id); // function to Setup component
-		,void   (* _on_update)(void *_component_data) // function component
-		,void   (* _on_create)(void *_component_data) // set it up if component need to init or allocate resources on its creation
-		,void   (* _on_destroy)(void *_component_data)
+		,void   (* _on_update)(void *_component_data, ZG_Entity _entity) // function component
+		,void   (* _on_create)(void *_component_data, ZG_Entity _entity) // set it up if component need to init or allocate resources on its creation
+		,void   (* _on_destroy)(void *_component_data, ZG_Entity _entity)
 		,ZG_ComponentList   (*_required_components)(void) // function to destroy
 ){
 

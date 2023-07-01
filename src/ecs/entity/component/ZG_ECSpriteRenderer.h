@@ -10,9 +10,9 @@ struct ZG_ECSpriteRenderer{
 
 //---
 ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void);
-void ZG_ECSpriteRenderer_OnCreate(void *_this);
-void ZG_ECSpriteRenderer_Update(void *_this);
-void ZG_ECSpriteRenderer_OnDestroy(void *_this);
+void ZG_ECSpriteRenderer_OnCreate(void *_this, ZG_Entity _entity);
+void ZG_ECSpriteRenderer_Update(void *_this, ZG_Entity _entity);
+void ZG_ECSpriteRenderer_OnDestroy(void *_this, ZG_Entity _entity);
 //---
 
 

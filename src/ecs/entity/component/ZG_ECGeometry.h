@@ -4,13 +4,13 @@
 typedef struct ZG_ECGeometry ZG_ECGeometry;
 
 struct ZG_ECGeometry{
-	ZG_EntityHeader 	header;
+
 	ZG_Geometry 		*geometry;
 };
 
 //---
-void ZG_ECGeometry_OnCreate(void *_this);
-void ZG_ECGeometry_OnDestroy(void *_this);
+void ZG_ECGeometry_OnCreate(void *_this, ZG_Entity _entity);
+void ZG_ECGeometry_OnDestroy(void *_this, ZG_Entity _entity);
 //---
 
 #endif

@@ -26,7 +26,7 @@ ZG_ComponentList ZG_ECSpriteRenderer_RequiredComponents(void){
 	return cl;
 }
 
-void ZG_ECSpriteRenderer_OnCreate(void *_this){
+void ZG_ECSpriteRenderer_OnCreate(void *_this, ZG_Entity _entity){
 	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
 
 	//ec_sprite_renderer->header.entity=_entity;
@@ -61,7 +61,7 @@ void ZG_ECSpriteRenderer_OnCreate(void *_this){
 }
 
 
-void ZG_ECSpriteRenderer_OnUpdate(void *_this){
+void ZG_ECSpriteRenderer_OnUpdate(void *_this, ZG_Entity _entity){
 	ZG_ECSpriteRenderer *ec_sprite_renderer=_this;
 	ZG_ECSpriteRendererData * data= ec_sprite_renderer->data;
 	ZG_Transform *transform = NULL;
@@ -78,7 +78,7 @@ void ZG_ECSpriteRenderer_OnUpdate(void *_this){
 	Graphics_Draw(transform,data->geometry,data->appearance);
 }
 
-void ZG_ECSpriteRenderer_OnDestroy(void *_this){
+void ZG_ECSpriteRenderer_OnDestroy(void *_this, ZG_Entity _entity){
 	ZG_ECSpriteRendererData * data= ((ZG_ECSpriteRenderer *)_this)->data;
 	ZG_Appearance_Delete(data->appearance);
 	ZG_FREE(data);
