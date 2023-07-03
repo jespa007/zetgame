@@ -8,7 +8,7 @@ struct ZG_ACMaterialAnimation{
 
 
 //----
-void			ZG_ACMaterialAnimation_Setup(ZG_AComponentHeader *_this, ZG_ComponentId _id);
+void			ZG_ACMaterialAnimation_Setup(ZG_AComponentHeader *_this, ZG_EComponentId _id);
 void 			ZG_ACMaterialAnimation_Update(ZG_AComponentHeader *_this);
 void 			ZG_ACMaterialAnimation_Destroy(ZG_AComponentHeader *_this);
 //----

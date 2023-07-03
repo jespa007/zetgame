@@ -6,12 +6,16 @@
 #include "mmedia/_zg_mmedia_.h"
 #include "animation/_zg_animation_.h"
 
-typedef unsigned int ZG_ComponentId;
+
+
+// ZG_Component
+typedef unsigned int ZG_EComponentId;
 
 // ZG_Entity
-typedef struct ZG_EntityManager ZG_EntityManager;
-typedef struct ZG_Archetype ZG_Archetype;
-typedef struct ZG_Entity ZG_Entity;
+typedef unsigned int ZG_Entity;
+typedef unsigned int ZG_EntityManager;
+typedef unsigned int ZG_EntityArchetype;
+
 
 
 
@@ -20,8 +24,8 @@ typedef struct ZG_Entity ZG_Entity;
 #include "ecs/animation/component/ZG_AComponent.h"
 
 // entity
-#include "entity/ZG_Archetype.h"
-#include "entity/ZG_Archetype.h"
+#include "entity/ZG_EntityArchetype.h"
+#include "entity/ZG_EntityArchetype.h"
 #include "ecs/entity/ZG_Entity.h"
 
 
@@ -36,7 +40,7 @@ typedef struct ZG_Entity ZG_Entity;
 
 
 // Animation
-#include "ecs/animation/ZG_AnimationSystem.h"
+#include "animation/ZG_AnimationManager.h"
 
 // Animation Component
 #include "ecs/animation/component/ZG_ACTransformAnimation.h"

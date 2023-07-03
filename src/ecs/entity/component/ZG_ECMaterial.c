@@ -1,7 +1,7 @@
 #include "ecs/_zg_ecs_.h"
 
 typedef struct{
-	ZG_ComponentId 	material_animation_component; // in case entity it has associated material animation component
+	EntityAnimation 	material_entity_animation; // in case entity it has associated material animation component
 }ZG_ECMaterialData;
 
 void ZG_ECMaterial_OnCreate(void *_this, ZG_Entity _entity){

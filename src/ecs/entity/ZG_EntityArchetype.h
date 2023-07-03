@@ -24,14 +24,11 @@ ZG_Archetype_GetComponentFromIdx(\
 )
 
 
+typedef unsigned int ZG_EntityArcheType;
 
-struct ZG_Archetype{
-
-	void *data;
-};
 
 // Static functions
-ZG_Archetype 	*		ZG_Archetype_New(
+ZG_EntityArcheType 	ZG_Archetype_New(
 		ZG_EntityManager *_this
 		, const char *_id
 		,uint16_t max_entities
@@ -41,7 +38,7 @@ ZG_Archetype 	*		ZG_Archetype_New(
 
 
 // The new entity is a handle of flags that locates its archetype and entity offset
-ZG_Entity  					ZG_Archetype_NewEntity(ZG_Archetype *_this);
-void 				*		ZG_Archetype_GetComponent(ZG_Archetype *_this, ZG_Entity _entity,const char * _component_name);
+ZG_Entity  					ZG_Archetype_NewEntity(ZG_EntityArcheType _entity_archetype);
+void 				*		ZG_Archetype_GetComponent(ZG_EntityArcheType _entity_archetype, ZG_Entity _entity,const char * _component_name);
 
 #endif

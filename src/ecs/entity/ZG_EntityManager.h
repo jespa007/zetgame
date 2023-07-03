@@ -1,11 +1,11 @@
-#ifndef __ZG_ENTITY_SYSTEM_H__
-#define __ZG_ENTITY_SYSTEM_H__
+#ifndef __ZG_ENTITY_MANAGER_H__
+#define __ZG_ENTITY_MANAGER_H__
 
 #define ZG_UNLIMITIED_ENTITIES	-1
 
 #define ZG_BITS_ENTITY_MANAGERS			4
 #define ZG_BITS_ENTITY_ARCHETYPES		10
-#define ZG_BITS_ENTITY_PER_ARCHETYPE	18
+#define ZG_BITS_ARCHETYPE_ENTITIES		18
 
 
 #define ZG_ECS_ADD_COMPONENT(_type_data, _on_create,_on_destroy, _on_update,_required_components) \
@@ -19,9 +19,8 @@ ZG_EntityManager_RegisterComponent(\
 )
 
 
-
 typedef struct{
-	ZG_ComponentId component_id;
+	ZG_EComponentId id;
 	const char *name;
 	size_t 	size_data; // len data component
 
@@ -43,10 +42,10 @@ typedef struct{
 	void   (*EComponent_OnDestroy)(void *_component_data);// set it up if component need to deinit or deallocate resources on its creation
 	//void   (*ZG_EComponent_Destroy)(void *); // function to destroy
 }ZG_ESRegisterComponent;*/
-
+/*
 struct ZG_EntityManager{
 	void *data;
-};
+};*/
 //---------------------------------------------------
 // STATIC FUNCTIONS
 bool				ZG_EntityManager_Init(void);
@@ -82,8 +81,8 @@ void							ZG_EntityManager_Destroy(void);
 // PUBLIC FUNCTIONS
 
 
-ZG_Archetype 	*		ZG_EntityManager_NewArchetype(
-		ZG_EntityManager *_this
+ZG_Archetype 			ZG_EntityManager_NewArchetype(
+		ZG_EntityManager _entity_manager
 		, const char *_id
 		,uint16_t max_entities
 		, ZG_EComponent * entity_components
@@ -92,10 +91,10 @@ ZG_Archetype 	*		ZG_EntityManager_NewArchetype(
 
 
 // The new entity is a handle of flags that locates its archetype and entity offset
-ZG_Entity  				EntityManager_NewEntity(ZG_EntityManager *_this, const char *_archetype);
-void					EntityManager_DestroyEntity(ZG_EntityManager *_this, ZG_Entity _entity);
-void					ZG_EntityManager_Update(ZG_EntityManager *_this);
-void 					ZG_EntityManager_GetComponent(ZG_EntityManager *_this, ZG_Entity * _entity, ZG_ComponentId _component_id);
+ZG_Entity  				EntityManager_NewEntity(ZG_EntityManager _entity_manager, ZG_EntityArchetype _entity_archetype);
+void					EntityManager_DestroyEntity(ZG_EntityManager _entity_manager, ZG_Entity _entity_id);
+void					ZG_EntityManager_Update(ZG_EntityManager _entity_manager);
+void 					ZG_EntityManager_GetEntityComponent(ZG_EntityManager _entity_manager,ZG_Entity _entity, ZG_Component _component);
 //uint8_t *EntityManager_NewComponent(ZG_EntityManager *_this,int idx_component);
 /*void  			EntityManager_RemoveEntity(ZG_EntityManager * _this, ZG_Entity entity);
 
@@ -107,7 +106,7 @@ ZG_Geometry 	*		EntityManager_GetComponentGeometry(ZG_EntityManager * _this, ZG_
 Camera 		*		EntityManager_GetComponentCamera(ZG_EntityManager * _this, ZG_Entity entity);
 
 */
-void				ZG_EntityManager_Delete(ZG_EntityManager * _this);
+void				ZG_EntityManager_Delete(ZG_EntityManager _entity_manager);
 
 
 

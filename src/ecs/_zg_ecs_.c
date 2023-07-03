@@ -1,6 +1,6 @@
 
 // ZG_Entity
-#include "ecs/animation/ZG_AnimationSystem.c"
+#include "animation/ZG_AnimationManager.c"
 #include "ecs/animation/component/ZG_ACMaterialAnimation.c"
 #include "ecs/animation/component/ZG_ACTransformAnimation.c"
 #include "ecs/collision/ZG_CollisionSystem.c"
@@ -11,8 +11,8 @@
 #include "ecs/entity/component/ZG_ECTexture.c"
 #include "ecs/entity/component/ZG_ECTransform.c"
 #include "ecs/entity/ZG_Entity.c"
-#include "entity/ZG_Archetype.c"
-#include "entity/ZG_Archetype.c"
+#include "entity/ZG_EntityArchetype.c"
+#include "entity/ZG_EntityArchetype.c"
 
 
 
