@@ -3,13 +3,13 @@
 
 typedef struct{
 	ZG_EntityManager	*entity_system;
-}ZG_CollisionSystemData;
+}ZG_ECollisionSystemData;
 
 //------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_CollisionSystem *ZG_CollisionSystem_New(ZG_EntityManager *_entity_system){
-	ZG_CollisionSystem *system=ZG_NEW(ZG_CollisionSystem);
-	ZG_CollisionSystemData *data=ZG_NEW(ZG_CollisionSystemData);
+ZG_ECollisionSystem *ZG_ECollisionSystem_New(ZG_EntityManager *_entity_system){
+	ZG_ECollisionSystem *system=ZG_NEW(ZG_ECollisionSystem);
+	ZG_ECollisionSystemData *data=ZG_NEW(ZG_ECollisionSystemData);
 
 	system->data=data;
 
@@ -22,14 +22,14 @@ ZG_CollisionSystem *ZG_CollisionSystem_New(ZG_EntityManager *_entity_system){
 // Register on end_collision
 
 
-void ZG_CollisionSystem_Update(ZG_CollisionSystem * _this){
+void ZG_ECollisionSystem_Update(ZG_ECollisionSystem * _this){
 	// foreach archetypes collisions
 	// check collision foreach entity according its current collider
 	// check flags begin/end to trigger its callback functions
 }
 
-void ZG_CollisionSystem_Delete(ZG_CollisionSystem *_this){
-	ZG_CollisionSystemData *data=(ZG_CollisionSystemData *)_this->data;
+void ZG_ECollisionSystem_Delete(ZG_ECollisionSystem *_this){
+	ZG_ECollisionSystemData *data=(ZG_ECollisionSystemData *)_this->data;
 	ZG_FREE(data);
 	ZG_FREE(_this);
 }

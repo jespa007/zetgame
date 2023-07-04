@@ -11,7 +11,7 @@ bool  		g_animation_system_user_can_register_components=true;
 typedef struct{
 	ZG_AComponent id;
 	ZG_RegisterComponent data;
-}ZG_AnimationManagerRegisteredComponentData;
+}ZG_EAnimationManagerRegisteredComponentData;
 */
 
 typedef struct{
@@ -20,21 +20,21 @@ typedef struct{
 
 	ZG_ComponentId			*free_slots; // it gives information of free slots
 	size_t 				n_free_slots;
-}ZG_AnimationManagerComponentData;
+}ZG_EAnimationManagerComponentData;
 
 typedef struct{
 	ZG_EntityManager	*entity_system;
-	ZG_AnimationManagerComponentData **components;//[ENTITY_COMPONENT_MAX];
-}ZG_AnimationManagerData;
+	ZG_EAnimationManagerComponentData **components;//[ENTITY_COMPONENT_MAX];
+}ZG_EAnimationManagerData;
 
 
 //---------------------------------------------------
 // PRIVATE FUNCTIONS
 
 //---------------------------------------------------
-/*bool	ZG_AnimationManager_RegisterComponent(
+/*bool	ZG_EAnimationManager_RegisterComponent(
 		ZG_AComponent _idx_component
-		,ZG_AnimationManagerRegisterComponent as_component_register
+		,ZG_EAnimationManagerRegisterComponent as_component_register
 ){
 
 	if(g_animation_system_user_can_register_components==false){
@@ -47,7 +47,7 @@ typedef struct{
 	}
 
 	ZG_AComponent idx_component=_idx_component;//g_animation_system_registered_components->count;
-	ZG_AnimationManagerRegisteredComponentData *new_component_register=ZG_NEW(ZG_AnimationManagerRegisteredComponentData);
+	ZG_EAnimationManagerRegisteredComponentData *new_component_register=ZG_NEW(ZG_EAnimationManagerRegisteredComponentData);
 	new_component_register->data=as_component_register;
 	new_component_register->id=idx_component;
 	ZG_List_Add(g_animation_system_registered_components,new_component_register);
@@ -55,7 +55,7 @@ typedef struct{
 	return true;
 }*/
 
-bool	ZG_AnimationManager_AddComponent(
+bool	ZG_EAnimationManager_AddComponent(
 		const char *_name
 		//,ZG_ESRegisterComponent es_component_register
 		//ZG_EComponent id;
@@ -94,12 +94,12 @@ bool	ZG_AnimationManager_AddComponent(
 
 //---------------------------------------------------
 // STATIC FUNCTIONS
-bool ZG_AnimationManager_Init(void){
+bool ZG_EAnimationManager_Init(void){
 
 	unsigned min_iter=0;
 
 	// invalid (0)
-	/*ZG_AnimationManager_RegisterComponentBuiltin(ZG_AC_INVALID,(ZG_AnimationManagerRegisterComponent){
+	/*ZG_EAnimationManager_RegisterComponentBuiltin(ZG_AC_INVALID,(ZG_EAnimationManagerRegisterComponent){
 		.size_data				=0
 		,.ZG_AComponent_Setup		=NULL
 		,.ZG_AComponent_Update		=NULL
@@ -113,7 +113,7 @@ bool ZG_AnimationManager_Init(void){
 	);
 
 	// Animation transform
-	/*ZG_AnimationManager_RegisterComponentBuiltin(ZG_AC_TRANSFORM_ANIMATION,(ZG_AnimationManagerRegisterComponent){
+	/*ZG_EAnimationManager_RegisterComponentBuiltin(ZG_AC_TRANSFORM_ANIMATION,(ZG_EAnimationManagerRegisterComponent){
 		.size_data				=sizeof(ZG_ACTransformAnimation)
 		,.ZG_AComponent_Setup		=ACTransformAnimation_Setup
 		,.ZG_AComponent_Update		=ACTransformAnimation_Update
@@ -121,7 +121,7 @@ bool ZG_AnimationManager_Init(void){
 	});*/
 
 	// material animation
-	/*ZG_AnimationManager_RegisterComponentBuiltin(ZG_AC_MATERIAL_ANIMATION,(ZG_AnimationManagerRegisterComponent){
+	/*ZG_EAnimationManager_RegisterComponentBuiltin(ZG_AC_MATERIAL_ANIMATION,(ZG_EAnimationManagerRegisterComponent){
 		.size_data				=sizeof(ZG_ACMaterialAnimation)
 		,.ZG_AComponent_Setup		=ZG_ACMaterialAnimation_Setup
 		,.ZG_AComponent_Update		=ZG_ACMaterialAnimation_Update
@@ -132,7 +132,7 @@ bool ZG_AnimationManager_Init(void){
 	// check component consistency
 	 min_iter=MIN(g_animation_system_registered_components->count,AC_MAX_COMPONENTS);
 	for(unsigned i=0; i < min_iter; i++){
-		ZG_AnimationManagerRegisteredComponentData *component=g_animation_system_registered_components->items[i];
+		ZG_EAnimationManagerRegisteredComponentData *component=g_animation_system_registered_components->items[i];
 		if(component->id != i){
 			ZG_LOG_ERROR("Inconsistency idx components (enum:%i list:%i)",i,component->id);
 			return false;
@@ -143,52 +143,52 @@ bool ZG_AnimationManager_Init(void){
 	return true;
 }
 /*
-bool	ZG_AnimationManager_RegisterComponent(ZG_RegisterComponent _register_component){
+bool	ZG_EAnimationManager_RegisterComponent(ZG_RegisterComponent _register_component){
 	int idx_component=0;
 
 	if(g_animation_system_registered_components != NULL){
 		idx_component=g_animation_system_registered_components->count;
 	}
 
-	if(ZG_AnimationManager_RegisterComponentBuiltin(idx_component,_register_component)==false){
+	if(ZG_EAnimationManager_RegisterComponentBuiltin(idx_component,_register_component)==false){
 		return false;
 	}
 	return true;
 }*/
 
-size_t					ZG_AnimationManager_NumComponents(void){
+size_t					ZG_EAnimationManager_NumComponents(void){
 	if(g_animation_system_registered_components != NULL){
 		return g_animation_system_registered_components->count;
 	}
 	return 0;
 }
 
-void ZG_AnimationManager_DeInit(void){
+void ZG_EAnimationManager_DeInit(void){
 	ZG_List_DeleteAndFreeAllItems(g_animation_system_registered_components);
 }
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
 
-void ZG_AnimationManager_ExtendComponent(ZG_AnimationManager *_this,ZG_AComponent _idx_component, size_t extend);
+void ZG_EAnimationManager_ExtendComponent(ZG_EAnimationManager *_this,ZG_AComponent _idx_component, size_t extend);
 
-ZG_AnimationManager *ZG_AnimationManager_New(ZG_EntityManager *_entity_system){
-	ZG_AnimationManager *system=ZG_NEW(ZG_AnimationManager);
-	ZG_AnimationManagerData *data=ZG_NEW(ZG_AnimationManagerData);
+ZG_EAnimationManager *ZG_EAnimationManager_New(ZG_EntityManager *_entity_system){
+	ZG_EAnimationManager *system=ZG_NEW(ZG_EAnimationManager);
+	ZG_EAnimationManagerData *data=ZG_NEW(ZG_EAnimationManagerData);
 
-	data->components=malloc(sizeof(ZG_AnimationManagerComponentData)*g_animation_system_registered_components->count);
-	memset(data->components,0,sizeof(ZG_AnimationManagerComponentData)*g_animation_system_registered_components->count);
+	data->components=malloc(sizeof(ZG_EAnimationManagerComponentData)*g_animation_system_registered_components->count);
+	memset(data->components,0,sizeof(ZG_EAnimationManagerComponentData)*g_animation_system_registered_components->count);
 
 	for(unsigned i=0; i < g_animation_system_registered_components->count;i++){
-		data->components[i]=ZG_NEW(ZG_AnimationManagerComponentData);
+		data->components[i]=ZG_NEW(ZG_EAnimationManagerComponentData);
 	}
 
 	system->data=data;
 	data->entity_system=_entity_system;
 
 	// extend 100 by default
-	//ZG_AnimationManager_ExtendComponent(system,ZG_AC_TRANSFORM_ANIMATION,100);
-	//ZG_AnimationManager_ExtendComponent(system,ZG_AC_MATERIAL_ANIMATION,100);
+	//ZG_EAnimationManager_ExtendComponent(system,ZG_AC_TRANSFORM_ANIMATION,100);
+	//ZG_EAnimationManager_ExtendComponent(system,ZG_AC_MATERIAL_ANIMATION,100);
 
 	// after first system is created, user cannot register any component anymore
 	g_animation_system_user_can_register_components=false;
@@ -196,7 +196,7 @@ ZG_AnimationManager *ZG_AnimationManager_New(ZG_EntityManager *_entity_system){
 	return system;
 }
 
-void ZG_AnimationManager_ExtendComponent(ZG_AnimationManager *_this,ZG_AComponent _idx_component, size_t extend){
+void ZG_EAnimationManager_ExtendComponent(ZG_EAnimationManager *_this,ZG_AComponent _idx_component, size_t extend){
 
 
 	// new behaviour
@@ -212,9 +212,9 @@ void ZG_AnimationManager_ExtendComponent(ZG_AnimationManager *_this,ZG_AComponen
 		return;
 	}
 
-	ZG_AnimationManagerData *data=_this->data;
-	ZG_AnimationManagerComponentData *component_data=data->components[_idx_component];
-	ZG_AnimationManagerRegisterComponent  registered_component_data=((ZG_AnimationManagerRegisteredComponentData *)g_animation_system_registered_components->items[_idx_component])->data;
+	ZG_EAnimationManagerData *data=_this->data;
+	ZG_EAnimationManagerComponentData *component_data=data->components[_idx_component];
+	ZG_EAnimationManagerRegisterComponent  registered_component_data=((ZG_EAnimationManagerRegisteredComponentData *)g_animation_system_registered_components->items[_idx_component])->data;
 	int current_component_data_len=component_data->n_elements;
 	size_t n_new_elements=current_component_data_len+extend;
 	uint8_t *old_ptr=component_data->ptr_data;
@@ -256,8 +256,8 @@ void ZG_AnimationManager_ExtendComponent(ZG_AnimationManager *_this,ZG_AComponen
 }
 
 
-void				ZG_AnimationManager_StartTweenTransform(
-		ZG_AnimationManager *_this
+void				ZG_EAnimationManager_StartTweenTransform(
+		ZG_EAnimationManager *_this
 		,ZG_Entity	*_entity
 		, ZG_TransformComponent _transform_component
 		, ZG_Ease _ease
@@ -268,7 +268,7 @@ void				ZG_AnimationManager_StartTweenTransform(
 
 ){
 
-	ZG_AnimationManagerData *data=(ZG_AnimationManagerData *)_this->data;
+	ZG_EAnimationManagerData *data=(ZG_EAnimationManagerData *)_this->data;
 	ZG_ASSERT_ENTITY_BELONGS_TO_SYSTEM(_entity,data->entity_system);
 
 	// Check whether entity has transform animation
@@ -280,9 +280,9 @@ void				ZG_AnimationManager_StartTweenTransform(
 
 	if(transform_animation == NULL){ // assign new transform animation
 		// check limit
-		ZG_AnimationManagerComponentData *component_data=data->components[ZG_AC_TRANSFORM_ANIMATION];
+		ZG_EAnimationManagerComponentData *component_data=data->components[ZG_AC_TRANSFORM_ANIMATION];
 		if(component_data->n_free_slots>0){
-			ZG_AnimationManagerRegisterComponent * registered_animation=(ZG_AnimationManagerRegisterComponent *)g_animation_system_registered_components->items[ZG_AC_TRANSFORM_ANIMATION];
+			ZG_EAnimationManagerRegisterComponent * registered_animation=(ZG_EAnimationManagerRegisterComponent *)g_animation_system_registered_components->items[ZG_AC_TRANSFORM_ANIMATION];
 			int idx_slot=component_data->free_slots[component_data->n_free_slots--];
 			transform_animation=(ZG_ACTransformAnimation *)component_data->ptr_data+idx_slot*registered_animation->size_data;
 			transform_animation->header.entity=_entity;
@@ -306,10 +306,10 @@ void				ZG_AnimationManager_StartTweenTransform(
 	);
 }
 
-void ZG_AnimationManager_Update(ZG_AnimationManager * _this){
-	ZG_AnimationManagerData *data=(ZG_AnimationManagerData *)_this->data;
-	ZG_AnimationManagerRegisteredComponentData  **ptr_registered_component_data=(ZG_AnimationManagerRegisteredComponentData  **)g_animation_system_registered_components->items;
-	ZG_AnimationManagerComponentData **component_data=data->components;
+void ZG_EAnimationManager_Update(ZG_EAnimationManager * _this){
+	ZG_EAnimationManagerData *data=(ZG_EAnimationManagerData *)_this->data;
+	ZG_EAnimationManagerRegisteredComponentData  **ptr_registered_component_data=(ZG_EAnimationManagerRegisteredComponentData  **)g_animation_system_registered_components->items;
+	ZG_EAnimationManagerComponentData **component_data=data->components;
 
 	for(unsigned i=0; i < g_animation_system_registered_components->count; i++){
 		void (*ZG_AComponent_Update)(void *) =(*ptr_registered_component_data)->data.ZG_AComponent_Update;
@@ -329,10 +329,10 @@ void ZG_AnimationManager_Update(ZG_AnimationManager * _this){
 }
 
 
-void ZG_AnimationManager_Delete(ZG_AnimationManager *_this){
-	ZG_AnimationManagerData *data=(ZG_AnimationManagerData *)_this->data;
-	ZG_AnimationManagerRegisteredComponentData  **ptr_registered_component_data=(ZG_AnimationManagerRegisteredComponentData  **)g_animation_system_registered_components->items;
-	ZG_AnimationManagerComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
+void ZG_EAnimationManager_Delete(ZG_EAnimationManager *_this){
+	ZG_EAnimationManagerData *data=(ZG_EAnimationManagerData *)_this->data;
+	ZG_EAnimationManagerRegisteredComponentData  **ptr_registered_component_data=(ZG_EAnimationManagerRegisteredComponentData  **)g_animation_system_registered_components->items;
+	ZG_EAnimationManagerComponentData **component_data=data->components;//[ENTITY_COMPONENT_TRANSFORM];
 
 
 	// release all entities
