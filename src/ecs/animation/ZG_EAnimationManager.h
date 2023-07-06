@@ -3,7 +3,7 @@
 
 
 #define ZG_ACS_ADD_COMPONENT(_type_data, _on_update,_on_create,_on_destroy) \
-ZG_EAnimationManager_RegisterComponent(\
+ZG_AnimationSystem_RegisterComponent(\
 	""#_type_data,\
 	sizeof(_type_data)\
 	,_on_update\
@@ -15,17 +15,16 @@ ZG_EAnimationManager_RegisterComponent(\
 #define ZG_BITS_EANIMATION_ENTITIES		18
 
 
-typedef unsigned int ZG_EAComponentId;
-typedef unsigned int ZG_EAnimationManager;
-typedef unsigned int ZG_EntityAnimation;
+typedef unsigned int ZG_AComponentId;
+typedef unsigned int ZG_AnimationManager;
 /*
-struct ZG_EAnimationManager{
+struct ZG_AnimationSystem{
 	void *data;
 };*/
 //---------------------------------------------------
 // STATIC FUNCTIONS
-bool				ZG_EAnimationManager_Init(void);
-bool	ZG_EAnimationManager_RegisterComponent(
+bool				ZG_AnimationSystem_Init(void);
+bool	ZG_AnimationSystem_RegisterComponent(
 		const char *_name
 		//,ZG_ESRegisterComponent es_component_register
 		//ZG_EComponent id;
@@ -35,30 +34,30 @@ bool	ZG_EAnimationManager_RegisterComponent(
 		,void   (* _on_create)(void *_component_data, ZG_Component _id) // set it up if component need to init or allocate resources on its creation
 		,void   (* _on_destroy)(void *_component_data)
 );
-size_t				ZG_EAnimationManager_NumComponents(void);
-void 				ZG_EAnimationManager_DeInit(void);
+size_t				ZG_AnimationSystem_NumComponents(void);
+void 				ZG_AnimationSystem_DeInit(void);
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_EAnimationManager		ZG_EAnimationManager_New();
-ZG_EntityAnimation  	ZG_EAnimationManager_NewEntityAnimation(ZG_EAnimationManager _animation_manager, ZG_Entity _entity, ZG_AComponentId _animation_component_id);
-ZG_EntityAnimation  	ZG_EAnimationManager_NewEntityAnimation(ZG_EAnimationManager _animation_manager, ZG_Entity _entity, const char *_animation_component_name);
+ZG_AnimationSystem		ZG_AnimationSystem_New();
+ZG_EntityAnimation  	ZG_AnimationSystem_NewEntityAnimation(ZG_AnimationSystem _animation_manager, ZG_Entity _entity, ZG_AComponentId _animation_component_id);
+ZG_EntityAnimation  	ZG_AnimationSystem_NewEntityAnimation(ZG_AnimationSystem _animation_manager, ZG_Entity _entity, const char *_animation_component_name);
 
 
-//ZG_Entity  		*		AnimationSystem_NewEntity(ZG_EAnimationManager *_this,ZG_EComponent * entity_components, size_t entity_components_len);
-void					ZG_EAnimationManager_Update(ZG_EAnimationManager _animation_manager);
-//uint8_t *AnimationSystem_NewComponent(ZG_EAnimationManager *_this,int idx_component);
-/*void  			AnimationSystem_RemoveEntity(ZG_EAnimationManager * _this, ZG_Entity entity);
+//ZG_Entity  		*		AnimationSystem_NewEntity(ZG_AnimationSystem *_this,ZG_EComponent * entity_components, size_t entity_components_len);
+void					ZG_AnimationSystem_Update(ZG_AnimationSystem _animation_manager);
+//uint8_t *AnimationSystem_NewComponent(ZG_AnimationSystem *_this,int idx_component);
+/*void  			AnimationSystem_RemoveEntity(ZG_AnimationSystem * _this, ZG_Entity entity);
 
 // Channels
-ZG_Transform 	*		AnimationSystem_GetComponentTransform(ZG_EAnimationManager * _this, ZG_Entity entity);
-TransformNode 		*		AnimationSystem_GetComponentTransformNode(ZG_EAnimationManager * _this, ZG_Entity entity);
-ZG_Appearance 	*		AnimationSystem_GetComponentAppearance(ZG_EAnimationManager * _this, ZG_Entity entity);
-ZG_Geometry 	*		AnimationSystem_GetComponentGeometry(ZG_EAnimationManager * _this, ZG_Entity entity);
-Camera 		*		AnimationSystem_GetComponentCamera(ZG_EAnimationManager * _this, ZG_Entity entity);
+ZG_Transform 	*		AnimationSystem_GetComponentTransform(ZG_AnimationSystem * _this, ZG_Entity entity);
+TransformNode 		*		AnimationSystem_GetComponentTransformNode(ZG_AnimationSystem * _this, ZG_Entity entity);
+ZG_Appearance 	*		AnimationSystem_GetComponentAppearance(ZG_AnimationSystem * _this, ZG_Entity entity);
+ZG_Geometry 	*		AnimationSystem_GetComponentGeometry(ZG_AnimationSystem * _this, ZG_Entity entity);
+Camera 		*		AnimationSystem_GetComponentCamera(ZG_AnimationSystem * _this, ZG_Entity entity);
 */
-void				ZG_EAnimationManager_StartTweenTransform(
-		ZG_EAnimationManager _animation_manager
+void				ZG_AnimationSystem_StartTweenTransform(
+		ZG_AnimationSystem _animation_manager
 		,ZG_Entity	_entity
 		, ZG_TransformComponent _transform_component
 		, ZG_Ease _ease
@@ -82,7 +81,7 @@ void				AnimationSystem_StartActionMaterial(
 );
 */
 
-void				ZG_EAnimationManager_Delete(ZG_EAnimationManager _animation_manager);
+void				ZG_AnimationSystem_Delete(ZG_AnimationSystem _animation_manager);
 
 
 
