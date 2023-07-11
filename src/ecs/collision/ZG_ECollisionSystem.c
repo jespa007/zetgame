@@ -2,12 +2,12 @@
 
 
 typedef struct{
-	ZG_EntityManager	*entity_system;
+	ZG_EntitySystem	*entity_system;
 }ZG_ECollisionSystemData;
 
 //------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_ECollisionSystem *ZG_ECollisionSystem_New(ZG_EntityManager *_entity_system){
+ZG_ECollisionSystem *ZG_ECollisionSystem_New(ZG_EntitySystem *_entity_system){
 	ZG_ECollisionSystem *system=ZG_NEW(ZG_ECollisionSystem);
 	ZG_ECollisionSystemData *data=ZG_NEW(ZG_ECollisionSystemData);
 

@@ -14,7 +14,7 @@ void 				ZG_ECollisionSystem_DeInit(void);
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_ECollisionSystem 	*		ZG_ECollisionSystem_New(ZG_EntityManager *_entity_system);
+ZG_ECollisionSystem 	*		ZG_ECollisionSystem_New(ZG_EntitySystem *_entity_system);
 
 // define callback functions on begin_collision,collision,end_collision
 //

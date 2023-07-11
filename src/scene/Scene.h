@@ -30,7 +30,7 @@ void Scene_Clean(void);
 //void Scene_AttachMoviePlayer(Scene *_this,MoviePlayer *movie_player);
 //void Scene_AttachSprite2dEmitter(Scene *_this,Sprite2dEmitter *sprite2d_emitter);
 
-ZG_EntityManager 	*Scene_GetEntityManager(
+ZG_EntitySystem 	*Scene_GetEntitySystem(
 		Scene *_this
 );
 

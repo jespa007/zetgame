@@ -35,18 +35,18 @@ void ZG_ECSpriteRenderer_OnCreate(void *_this, ZG_Entity _entity){
 
 	ZG_ECSpriteRendererData *data=ZG_NEW(ZG_ECSpriteRendererData);
 
-	data->ec_geometry=ZG_ARCHETYPE_GET_COMPONENT(ec_sprite_renderer->header.archetype,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
+	data->ec_geometry=ZG_ENTITY_TYPE_GET_COMPONENT(ec_sprite_renderer->header.archetype,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
 
 
 	if(data->ec_geometry==NULL){
-		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : Archetype doesn't have geometry");
+		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : EntityType doesn't have geometry");
 		return;
 	}
 
-	data->ec_material=ZG_ARCHETYPE_GET_COMPONENT(ec_sprite_renderer->header.archetype,ECMaterial,_id);//_entity->components[EC_MATERIAL];
+	data->ec_material=ZG_ENTITY_TYPE_GET_COMPONENT(ec_sprite_renderer->header.archetype,ECMaterial,_id);//_entity->components[EC_MATERIAL];
 
 	if(data->ec_material==NULL){
-		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : Archetype doesn't have material component");
+		ZG_LOG_ERRORF("ZG_ECSpriteRenderer_OnCreate : EntityType doesn't have material component");
 		return;
 	}
 

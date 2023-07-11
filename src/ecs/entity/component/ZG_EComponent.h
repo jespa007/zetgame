@@ -31,7 +31,7 @@
 /*
 typedef struct{
 	ZG_EntityId			entity_id; // global position
-	ZG_Archetype	*archetype;
+	ZG_EntityType	*archetype;
 }ZG_EntityHeader;
 */
 

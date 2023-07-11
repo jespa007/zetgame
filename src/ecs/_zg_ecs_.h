@@ -13,8 +13,8 @@ typedef unsigned int ZG_EComponentId;
 
 // ZG_Entity
 typedef unsigned int ZG_Entity;
-typedef unsigned int ZG_EntityManager;
-typedef unsigned int ZG_EntityArchetype;
+typedef unsigned int ZG_EntitySystem;
+typedef unsigned int ZG_EntityEntityType;
 
 
 
@@ -24,8 +24,8 @@ typedef unsigned int ZG_EntityArchetype;
 #include "ecs/animation/component/ZG_AComponent.h"
 
 // entity
-#include "entity/ZG_EntityArchetype.h"
-#include "entity/ZG_EntityArchetype.h"
+#include "entity/ZG_EntityEntityType.h"
+#include "entity/ZG_EntityEntityType.h"
 #include "ecs/entity/ZG_Entity.h"
 
 
@@ -58,7 +58,7 @@ typedef unsigned int ZG_EntityArchetype;
 // TWEENS
 //#include "component/ECTweenTransform.h"
 //#include "component/ECViewer2d.h"
-//#include "entity/ZG_Archetype.h"
+//#include "entity/ZG_EntityType.h"
 
 bool ZG_ECS_Init(void);
 void ZG_ECS_DeInit(void);

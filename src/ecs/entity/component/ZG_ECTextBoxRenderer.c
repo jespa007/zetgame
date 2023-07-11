@@ -19,11 +19,11 @@ void ZG_ECTextBoxRenderer_OnCreate(void *_this){
 	ZG_ECTextBoxRendererData *data=ZG_NEW(ZG_ECTextBoxRendererData);
 
 
-	data->ec_transform_idx=ZG_ARCHETYPE_GET_COMPONENT_IDX(ec_textbox_renderer->header.archetype,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
+	data->ec_transform_idx=ZG_ENTITY_TYPE_GET_COMPONENT_IDX(ec_textbox_renderer->header.archetype,ECGeometry,_id);//_entity->components[EC_GEOMETRY];
 
 
 	if(data->ec_transform_idx==ZG_INVALID_IDX){
-		ZG_LOG_ERRORF("ZG_ECTextBoxRenderer_OnCreate : Archetype doesn't have transform component");
+		ZG_LOG_ERRORF("ZG_ECTextBoxRenderer_OnCreate : EntityType doesn't have transform component");
 		return;
 	}
 

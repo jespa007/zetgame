@@ -9,6 +9,9 @@ typedef struct ZG_ACMaterialAnimation ZG_ACMaterialAnimation;
 
 typedef struct{
 	ZG_Entity		entity; // if NULL -> no entity associated -> inactive
+	uint32_t		start_time;
+	uint32_t		duration;
+	int				repeat
 }ZG_AComponentHeader;
 
 

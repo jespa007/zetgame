@@ -23,7 +23,7 @@ typedef struct{
 }ZG_AnimationSystemComponentData;
 
 typedef struct{
-	ZG_EntityManager	*entity_system;
+	ZG_EntitySystem	*entity_system;
 	ZG_AnimationSystemComponentData **components;//[ENTITY_COMPONENT_MAX];
 }ZG_AnimationSystemData;
 
@@ -172,7 +172,7 @@ void ZG_AnimationSystem_DeInit(void){
 
 void ZG_AnimationSystem_ExtendComponent(ZG_AnimationSystem *_this,ZG_AComponent _idx_component, size_t extend);
 
-ZG_AnimationSystem *ZG_AnimationSystem_New(ZG_EntityManager *_entity_system){
+ZG_AnimationSystem *ZG_AnimationSystem_New(ZG_EntitySystem *_entity_system){
 	ZG_AnimationSystem *system=ZG_NEW(ZG_AnimationSystem);
 	ZG_AnimationSystemData *data=ZG_NEW(ZG_AnimationSystemData);
 

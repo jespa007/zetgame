@@ -1,18 +1,23 @@
-#ifndef __ZG_EANIMATION_SYSTEM_H__
-#define __ZG_EANIMATION_SYSTEM_H__
+#ifndef __ZG_ANIMATION_SYSTEM_H__
+#define __ZG_ANIMATION_SYSTEM_H__
 
 
-#define ZG_ACS_ADD_COMPONENT(_type_data, _on_update,_on_create,_on_destroy) \
+#define ZG_ACS_ADD_COMPONENT(_component_type, _on_create,_on_destroy) \
 ZG_AnimationSystem_RegisterComponent(\
-	""#_type_data,\
+	""#_component_type,\
 	sizeof(_type_data)\
-	,_on_update\
 	,_on_create\
 	,_on_destroy\
 )
 
-#define ZG_BITS_EANIMATION_MANAGERS		4
-#define ZG_BITS_EANIMATION_ENTITIES		18
+#define ZG_ACS_ON_UPDATE(_component_id, _on_update) \
+ZG_AnimationSystem_SetComponentOnUpdate(\
+	_component_id\
+	,_on_update\
+)
+
+#define ZG_BITS_ANIMATION_MANAGERS		4
+#define ZG_BITS_ANIMATION_ENTITIES		18
 
 
 typedef unsigned int ZG_AComponentId;
@@ -39,9 +44,12 @@ void 				ZG_AnimationSystem_DeInit(void);
 
 //---------------------------------------------------
 // PUBLIC FUNCTIONS
-ZG_AnimationSystem		ZG_AnimationSystem_New();
-ZG_EntityAnimation  	ZG_AnimationSystem_NewEntityAnimation(ZG_AnimationSystem _animation_manager, ZG_Entity _entity, ZG_AComponentId _animation_component_id);
-ZG_EntityAnimation  	ZG_AnimationSystem_NewEntityAnimation(ZG_AnimationSystem _animation_manager, ZG_Entity _entity, const char *_animation_component_name);
+//ZG_AnimationSystem		ZG_AnimationSystem_New();
+ZG_AComponentId  	ZG_AnimationSystem_NewTween(
+		ZG_Entity _entity
+		, ZG_AComponentId _animation_component_id
+);
+ZG_AComponentId  	ZG_AnimationSystem_NewAnimation(ZG_Entity _entity, const char *_animation_component_name);
 
 
 //ZG_Entity  		*		AnimationSystem_NewEntity(ZG_AnimationSystem *_this,ZG_EComponent * entity_components, size_t entity_components_len);
