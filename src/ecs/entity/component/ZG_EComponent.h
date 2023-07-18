@@ -24,16 +24,20 @@
 	EC_MAX_COMPONENTS
 }ZG_EComponent;*/
 
-#define ZG_EC_INVALID -1
+#define ZG_IDX_EC_INVALID -1
 
-//typedef int ZG_EComponent;
+extern int ZG_IDX_EC_TRANSFORM;
+extern int ZG_IDX_EC_GEOMETRY;
+extern int ZG_IDX_EC_MATERIAL;
+extern int ZG_IDX_EC_TEXTURE;
+extern int ZG_IDX_EC_SPRITE_RENDERER;
+extern int ZG_IDX_EC_TEXTBOX_RENDERER;
+extern int ZG_IDX_EC_TRANSFORM_ANIMATION;
+extern int ZG_IDX_EC_MATERIAL_ANIMATION;
+extern int ZG_IDX_EC_COLLIDER_RECTANGLE2D;
+extern int ZG_IDX_EC_COLLIDER_CIRCLE2D;
 
-/*
-typedef struct{
-	ZG_EntityId			entity_id; // global position
-	ZG_EntityType	*archetype;
-}ZG_EntityHeader;
-*/
+
 
 typedef struct{
 	const char **	components;

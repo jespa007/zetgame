@@ -1,19 +1,18 @@
 #include "ecs/_zg_ecs_.h"
 
 typedef struct{
-	EntityAnimation 	material_entity_animation; // in case entity it has associated material animation component
+	ZG_Material 				*material;
+
 }ZG_ECMaterialData;
 
 void ZG_ECMaterial_OnCreate(void *_this, ZG_Entity _entity){
 	ZG_ECMaterial *ec_material=_this;
-	ec_material->material=NULL;//ZG_Material_New();
+	ec_material->material=ZG_Material_DefaultValues();
 }
 
 void ZG_ECMaterial_OnDestroy(void *_this, ZG_Entity _entity){
 	ZG_ECMaterial *ec_material=_this;
-	if(ec_material->material!=NULL){
-		ZG_Material_Delete(ec_material->material);
-	}
+	ZG_Material_Delete(ec_material->material);
 }
 
 //-----

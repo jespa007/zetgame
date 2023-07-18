@@ -4,8 +4,8 @@
 typedef struct ZG_ECMaterial ZG_ECMaterial;
 
 struct ZG_ECMaterial{
-	ZG_Material 		*material;
-	void			*data;
+	ZG_Material 				material;
+	int 						ac_idx_material_animation; // in case entity it has associated material animation component
 };
 
 //---

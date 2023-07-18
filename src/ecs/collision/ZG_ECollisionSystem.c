@@ -24,7 +24,7 @@ ZG_ECollisionSystem *ZG_ECollisionSystem_New(ZG_EntitySystem *_entity_system){
 
 void ZG_ECollisionSystem_Update(ZG_ECollisionSystem * _this){
 	// foreach archetypes collisions
-	// check collision foreach entity according its current collider
+	// get collision component data foreach entity according its current collider
 	// check flags begin/end to trigger its callback functions
 }
 

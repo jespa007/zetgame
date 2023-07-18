@@ -26,7 +26,7 @@ typedef struct{
 //---------------------------------------------------
 // PRIVATE FUNCTIONS
 
-bool	ZG_EntitySystem_RegisterComponent(
+int	ZG_EntitySystem_RegisterComponent(
 		const char *_name
 		//,ZG_ESRegisterComponent es_component_register
 		//ZG_EComponent id;
@@ -65,7 +65,7 @@ bool	ZG_EntitySystem_RegisterComponent(
 	ZG_List_Add(g_entity_manager_registered_components,new_component_register);
 	ZG_Map_Set(g_map_entity_manager_registered_components,new_component_register,g_entity_manager_registered_components->count);
 
-	return true;
+	return idx_component;
 }
 
 
@@ -75,13 +75,12 @@ bool ZG_EntitySystem_Init(void){
 
 	unsigned min_iter=0;
 
-	if(ZG_ECS_ADD_COMPONENT(
+	if(ZG_IDX_EC_TRANSFORM=ZG_ECS_ADD_COMPONENT(
 		ZG_ECTransform
-		,ZG_ECTransform_OnUpdate
 		,ZG_ECTransform_OnCreate
 		,ZG_ECTransform_OnDestroy
 		,NULL
-	)==false){
+	)==ZG_IDX_EC_INVALID){
 		return false;
 	}
 

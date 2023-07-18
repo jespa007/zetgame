@@ -56,7 +56,7 @@ struct ZG_Material{
 };
 
 ZG_Material * ZG_Material_New(uint32_t properties);
-void ZG_Material_Reset(ZG_Material *material);
+ZG_Material ZG_Material_DefaultValues(void);
 void ZG_Material_SetAlpha(ZG_Material *material,float alpha);
 void ZG_Material_SetColor3i(ZG_Material *material,uint8_t r,uint8_t g,uint8_t b);
 void ZG_Material_Apply(ZG_Material * material);
