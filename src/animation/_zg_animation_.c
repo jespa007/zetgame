@@ -7,8 +7,5 @@
 //#include "KeyframeTrackGroup.c"
 #include "ZG_Tween.c"
 #include "ZG_TweenChannel.c"
-#include "ZG_TransformAction.c"
-#include "ZG_TransformAnimation.c"
-#include "ZG_MaterialAction.c"
-#include "ZG_MaterialAnimation.c"
+
 

@@ -26,6 +26,12 @@
 //--- stream
 #include "stream/ZG_JpegMPS.h"
 
+#include "ZG_TransformAction.h"
+#include "ZG_TransformAnimation.h"
+#include "ZG_MaterialAction.h"
+#include "ZG_MaterialAnimation.h"
+
+
 
 
 

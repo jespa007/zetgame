@@ -26,6 +26,11 @@
 #include "stream/ZG_JpegMPS.c"
 #include "ZG_TextBox.c"
 
+#include "ZG_TransformAction.c"
+#include "ZG_TransformAnimation.c"
+#include "ZG_MaterialAction.c"
+#include "ZG_MaterialAnimation.c"
+
 
 
 
