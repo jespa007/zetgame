@@ -243,48 +243,13 @@ else()
 endif()
 
 
-
-set(EXE_DEPS "")
-
-IF (MINGW OR MSVC)
-	
-	IF(MINGW)
-		# Don't change link order to avoid link fails 
-		set(EXE_DEPS
-			mingw32 
-			SDL2main  
-			SDL2
-		)
-		
-		
-	endif()
-
-  	# Add dependency platform libraries
-  	set( LIB_DEPS  ${LIB_DEPS} 
-  			zlibstatic
-		  	opengl32 
-		  	Rpcrt4   # Win32 uuid create 
-		  	ws2_32	 # Win32 winsock2
-			imm32    # Win32 Keyboard
-			winmm    # Win32 Audio
-			version  # Win32 GetVersion Info
-			setupapi # Win32 DiGet class
-			
-	)
-	
-ELSE()
-
-	# Additional libraries for linux? 
-	set( LIB_DEPS ${LIB_DEPS} 
-		z
-		m 
-		GL 
-		dl
-		uuid
-	)
+find_package(PkgConfig REQUIRED)
+find_package(SDL2 REQUIRED)
 
 
-ENDIF()
+set(EXE_DEPS
+   ${SDL2_LIBRARIES}
+)
 
 set( LINK_PARAMS "-Wl,--no-as-needed" )
 
