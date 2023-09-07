@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "_zg_graphics_.h"
 
 typedef struct{
 	ZG_Animation *animation;
@@ -7,13 +7,13 @@ typedef struct{
 
 
 ZG_MaterialAnimation *ZG_MaterialAnimation_New(void){
-	ZG_MaterialAnimation *transform_animation=ZG_NEW(ZG_MaterialAnimation);
+	ZG_MaterialAnimation *material_animation=ZG_NEW(ZG_MaterialAnimation);
 	ZG_MaterialAnimationData *data=ZG_NEW(ZG_MaterialAnimationData);
-	data->animation=ZG_Animation_New(ZG_TRANSFORM_COMPONENT_MAX);
+	data->animation=ZG_Animation_New(ZG_MATERIAL_COMPONENT_MAX);
 
-	transform_animation->data=data;
+	material_animation->data=data;
 
-	return transform_animation;
+	return material_animation;
 }
 
 void ZG_MaterialAnimation_Update(ZG_MaterialAnimation *_this, ZG_Material *_material){

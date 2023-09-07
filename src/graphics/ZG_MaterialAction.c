@@ -1,5 +1,5 @@
 
-#include "_zg_animation_.h"
+#include "_zg_graphics_.h"
 
 typedef struct{
 	ZG_Action *action;
@@ -8,15 +8,15 @@ typedef struct{
 
 // PUBLIC
 ZG_MaterialAction 	*	ZG_MaterialAction_New(void){
-	ZG_MaterialAction *transform_action=ZG_NEW(ZG_MaterialAction);
+	ZG_MaterialAction *material_action=ZG_NEW(ZG_MaterialAction);
 	ZG_MaterialActionData *data=ZG_NEW(ZG_MaterialActionData);
 
-	ZG_Action *action=ZG_Action_New(ZG_TRANSFORM_COMPONENT_MAX);
+	ZG_Action *action=ZG_Action_New(ZG_MATERIAL_COMPONENT_MAX);
 	data->action=action;
 
-	transform_action->data=data;
+	material_action->data=data;
 
-	return transform_action;
+	return material_action;
 }
 
 void					ZG_MaterialAction_SetKeyframesTrack(
