@@ -1,4 +1,4 @@
-#include "_zg_base_.h"
+#include "@zg_base.h"
 
 ZG_MapInt *ZG_MapInt_New(){
 	ZG_MapInt *_this = ZG_NEW(ZG_MapInt);

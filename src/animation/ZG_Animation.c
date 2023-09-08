@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "@zg_animation.h"
 
 typedef struct{
 	ZG_Action *action;

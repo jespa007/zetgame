@@ -1,5 +1,5 @@
 #include "zetgame.h"
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 typedef enum{
 	ZG_TBRT_TOKEN_TYPE_WORD,

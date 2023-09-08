@@ -1,6 +1,6 @@
+#include "../animation/@zg_animation.h"
 #include "../ecs/zg_ecs.h"
-#include "graphics/_zg_graphics_.h"
-#include "animation/_zg_animation_.h"
+#include "graphics/@zg_graphics.h"
 #include "mmedia/_zg_mmedia_.h"
 #include "Scene.h"
 #include "nodes/TextureNode.h"

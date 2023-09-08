@@ -1,4 +1,4 @@
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 ZG_Light * ZG_Light_New(void){
 	ZG_Light * light = ZG_NEW(ZG_Light);

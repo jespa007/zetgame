@@ -1,4 +1,4 @@
-#include "_zg_math_.h"
+#include "@zg_math.h"
 
 ZG_Vector2f ZG_Vector2f_New(float x, float y){
 	ZG_Vector2f v={.x=x,.y=y};

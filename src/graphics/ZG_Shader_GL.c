@@ -1,4 +1,4 @@
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 typedef struct{
 	GLuint program;

@@ -1,4 +1,4 @@
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 #ifdef _WIN32
 BOOL ZG_Graphics_Win32_GetMonitorDevice( TCHAR* adapterName, DISPLAY_DEVICE * ddMon )

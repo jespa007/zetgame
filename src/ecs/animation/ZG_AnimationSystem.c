@@ -1,4 +1,4 @@
-#include "../_zg_ecs_.h"
+#include "../@zg_ecs.h"
 
 
 ZG_List 		*	g_animation_system_registered_components=NULL;

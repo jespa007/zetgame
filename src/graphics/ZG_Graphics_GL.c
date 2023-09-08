@@ -1,4 +1,4 @@
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 //bool screen_shoot_request;
 uint32_t start_ticks;

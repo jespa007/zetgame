@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "@zg_animation.h"
 
 ZG_Tween *ZG_Tween_New(Uint8 n_channels){
 	ZG_Tween *tween=ZG_NEW(ZG_Tween);

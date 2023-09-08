@@ -1,5 +1,5 @@
 
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 typedef struct{
 	ZG_Action *action;

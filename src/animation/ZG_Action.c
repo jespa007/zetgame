@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "@zg_animation.h"
 
 ZG_Action * 			ZG_Action_New(uint8_t n_channels){
 	ZG_Action *action=ZG_NEW(ZG_Action);

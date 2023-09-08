@@ -1,4 +1,4 @@
-#include "_zg_gui_.h"
+#include "@zg_gui.h"
 
 #define ZG_DEFAULT_WINDOW_WIDTH 			150
 #define ZG_DEFAULT_WINDOW_CONTENT_HEIHGT 	300

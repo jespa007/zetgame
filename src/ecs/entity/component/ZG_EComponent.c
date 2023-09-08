@@ -1,4 +1,4 @@
-#include "ecs/_zg_ecs_.h"
+#include "ecs/@zg_ecs.h"
 
 
 int ZG_IDX_EC_TRANSFORM=ZG_IDX_EC_INVALID;

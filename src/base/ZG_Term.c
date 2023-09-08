@@ -1,4 +1,4 @@
-#include "_zg_base_.h"
+#include "@zg_base.h"
 
 
 void ZG_Term_SetColor(FILE *std_type, TermEffect attr, TermColor fg, TermColor bg)

@@ -1,4 +1,4 @@
-#include "../_zg_ecs_.h"
+#include "../@zg_ecs.h"
 
 ZG_List *g_entity_manager_registered_components=NULL;
 ZG_MapString *g_map_entity_manager_registered_components=NULL;

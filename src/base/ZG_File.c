@@ -1,4 +1,4 @@
-#include "_zg_base_.h"
+#include "@zg_base.h"
 
 ZG_BufferByte * ZG_File_Read(const char *filename){
 	long int  file_length=0;

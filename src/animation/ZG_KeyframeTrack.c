@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "@zg_animation.h"
 
 #define ZG_CAST_BEZIER_POINT(p) ((ZG_KeyframePoint *)(p))
 

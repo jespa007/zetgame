@@ -1,5 +1,5 @@
-#include "math/_zg_math_.h"
-#include "graphics/_zg_graphics_.h"
+#include "math/@zg_math.h"
+#include "graphics/@zg_graphics.h"
 
 #include "2d/ZG_Collider2d.h"
 #include "2d/ZG_PointCollider2d.h"

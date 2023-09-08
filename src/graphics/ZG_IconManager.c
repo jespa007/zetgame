@@ -1,6 +1,6 @@
 
 #include "assets/image/silk_icons_preview.png.c"
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 //#include "../res/image/silk_icons_preview.gif.c"
 
 #define DEFAULT_WIDTH_ICON_PACK 316

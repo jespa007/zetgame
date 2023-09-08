@@ -1,8 +1,8 @@
 #ifndef __ZG_GUI_H__
 #define __ZG_GUI_H__
 
-#include "input/_zg_input_.h"
-#include "graphics/_zg_graphics_.h"
+#include "input/@zg_input.h"
+#include "graphics/@zg_graphics.h"
 
 #include "ZG_GUIWidget.h"
 #include "ZG_GUIFrame.h"

@@ -1,4 +1,4 @@
-#include "_zg_base_.h"
+#include "@zg_base.h"
 
 ZG_BufferShort *ZG_BufferShort_New(size_t len){
 	ZG_BufferShort *buffer=ZG_NEW(ZG_BufferShort);

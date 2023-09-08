@@ -268,42 +268,42 @@ ENDIF()
 set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 
 	#-- Base --
-	base/_zg_base_.c
+	base/@zg_base.c
 	
 	#-- Graphics -- 
-	graphics/_zg_graphics_.c
+	graphics/@zg_graphics.c
 	
 	
 	#-- Animation --
-	animation/_zg_animation_.c
+	animation/@zg_animation.c
 	
 	#-- Multimedia -- 
-	mmedia/_zg_mmedia_.c
+	mmedia/@zg_mmedia.c
 	
 	#-- Math --
-	math/_zg_math_.c
+	math/@zg_math.c
 	
 	#-- Input --
-	input/_zg_input_.c
+	input/@zg_input.c
 	
 	
 	#-- Scene --
-	##scene/zg_scene.c
+	##scene/@zg_scene.c
 	
 	#-- Physics --
-	physics/_zg_physics_.c
+	physics/@zg_physics.c
 	
 	#-- Gui --
-	gui/_zg_gui_.c
+	gui/@zg_gui.c
 	
 	#-- Sprite --
-	sprite/_zg_sprite_.c
+	sprite/@zg_sprite.c
 
 	#-- ZG_Tilemap --
-	tilemap/_zg_tilemap_.c
+	tilemap/@zg_tilemap.c
 	
 	#-- ZG_Entity Component System --
-	ecs/_zg_ecs_.c
+	ecs/@zg_ecs.c
 	
 	#-- Zetgame --
 	zetgame.c		

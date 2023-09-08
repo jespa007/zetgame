@@ -1,4 +1,4 @@
-#include "_zg_math_.h"
+#include "@zg_math.h"
 
 
 float ZG_Luts_Sin[ZG_LUTS_SIZE]={0};

@@ -1,3 +1,4 @@
+#include "graphics/@zg_graphics.h"
 #include "ZG_Ease.c"
 #include "ZG_Action.c"
 #include "ZG_Animation.c"

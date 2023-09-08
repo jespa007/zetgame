@@ -1,4 +1,4 @@
-#include "_zg_math_.h"
+#include "@zg_math.h"
 
 ZG_Vector3f  ZG_Vector3f_New3f(float x, float y, float z){
 	return (ZG_Vector3f){

@@ -1,4 +1,4 @@
-#include "mmedia/_zg_mmedia_.h"
+#include "mmedia/@zg_mmedia.h"
 
 #ifdef __WITH_FFMPEG__
 

@@ -1,4 +1,4 @@
-#include "_zg_gui_.h"
+#include "@zg_gui.h"
 
 typedef struct{
 	ZG_MapString 			* 	windows;

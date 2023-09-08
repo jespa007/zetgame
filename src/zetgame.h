@@ -1,17 +1,17 @@
 #ifndef __ZETGAME_H__
 #define __ZETGAME_H__
 
-#include "base/_zg_base_.h"
-#include "mmedia/_zg_mmedia_.h"
-#include "math/_zg_math_.h"
-#include "physics/_zg_physics_.h"
-#include "input/_zg_input_.h"
-#include "graphics/_zg_graphics_.h"
+#include "base/@zg_base.h"
+#include "mmedia/@zg_mmedia.h"
+#include "math/@zg_math.h"
+#include "physics/@zg_physics.h"
+#include "input/@zg_input.h"
+#include "graphics/@zg_graphics.h"
 //#include "scene/zg_scene.h"
-#include "gui/_zg_gui_.h"
-#include "sprite/_zg_sprite_.h"
-#include "tilemap/_zg_tilemap_.h"
-#include "ecs/_zg_ecs_.h"
+#include "gui/@zg_gui.h"
+#include "sprite/@zg_sprite.h"
+#include "tilemap/@zg_tilemap.h"
+#include "ecs/@zg_ecs.h"
 
 
 #define ZETGAME_VERSION_MAJOR	1

@@ -1,4 +1,4 @@
-#include "../_zg_ecs_.h"
+#include "../@zg_ecs.h"
 
 //------------------------------------------------------------
 // entities are simply a pointer that hides its entity manager.

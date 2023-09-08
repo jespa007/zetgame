@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "@zg_animation.h"
 
 ZG_KeyframePoint * ZG_KeyframePoint_New(void){
 	ZG_KeyframePoint * bp = ZG_NEW(ZG_KeyframePoint);

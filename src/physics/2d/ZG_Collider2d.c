@@ -1,4 +1,4 @@
-#include "physics/_zg_physics_.h"
+#include "physics/@zg_physics.h"
 
 typedef struct{
 	ZG_Vector2f dim;

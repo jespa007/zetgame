@@ -1,4 +1,4 @@
-#include "_zg_base_.h"
+#include "@zg_base.h"
 
 ZG_BufferFloat *ZG_BufferFloat_New(size_t len){
 	ZG_BufferFloat *buffer=ZG_NEW(ZG_BufferFloat);

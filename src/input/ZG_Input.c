@@ -1,5 +1,5 @@
-#include "_zg_input_.h"
-#include "graphics/_zg_graphics_.h"
+#include "@zg_input.h"
+#include "graphics/@zg_graphics.h"
 
 
 /*

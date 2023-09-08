@@ -1,4 +1,4 @@
-#include "_zg_base_.h"
+#include "@zg_base.h"
 #define ZG_VAR_LOG(l) ((l) == ZG_LOG_LEVEL_ERROR?"ERR": (l)==ZG_LOG_LEVEL_WARNING?"WRN": (l) == ZG_LOG_LEVEL_INFO ? "INF" : (l) == ZG_LOG_LEVEL_DEBUG ? "DBG" : "NAN" )
 #define ZG_MAX_LOGOUT_STRING 1024
 	

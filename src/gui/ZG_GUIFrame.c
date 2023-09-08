@@ -1,4 +1,4 @@
-#include "_zg_gui_.h"
+#include "@zg_gui.h"
 
 void ZG_GUIWidget_SetPositionAbsolute2i(ZG_GUIWidget *_this,int x,int y);
 void ZG_GUIWidget_UpdatePosition(ZG_GUIWidget *_this);

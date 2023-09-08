@@ -1,4 +1,4 @@
-#include "_zg_gui_.h"
+#include "@zg_gui.h"
 #include "assets/image/button1.png.c"
 
 typedef struct{

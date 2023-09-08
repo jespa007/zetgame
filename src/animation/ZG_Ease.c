@@ -1,4 +1,4 @@
-#include "_zg_animation_.h"
+#include "@zg_animation.h"
 
 float ZG_Ease_Linear( float t ){
 	return t;

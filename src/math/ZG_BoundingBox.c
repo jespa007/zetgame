@@ -1,5 +1,5 @@
 
-#include "_zg_math_.h"
+#include "@zg_math.h"
 
 ZG_BoundingBox  ZG_BoundingBox_New(void){
 	return (ZG_BoundingBox){

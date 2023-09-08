@@ -1,5 +1,5 @@
 #include "ZG_SpriteKeyFrameResource.c"
-#include "_zg_sprite_.h"
+#include "@zg_sprite.h"
 
 
 typedef struct{

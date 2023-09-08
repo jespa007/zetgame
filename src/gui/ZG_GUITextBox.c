@@ -1,4 +1,4 @@
-#include "_zg_gui_.h"
+#include "@zg_gui.h"
 
 static void ZG_GUITextBox_Draw(void *gui_label);
 

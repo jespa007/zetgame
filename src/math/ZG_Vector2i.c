@@ -1,4 +1,4 @@
-#include "_zg_math_.h"
+#include "@zg_math.h"
 
 ZG_Vector2i ZG_Vector2i_Zeros(){
 	ZG_Vector2i v={.x=0,.y=0};

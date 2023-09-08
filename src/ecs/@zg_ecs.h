@@ -2,9 +2,9 @@
 #define __ZG_ECS_H__
 
 
-#include "graphics/_zg_graphics_.h"
+#include "../animation/@zg_animation.h"
+#include "graphics/@zg_graphics.h"
 #include "mmedia/_zg_mmedia_.h"
-#include "animation/_zg_animation_.h"
 
 
 

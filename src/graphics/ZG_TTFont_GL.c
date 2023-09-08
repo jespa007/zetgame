@@ -4,7 +4,7 @@
  * http://lazyfoo.net/tutorials/OpenGL/23_freetype_fonts/index.php
  */
 
-#include "_zg_graphics_.h"
+#include "@zg_graphics.h"
 
 
 typedef struct {

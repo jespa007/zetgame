@@ -1,4 +1,4 @@
-#include "_zg_math_.h"
+#include "@zg_math.h"
 
 ZG_Quaternion ZG_Quaternion_New(){
 	ZG_Quaternion q;
