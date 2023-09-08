@@ -1,5 +1,4 @@
 #include "../base/@zg_base.h"
-
 #include "ZG_Luts.h"
 #include "ZG_Vector2f.h"
 #include "ZG_Vector2i.h"
