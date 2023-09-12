@@ -20,10 +20,10 @@ typedef struct{
 	ZG_HorizontalAlignment horizontal_alignment;
 	ZG_VerticalAlignment vertical_alignment;
 
-}PrintFontInfo;
+}TextBoxTest;
 
 
-const PrintFontInfo print_font_info[]={
+const TextBoxTest textbox_tests[]={
 		 {"hello world<br>top-left"			,0,0,TEXTBOX_WIDTH,TEXTBOX_HEIGHT,ZG_HORIZONTAL_ALIGNMENT_LEFT,ZG_VERTICAL_ALIGNMENT_TOP}
 		,{"hello world<br>center-left"		,0,(HEIGHT_RESOLUTION>>1)-(TEXTBOX_HEIGHT>>1),TEXTBOX_WIDTH,TEXTBOX_HEIGHT,ZG_HORIZONTAL_ALIGNMENT_LEFT,ZG_VERTICAL_ALIGNMENT_CENTER}
 		,{"hello world!<br>bottom-left"		,0,HEIGHT_RESOLUTION-TEXTBOX_HEIGHT,TEXTBOX_WIDTH,TEXTBOX_HEIGHT,ZG_HORIZONTAL_ALIGNMENT_LEFT,VERTICAL_ALIGNMENT_BOTTOM}
@@ -59,7 +59,7 @@ int main(int argc, char * argv[]){
 
 		ZG_Graphics_BeginRender();
 
-		PrintFontInfo *aux_ptr=(PrintFontInfo *)print_font_info;
+		TextBoxTest *aux_ptr=(TextBoxTest *)textbox_tests;
 		while(aux_ptr->text !=NULL){
 			//TextBox_SetPosition2i(textbox,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
 			ZG_TextBox_SetDimensions(textbox,aux_ptr->w,aux_ptr->h);
