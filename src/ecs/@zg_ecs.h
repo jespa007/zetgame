@@ -4,7 +4,7 @@
 
 #include "../animation/@zg_animation.h"
 #include "graphics/@zg_graphics.h"
-#include "mmedia/_zg_mmedia_.h"
+#include "mmedia/@zg_mmedia.h"
 
 
 
@@ -24,8 +24,8 @@ typedef unsigned int ZG_EntityEntityType;
 #include "ecs/animation/component/ZG_AComponent.h"
 
 // entity
-#include "entity/ZG_EntityEntityType.h"
-#include "entity/ZG_EntityEntityType.h"
+//#include "entity/ZG_EntityEntityType.h"
+//#include "entity/ZG_EntityEntityType.h"
 #include "ecs/entity/ZG_Entity.h"
 
 

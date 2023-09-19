@@ -188,21 +188,21 @@ ZG_EntityType * Scene_NewEntityType(
 
 TransformNode *Scene_NewTransformNode(Scene *_this){
 	SceneData *data=_this->data;
-	TransformNode *sg_node=TransformNode_New(_this,ZG_ZG_EntityType_NewEntity(data->em_sg_nodes));
+	TransformNode *sg_node=TransformNode_New(_this,ZG_EntityType_NewEntity(data->em_sg_nodes));
 	ZG_List_Add(data->sg_nodes,sg_node);
 	return sg_node;
 }
 
 TextureNode *Scene_NewTextureNode(Scene *_this){
 	SceneData *data=_this->data;
-	TextureNode *sg_texture=TextureNode_New(_this,ZG_ZG_EntityType_NewEntity(data->em_sg_textures));
+	TextureNode *sg_texture=TextureNode_New(_this,ZG_EntityType_NewEntity(data->em_sg_textures));
 	ZG_List_Add(data->sg_textures,sg_texture);
 	return sg_texture;
 }
 
 TextBoxNode *Scene_NewTextBoxNode(Scene *_this){
 	SceneData *data=_this->data;
-	TextBoxNode *sg_textbox=TextBoxNode_New(_this,ZG_ZG_EntityType_NewEntity(data->em_sg_textboxes));
+	TextBoxNode *sg_textbox=TextBoxNode_New(_this,ZG_EntityType_NewEntity(data->em_sg_textboxes));
 	ZG_List_Add(data->sg_textboxes,sg_textbox);
 	return sg_textbox;
 }

@@ -17,15 +17,15 @@ int main(int argc, char *argv[]){
 	ZG_Init(&setup);
 
 	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
-	TilemapManager *tilemap_manager=TilemapManager_New(texture_manager);
+	ZG_TilemapManager *tilemap_manager=ZG_TilemapManager_New(texture_manager);
 	ZG_Tilemap *tilemap=NULL;
 
-	if(TilemapManager_Load(
+	if(ZG_TilemapManager_Load(
 			tilemap_manager
 			,"../../../test/data/tilemap/mario3_world1.json"
 		)){
 
-		if((tilemap=TilemapManager_Get(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
+		if((tilemap=ZG_TilemapManager_Get(tilemap_manager,TILEMAP_LAYER_NAME))==NULL) {
 			ZG_LOG_ERROR("Cannot get layer '%s'",TILEMAP_LAYER_NAME);
 		}
 	}
@@ -35,12 +35,12 @@ int main(int argc, char *argv[]){
 
 
 		if(tilemap != NULL){
-			Tilemap_Update(tilemap);
-			Tilemap_Draw(tilemap);
+			ZG_Tilemap_Update(tilemap);
+			ZG_Tilemap_Draw(tilemap);
 		}
 
-		if(K_T){
-			Graphics_ToggleFullscreen();
+		if(ZG_KP_T){
+			ZG_Graphics_ToggleFullscreen();
 		}
 
 	   ZG_Graphics_EndRender();
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
 	}while(!ZG_KP_ESC);
 
 
-	TilemapManager_Delete(tilemap_manager);
+	ZG_TilemapManager_Delete(tilemap_manager);
 	ZG_TextureManager_Delete(texture_manager);
 
 

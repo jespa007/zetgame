@@ -13,7 +13,7 @@ ZG_Entity *NewEntityTransform(
 		, bool _set_displacement
 ){
 
-	ZG_Entity *entity_transform=ZG_ZG_EntityType_NewEntity(_em_transforms);
+	ZG_Entity *entity_transform=ZG_EntityType_NewEntity(_em_transforms);
 
 	if(_set_displacement){
 		ZG_ECTransform_SetDisplacement2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
@@ -33,7 +33,7 @@ ZG_Entity *NewEntityTexture(
 	, ZG_Texture *_texture
 	, bool _set_displacement
 ){
-	ZG_Entity *entity_texture=ZG_ZG_EntityType_NewEntity(_em_textures);
+	ZG_Entity *entity_texture=ZG_EntityType_NewEntity(_em_textures);
 
 	if(_set_displacement){
 		ZG_ECTransform_SetDisplacement2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
@@ -57,7 +57,7 @@ ZG_Entity *NewEntityTextBox(
 	, bool _set_displacement
 ){
 
-	ZG_Entity *entity_textbox=ZG_ZG_EntityType_NewEntity(_em_textboxes);
+	ZG_Entity *entity_textbox=ZG_EntityType_NewEntity(_em_textboxes);
 
 	if(_set_displacement){
 		ZG_ECTransform_SetDisplacement2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);

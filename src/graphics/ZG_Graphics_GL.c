@@ -180,11 +180,11 @@ void ZG_Graphics_GL_EndRender(void) {
 	float diff = (float)(SDL_GetTicks()-start_ticks);
 	int to_16 = (16-diff);
 
-	if(diff == 0)
+	/*if(diff == 0)
 		diff=1;
 
 	g_graphics_vars->fps=1000.0f/diff;
-
+*/
 	// Swap buffers
 	// wait vsync and swap buffers... (you must get over 60FPS)
 	SDL_GL_SwapWindow(g_graphics_vars->sdl_window);

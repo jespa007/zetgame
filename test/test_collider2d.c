@@ -69,7 +69,7 @@ void update_options(
 
 void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 
-	Graphics_Print(10,30,ZG_COLOR4F_WHITE,"Selected collider:");
+	ZG_Graphics_Print(10,30,ZG_COLOR4F_WHITE,"Selected collider:");
 	// draw background rectangles as deactivated
 	for(unsigned i=0; i < MAX_SELECT_COLLIDERS; i++){
 		ZG_Color4f color=ZG_COLOR4F_GRAY;
@@ -83,7 +83,7 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 		ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE,BUTTON_GROUP_SIZE,color,thickness);
 		switch(i){
 		case SELECT_COLLIDER_POINT: // point
-			Graphics_DrawPoint2i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,color,thickness*2);
+			ZG_Graphics_DrawPoint2i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,color,thickness*2);
 			break;
 		case SELECT_COLLIDER_RECTANGLE_PORTRAIT: // rectangle portrait
 			ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,10,40,color,thickness);
@@ -92,13 +92,13 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 			ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,10,color,thickness);
 			break;
 		case SELECT_COLLIDER_CIRCLE: // circle
-			Graphics_DrawCircle3i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE>>2,color,thickness);
+			ZG_Graphics_DrawCircle3i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE>>2,color,thickness);
 			break;
 
 		}
 	}
 
-	Graphics_Print(10,70,ZG_COLOR4F_WHITE,"Colliding: %s",_colliding);
+	ZG_Graphics_Print(10,70,ZG_COLOR4F_WHITE,"Colliding: %s",_colliding);
 
 }
 
@@ -207,8 +207,8 @@ int main(int argc, char *argv[]){
 			&mouse_transform.scale
 		);
 
-		if(K_T){
-			Graphics_ToggleFullscreen();
+		if(ZG_KP_T){
+			ZG_Graphics_ToggleFullscreen();
 		}
 
 		ZG_Graphics_EndRender();

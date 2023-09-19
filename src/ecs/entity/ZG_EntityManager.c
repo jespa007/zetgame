@@ -85,7 +85,7 @@ bool ZG_EntitySystem_Init(void){
 	}
 
 	// invalid (0)
-	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(ZG_EC_INVALID,(ZG_ESRegisterComponent){
+	/*ZG_EntitySystem_RegisterComponentBuiltin(ZG_EC_INVALID,(ZG_ESRegisterComponent){
 		.size_data				=0
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=NULL
@@ -96,7 +96,7 @@ bool ZG_EntitySystem_Init(void){
 	//ZG_ECS_REGISTER_COMPONENT(ZG_ECTransform,ZG_ECTransform_Update,ZG_ECTransform_Setup,ZG_ECTransform_Destroy);
 
 	// transform
-	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM,(ZG_ESRegisterComponent){
+	/*ZG_EntitySystem_RegisterComponentBuiltin(EC_TRANSFORM,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECTransform)
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=ZG_ECTransform_Setup
@@ -106,7 +106,7 @@ bool ZG_EntitySystem_Init(void){
 
 
 	// geometry
-	/*ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_GEOMETRY,(ZG_ESRegisterComponent){
+	/*ZG_EntitySystem_RegisterComponentBuiltin(EC_GEOMETRY,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECGeometry)
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=ZG_ECGeometry_Setup
@@ -115,7 +115,7 @@ bool ZG_EntitySystem_Init(void){
 	});
 
 	// material
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_MATERIAL,(ZG_ESRegisterComponent){
+	ZG_EntitySystem_RegisterComponentBuiltin(EC_MATERIAL,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECMaterial)
 		,.required_components	= (ZG_EComponentList){0,0}
 		,.EComponent_Setup		=ZG_ECMaterial_Setup
@@ -124,7 +124,7 @@ bool ZG_EntitySystem_Init(void){
 	});
 
 	// texture
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_TEXTURE,(ZG_ESRegisterComponent){
+	ZG_EntitySystem_RegisterComponentBuiltin(EC_TEXTURE,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECTexture)
 		,.required_components	=(ZG_EComponentList){0,0}
 		,.EComponent_Setup		=ZG_ECTexture_Setup
@@ -133,7 +133,7 @@ bool ZG_EntitySystem_Init(void){
 	});
 
 	// sprite renderer (1)
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_SPRITE_RENDERER,(ZG_ESRegisterComponent){
+	ZG_EntitySystem_RegisterComponentBuiltin(EC_SPRITE_RENDERER,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECSpriteRenderer)
 		,.required_components	=ZG_ECSpriteRenderer_RequiredComponents()
 		,.EComponent_Setup		=ZG_ECSpriteRenderer_Setup
@@ -143,7 +143,7 @@ bool ZG_EntitySystem_Init(void){
 
 
 	// text box renderer (1)
-	ZG_ZG_EntitySystem_RegisterComponentBuiltin(EC_TEXTBOX_RENDERER,(ZG_ESRegisterComponent){
+	ZG_EntitySystem_RegisterComponentBuiltin(EC_TEXTBOX_RENDERER,(ZG_ESRegisterComponent){
 		.size_data				=sizeof(ZG_ECTextBoxRenderer)
 		,.required_components	=ZG_ECTextBoxRenderer_RequiredComponents()
 		,.EComponent_Setup		=ZG_ECTextBoxRenderer_Setup
@@ -227,7 +227,7 @@ int	ZG_EntitySystem_RegisterComponent(ZG_ESRegisterComponent es_component_regist
 		idx_component=g_entity_manager_registered_components->count;
 	}
 
-	if(ZG_ZG_EntitySystem_RegisterComponentBuiltin(idx_component,es_component_register)==false){
+	if(ZG_EntitySystem_RegisterComponentBuiltin(idx_component,es_component_register)==false){
 		return ZG_EC_INVALID;
 	}
 	return idx_component;

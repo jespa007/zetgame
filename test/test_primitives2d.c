@@ -34,9 +34,9 @@ int main(int argc, char *argv[]){
 		SDL_FreeSurface(srf);
 	}
 
-	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFF));
+	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFF));
 
-	ZG_Geometry *geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
+	ZG_Geometry *geometry=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
 	ZG_Appearance *appearance=ZG_Appearance_New();
 
 	do{

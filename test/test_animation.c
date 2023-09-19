@@ -35,10 +35,10 @@ int main(int argc, char *argv[]){
 	float inc_y=STEP_INC; // [-1 to 1]
 	float inc_scale=STEP_INC; // [0.5 to 1.5]
 
-	ZG_Texture * text_png = ZG_Texture_NewFromFile("../../../test/data/images/test.png");
-	ZG_Texture * text_jpg = ZG_Texture_NewFromFile("../../../test/data/images/test.jpg");
-	TransformAnimation 			*trs_animation=TransformAnimation_New();
-	ZG_TransformAction	    		*act_translate=TransformAction_New();
+	ZG_Texture 						*text_png = ZG_Texture_NewFromFile("../../../test/data/images/test.png");
+	ZG_Texture 						*text_jpg = ZG_Texture_NewFromFile("../../../test/data/images/test.jpg");
+	ZG_TransformAnimation 			*trs_animation=ZG_TransformAnimation_New();
+	ZG_TransformAction	    		*act_translate=ZG_TransformAction_New();
 
 
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
 	convert_to_displacement2d_y(tr_values_y,ZG_ARRAY_SIZE(tr_values_y));
 
 	// set key frames x an y
-	TransformAction_SetKeyframesTrack(
+	ZG_TransformAction_SetKeyframesTrack(
 		act_translate
 		,ZG_TRANSFORM_COMPONENT_TRANSLATE_X
 		,ZG_EASE_IN_OUT_SINE
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
 		,ZG_ARRAY_SIZE(tr_values_x)
 	);
 
-	TransformAction_SetKeyframesTrack(
+	ZG_TransformAction_SetKeyframesTrack(
 		act_translate
 		,ZG_TRANSFORM_COMPONENT_TRANSLATE_Y
 		,ZG_EASE_IN_OUT_SINE
@@ -80,50 +80,50 @@ int main(int argc, char *argv[]){
 		,ZG_ARRAY_SIZE(tr_values_y)
 	);
 
-	TransformAnimation_StartAction(
+	ZG_TransformAnimation_StartAction(
 			trs_animation
 			,act_translate
 			,SDL_GetTicks()
 			,1);
 
 	ZG_Appearance *appearance=ZG_Appearance_New();
-	Appearance_SetColor3i(appearance,1,0,0);
+	ZG_Appearance_SetColor3i(appearance,1,0,0);
 	appearance->texture=text_png;
 
 	ZG_Transform transform=ZG_Transform_New();
 
 
-	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
+	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
 
 	do{
 		ZG_Graphics_BeginRender();
 
-		TransformAnimation_Update(trs_animation,&transform);
+		ZG_TransformAnimation_Update(trs_animation,&transform);
 
-		if(K_S){
-			TransformAnimation_StartTween(
+		if(ZG_K_S){
+			ZG_TransformAnimation_StartTween(
 				  trs_animation
 				 , SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_SCALE_Y
-				, EASE_OUT_SINE
+				, ZG_EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
 				, 500
 				, false
 			);
 
-			TransformAnimation_StartTween(
+			ZG_TransformAnimation_StartTween(
 				  trs_animation
 				, SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_SCALE_X
-				, EASE_OUT_SINE
+				, ZG_EASE_OUT_SINE
 				, 1.0f
 				, 1.5f
 				, 500
 				, false
 			);
 
-			TransformAnimation_StartTween(
+			ZG_TransformAnimation_StartTween(
 				 trs_animation
 				, SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_ROTATE_Z
@@ -135,17 +135,17 @@ int main(int argc, char *argv[]){
 			);
 		}
 
-		Graphics_Draw(&transform,ZG_Geometry_GetDefaultRectangleTextured(),appearance);
+		ZG_Graphics_Draw(&transform,ZG_Geometry_GetDefaultRectangleTextured(),appearance);
 
 		x+=inc_x;
 		y+=inc_y;
 		scale+=inc_scale;
 
-		if(ZG_KEY_LEFT){
+		if(ZG_KP_LEFT){
 			transform.rotate.z-=4;
 		}
 
-		if(ZG_KEY_RIGHT){
+		if(ZG_KP_RIGHT){
 			transform.rotate.z+=4;
 		}
 
@@ -157,8 +157,8 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
 
-		if(K_T){
-			Graphics_ToggleFullscreen();
+		if(ZG_KP_T){
+			ZG_Graphics_ToggleFullscreen();
 		}
 
 		ZG_Graphics_EndRender();
@@ -166,8 +166,8 @@ int main(int argc, char *argv[]){
 		ZG_Input_Update();
 	}while(!ZG_KP_ESC);
 
-	TransformAnimation_Delete(trs_animation);
-	TransformAction_Delete(act_translate);
+	ZG_TransformAnimation_Delete(trs_animation);
+	ZG_TransformAction_Delete(act_translate);
 
 	//ZG_Transform_Delete(transform);
 

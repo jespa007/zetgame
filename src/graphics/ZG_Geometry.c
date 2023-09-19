@@ -199,7 +199,7 @@ void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const short *_indices,size_t _
 		ZG_LOG_ERRORF("ZG_Geometry_SetIndices : Number of indices should be greather equal than 3");
 		return;
 	}
-
+	
 	switch(ZG_Graphics_GetGraphicsApi()){
 	default:
 
@@ -208,6 +208,8 @@ void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const short *_indices,size_t _
 		ZG_Geometry_GL_SetIndices(_this,_indices,_indices_len);
 		break;
 	}
+	
+	_this->indices_length=_indices_len;
 }
 
 void 			ZG_Geometry_SetMeshVertex(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len){

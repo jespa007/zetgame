@@ -46,6 +46,7 @@ ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleFilled(void); // it returns a quad
 ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleTextured(void); // it returns a quad of 1 by 1
 ZG_Geometry	* 	ZG_Geometry_New(ZG_GeometryType _geometry_type);
 ZG_Geometry	* 	ZG_Geometry_NewRectangle(uint32_t properties);
+ZG_Geometry	* 	ZG_Geometry_NewFilledRectangle(uint32_t properties);
 ZG_Geometry	* 	ZG_Geometry_NewPoints(void);
 /**
  * _smooth: 1-N

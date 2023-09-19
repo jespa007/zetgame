@@ -6,7 +6,7 @@ int main(int argc, char *argv[]){
 
 	ZG_Init(NULL);
 
-	ZG_Shader *s=Shader_Load(
+	ZG_Shader *s=ZG_Shader_Load(
 		"../../../test/data/shaders/sample"
 	);
 
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_BeginRender();
 
 	if(s!=NULL){
-	Shader_Use(s);
+		ZG_Shader_Use(s);
 	}
 	   ZG_Graphics_EndRender();
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 	}while(!ZG_KP_ESC);
 
 
-	Shader_Delete(s);
+	ZG_Shader_Delete(s);
 
 	ZG_DeInit();
 

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	ZG_TTFont * font1 = ZG_TTFont_NewFromFile("../../../test/data/fonts/g5lis1b.ttf");
 	ZG_TTFont * font2 = ZG_TTFont_NewFromFile("../../../test/data/fonts/Trebuchet MS.ttf");
 	//Shape2d * shape2d = Shape2d_New();
-	ZG_Geometry *geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE);
+	ZG_Geometry *geometry=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
 	ZG_Appearance *appearance=ZG_Appearance_New();
 	ZG_Transform transform=ZG_Transform_New();
 

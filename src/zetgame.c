@@ -50,9 +50,9 @@ void ZG_Init(ZG_SetupParams * info){
 	}
 
 	ZG_Input_Init();
-	if(!ZG_ECS_Init()){
+	/*if(!ZG_ECS_Init()){
 		exit(EXIT_FAILURE);
-	}
+	}*/
 	//SGRender_Init();
 	ZG_GUI_Init();
 }
@@ -74,7 +74,7 @@ void ZG_DeInit(void){
 	ZG_Mixer_DeInit();
 	ZG_Input_DeInit();
 	ZG_Graphics_DeInit();
-	ZG_ECS_DeInit();
+	//ZG_ECS_DeInit();
 
 	SDL_DestroyResources();
 

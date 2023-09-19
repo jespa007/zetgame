@@ -76,8 +76,8 @@ int main(int argc, char * argv[]){
 		//Draw blue rectangle
 		//ZG_Graphics_DrawRectangle4i(10,10,20,20,ZG_Color4f_New4f(0,1,0,1),2);
 
-		if(K_T){
-			Graphics_ToggleFullscreen();
+		if(ZG_KP_T){
+			ZG_Graphics_ToggleFullscreen();
 		}
 
 		ZG_Graphics_EndRender();

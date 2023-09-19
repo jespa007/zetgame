@@ -70,7 +70,7 @@ else()
 
 	SET(COMPILER "gcc")
 
-	SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
+	SET( CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} -D__STDC_CONSTANT_MACROS  -pthread -fomit-frame-pointer -std=c99 -pipe -static-libgcc -Wall -Wextra -pedantic -Wstrict-prototypes -Wsign-compare -Wtype-limits ")
 	  
 	if (MINGW)
 		MESSAGE("-- Plataform: MINGW" )
@@ -242,17 +242,66 @@ else()
 	set( LIB_DEPS ${LIB_DEPS}   zetnet )
 endif()
 
-
-find_package(PkgConfig REQUIRED)
-find_package(SDL2 REQUIRED)
-
-
-set(EXE_DEPS
-   ${SDL2_LIBRARIES}
+set(
+ LIB_DEPS ${LIB_DEPS} 
+ jpeg
+ z
+ freetype
+ xmp-lite
+ 
 )
 
-set( LINK_PARAMS "-Wl,--no-as-needed" )
 
+# 3rd party libraries
+if(MSVC)
+	  # Add dependency platform libraries
+  	set( LIB_DEPS  ${LIB_DEPS} 
+		  	opengl32 # OpenGL for windows
+		  	Rpcrt4   # Win32 uuid create 
+		  	ws2_32	 # Win32 winsock2
+			imm32    # Win32 Keyboard
+			winmm    # Win32 Audio
+			version  # Win32 GetVersion Info
+			setupapi # Win32 DiGet class
+			SDL2	 # SDL2
+			SDL2main # SDL2_main
+			Iphlpapi # Win32 network functions
+	)
+else()
+	find_package(PkgConfig REQUIRED)
+	find_package(SDL2 REQUIRED)
+	
+	set(LIB_DEPS ${LIB_DEPS} 
+		mingw32
+	   SDL2main 
+	   SDL2
+	   ${SDL2_EXTRA_LINK_FLAGS_STATIC}
+	)	
+	
+	if(MINGW)
+		set(LIB_DEPS ${LIB_DEPS} 
+			Rpcrt4	 # Win32 uuid create 
+			Opengl32 # OpenGL for windows
+			ws2_32	 # Win32 winsock2
+			Iphlpapi # Win32 network functions
+			
+		)
+		
+		if(NOT IS_DEBUG)
+			set(LIB_DEPS ${LIB_DEPS} 
+				 -mwindows
+			)
+		endif()
+		
+	else()
+		set(LIB_DEPS ${LIB_DEPS} 
+			gl		# OpenGL
+			uuid
+		)
+	endif()
+endif()
+
+set( LINK_PARAMS "-Wl,--no-as-needed" )
 IF(MINGW)
 	set( LINK_PARAMS "${LINK_PARAMS},--export-all-symbols" )
 ENDIF()
@@ -303,20 +352,13 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	tilemap/@zg_tilemap.c
 	
 	#-- ZG_Entity Component System --
-	ecs/@zg_ecs.c
+	#ecs/@zg_ecs.c
 	
 	#-- Zetgame --
 	zetgame.c		
 )
 
 add_library( ${ZETGAME_LIB_NAME}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
-
-
-target_link_libraries(${ZETGAME_LIB_NAME}${POST_NAME}
-	${LIB_DEPS}
-	${LINK_PARAMS}
-)	
-
 
 #-----------------------------------------
 #
@@ -329,68 +371,68 @@ add_executable(test_mixer${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
 )
 
-target_link_libraries(test_mixer${POST_NAME}   			${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_mixer${POST_NAME}   		 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 	
 add_executable(test_2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_2d.c
 )
 
-target_link_libraries(test_2d${POST_NAME}    			${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_2d${POST_NAME}    			 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS} )
 
 #Graphics
-add_executable(test_primitives${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_primitives.c
+add_executable(test_primitives2d${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_primitives2d.c
 )
 
-target_link_libraries(test_primitives${POST_NAME}    ${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_primitives2d${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 
 add_executable(test_viewport${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
 )
 
-target_link_libraries(test_viewport${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_viewport${POST_NAME}    ${ZETGAME_LIB_NAME}${POST_NAME}  	${LIB_DEPS})
 
 add_executable(test_animation${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_animation.c
 )
 
-target_link_libraries(test_animation${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_animation${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 #--- SCENEGRAPH
-add_executable(test_scenegraph${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
-)
+#add_executable(test_scenegraph${POST_NAME} 
+#	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
+#)
 
-target_link_libraries(test_scenegraph${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+#target_link_libraries(test_scenegraph${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 #--- SPRITE
 add_executable(test_sprite${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_sprite.c
 )
 
-target_link_libraries(test_sprite${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_sprite${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 #--- TILEMAP
 add_executable(test_tilemap${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
 )
 
-target_link_libraries(test_tilemap${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_tilemap${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
 
 #--- COLLIDER2D
 add_executable(test_collider2d${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_collider2d.c
 )
 
-target_link_libraries(test_collider2d${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_collider2d${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 #--- SHADER
 add_executable(test_shader${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_shader.c
 )
 
-target_link_libraries(test_shader${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_shader${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
 
 #endif()
 
@@ -405,7 +447,7 @@ add_executable(test_textbox${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_textbox.c
 )
 
-target_link_libraries(test_textbox${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_textbox${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
 
 
 #--- GUI
@@ -413,5 +455,5 @@ add_executable(test_gui${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_gui.c
 )
 
-target_link_libraries(test_gui${POST_NAME}    	${EXE_DEPS} ${ZETGAME_LIB_NAME}${POST_NAME} "-Wl,--no-as-needed" )
+target_link_libraries(test_gui${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 

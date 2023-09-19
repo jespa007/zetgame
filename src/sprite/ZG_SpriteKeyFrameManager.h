@@ -23,7 +23,7 @@ bool ZG_SpriteKeyFrameManager_Load(ZG_SpriteKeyFrameManager *_this
 );
 ZG_SpriteKeyFrame *ZG_SpriteKeyFrameManager_Get(ZG_SpriteKeyFrameManager *_this,const char *_skf_id);
 
-void ZG_ZG_SpriteKeyFrameManager_Delete(ZG_SpriteKeyFrameManager *_this);
+void ZG_SpriteKeyFrameManager_Delete(ZG_SpriteKeyFrameManager *_this);
 
 
 #endif

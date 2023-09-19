@@ -11,7 +11,7 @@
 #include "gui/@zg_gui.h"
 #include "sprite/@zg_sprite.h"
 #include "tilemap/@zg_tilemap.h"
-#include "ecs/@zg_ecs.h"
+//#include "ecs/@zg_ecs.h"
 
 
 #define ZETGAME_VERSION_MAJOR	1
