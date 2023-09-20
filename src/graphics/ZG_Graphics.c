@@ -650,7 +650,7 @@ void ZG_Graphics_DrawPoint2i(int _x, int _y, ZG_Color4f _color, uint8_t _point_s
 }
 
 
-void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, int _width, int _height, ZG_Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color, uint8_t _thickness){
 
 
 	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
@@ -674,53 +674,41 @@ void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawRectangleFilled4i(int x, int y, uint16_t width, uint16_t height, ZG_Color4f color){
+void ZG_Graphics_DrawRectangleFilled4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f color){
 
-	ZG_Vector2i p1_2d=ZG_Vector2i_New(x,y);
-	ZG_Vector2i p2_2d=ZG_Vector2i_New(x+width,y+height);
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
+	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
-	ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
-	ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
-
-	ZG_Graphics_DrawRectangleFilled4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,color);
+	ZG_Graphics_DrawRectangleFilled4f(translate.x,translate.y,scale.x,scale.y,color);
 }
 
-void ZG_Graphics_DrawRectangleFilled4f(float _x1, float _y1, float _x2, float _y2, ZG_Color4f _color){
+void ZG_Graphics_DrawRectangleFilled4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color){
 	ZG_Transform t=ZG_Transform_New();
-	float w=_x2-_x1;
-	float h=_y2-_y1;
-	t.translate.x=_x1+w*0.5;
-	t.translate.y=_y1+h*0.5;
-	t.scale.x=w;
-	t.scale.y=h;
+	t.translate.x=_x_center;
+	t.translate.y=_y_center;
+	t.scale.x=_scale_x;
+	t.scale.y=_scale_y;
 
-	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Transform_Apply(&t);
 	ZG_Geometry_Draw(ZG_Geometry_GetDefaultRectangleFilled());
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawRectangleTextured4i(int _x, int _y, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
+void ZG_Graphics_DrawRectangleTextured4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
 
-	ZG_Vector2i p1_2d=ZG_Vector2i_New(_x-(_width>>1),_y+(_height>>1));
-	ZG_Vector2i p2_2d=ZG_Vector2i_New(_x+(_width>>1),_y-(_height>>1));
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
+	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
-	ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorld(p1_2d.x,p1_2d.y);
-	ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorld(p2_2d.x,p2_2d.y);
-
-	ZG_Graphics_DrawRectangleTextured4f(p1_3d.x,p1_3d.y,p2_3d.x,p2_3d.y,_color,text,text_crop);
+	ZG_Graphics_DrawRectangleTextured4f(translate.x,translate.y,scale.x,scale.y,_color,text,text_crop);
 }
 
-void ZG_Graphics_DrawRectangleTextured4f(float _x1, float _y1, float _x2, float _y2,  ZG_Color4f _color,ZG_Texture *_texture, ZG_TextureRect * _text_crop){
+void ZG_Graphics_DrawRectangleTextured4f(float _x_center, float _y_center, float _scale_x, float _scale_y,  ZG_Color4f _color,ZG_Texture *_texture, ZG_TextureRect * _text_crop){
 	ZG_Transform t=ZG_Transform_New();
 
-	// setup transform
-	float w=fabs(_x2-_x1);
-	float h=fabs(_y2-_y1); // y1 > y2, that's way y1-y2
-	t.translate.x=_x1+w*0.5;
-	t.translate.y=_y1+h*0.5;
-	t.scale.x=w;
-	t.scale.y=h;
+	t.translate.x=_x_center;
+	t.translate.y=_y_center;
+	t.scale.x=_scale_x;
+	t.scale.y=_scale_y;
 
 	// setup appearance
 	g_graphics_vars->appearance_rectangle_default->material->color=_color;

@@ -42,9 +42,18 @@ int main(int argc, char *argv[]){
 	do{
 		ZG_Graphics_BeginRender();
 
-		int x=10,y=10;
+		int x=SHAPE_WIDTH,y=SHAPE_WIDTH;
 
-		//Graphics_SetProjectionMode(ZG_PROJECTION_MODE_ORTHO);
+		// paint primitives
+		ZG_Graphics_DrawRectangle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,4);
+		x+=SHAPE_WIDTH+10;
+
+		ZG_Graphics_DrawRectangleFilled4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE);
+		x+=SHAPE_WIDTH+10;
+
+		ZG_Graphics_DrawCircle3i(x,y,SHAPE_WIDTH>>1,ZG_COLOR4F_WHITE,4);
+		x+=SHAPE_WIDTH+10;
+
 
 		for(unsigned i=0; i < textures->count; i++){
 
