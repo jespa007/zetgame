@@ -52,7 +52,7 @@ void ZG_ECSpriteRenderer_OnCreate(void *_this, ZG_Entity _entity){
 
 
 	data->appearance=ZG_Appearance_New();
-	data->ec_geometry->geometry=ZG_Geometry_NewRectangleFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
+	data->ec_geometry->geometry=ZG_Geometry_NewRectangle2dFilled(ZG_GEOMETRY_PROPERTY_TEXTURE); // Quad by default ?
 	data->ec_material->material=data->appearance->material=ZG_Material_New(0); // Mat by default ?
 
 	ec_sprite_renderer->data=data;

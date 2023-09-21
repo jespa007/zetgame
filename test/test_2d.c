@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 	ZG_TTFont * font1 = ZG_TTFont_NewFromFile("../../../test/data/fonts/g5lis1b.ttf");
 	ZG_TTFont * font2 = ZG_TTFont_NewFromFile("../../../test/data/fonts/Trebuchet MS.ttf");
 	//Shape2d * shape2d = Shape2d_New();
-	ZG_Geometry *geometry=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
+	ZG_Geometry *geometry=ZG_Geometry_NewRectangle2d(ZG_GEOMETRY_PROPERTY_TEXTURE);
 	ZG_Appearance *appearance=ZG_Appearance_New();
 	ZG_Transform transform=ZG_Transform_New();
 
@@ -31,8 +31,8 @@ int main(int argc, char *argv[]){
 	do{
 		ZG_Graphics_BeginRender();
 
-		ZG_Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
-		ZG_Graphics_DrawRectangleFilled4i(20,20,100,100,ZG_Color4f_FromHex(0xFFFF));
+		ZG_Graphics_DrawFilledRectangle4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
+		ZG_Graphics_DrawFilledRectangle4i(20,20,100,100,ZG_Color4f_FromHex(0xFFFF));
 		ZG_Graphics_DrawRectangleTextured4i(200,200,100,100,ZG_COLOR4F_WHITE,text_png,NULL);
 		ZG_Graphics_DrawRectangleTextured4i(300,300,100,100,ZG_COLOR4F_WHITE,text_jpg,NULL);
 		ZG_Graphics_DrawRectangleTextured4i(100,200,100,100,ZG_COLOR4F_WHITE,text_default,NULL);

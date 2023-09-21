@@ -365,7 +365,21 @@ add_library( ${ZETGAME_LIB_NAME}${POST_NAME} STATIC ${ZETGAME_LIB_SRCS} )
 # EXECUTABLES
 #
 
-#if(false)
+#Graphics
+add_executable(test_primitives2d${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_primitives2d.c
+)
+
+target_link_libraries(test_primitives2d${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+
+#--- COLLIDER2D
+add_executable(test_collider2d${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_collider2d.c
+)
+
+target_link_libraries(test_collider2d${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+
+if(false)
 
 add_executable(test_mixer${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_mixer.c
@@ -378,13 +392,6 @@ add_executable(test_2d${POST_NAME}
 )
 
 target_link_libraries(test_2d${POST_NAME}    			 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS} )
-
-#Graphics
-add_executable(test_primitives2d${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_primitives2d.c
-)
-
-target_link_libraries(test_primitives2d${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 
 add_executable(test_viewport${POST_NAME} 
@@ -420,13 +427,6 @@ add_executable(test_tilemap${POST_NAME}
 
 target_link_libraries(test_tilemap${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
 
-#--- COLLIDER2D
-add_executable(test_collider2d${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_collider2d.c
-)
-
-target_link_libraries(test_collider2d${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
-
 #--- SHADER
 add_executable(test_shader${POST_NAME} 
 	${PROJECT_SOURCE_DIR}/../test/test_shader.c
@@ -434,7 +434,7 @@ add_executable(test_shader${POST_NAME}
 
 target_link_libraries(test_shader${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
 
-#endif()
+endif()
 
 #--- PARTICLE SYSTEM
 #add_executable(test_particle${POST_NAME} 

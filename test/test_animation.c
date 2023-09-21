@@ -135,7 +135,7 @@ int main(int argc, char *argv[]){
 			);
 		}
 
-		ZG_Graphics_Draw(&transform,ZG_Geometry_GetDefaultRectangleTextured(),appearance);
+		ZG_Graphics_Draw(&transform,ZG_Geometry_GetDefaultTexturedRectangle2d(),appearance);
 
 		x+=inc_x;
 		y+=inc_y;
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
 		if(scale< 0.5f || scale > 2.0f) inc_scale*=-1;
 
 
-		ZG_Graphics_DrawRectangleFilled4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
+		ZG_Graphics_DrawFilledRectangle4i(10,10,100,100,ZG_Color4f_FromHex(0xFF));
 
 		if(ZG_KP_T){
 			ZG_Graphics_ToggleFullscreen();

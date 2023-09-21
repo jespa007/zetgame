@@ -39,20 +39,22 @@ struct ZG_Geometry{
 
 
 
-ZG_Geometry	* 	ZG_Geometry_GetDefaultPoint(void);
-ZG_Geometry	* 	ZG_Geometry_GetDefaultCircle(void); // it returns a circle of 1 radius
-ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangle(void); // it returns a quad of 1 by 1
-ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleFilled(void); // it returns a quad of 1 by 1
-ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleTextured(void); // it returns a quad of 1 by 1
-ZG_Geometry	* 	ZG_Geometry_New(ZG_GeometryType _geometry_type);
-ZG_Geometry	* 	ZG_Geometry_NewRectangle(uint32_t properties);
-ZG_Geometry	* 	ZG_Geometry_NewFilledRectangle(uint32_t properties);
+ZG_Geometry	* 	ZG_Geometry_GetDefaultPoint2d(void);
+ZG_Geometry	* 	ZG_Geometry_GetDefaultCircle2d(void); // it returns a circle of 1 radius
+ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangle2d(void); // it returns a quad of 1 by 1
+ZG_Geometry	* 	ZG_Geometry_GetDefaultFilledRectangle2d(void); // it returns a quad of 1 by 1
+ZG_Geometry	* 	ZG_Geometry_GetDefaultTexturedRectangle2d(void); // it returns a quad of 1 by 1
+ZG_Geometry	* 	ZG_Geometry_NewRectangle2d(void);
+ZG_Geometry	* 	ZG_Geometry_NewFilledRectangle2d(void);
+ZG_Geometry	* 	ZG_Geometry_NewTexturedRectangle2d(void);
 ZG_Geometry	* 	ZG_Geometry_NewPoints(void);
 /**
  * _smooth: 1-N
  */
-ZG_Geometry	* 	ZG_Geometry_NewCircle(uint16_t _divisions_per_quadrant);
+ZG_Geometry	* 	ZG_Geometry_NewCircle2d(uint16_t _divisions_per_quadrant);
 
+
+ZG_Geometry	* 	ZG_Geometry_New(ZG_GeometryType _geometry_type);
 void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const short *_indices,size_t _indices_len);
 void 			ZG_Geometry_SetMeshVertex(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len);
 void 			ZG_Geometry_SetMeshTexture(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len);

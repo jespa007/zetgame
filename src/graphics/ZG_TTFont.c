@@ -208,7 +208,7 @@ ZG_TTFont * TTFont_NewEmpty(void){
     data->font_size=ZG_DEFAULT_FONT_SIZE;
 
     // data
-    data->geometry=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
+    data->geometry=ZG_Geometry_NewTexturedRectangle2d();
 
     // TTF load each char flipped vertically, we define inverse uv transform as usually
 	float mesh_texture[]={

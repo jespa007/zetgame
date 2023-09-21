@@ -22,9 +22,9 @@ ZG_Geometry	* ZG_Geometry_GetDefaultPoint(void){
 	return g_geometry_default_point;
 }
 
-ZG_Geometry	* ZG_Geometry_GetDefaultRectangle(void){
+ZG_Geometry	* ZG_Geometry_GetDefaultRectangle2d(void){
 	if(g_geometry_default_rectangle == NULL){
-		g_geometry_default_rectangle=ZG_Geometry_NewRectangle(0);
+		g_geometry_default_rectangle=ZG_Geometry_NewRectangle2d();
 	}
 
 	return g_geometry_default_rectangle;
@@ -32,23 +32,23 @@ ZG_Geometry	* ZG_Geometry_GetDefaultRectangle(void){
 
 ZG_Geometry	* 	ZG_Geometry_GetDefaultCircle(void){
 	if(g_geometry_default_circle == NULL){
-		g_geometry_default_circle=ZG_Geometry_NewCircle(0);
+		g_geometry_default_circle=ZG_Geometry_NewCircle2d(0);
 	}
 
 	return g_geometry_default_circle;
 }
 
-ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleFilled(void){
+ZG_Geometry	* 	ZG_Geometry_GetDefaultFilledRectangle2d(void){
 	if(g_geometry_default_rectangle_filled == NULL){
-		g_geometry_default_rectangle_filled=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_COLOR);
+		g_geometry_default_rectangle_filled=ZG_Geometry_NewFilledRectangle2d();
 	}
 
 	return g_geometry_default_rectangle_filled;
 }
 
-ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangleTextured(void){
+ZG_Geometry	* 	ZG_Geometry_GetDefaultTexturedRectangle2d(void){
 	if(g_geometry_default_rectangle_textured == NULL){
-		g_geometry_default_rectangle_textured=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
+		g_geometry_default_rectangle_textured=ZG_Geometry_NewTexturedRectangle2d();
 	}
 
 	return g_geometry_default_rectangle_textured;
@@ -86,21 +86,47 @@ ZG_Geometry	* ZG_Geometry_NewPoints(void){
 	return geometry;
 }
 
-
-ZG_Geometry	* ZG_Geometry_NewRectangle(uint32_t _properties){
-
-	ZG_Geometry *geometry=NULL;
-
+ZG_Geometry	* ZG_Geometry_NewRectangle2d(void){
 	short indices[]={
-		0,1
-		,2,3
+		0,1,2,3
 	};
 
 	// A quarter of screen as size...
 	float mesh_vertex[]={
 		   -0.5f,-0.5f,0.0f,  // bottom left
-		   +0.5f,-0.5f,0.0f,  // bottom right
 		   -0.5f,+0.5f,0.0f,  // top left
+		   +0.5f,+0.5f,0.0f,  // top right
+		   +0.5f,-0.5f,0.0f   // bottom right
+	};
+
+	ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_LINE_LOOP);
+
+	if(geometry){ // setup indexes...
+
+		ZG_Geometry_SetIndices(geometry,indices,ZG_ARRAY_SIZE(indices));
+
+		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
+
+	}
+
+	return geometry;
+}
+
+
+ZG_Geometry	* ZG_Geometry_NewFilledRectangle2d(void){
+
+	ZG_Geometry *geometry=NULL;
+
+	short indices[]={
+		0,1,2	// 1st triangle
+	   ,1,3,2 	// 2nd triangle
+	};
+
+	// A quarter of screen as size...
+	float mesh_vertex[]={
+		   -0.5f,-0.5f,0.0f,  // bottom left
+		   -0.5f,+0.5f,0.0f,  // top left
+		   +0.5f,-0.5f,0.0f,  // bottom right
 		   +0.5f,+0.5f,0.0f   // top right
 	};
 
@@ -110,38 +136,53 @@ ZG_Geometry	* ZG_Geometry_NewRectangle(uint32_t _properties){
 
 
 		ZG_Geometry_SetIndices(geometry,indices,ZG_ARRAY_SIZE(indices));
-
 		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 
-		if(_properties & ZG_GEOMETRY_PROPERTY_TEXTURE){
-
-			float mesh_texture[]={
-				   0.0f,  1.0f,   // bottom left
-				   1.0f,  1.0f,   // bottom right
-				   0.0f,  0.0f,   // top left
-				   1.0f,  0.0f    // top right
-			};
-
-			ZG_Geometry_SetMeshTexture(geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
-		}
-
-		if(_properties & ZG_GEOMETRY_PROPERTY_COLOR){
-
-			float mesh_color[]={
-				  1.0f,1.0f,1.0f,  // bottom left
-				  1.0f,1.0f,1.0f,  // bottom right
-				  1.0f,1.0f,1.0f,  // top left
-				  1.0f,1.0f,1.0f   // top right
-			};
-
-			ZG_Geometry_SetMeshColor(geometry,mesh_color,ZG_ARRAY_SIZE(mesh_color));
-		}
 	}
 
 	return geometry;
 }
 
-ZG_Geometry	* ZG_Geometry_NewCircle(uint16_t _divisions_per_quadrant){
+ZG_Geometry	* ZG_Geometry_NewTexturedRectangle2d(void){
+
+	ZG_Geometry *geometry=NULL;
+
+	short indices[]={
+		0,1,2	// 1st triangle
+	   ,1,3,2 	// 2nd triangle
+	};
+
+	// A quarter of screen as size...
+	float mesh_vertex[]={
+		   -0.5f,-0.5f,0.0f,  // bottom left
+		   -0.5f,+0.5f,0.0f,  // top left
+		   +0.5f,-0.5f,0.0f,  // bottom right
+		   +0.5f,+0.5f,0.0f   // top right
+	};
+
+	geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_TRIANGLE_STRIP);
+
+	if(geometry){ // setup indices...
+
+		ZG_Geometry_SetIndices(geometry,indices,ZG_ARRAY_SIZE(indices));
+
+		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
+
+		float mesh_texture[]={
+			   0.0f,  1.0f,   // bottom left
+			   1.0f,  1.0f,   // bottom right
+			   0.0f,  0.0f,   // top left
+			   1.0f,  0.0f    // top right
+		};
+
+		ZG_Geometry_SetMeshTexture(geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
+
+	}
+
+	return geometry;
+}
+
+ZG_Geometry	* ZG_Geometry_NewCircle2d(uint16_t _divisions_per_quadrant){
 
 	if(_divisions_per_quadrant < 1){
 		// default circle divisions per quadrant
@@ -165,7 +206,10 @@ ZG_Geometry	* ZG_Geometry_NewCircle(uint16_t _divisions_per_quadrant){
     for (float r = 0; r < 2*PI; r+=inc_r,it_vertexs+=3,it_indexs++)
     {
     	*(it_vertexs+0)=cos(r);
-    	*(it_vertexs+1)=sin(r);
+
+    	// normalize height to have an square aspect
+    	*(it_vertexs+1)=sin(r)*ZG_Graphics_GetWidth()*ZG_Graphics_GetOneOverHeight();
+
     	*(it_vertexs+2)=0;
 
     	*(it_indexs+0)=index+0;

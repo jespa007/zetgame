@@ -183,7 +183,7 @@ static void  ZG_GUIButton_Draw(void *gui_button){
 			if(v > 1) v=1;
 
 			ZG_Graphics_DrawRectangle4i(position.x+dimensions.x+5, position.y, 10, dimensions.y,data->auto_click_on_over.color, 1);
-			ZG_Graphics_DrawRectangleFilled4i(position.x+dimensions.x+5, position.y+dimensions.y-(dimensions.y-1)*v, 9, (dimensions.y-1)*v, data->auto_click_on_over.color);
+			ZG_Graphics_DrawFilledRectangle4i(position.x+dimensions.x+5, position.y+dimensions.y-(dimensions.y-1)*v, 9, (dimensions.y-1)*v, data->auto_click_on_over.color);
 
 		}
 	}

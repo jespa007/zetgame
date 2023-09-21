@@ -77,8 +77,8 @@ void ZG_Graphics_DrawRectangle2i(uint16_t _width, uint16_t _height, ZG_Color4f _
 void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f color,  uint8_t thickness);
 void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f color, uint8_t thickness);
 
-void ZG_Graphics_DrawRectangleFilled4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color);
-void ZG_Graphics_DrawRectangleFilled4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color);
+void ZG_Graphics_DrawFilledRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color);
+void ZG_Graphics_DrawFilledRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color);
 
 void ZG_Graphics_DrawRectangleTextured4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height,  ZG_Color4f color,ZG_Texture *text, ZG_TextureRect * text_crop);
 void ZG_Graphics_DrawRectangleTextured4f(float _x_center, float _y1_center, float _scale_x, float _scale_y, ZG_Color4f color, ZG_Texture *text, ZG_TextureRect * text_crop);

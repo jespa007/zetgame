@@ -35,9 +35,9 @@ typedef struct{
 	 ZG_List   *capture_screen_callbacks;
 	 int 	n_screenshoot;
 
-	ZG_Geometry *geometry_rectangle_default;
-	ZG_Appearance *appearance_rectangle_default;
-	ZG_Material *material_rectangle_default;
+	ZG_Geometry *default_geometry_textured_rectangle2d;
+	ZG_Appearance *default_appearance_rectangle2d;
+	ZG_Material *default_material_rectangle2d;
 	SDL_Rect *rect_display;
 	int num_displays;
 	int active_display;
@@ -181,10 +181,10 @@ bool ZG_Graphics_Init(
 	ZG_ViewPort_Init(_width,_height);
 
 	// created default rectangle/s for drawing
-	g_graphics_vars->geometry_rectangle_default=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
-	g_graphics_vars->appearance_rectangle_default=ZG_Appearance_New();
-	g_graphics_vars->material_rectangle_default=ZG_Material_New(0);
-	g_graphics_vars->appearance_rectangle_default->material=g_graphics_vars->material_rectangle_default;
+	g_graphics_vars->default_geometry_textured_rectangle2d=ZG_Geometry_NewTexturedRectangle2d();
+	g_graphics_vars->default_appearance_rectangle2d=ZG_Appearance_New();
+	g_graphics_vars->default_material_rectangle2d=ZG_Material_New(0);
+	g_graphics_vars->default_appearance_rectangle2d->material=g_graphics_vars->default_material_rectangle2d;
 
 	ZG_Graphics_SetFullscreen(g_graphics_vars->fullscreen);
 
@@ -565,7 +565,7 @@ void ZG_Graphics_EndRender(void)
 			FPS=1000.0f/diff;
 		}
 
-		ZG_Graphics_Print(0,ZG_Graphics_GetHeight()-30,ZG_COLOR4F_WHITE, "FPS: %.02f",FPS);
+		ZG_Graphics_Print(5,ZG_Graphics_GetHeight()-5,ZG_COLOR4F_WHITE, "FPS: %.02f",FPS);
 //			printf("%.2f fps\n",1000.0f/diff);
 
 
@@ -670,27 +670,28 @@ void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_
 	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Graphics_SetLineThickness(_thickness);
 	ZG_Transform_Apply(&t);
-	ZG_Geometry_Draw(ZG_Geometry_GetDefaultRectangle());
+	ZG_Geometry_Draw(ZG_Geometry_GetDefaultRectangle2d());
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawRectangleFilled4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f color){
+void ZG_Graphics_DrawFilledRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f color){
 
 	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
 	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
-	ZG_Graphics_DrawRectangleFilled4f(translate.x,translate.y,scale.x,scale.y,color);
+	ZG_Graphics_DrawFilledRectangle4f(translate.x,translate.y,scale.x,scale.y,color);
 }
 
-void ZG_Graphics_DrawRectangleFilled4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color){
+void ZG_Graphics_DrawFilledRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color){
 	ZG_Transform t=ZG_Transform_New();
 	t.translate.x=_x_center;
 	t.translate.y=_y_center;
 	t.scale.x=_scale_x;
 	t.scale.y=_scale_y;
 
+	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Transform_Apply(&t);
-	ZG_Geometry_Draw(ZG_Geometry_GetDefaultRectangleFilled());
+	ZG_Geometry_Draw(ZG_Geometry_GetDefaultFilledRectangle2d());
 	ZG_Transform_Restore(&t);
 }
 
@@ -711,11 +712,11 @@ void ZG_Graphics_DrawRectangleTextured4f(float _x_center, float _y_center, float
 	t.scale.y=_scale_y;
 
 	// setup appearance
-	g_graphics_vars->appearance_rectangle_default->material->color=_color;
-	g_graphics_vars->appearance_rectangle_default->texture=_texture;
+	g_graphics_vars->default_appearance_rectangle2d->material->color=_color;
+	g_graphics_vars->default_appearance_rectangle2d->texture=_texture;
 
 	ZG_Transform_Apply(&t);
-	ZG_Appearance_Apply(g_graphics_vars->appearance_rectangle_default);
+	ZG_Appearance_Apply(g_graphics_vars->default_appearance_rectangle2d);
 
 	// setup crop
    if(_text_crop == NULL){
@@ -727,7 +728,7 @@ void ZG_Graphics_DrawRectangleTextured4f(float _x_center, float _y_center, float
 			   1.0f,  0.0f    // top right
 		};
 
-		ZG_Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
+		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 	}else{
 		float mesh_texture[]={
 				_text_crop->u1, _text_crop->v2, // bottom left
@@ -736,12 +737,12 @@ void ZG_Graphics_DrawRectangleTextured4f(float _x_center, float _y_center, float
 				_text_crop->u2, _text_crop->v1  // top right
 		};
 
-		ZG_Geometry_SetMeshTexture(g_graphics_vars->geometry_rectangle_default,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
+		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 	}
 
-	ZG_Geometry_Draw(g_graphics_vars->geometry_rectangle_default);
+	ZG_Geometry_Draw(g_graphics_vars->default_geometry_textured_rectangle2d);
 
-	ZG_Appearance_Restore(g_graphics_vars->appearance_rectangle_default);
+	ZG_Appearance_Restore(g_graphics_vars->default_appearance_rectangle2d);
 	ZG_Transform_Restore(&t);
 }
 
@@ -810,9 +811,9 @@ void ZG_Graphics_DeInit(void) {
 
 
 	// deinit gl vars first
-	ZG_Geometry_Delete(g_graphics_vars->geometry_rectangle_default);
-	ZG_Appearance_Delete(g_graphics_vars->appearance_rectangle_default);
-	ZG_Material_Delete(g_graphics_vars->material_rectangle_default);
+	ZG_Geometry_Delete(g_graphics_vars->default_geometry_textured_rectangle2d);
+	ZG_Appearance_Delete(g_graphics_vars->default_appearance_rectangle2d);
+	ZG_Material_Delete(g_graphics_vars->default_material_rectangle2d);
 
 	// ...then deini gl context
 	switch(g_graphics_vars->graphics_api){

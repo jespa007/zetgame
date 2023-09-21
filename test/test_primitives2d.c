@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
 
 	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFF));
 
-	ZG_Geometry *geometry=ZG_Geometry_NewRectangle(ZG_GEOMETRY_PROPERTY_TEXTURE);
+	ZG_Geometry *geometry=ZG_Geometry_NewTexturedRectangle2d();
 	ZG_Appearance *appearance=ZG_Appearance_New();
 
 	do{
@@ -45,13 +45,13 @@ int main(int argc, char *argv[]){
 		int x=SHAPE_WIDTH,y=SHAPE_WIDTH;
 
 		// paint primitives
-		ZG_Graphics_DrawRectangle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,4);
+		ZG_Graphics_DrawRectangle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,2);
 		x+=SHAPE_WIDTH+10;
 
-		ZG_Graphics_DrawRectangleFilled4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE);
+		ZG_Graphics_DrawFilledRectangle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE);
 		x+=SHAPE_WIDTH+10;
 
-		ZG_Graphics_DrawCircle3i(x,y,SHAPE_WIDTH>>1,ZG_COLOR4F_WHITE,4);
+		ZG_Graphics_DrawCircle3i(x,y,SHAPE_WIDTH>>1,ZG_COLOR4F_WHITE,2);
 		x+=SHAPE_WIDTH+10;
 
 
