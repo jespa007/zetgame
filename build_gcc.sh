@@ -543,12 +543,4 @@ fi
 
 #------------------------------------------------------------------------------------------------------------------------
 
-if ! [ "$TARGET_OS" = "mingw32" ]
-then
 
-	if [ -d $THIRD_PARTY_INSTALL_DIR"/lib/cmake" ] 
-	then
-		echo "clean up"
-		rm -r $THIRD_PARTY_INSTALL_DIR"/lib/cmake"
-	fi
-fi

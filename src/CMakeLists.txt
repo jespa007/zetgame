@@ -268,11 +268,12 @@ if(MSVC)
 			Iphlpapi # Win32 network functions
 	)
 else()
+	list(APPEND CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/lib/cmake/SDL2/)
 	find_package(PkgConfig REQUIRED)
 	find_package(SDL2 REQUIRED)
 	
 	set(LIB_DEPS ${LIB_DEPS} 
-		mingw32
+		
 	   SDL2main 
 	   SDL2
 	   ${SDL2_EXTRA_LINK_FLAGS_STATIC}
@@ -280,6 +281,7 @@ else()
 	
 	if(MINGW)
 		set(LIB_DEPS ${LIB_DEPS} 
+			mingw32
 			Rpcrt4	 # Win32 uuid create 
 			Opengl32 # OpenGL for windows
 			ws2_32	 # Win32 winsock2
