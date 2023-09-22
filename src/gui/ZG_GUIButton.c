@@ -173,7 +173,7 @@ static void  ZG_GUIButton_Draw(void *gui_button){
 	result_font_color.a=alpha;
 	//background_result.a=alpha;
 
-	ZG_Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,g_default_texture_button,NULL);
+	ZG_Graphics_DrawTexturedRectangle4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,g_default_texture_button,NULL);
 
 
 	if(data->mouse_collide){
@@ -189,7 +189,7 @@ static void  ZG_GUIButton_Draw(void *gui_button){
 	}
 
 	if(data->icon.texture!=NULL){ // draw icon
-		ZG_Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
+		ZG_Graphics_DrawTexturedRectangle4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE, data->icon.texture, &data->icon.texture_crop);
 	}
 
 	ZG_Transform_SetPosition2i(&transform,position.x,position.y);

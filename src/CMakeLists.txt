@@ -272,13 +272,7 @@ else()
 	find_package(PkgConfig REQUIRED)
 	find_package(SDL2 REQUIRED)
 	
-	set(LIB_DEPS ${LIB_DEPS} 
-		
-	   SDL2main 
-	   SDL2
-	   ${SDL2_EXTRA_LINK_FLAGS_STATIC}
-	)	
-	
+
 	if(MINGW)
 		set(LIB_DEPS ${LIB_DEPS} 
 			mingw32
@@ -297,10 +291,17 @@ else()
 		
 	else()
 		set(LIB_DEPS ${LIB_DEPS} 
-			gl		# OpenGL
+			GL		# OpenGL
 			uuid
 		)
 	endif()
+	
+	set(LIB_DEPS ${LIB_DEPS} 
+		
+	   SDL2main 
+	   SDL2
+	   ${SDL2_EXTRA_LINK_FLAGS_STATIC}
+	)		
 endif()
 
 set( LINK_PARAMS "-Wl,--no-as-needed" )

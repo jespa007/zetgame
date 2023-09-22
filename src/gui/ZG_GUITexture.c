@@ -21,7 +21,7 @@ static void ZG_GUITexture_DrawWidget(void *gui_texture){
 	position.y+=dimensions.y>>1;
 
 	if(data->texture!=NULL){
-		ZG_Graphics_DrawRectangleTextured4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,data->texture,NULL);
+		ZG_Graphics_DrawTexturedRectangle4i(position.x,position.y,dimensions.x,dimensions.y,ZG_COLOR4F_WHITE,data->texture,NULL);
 	}
 
 	ZG_Transform_SetPosition2i(&transform,position.x,position.y);

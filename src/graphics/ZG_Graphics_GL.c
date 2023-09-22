@@ -5,10 +5,15 @@ uint32_t start_ticks;
 
 #define ZG_GRAPHICS_GL_DISABLE_VSYNCH
 
-//static SDL_GLContext * g_sdl_gl_context = NULL;
+static SDL_GLContext * g_sdl_gl_context = NULL;
 
 
 bool ZG_Graphics_GL_Init(void){
+
+	if(g_sdl_gl_context!=NULL){
+		ZG_LOG_ERRORF("Graphics GL already initialized");
+		return false;
+	}
 
 	// Attach the OpenGL context to our window
 // Only creates opengl context in Windows environment. In linux is already created
@@ -19,11 +24,11 @@ bool ZG_Graphics_GL_Init(void){
 		return false;
 	}
 
-	/*if(SDL_GL_MakeCurrent(g_graphics_vars->sdl_window,
+	if(SDL_GL_MakeCurrent(g_graphics_vars->sdl_window,
 			g_sdl_gl_context)!=0){
 		ZG_LOG_ERROR("Cannot make current context:%s",SDL_GetError());
 		return false;
-	}*/
+	}
 #endif
 
 	// Disable vsync (Because it takes lot of high CPU)
@@ -217,6 +222,11 @@ void ZG_Graphics_GL_DeInit(void) {
 		ZG_LOG_WARNING("OpenGL (%x): There's some OGL problems. Enable debug to check file/line",e);
 	}else{
 		ZG_LOG_INFOF("OpenGL: OK");
+	}
+
+	if(g_sdl_gl_context!=NULL){
+		SDL_GL_DeleteContext(g_sdl_gl_context);
+		g_sdl_gl_context=NULL;
 	}
 
 }

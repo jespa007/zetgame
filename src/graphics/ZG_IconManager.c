@@ -124,7 +124,7 @@ void ZG_IconManager_DrawIcon(ZG_IconManager * _this,uint16_t idx_icon, int x,int
 
 		if(icon.texture != NULL){
 
-			ZG_Graphics_DrawRectangleTextured4i(x,y,width,height,ZG_COLOR4F_WHITE,icon.texture,&icon.texture_crop);
+			ZG_Graphics_DrawTexturedRectangle4i(x,y,width,height,ZG_COLOR4F_WHITE,icon.texture,&icon.texture_crop);
 		}
 	}
 }

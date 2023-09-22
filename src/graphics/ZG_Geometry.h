@@ -39,7 +39,7 @@ struct ZG_Geometry{
 
 
 
-ZG_Geometry	* 	ZG_Geometry_GetDefaultPoint2d(void);
+ZG_Geometry	* 	ZG_Geometry_GetDefaultPoint(void);
 ZG_Geometry	* 	ZG_Geometry_GetDefaultCircle2d(void); // it returns a circle of 1 radius
 ZG_Geometry	* 	ZG_Geometry_GetDefaultRectangle2d(void); // it returns a quad of 1 by 1
 ZG_Geometry	* 	ZG_Geometry_GetDefaultFilledRectangle2d(void); // it returns a quad of 1 by 1

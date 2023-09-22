@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 			appearance->texture=textures->items[i];
 
 			// circle
-			ZG_Graphics_DrawRectangleTextured4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,textures->items[i],NULL);
+			ZG_Graphics_DrawTexturedRectangle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,textures->items[i],NULL);
 			x+=SHAPE_WIDTH+10;
 
 			if((i%2==0) && i > 0){

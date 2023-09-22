@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
 
 			}
 
-			ZG_Graphics_DrawRectangleTextured4i(
+			ZG_Graphics_DrawTexturedRectangle4i(
 				32
 				,32
 				,64
