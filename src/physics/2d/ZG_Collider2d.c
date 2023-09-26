@@ -41,7 +41,8 @@ bool ZG_Collider2d_TestIntersectionPointRectangle(
 bool ZG_Collider2d_TestIntersectionPointCircle(
 							  ZG_Vector3f _p1
 							, ZG_Vector3f _p2
-							, float _r2
+							, float _w2
+							, float _h2
 							){
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
@@ -49,7 +50,7 @@ bool ZG_Collider2d_TestIntersectionPointCircle(
 	float distance=(xdiff)*(xdiff)+
 					  (ydiff)*(ydiff);
 
-	return distance < _r2*_r2;
+	return distance < (_w2*0.5*_h2*0.5);
 }
 
 bool ZG_Collider2d_TestIntersectionRectangleRectangle(
@@ -84,15 +85,20 @@ bool ZG_Collider2d_TestIntersectionRectangleCircle(
 	, float _w1
 	, float _h1
 	, ZG_Vector3f _p2
-	, float _r2){
+	, float _w2
+	, float _h2
+	){
 	float w1_med=_w1*0.5;
 	float h1_med=_h1*0.5;
+	float w2_med=_w2*0.5;
+	float h2_med=_h2*0.5;
+
 
     float circle_distance_x = fabs(_p2.x - _p1.x);
     float circle_distance_y = fabs(_p2.y - _p1.y);
 
-   	if (circle_distance_x > (w1_med + _r2)) { return false; }
-   	if (circle_distance_y > (h1_med + _r2)) { return false; }
+   	if (circle_distance_x > (w1_med + w2_med)) { return false; }
+   	if (circle_distance_y > (h1_med + h2_med)) { return false; }
 
    	if (circle_distance_x <= (w1_med)) { return true; }
    	if (circle_distance_y <= (h1_med)) { return true; };
@@ -103,18 +109,25 @@ bool ZG_Collider2d_TestIntersectionRectangleCircle(
 	float corner_distance=(xdiff)*(xdiff)+
 						  (ydiff)*(ydiff);
 
-	return corner_distance<=_r2*_r2;
+	return corner_distance<=_w2*_h2*0.25;
 }
 
 bool ZG_Collider2d_TestIntersectionCircleCircle(
 	ZG_Vector3f _p1
-	, float _r1
+	, float _w1
+	, float _h1
 	, ZG_Vector3f _p2
-	, float _r2){
+	, float _w2
+	, float _h2){
+
+	float w1_med=_w1*0.5;
+	float h1_med=_h1*0.5;
+	float w2_med=_w2*0.5;
+	float h2_med=_h2*0.5;
 
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
-	float rad_sum_sq = (_r1 + _r2) * (_r1 + _r2);
+	float rad_sum_sq = (w1_med + h1_med) * (w2_med + h2_med);
 
 	float distance=(xdiff)*(xdiff)+
 					  (ydiff)*(ydiff);
@@ -138,10 +151,11 @@ void ZG_Collider2d_Draw(ZG_Transform _t3d, ZG_Collider2dType _collider_type, ZG_
 				,_color,1);
 		break;
 	case ZG_COLLIDER2D_TYPE_CIRCLE:
-		ZG_Graphics_DrawCircle3f(
+		ZG_Graphics_DrawCircle4f(
 				_t3d.translate.x
 				,_t3d.translate.y
 				,_t3d.scale.x // diameter
+				,_t3d.scale.y
 				,_color,1);
 		break;
 	}
@@ -173,6 +187,7 @@ bool ZG_Collider2d_Test(ZG_Transform _t1, ZG_Collider2dType _c1, ZG_Transform _t
 					_t1.translate
 					,_t2.translate
 					,_t2.scale.x
+					,_t2.scale.y
 			);
 			break;
 		default:
@@ -208,6 +223,7 @@ bool ZG_Collider2d_Test(ZG_Transform _t1, ZG_Collider2dType _c1, ZG_Transform _t
 					,_t1.scale.y
 					,_t2.translate
 					,_t2.scale.x
+					,_t2.scale.y
 			);
 			break;
 		default:
@@ -221,6 +237,7 @@ bool ZG_Collider2d_Test(ZG_Transform _t1, ZG_Collider2dType _c1, ZG_Transform _t
 					_t2.translate
 					,_t1.translate
 					,_t1.scale.x
+					,_t1.scale.y
 			);
 			break;
 		case ZG_COLLIDER2D_TYPE_RECTANGLE:
@@ -230,6 +247,7 @@ bool ZG_Collider2d_Test(ZG_Transform _t1, ZG_Collider2dType _c1, ZG_Transform _t
 					,_t2.scale.y
 					,_t1.translate
 					,_t1.scale.x
+					,_t1.scale.y
 
 			);
 			break;
@@ -237,8 +255,10 @@ bool ZG_Collider2d_Test(ZG_Transform _t1, ZG_Collider2dType _c1, ZG_Transform _t
 			test=ZG_Collider2d_TestIntersectionCircleCircle(
 					_t1.translate
 					,_t1.scale.x
+					,_t1.scale.y
 					,_t2.translate
 					,_t2.scale.x
+					,_t2.scale.y
 			);
 			break;
 		default:

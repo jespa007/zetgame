@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 		ZG_Graphics_DrawFilledRectangle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE);
 		x+=SHAPE_WIDTH+10;
 
-		ZG_Graphics_DrawCircle3i(x,y,SHAPE_WIDTH>>1,ZG_COLOR4F_WHITE,2);
+		ZG_Graphics_DrawCircle4i(x,y,SHAPE_WIDTH,SHAPE_WIDTH,ZG_COLOR4F_WHITE,2);
 		x+=SHAPE_WIDTH+10;
 
 

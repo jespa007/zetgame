@@ -92,7 +92,7 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 			ZG_Graphics_DrawRectangle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,10,color,thickness);
 			break;
 		case SELECT_COLLIDER_CIRCLE: // circle
-			ZG_Graphics_DrawCircle3i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,BUTTON_GROUP_SIZE>>2,color,thickness);
+			ZG_Graphics_DrawCircle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,40,color,thickness);
 			break;
 
 		}
@@ -107,7 +107,15 @@ int main(int argc, char *argv[]){
 	ZG_UNUSUED_PARAM(argc);
 	ZG_UNUSUED_PARAM(argv);
 
-	ZG_Init(NULL);
+	ZG_Init(NULL/*&(ZG_SetupParams){
+			.graphics_api=ZG_GRAPHICS_API_GL
+			,.width=640
+			,.height=640
+			,.wcaption_title="zetgame"
+			,.wposx=SDL_WINDOWPOS_CENTERED
+			,.wposy=SDL_WINDOWPOS_CENTERED
+			,.graphic_properties=0
+	}*/);
 
 	const char *colliding="none";
 	struct{
@@ -144,6 +152,7 @@ int main(int argc, char *argv[]){
 	colliders[2].transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(500);
 	colliders[2].transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(300);
 	colliders[2].transform.scale.x=ZG_ViewPort_ScreenToWorldWidth(100);
+	colliders[2].transform.scale.y=ZG_ViewPort_ScreenToWorldHeight(100);
 
 
 	ZG_Collider2dType mouse_collider_type=ZG_COLLIDER2D_TYPE_POINT;

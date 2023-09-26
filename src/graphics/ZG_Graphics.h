@@ -74,17 +74,17 @@ void ZG_Graphics_DrawPoint2f(float _x, float _y, ZG_Color4f _color, uint8_t _poi
 void ZG_Graphics_DrawPoint2i(int _x, int _y, ZG_Color4f _color, uint8_t _point_size);
 
 void ZG_Graphics_DrawRectangle2i(uint16_t _width, uint16_t _height, ZG_Color4f _color, uint8_t thickness);
-void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f color,  uint8_t thickness);
-void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f color, uint8_t thickness);
+void ZG_Graphics_DrawRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f color,  uint8_t thickness);
+void ZG_Graphics_DrawRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f color, uint8_t thickness);
 
-void ZG_Graphics_DrawFilledRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color);
-void ZG_Graphics_DrawFilledRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color);
+void ZG_Graphics_DrawFilledRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f _color);
+void ZG_Graphics_DrawFilledRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f _color);
 
-void ZG_Graphics_DrawTexturedRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height,  ZG_Color4f color,ZG_Texture *text, ZG_TextureRect * text_crop);
-void ZG_Graphics_DrawTexturedRectangle4f(float _x_center, float _y1_center, float _scale_x, float _scale_y, ZG_Color4f color, ZG_Texture *text, ZG_TextureRect * text_crop);
+void ZG_Graphics_DrawTexturedRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height,  ZG_Color4f color,ZG_Texture *text, ZG_TextureRect * text_crop);
+void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f color, ZG_Texture *text, ZG_TextureRect * text_crop);
 
-void ZG_Graphics_DrawCircle3f(float _x_center, float _y_center, float _r, ZG_Color4f _color, uint8_t _thickness);
-void ZG_Graphics_DrawCircle3i(int _x_center, int _y_center, int _r, ZG_Color4f _color, uint8_t _thickness);
+void ZG_Graphics_DrawCircle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f _color, uint8_t _thickness);
+void ZG_Graphics_DrawCircle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height,ZG_Color4f _color, uint8_t _thickness);
 
 
 //void ZG_Graphics_DrawShape(Shape *shape, ZG_Transform *transform);

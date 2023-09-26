@@ -28,7 +28,8 @@ bool ZG_Collider2d_TestIntersectionPointRectangle(
 bool ZG_Collider2d_TestIntersectionPointCircle(
 							  ZG_Vector3f _p1
 							, ZG_Vector3f _p2
-							, float _r2
+							, float _w2
+							, float _h2
 							);
 
 bool ZG_Collider2d_TestIntersectionRectangleRectangle(
@@ -41,12 +42,18 @@ bool ZG_Collider2d_TestIntersectionRectangleCircle(
 		  	  	  	  	  	 ZG_Vector3f _p1
 							, float _w1, float _h1
 							, ZG_Vector3f _p2
-							, float _r2);
+							, float _w2
+							, float _h2
+							);
 
-bool ZG_Collider2d_TestIntersectionCircleCircle( ZG_Vector3f _p1
-								, float _r1
-								, ZG_Vector3f _p2
-								, float _r2);
+bool ZG_Collider2d_TestIntersectionCircleCircle(
+	ZG_Vector3f _p1
+	, float _w1
+	, float _h1
+	, ZG_Vector3f _p2
+	, float _w2
+	, float _h2
+);
 
 bool ZG_Collider2d_TestIntersectionCirclePoint( ZG_Vector3f _p1
 								, float _r1

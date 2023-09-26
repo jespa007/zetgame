@@ -650,19 +650,19 @@ void ZG_Graphics_DrawPoint2i(int _x, int _y, ZG_Color4f _color, uint8_t _point_s
 }
 
 
-void ZG_Graphics_DrawRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f _color, uint8_t _thickness){
 
 
-	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_center_x,_center_y);
 	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
 	ZG_Graphics_DrawRectangle4f(translate.x,translate.y,scale.x,scale.y,_color,_thickness);
 }
 
-void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f _color, uint8_t _thickness){
 	ZG_Transform t=ZG_Transform_New();
-	t.translate.x=_x_center;
-	t.translate.y=_y_center;
+	t.translate.x=_center_x;
+	t.translate.y=_center_y;
 	t.scale.x=_scale_x;
 	t.scale.y=_scale_y;
 
@@ -674,18 +674,18 @@ void ZG_Graphics_DrawRectangle4f(float _x_center, float _y_center, float _scale_
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawFilledRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f color){
+void ZG_Graphics_DrawFilledRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f color){
 
-	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_center_x,_center_y);
 	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
 	ZG_Graphics_DrawFilledRectangle4f(translate.x,translate.y,scale.x,scale.y,color);
 }
 
-void ZG_Graphics_DrawFilledRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y, ZG_Color4f _color){
+void ZG_Graphics_DrawFilledRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f _color){
 	ZG_Transform t=ZG_Transform_New();
-	t.translate.x=_x_center;
-	t.translate.y=_y_center;
+	t.translate.x=_center_x;
+	t.translate.y=_center_y;
 	t.scale.x=_scale_x;
 	t.scale.y=_scale_y;
 
@@ -695,19 +695,19 @@ void ZG_Graphics_DrawFilledRectangle4f(float _x_center, float _y_center, float _
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawTexturedRectangle4i(int _x_center, int _y_center, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
+void ZG_Graphics_DrawTexturedRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
 
-	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_x_center,_y_center);
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_center_x,_center_y);
 	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
 
 	ZG_Graphics_DrawTexturedRectangle4f(translate.x,translate.y,scale.x,scale.y,_color,text,text_crop);
 }
 
-void ZG_Graphics_DrawTexturedRectangle4f(float _x_center, float _y_center, float _scale_x, float _scale_y,  ZG_Color4f _color,ZG_Texture *_texture, ZG_TextureRect * _text_crop){
+void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y,  ZG_Color4f _color,ZG_Texture *_texture, ZG_TextureRect * _text_crop){
 	ZG_Transform t=ZG_Transform_New();
 
-	t.translate.x=_x_center;
-	t.translate.y=_y_center;
+	t.translate.x=_center_x;
+	t.translate.y=_center_y;
 	t.scale.x=_scale_x;
 	t.scale.y=_scale_y;
 
@@ -747,13 +747,13 @@ void ZG_Graphics_DrawTexturedRectangle4f(float _x_center, float _y_center, float
 }
 
 
-void ZG_Graphics_DrawCircle3f(float _x, float _y, float _r, ZG_Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawCircle4f(float _center_x, float _center_y, float _scale_x, float _scale_y, ZG_Color4f _color, uint8_t _thickness){
 
 	ZG_Transform t=ZG_Transform_New();
-	t.translate.x=_x;
-	t.translate.y=_y;
-	t.scale.x=_r;
-	t.scale.y=_r;
+	t.translate.x=_center_x;
+	t.translate.y=_center_y;
+	t.scale.x=_scale_x;
+	t.scale.y=_scale_y;
 
 	ZG_Graphics_SetColor4f(_color.r,_color.b, _color.g, _color.a);
 	ZG_Graphics_SetLineThickness(_thickness);
@@ -763,12 +763,16 @@ void ZG_Graphics_DrawCircle3f(float _x, float _y, float _r, ZG_Color4f _color, u
 }
 
 
-void ZG_Graphics_DrawCircle3i(int _x, int _y, int _r, ZG_Color4f _color, uint8_t _thickness){
+void ZG_Graphics_DrawCircle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height,ZG_Color4f _color, uint8_t _thickness){
 
-	ZG_Graphics_DrawCircle3f(
-			ZG_ViewPort_ScreenToWorldPositionX(_x)
-			,ZG_ViewPort_ScreenToWorldPositionY(_y)
-			,ZG_ViewPort_ScreenToWorldWidth(_r)
+	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_center_x,_center_y);
+	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
+
+	ZG_Graphics_DrawCircle4f(
+			translate.x
+			,translate.y
+			,scale.x
+			,scale.y
 			,_color
 			,_thickness
 	);
