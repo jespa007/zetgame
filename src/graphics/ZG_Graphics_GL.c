@@ -15,9 +15,7 @@ bool ZG_Graphics_GL_Init(void){
 		return false;
 	}
 
-	// Attach the OpenGL context to our window
-// Only creates opengl context in Windows environment. In linux is already created
-#ifdef _WIN32
+	// Creates and attach the OpenGL context to current window
 	SDL_GLContext g_sdl_gl_context = SDL_GL_CreateContext(g_graphics_vars->sdl_window);
 	if(g_sdl_gl_context == NULL){
 		ZG_LOG_ERROR("Cannot create gl context:%s",SDL_GetError());
@@ -29,7 +27,6 @@ bool ZG_Graphics_GL_Init(void){
 		ZG_LOG_ERROR("Cannot make current context:%s",SDL_GetError());
 		return false;
 	}
-#endif
 
 	// Disable vsync (Because it takes lot of high CPU)
 	SDL_GL_SetSwapInterval(

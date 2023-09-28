@@ -48,7 +48,7 @@ void update_options(
 					break;
 				case SELECT_COLLIDER_CIRCLE:
 					_mouse_w=100;
-					_mouse_h=50;
+					_mouse_h=100;
 					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_CIRCLE;
 					break;
 				}
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]){
 	// Circle
 	colliders[2].transform.translate.x=ZG_ViewPort_ScreenToWorldPositionX(500);
 	colliders[2].transform.translate.y=ZG_ViewPort_ScreenToWorldPositionY(300);
-	colliders[2].transform.scale.x=ZG_ViewPort_ScreenToWorldWidth(50);
+	colliders[2].transform.scale.x=ZG_ViewPort_ScreenToWorldWidth(100);
 	colliders[2].transform.scale.y=ZG_ViewPort_ScreenToWorldHeight(100);
 
 

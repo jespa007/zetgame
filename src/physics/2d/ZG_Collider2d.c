@@ -120,26 +120,32 @@ bool ZG_Collider2d_TestIntersectionCircleCircle(
 	, float _w2
 	, float _h2){
 
-	float w1_med=_w1*0.5;
-	float h1_med=_h1*0.5;
-	float w2_med=_w2*0.5;
-	float h2_med=_h2*0.5;
+	float a1=_w1*0.5;
+	float b1=_h1*0.5;
+	float a2=_w2*0.5;
+	float b2=_h2*0.5;
 
 	float xdiff=fabs(_p2.x-_p1.x);
 
 	printf("p1=(%.02f %0.2f) p2=(%0.2f %0.2f)\n",_p1.x,_p1.y,_p2.x,_p2.y);
+	printf("d1=(%.02f %0.2f) d2=(%0.2f %0.2f)\n",a1,b1,a2,b2);
 
 	// TODO: check why if Y_DIFF is not CORRECTED BY DOING 'ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth()'
 	// test collision is displaced
-	float ydiff=fabs(_p2.y-_p1.y)*ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth();
+	float ydiff=fabs(_p2.y-_p1.y);//*ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth();
 
-	float rad_sum_sq_w = (w1_med + w2_med) * (w1_med + w2_med);
-	float rad_sum_sq_h = (h1_med + h2_med) * (h1_med + h2_med);
+	//float rad_sum_sq_w = (w1_med + w2_med) * (w1_med + w2_med);
+	//float rad_sum_sq_h = (h1_med + h2_med) * (h1_med + h2_med);
 
-	float distance=(xdiff)*(xdiff)+
-					  (ydiff)*(ydiff);
+	//printf("rad_sum_sq_h=%0.2f\n",rad_sum_sq_h);
 
-	return ((rad_sum_sq_w) >= distance && (rad_sum_sq_h) >= distance);
+	float distance=sqrt((xdiff)*(xdiff)+
+					  (ydiff)*(ydiff));
+
+	printf("diffx=%0.2f diffy=%0.2f\n",xdiff,ydiff);
+	printf("distance=%0.2f\n",distance);
+
+	return ((a1 + a2) >= distance && (b1 + b2) >= distance);
 
 }
 
