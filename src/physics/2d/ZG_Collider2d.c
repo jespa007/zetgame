@@ -125,14 +125,21 @@ bool ZG_Collider2d_TestIntersectionCircleCircle(
 	float w2_med=_w2*0.5;
 	float h2_med=_h2*0.5;
 
-	float xdiff=fabs(_p1.x-_p2.x);
-	float ydiff=fabs(_p1.y-_p2.y);
-	float rad_sum_sq = (w1_med + h1_med) * (w2_med + h2_med);
+	float xdiff=fabs(_p2.x-_p1.x);
+
+	printf("p1=(%.02f %0.2f) p2=(%0.2f %0.2f)\n",_p1.x,_p1.y,_p2.x,_p2.y);
+
+	// TODO: check why if Y_DIFF is not CORRECTED BY DOING 'ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth()'
+	// test collision is displaced
+	float ydiff=fabs(_p2.y-_p1.y)*ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth();
+
+	float rad_sum_sq_w = (w1_med + w2_med) * (w1_med + w2_med);
+	float rad_sum_sq_h = (h1_med + h2_med) * (h1_med + h2_med);
 
 	float distance=(xdiff)*(xdiff)+
 					  (ydiff)*(ydiff);
 
-	return distance <= rad_sum_sq;
+	return ((rad_sum_sq_w) >= distance && (rad_sum_sq_h) >= distance);
 
 }
 
@@ -154,8 +161,8 @@ void ZG_Collider2d_Draw(ZG_Transform _t3d, ZG_Collider2dType _collider_type, ZG_
 		ZG_Graphics_DrawCircle4f(
 				_t3d.translate.x
 				,_t3d.translate.y
-				,_t3d.scale.x // diameter
-				,_t3d.scale.y
+				,_t3d.scale.x // diameter x
+				,_t3d.scale.y // diameter y
 				,_color,1);
 		break;
 	}

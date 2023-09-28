@@ -206,7 +206,7 @@ ZG_Geometry	* ZG_Geometry_NewCircle2d(uint16_t _divisions_per_quadrant){
     for (float r = 0; r < 2*PI; r+=inc_r,it_vertexs+=3,it_indexs++)
     {
     	*(it_vertexs+0)=cos(r)*0.5;
-    	*(it_vertexs+1)=sin(r)*0.5;
+    	*(it_vertexs+1)=sin(r)*0.5;//*ZG_Graphics_GetWidth()*ZG_Graphics_GetOneOverHeight();
     	*(it_vertexs+2)=0;
 
     	*(it_indexs+0)=index+0;
