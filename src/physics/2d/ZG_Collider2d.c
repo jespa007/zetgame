@@ -17,7 +17,8 @@ bool ZG_Collider2d_TestIntersectionPointPoint(
 bool ZG_Collider2d_TestIntersectionPointRectangle(
 							  ZG_Vector3f _p1
 							, ZG_Vector3f _p2
-							, float _w2, float _h2
+							, float _w2
+							, float _h2
 							){
 	float w2_med=_w2*0.5;
 	float h2_med=_h2*0.5;
@@ -43,14 +44,23 @@ bool ZG_Collider2d_TestIntersectionPointCircle(
 							, ZG_Vector3f _p2
 							, float _w2
 							, float _h2
-							){
+){
+
+	if(_w2==0 || _h2==0){
+		ZG_LOG_WARNINGF("ZG_Collider2d_TestIntersectionPointCircle: '_w2' or '_h2' dividing by 0");
+	}
+
+	float one_over_w2=_w2;
+	float one_over_h2=_h2;
+
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
 
 	float distance=(xdiff)*(xdiff)+
 					  (ydiff)*(ydiff);
 
-	return distance < (_w2*0.5*_h2*0.5);
+	// TDOO: check collision ellipse point ?
+	return distance < (_w2+_h2)*(_w2+_h2);
 }
 
 bool ZG_Collider2d_TestIntersectionRectangleRectangle(
@@ -120,32 +130,32 @@ bool ZG_Collider2d_TestIntersectionCircleCircle(
 	, float _w2
 	, float _h2){
 
-	float a1=_w1*0.5;
-	float b1=_h1*0.5;
-	float a2=_w2*0.5;
-	float b2=_h2*0.5;
 
-	float xdiff=fabs(_p2.x-_p1.x);
+	if(_w1==0 || _h1==0){
+		ZG_LOG_WARNINGF("ZG_Collider2d_TestIntersectionPointCircle: '_w1' or '_h1' dividing by 0");
+	}
 
-	printf("p1=(%.02f %0.2f) p2=(%0.2f %0.2f)\n",_p1.x,_p1.y,_p2.x,_p2.y);
-	printf("d1=(%.02f %0.2f) d2=(%0.2f %0.2f)\n",a1,b1,a2,b2);
 
-	// TODO: check why if Y_DIFF is not CORRECTED BY DOING 'ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth()'
-	// test collision is displaced
-	float ydiff=fabs(_p2.y-_p1.y);//*ZG_Graphics_GetHeight()*ZG_Graphics_GetOneOverWidth();
+	if(_w2==0 || _h2==0){
+		ZG_LOG_WARNINGF("ZG_Collider2d_TestIntersectionPointCircle: '_w2' or '_h2' dividing by 0");
+	}
 
-	//float rad_sum_sq_w = (w1_med + w2_med) * (w1_med + w2_med);
-	//float rad_sum_sq_h = (h1_med + h2_med) * (h1_med + h2_med);
 
-	//printf("rad_sum_sq_h=%0.2f\n",rad_sum_sq_h);
+	// For the collision supposes a circle of diameter 1 and w,h are scaled values to strech the circle and becomes ellipsed.
+	// When w=h=1 then the circle is the original.
+	float one_over_h1=1.0/_h1;
+	float one_over_h2=1.0/_h2;
+	float one_over_w1=1.0/_w1;
+	float one_over_w2=1.0/_w2;
 
-	float distance=sqrt((xdiff)*(xdiff)+
-					  (ydiff)*(ydiff));
 
-	printf("diffx=%0.2f diffy=%0.2f\n",xdiff,ydiff);
-	printf("distance=%0.2f\n",distance);
+	float xdiff=fabs(_p1.x-_p2.x);
+	float ydiff=fabs(_p1.y-_p2.y);
 
-	return ((a1 + a2) >= distance && (b1 + b2) >= distance);
+	float distance=(xdiff)*(xdiff)*one_over_w1*one_over_w2+
+					  (ydiff)*(ydiff)*one_over_h1*one_over_h2;
+
+	return distance<1;
 
 }
 
