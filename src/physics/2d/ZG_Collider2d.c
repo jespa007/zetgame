@@ -50,8 +50,8 @@ bool ZG_Collider2d_TestIntersectionPointCircle(
 		ZG_LOG_WARNINGF("ZG_Collider2d_TestIntersectionPointCircle: '_w2' or '_h2' dividing by 0");
 	}
 
-	float one_over_w2=_w2;
-	float one_over_h2=_h2;
+	float one_over_w2=(1.0/_w2);
+	float one_over_h2=(1.0/_h2);
 
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
@@ -59,8 +59,12 @@ bool ZG_Collider2d_TestIntersectionPointCircle(
 	float distance=(xdiff)*(xdiff)+
 					  (ydiff)*(ydiff);
 
+	printf("_w2:%.02f _h2:%.02f\n",_w2,_h2);
+	printf("xdiff:%.02f ydiff:%.02f distancia:%.02f\n",xdiff,ydiff,distance);
+
+
 	// TDOO: check collision ellipse point ?
-	return distance < (_w2+_h2)*(_w2+_h2);
+	return distance < 0.5*_w2*_h2;
 }
 
 bool ZG_Collider2d_TestIntersectionRectangleRectangle(
