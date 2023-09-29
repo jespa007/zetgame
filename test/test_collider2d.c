@@ -1,7 +1,7 @@
 #include "zetgame.h"
 
 #define BUTTON_GROUP_SIZE	 	50
-#define BUTTON_GROUP_OFFSET_X	200
+#define BUTTON_GROUP_OFFSET_X	240
 #define BUTTON_GROUP_OFFSET_Y	40
 
 typedef enum{
@@ -9,6 +9,8 @@ typedef enum{
 	SELECT_COLLIDER_RECTANGLE_PORTRAIT,
 	SELECT_COLLIDER_RECTANGLE_LANDSCAPE,
 	SELECT_COLLIDER_CIRCLE,
+	SELECT_COLLIDER_CIRCLE_STRECHED_HEIGHT,
+	SELECT_COLLIDER_CIRCLE_STRECHED_WIDTH,
 	MAX_SELECT_COLLIDERS
 }SelectCollider;
 
@@ -51,6 +53,17 @@ void update_options(
 					_mouse_h=100;
 					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_CIRCLE;
 					break;
+				case SELECT_COLLIDER_CIRCLE_STRECHED_HEIGHT:
+					_mouse_w=100;
+					_mouse_h=50;
+					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_CIRCLE;
+					break;
+				case SELECT_COLLIDER_CIRCLE_STRECHED_WIDTH:
+					_mouse_w=50;
+					_mouse_h=100;
+					*_mouse_collider_type=ZG_COLLIDER2D_TYPE_CIRCLE;
+					break;
+
 				}
 
 				_mouse_scale->x=ZG_ViewPort_ScreenToWorldWidth(_mouse_w);
@@ -93,6 +106,12 @@ void draw_options(SelectCollider  _selected_collider, const char *_colliding){
 			break;
 		case SELECT_COLLIDER_CIRCLE: // circle
 			ZG_Graphics_DrawCircle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,40,color,thickness);
+			break;
+		case SELECT_COLLIDER_CIRCLE_STRECHED_HEIGHT: // circle
+			ZG_Graphics_DrawCircle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,40,20,color,thickness);
+			break;
+		case SELECT_COLLIDER_CIRCLE_STRECHED_WIDTH: // circle
+			ZG_Graphics_DrawCircle4i(BUTTON_GROUP_OFFSET_X+i*BUTTON_GROUP_SIZE,BUTTON_GROUP_OFFSET_Y,20,40,color,thickness);
 			break;
 
 		}

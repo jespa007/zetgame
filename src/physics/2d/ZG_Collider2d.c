@@ -46,25 +46,20 @@ bool ZG_Collider2d_TestIntersectionPointCircle(
 							, float _h2
 ){
 
+	// taken from https://math.stackexchange.com/questions/2114895/point-ellipse-collision-test
 	if(_w2==0 || _h2==0){
 		ZG_LOG_WARNINGF("ZG_Collider2d_TestIntersectionPointCircle: '_w2' or '_h2' dividing by 0");
 	}
 
-	float one_over_w2=(1.0/_w2);
-	float one_over_h2=(1.0/_h2);
-
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
+	float ox=_w2*0.5;
+	float oy=_h2*0.5;
 
-	float distance=(xdiff)*(xdiff)+
-					  (ydiff)*(ydiff);
+	float distance=((xdiff)*(xdiff)/(ox*ox)+
+					  (ydiff)*(ydiff)/(oy*oy));
 
-	printf("_w2:%.02f _h2:%.02f\n",_w2,_h2);
-	printf("xdiff:%.02f ydiff:%.02f distancia:%.02f\n",xdiff,ydiff,distance);
-
-
-	// TDOO: check collision ellipse point ?
-	return distance < 0.5*_w2*_h2;
+	return distance < 1;
 }
 
 bool ZG_Collider2d_TestIntersectionRectangleRectangle(
@@ -147,17 +142,11 @@ bool ZG_Collider2d_TestIntersectionCircleCircle(
 
 	// For the collision supposes a circle of diameter 1 and w,h are scaled values to strech the circle and becomes ellipsed.
 	// When w=h=1 then the circle is the original.
-	float one_over_h1=1.0/_h1;
-	float one_over_h2=1.0/_h2;
-	float one_over_w1=1.0/_w1;
-	float one_over_w2=1.0/_w2;
-
-
 	float xdiff=fabs(_p1.x-_p2.x);
 	float ydiff=fabs(_p1.y-_p2.y);
 
-	float distance=(xdiff)*(xdiff)*one_over_w1*one_over_w2+
-					  (ydiff)*(ydiff)*one_over_h1*one_over_h2;
+	float distance=(xdiff)*(xdiff)/(_w1*_w2)+
+					  (ydiff)*(ydiff)/(_h1*_h2);
 
 	return distance<1;
 
