@@ -143,7 +143,7 @@ void ZG_GUIButton_PostUpdate(void *gui_button){
 		mouse_event.position=ZG_Input_GetMousePosition();
 
 		for(unsigned i=0; i < data->on_click_events->count; i++){
-			ZG_CallbackMouseEvent *cf=data->on_click_events->items[i];
+			ZG_MouseEventCallback *cf=data->on_click_events->items[i];
 			cf->ptr_function(&mouse_event,cf->user_data);
 		}
 	}
@@ -211,9 +211,9 @@ void ZG_GUIButton_SetIcon(ZG_GUIButton *_this, Icon icon){
 	data->icon=icon;
 }
 
-void ZG_GUIButton_AddEventOnClick(ZG_GUIButton *_this,ZG_CallbackMouseEvent on_click){
+void ZG_GUIButton_AddCallbackOnClick(ZG_GUIButton *_this,ZG_MouseEventCallback on_click){
 	ZG_GUIButtonData *data=_this->data;
-	ZG_CallbackMouseEvent *_cf=ZG_NEW(ZG_CallbackMouseEvent);
+	ZG_MouseEventCallback *_cf=ZG_NEW(ZG_MouseEventCallback);
 	*_cf=on_click;
 	ZG_List_Add(data->on_click_events,_cf);
 }

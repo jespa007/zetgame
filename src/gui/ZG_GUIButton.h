@@ -15,7 +15,7 @@ ZG_GUIButton * 	ZG_GUIButton_New(int x, int y, uint16_t width, uint16_t height);
 void 			ZG_GUIButton_SetIcon(ZG_GUIButton *_this, Icon icon_info);
 void 			ZG_GUIButton_SetText(ZG_GUIButton *_this, const char *_text_in,...);
 void 			ZG_GUIButton_SetupClickOnOver(ZG_GUIButton *_this, uint32_t time_ms, ZG_Color4f color);
-void 			ZG_GUIButton_AddEventOnClick(ZG_GUIButton *_this, ZG_CallbackMouseEvent on_click);
+void 			ZG_GUIButton_AddCallbackOnClick(ZG_GUIButton *_this, ZG_MouseEventCallback on_click);
 void 			ZG_GUIButton_Delete(ZG_GUIButton *_this);
 
 

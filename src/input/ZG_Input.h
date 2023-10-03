@@ -40,25 +40,25 @@ typedef struct{
 }ZG_MouseInfo;
 
 // TESTCASE SDL CALLBACK
-typedef void (*ZG_KeyEventCallback)(ZG_KeyEvent  * event, void * user_data);
+typedef void (*ZG_KeyEventFunction)(ZG_KeyEvent  * event, void * user_data);
 typedef struct{
-	ZG_KeyEventCallback ptr_function;
+	ZG_KeyEventFunction ptr_function;
 	void *user_data;
-}ZG_CallbackKeyEvent;
+}ZG_KeyEventCallback;
 
 
-typedef void (*ZG_MouseEventCallback)(ZG_MouseEvent  * event, void * user_data);
+typedef void (*ZG_MouseEventFunction)(ZG_MouseEvent  * event, void * user_data);
 typedef struct{
-	ZG_MouseEventCallback ptr_function;
+	ZG_MouseEventFunction ptr_function;
 	void *user_data;
-}ZG_CallbackMouseEvent;
+}ZG_MouseEventCallback;
 
 
-typedef void (*ZG_DropEventCallback)(ZG_DropEvent  * event, void * user_data);
+typedef void (*ZG_DropEventFunction)(ZG_DropEvent  * event, void * user_data);
 typedef struct{
-	ZG_DropEventCallback ptr_function;
+	ZG_DropEventFunction ptr_function;
 	void *user_data;
-}ZG_CallbackDropEvent;
+}ZG_DropEventCallback;
 
 
 
@@ -75,19 +75,19 @@ uint32_t 		ZG_Input_GetSecondMouseMotionType(void);
 void			ZG_Input_EnableMouseEvents(bool _enable);
 void 			ZG_Input_ShowCursor(bool _show_cursor);
 
-uint32_t 		ZG_Input_AddEventOnKeyUp(ZG_CallbackKeyEvent _callback);
-uint32_t 		ZG_Input_AddEventOnKeyDown(ZG_CallbackKeyEvent _callback);
-uint32_t 		ZG_Input_AddEventOnMouseButtonUp(ZG_CallbackMouseEvent _callback);
-uint32_t 		ZG_Input_AddEventOnMouseButtonDown(ZG_CallbackMouseEvent _callback);
-uint32_t 		ZG_Input_AddEventOnMouseMotion(ZG_CallbackMouseEvent _callback);
-uint32_t		ZG_Input_AddEventOnDropFile(ZG_CallbackDropEvent _callback);
+uint32_t 		ZG_Input_AddCallbackOnKeyUp(ZG_KeyEventCallback _callback);
+uint32_t 		ZG_Input_AddCallbackOnKeyDown(ZG_KeyEventCallback _callback);
+uint32_t 		ZG_Input_AddCallbackOnMouseButtonUp(ZG_MouseEventCallback _callback);
+uint32_t 		ZG_Input_AddCallbackOnMouseButtonDown(ZG_MouseEventCallback _callback);
+uint32_t 		ZG_Input_AddCallbackOnMouseMotion(ZG_MouseEventCallback _callback);
+uint32_t		ZG_Input_AddCallbackOnDropFile(ZG_DropEventCallback _callback);
 
-void 			ZG_Input_RemoveEventOnKeyUp(uint32_t idx_handle);
-void 			ZG_Input_RemoveEventOnKeyDown(uint32_t idx_handle);
-void 			ZG_Input_RemoveEventOnMouseButtonUp(uint32_t idx_handle);
-void 			ZG_Input_RemoveEventOnMouseMotion(uint32_t idx_handle);
-void 			ZG_Input_RemoveEventOnMouseButtonDown(uint32_t idx_handle);
-void			ZG_Input_RemoveEventOnDropFile(uint32_t idx_handle);
+void 			ZG_Input_RemoveCallbackOnKeyUp(uint32_t idx_handle);
+void 			ZG_Input_RemoveCallbackOnKeyDown(uint32_t idx_handle);
+void 			ZG_Input_RemoveCallbackOnMouseButtonUp(uint32_t idx_handle);
+void 			ZG_Input_RemoveCallbackOnMouseMotion(uint32_t idx_handle);
+void 			ZG_Input_RemoveCallbackOnMouseButtonDown(uint32_t idx_handle);
+void			ZG_Input_RemoveCallbackOnDropFile(uint32_t idx_handle);
 
 void 			ZG_Input_Update(void);
 bool			ZG_Input_IsKeyPressed(int id_key);

@@ -26,12 +26,12 @@ bool 	        	zg_old_state[ZG_KEY_ID_LAST]={0};
 
 
 typedef struct{
-	ZG_MapInt 	* on_key_up
-				   ,*on_key_down;
-	ZG_MapInt  *on_mouse_button_down
-				  ,*on_mouse_motion
-				  ,*on_mouse_button_up;
-	ZG_MapInt * on_drop_file;
+	ZG_MapInt 	* on_key_up_callbacks
+				   ,*on_key_down_callbacks;
+	ZG_MapInt  *on_mouse_button_down_callbacks
+				  ,*on_mouse_motion_callbacks
+				  ,*on_mouse_button_up_callbacks;
+	ZG_MapInt * on_drop_file_callbacks;
 	ZG_MouseInfo  mouse_info;
 	bool enable_mouse_events;
 	uint32_t second_mouse_motion;
@@ -71,12 +71,12 @@ void ZG_Input_Init(void) {
 	//memset(g_zg_key,0,sizeof(g_zg_key));
 	//memset(g_zg_key_pressed,0,sizeof(g_zg_key_pressed));
 
-	g_zg_input_vars->on_key_up=ZG_MapInt_New();
-	g_zg_input_vars->on_key_down=ZG_MapInt_New();
-	g_zg_input_vars->on_mouse_button_down=ZG_MapInt_New();
-	g_zg_input_vars->on_mouse_motion=ZG_MapInt_New();
-	g_zg_input_vars->on_mouse_button_up=ZG_MapInt_New();
-	g_zg_input_vars->on_drop_file=ZG_MapInt_New();
+	g_zg_input_vars->on_key_up_callbacks=ZG_MapInt_New();
+	g_zg_input_vars->on_key_down_callbacks=ZG_MapInt_New();
+	g_zg_input_vars->on_mouse_button_down_callbacks=ZG_MapInt_New();
+	g_zg_input_vars->on_mouse_motion_callbacks=ZG_MapInt_New();
+	g_zg_input_vars->on_mouse_button_up_callbacks=ZG_MapInt_New();
+	g_zg_input_vars->on_drop_file_callbacks=ZG_MapInt_New();
 	g_zg_input_vars->enable_mouse_events=true;
 	g_zg_input_vars->second_mouse_motion = SDL_RegisterEvents(1);
 
@@ -135,84 +135,84 @@ uint32_t ZG_Input_NewHandleId(void){
 	return g_zg_input_vars->n_id_handle++;
 }
 
-uint32_t 	ZG_Input_AddEventOnKeyUp(ZG_CallbackKeyEvent _callback){
+uint32_t 	ZG_Input_AddCallbackOnKeyUp(ZG_KeyEventCallback _callback){
 	uint32_t idx_handle=ZG_Input_NewHandleId();
-	ZG_CallbackKeyEvent *cf=ZG_NEW(ZG_CallbackKeyEvent);
+	ZG_KeyEventCallback *cf=ZG_NEW(ZG_KeyEventCallback);
 	*cf=_callback;
-	ZG_MapInt_Set(g_zg_input_vars->on_key_up,idx_handle,cf);
+	ZG_MapInt_Set(g_zg_input_vars->on_key_up_callbacks,idx_handle,cf);
 	return idx_handle;
 }
 
-uint32_t 	ZG_Input_AddEventOnKeyDown(ZG_CallbackKeyEvent _callback){
+uint32_t 	ZG_Input_AddCallbackOnKeyDown(ZG_KeyEventCallback _callback){
 	uint32_t idx_handle=ZG_Input_NewHandleId();
-	ZG_CallbackKeyEvent *cf=ZG_NEW(ZG_CallbackKeyEvent);
+	ZG_KeyEventCallback *cf=ZG_NEW(ZG_KeyEventCallback);
 	*cf=_callback;
-	ZG_MapInt_Set(g_zg_input_vars->on_key_down,idx_handle,cf);
+	ZG_MapInt_Set(g_zg_input_vars->on_key_down_callbacks,idx_handle,cf);
 	return idx_handle;
 }
 
-uint32_t 	ZG_Input_AddEventOnMouseButtonUp(ZG_CallbackMouseEvent _callback){
+uint32_t 	ZG_Input_AddCallbackOnMouseButtonUp(ZG_MouseEventCallback _callback){
 	uint32_t idx_handle=ZG_Input_NewHandleId();
-	ZG_CallbackMouseEvent *cf=ZG_NEW(ZG_CallbackMouseEvent);
+	ZG_MouseEventCallback *cf=ZG_NEW(ZG_MouseEventCallback);
 	*cf=_callback;
-	ZG_MapInt_Set(g_zg_input_vars->on_mouse_button_up,idx_handle,cf);
+	ZG_MapInt_Set(g_zg_input_vars->on_mouse_button_up_callbacks,idx_handle,cf);
 	return idx_handle;
 }
 
-uint32_t 	ZG_Input_AddEventOnMouseMotion(ZG_CallbackMouseEvent _callback){
+uint32_t 	ZG_Input_AddCallbackOnMouseMotion(ZG_MouseEventCallback _callback){
 	uint32_t idx_handle=ZG_Input_NewHandleId();
-	ZG_CallbackMouseEvent *cf=ZG_NEW(ZG_CallbackMouseEvent);
+	ZG_MouseEventCallback *cf=ZG_NEW(ZG_MouseEventCallback);
 	*cf=_callback;
-	ZG_MapInt_Set(g_zg_input_vars->on_mouse_motion,idx_handle,cf);
+	ZG_MapInt_Set(g_zg_input_vars->on_mouse_motion_callbacks,idx_handle,cf);
 	return idx_handle;
 }
 
-uint32_t 	ZG_Input_AddEventOnMouseButtonDown(ZG_CallbackMouseEvent _callback){
+uint32_t 	ZG_Input_AddCallbackOnMouseButtonDown(ZG_MouseEventCallback _callback){
 	uint32_t idx_handle=ZG_Input_NewHandleId();
-	ZG_CallbackMouseEvent *cf=ZG_NEW(ZG_CallbackMouseEvent);
+	ZG_MouseEventCallback *cf=ZG_NEW(ZG_MouseEventCallback);
 	*cf=_callback;
-	ZG_MapInt_Set(g_zg_input_vars->on_mouse_button_down,idx_handle,cf);
+	ZG_MapInt_Set(g_zg_input_vars->on_mouse_button_down_callbacks,idx_handle,cf);
 	return idx_handle;
 }
 
-uint32_t	ZG_Input_AddEventOnDropFile(ZG_CallbackDropEvent _callback){
+uint32_t	ZG_Input_AddCallbackOnDropFile(ZG_DropEventCallback _callback){
 	uint32_t idx_handle=ZG_Input_NewHandleId();
-	ZG_CallbackDropEvent *cf=ZG_NEW(ZG_CallbackDropEvent);
+	ZG_DropEventCallback *cf=ZG_NEW(ZG_DropEventCallback);
 	*cf=_callback;
-	ZG_MapInt_Set(g_zg_input_vars->on_drop_file,idx_handle,cf);
+	ZG_MapInt_Set(g_zg_input_vars->on_drop_file_callbacks,idx_handle,cf);
 	return idx_handle;
 }
 
-void 		ZG_Input_RemoveEventOnKeyUp(uint32_t idx_handle){
-	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_key_up,idx_handle);
+void 		ZG_Input_RemoveCallbackOnKeyUp(uint32_t idx_handle){
+	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_key_up_callbacks,idx_handle);
 }
 
-void 		ZG_Input_RemoveEventOnKeyDown(uint32_t idx_handle){
-	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_key_down,idx_handle);
+void 		ZG_Input_RemoveCallbackOnKeyDown(uint32_t idx_handle){
+	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_key_down_callbacks,idx_handle);
 }
 
-void 		ZG_Input_RemoveEventOnMouseButtonUp(uint32_t idx_handle){
-	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_mouse_button_up,idx_handle);
+void 		ZG_Input_RemoveCallbackOnMouseButtonUp(uint32_t idx_handle){
+	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_mouse_button_up_callbacks,idx_handle);
 }
 
-void 		ZG_Input_RemoveEventOnMouseMotion(uint32_t idx_handle){
-	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_mouse_motion,idx_handle);
+void 		ZG_Input_RemoveCallbackOnMouseMotion(uint32_t idx_handle){
+	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_mouse_motion_callbacks,idx_handle);
 }
 
-void 		ZG_Input_RemoveEventOnMouseButtonDown(uint32_t idx_handle){
-	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_mouse_button_down,idx_handle);
+void 		ZG_Input_RemoveCallbackOnMouseButtonDown(uint32_t idx_handle){
+	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_mouse_button_down_callbacks,idx_handle);
 }
 
-void		ZG_Input_RemoveEventOnDropFile(uint32_t idx_handle){
-	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_drop_file,idx_handle);
+void		ZG_Input_RemoveCallbackOnDropFile(uint32_t idx_handle){
+	ZG_MapInt_EraseAndFreeItem(g_zg_input_vars->on_drop_file_callbacks,idx_handle);
 }
 
 //------------------------------------------------------------------------------------------------
 void ZG_Input_UpdateDropEvents(ZG_DropEvent *drop_event) {
-	for(unsigned i = 0; i < g_zg_input_vars->on_drop_file->list->count; i++){
-			ZG_MapIntNode *node=g_zg_input_vars->on_drop_file->list->items[i];
-			ZG_CallbackDropEvent * e=(ZG_CallbackDropEvent *)node->val;
-			((ZG_DropEventCallback)(e->ptr_function))(drop_event,e->user_data);
+	for(unsigned i = 0; i < g_zg_input_vars->on_drop_file_callbacks->list->count; i++){
+			ZG_MapIntNode *node=g_zg_input_vars->on_drop_file_callbacks->list->items[i];
+			ZG_DropEventCallback * e=(ZG_DropEventCallback *)node->val;
+			((ZG_DropEventFunction)(e->ptr_function))(drop_event,e->user_data);
 		}
 }
 
@@ -220,8 +220,8 @@ void ZG_Input_UpdateMouseEvents(ZG_MapInt *mouse_events,ZG_MouseEvent *mouse_eve
 
 	for(unsigned i = 0; i < mouse_events->list->count; i++){
 		ZG_MapIntNode *node=mouse_events->list->items[i];
-		ZG_CallbackMouseEvent * e=(ZG_CallbackMouseEvent *)node->val;
-		((ZG_MouseEventCallback)(e->ptr_function))(mouse_event,e->user_data);
+		ZG_MouseEventCallback * e=(ZG_MouseEventCallback *)node->val;
+		((ZG_MouseEventFunction)(e->ptr_function))(mouse_event,e->user_data);
 	}
 
 }
@@ -230,8 +230,8 @@ void ZG_Input_UpdateKeyEvents(ZG_MapInt *key_events,ZG_KeyEvent *key_event) {
 
 	for(unsigned i = 0; i < key_events->list->count; i++){
 		ZG_MapIntNode *node=key_events->list->items[i];
-		ZG_CallbackKeyEvent * e=(ZG_CallbackKeyEvent *)node->val;
-		((ZG_KeyEventCallback)(e->ptr_function))(key_event,e->user_data);
+		ZG_KeyEventCallback * e=(ZG_KeyEventCallback *)node->val;
+		((ZG_KeyEventFunction)(e->ptr_function))(key_event,e->user_data);
 	}
 
 }
@@ -278,7 +278,7 @@ void ZG_Input_Update() {
 			mouse_info->position = mouse_event.position;
 
 
-			ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_motion ,&mouse_event);
+			ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_motion_callbacks ,&mouse_event);
 
 		}else{
 
@@ -306,7 +306,7 @@ void ZG_Input_Update() {
 
 				mouse_info->position = Vector2i_Mulv2f(mouse_event.position,ZG_Graphics_GetScale());
 
-				ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_motion ,&mouse_event);
+				ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_motion_callbacks ,&mouse_event);
 
 				break;
 			case SDL_MOUSEBUTTONDOWN:
@@ -324,7 +324,7 @@ void ZG_Input_Update() {
 
 				mouse_info->position = Vector2i_Mulv2f(mouse_event.position,ZG_Graphics_GetScale());
 
-				ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_button_down ,&mouse_event);
+				ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_button_down_callbacks ,&mouse_event);
 
 				break;
 			case SDL_MOUSEBUTTONUP:
@@ -342,7 +342,7 @@ void ZG_Input_Update() {
 
 				mouse_info->position = Vector2i_Mulv2f(mouse_event.position,ZG_Graphics_GetScale());
 
-				ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_button_up ,&mouse_event);
+				ZG_Input_UpdateMouseEvents(g_zg_input_vars->on_mouse_button_up_callbacks ,&mouse_event);
 				break;
 			case SDL_KEYUP:
 			case SDL_KEYDOWN:
@@ -408,10 +408,10 @@ void ZG_Input_Update() {
 						}
 
 						if(event.type == SDL_KEYUP){
-							ZG_Input_UpdateKeyEvents(g_zg_input_vars->on_key_up,&key_event);
+							ZG_Input_UpdateKeyEvents(g_zg_input_vars->on_key_up_callbacks,&key_event);
 						}
 						else{ // is key down...
-							ZG_Input_UpdateKeyEvents(g_zg_input_vars->on_key_down,&key_event);
+							ZG_Input_UpdateKeyEvents(g_zg_input_vars->on_key_down_callbacks,&key_event);
 						}
 					}
 				}
@@ -457,12 +457,12 @@ void ZG_Input_Update() {
 //------------------------------------------------------------------------------------------------
 void ZG_Input_DeInit(void){
 
-	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_key_up);
-	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_key_down);
-	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_mouse_button_down);
-	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_mouse_motion);
-	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_mouse_button_up);
-	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_drop_file);
+	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_key_up_callbacks);
+	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_key_down_callbacks);
+	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_mouse_button_down_callbacks);
+	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_mouse_motion_callbacks);
+	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_mouse_button_up_callbacks);
+	ZG_MapInt_DeleteAndFreeAllItems(g_zg_input_vars->on_drop_file_callbacks);
 
 	ZG_FREE(g_zg_input_vars);
 	g_zg_input_vars=NULL;

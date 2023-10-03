@@ -84,17 +84,17 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height,
 	data->window_style=ZG_GUI_WINDOW_STYLE_NORMAL;
 
 
-	ZG_Input_AddEventOnMouseButtonDown((ZG_CallbackMouseEvent){
+	ZG_Input_AddCallbackOnMouseButtonDown((ZG_MouseEventCallback){
 		.ptr_function=ZG_GUIWindow_OnMouseButtonDown
 		,.user_data=window
 	});
 
-	ZG_Input_AddEventOnMouseButtonUp((ZG_CallbackMouseEvent){
+	ZG_Input_AddCallbackOnMouseButtonUp((ZG_MouseEventCallback){
 		.ptr_function=ZG_GUIWindow_OnMouseButtonUp
 		,.user_data=window
 	});
 
-	ZG_Input_AddEventOnMouseMotion((ZG_CallbackMouseEvent){
+	ZG_Input_AddCallbackOnMouseMotion((ZG_MouseEventCallback){
 		.ptr_function=ZG_GUIWindow_OnMouseMotion
 		,.user_data=window
 	});
