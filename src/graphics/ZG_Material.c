@@ -1,5 +1,7 @@
 #include "ZG_Material_GL.c"
 
+
+
 ZG_Material * ZG_Material_New(uint32_t properties){
 	ZG_Material *material=ZG_NEW(ZG_Material);
 	material->properties=properties;
@@ -39,9 +41,9 @@ void ZG_Material_Apply(ZG_Material * material){
 void ZG_Material_SetColor3i(ZG_Material *material,uint8_t r,uint8_t g,uint8_t b){
 	if(material == NULL) return;
 
-	material->color.r=r;
-	material->color.g=g;
-	material->color.b=b;
+	material->color.r=r*ZG_ONE_OVER_256;
+	material->color.g=g*ZG_ONE_OVER_256;
+	material->color.b=b*ZG_ONE_OVER_256;
 }
 
 void ZG_Material_SetAlpha(ZG_Material *material,float alpha){

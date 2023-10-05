@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
 			,1);
 
 	ZG_Appearance *appearance=ZG_Appearance_New();
-	ZG_Appearance_SetColor3i(appearance,1,0,0);
+	//ZG_Appearance_SetColor3i(appearance,255,0,0);
 	appearance->texture=text_png;
 
 	ZG_Transform transform=ZG_Transform_New();
