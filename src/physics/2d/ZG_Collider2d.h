@@ -55,9 +55,6 @@ bool ZG_Collider2d_TestIntersectionCircleCircle(
 	, float _h2
 );
 
-bool ZG_Collider2d_TestIntersectionCirclePoint( ZG_Vector3f _p1
-								, float _r1
-								, ZG_Vector3f _p2);
 
 
 bool ZG_Collider2d_Test(ZG_Transform _t1, ZG_Collider2dType _c1, ZG_Transform _t2, ZG_Collider2dType _c2);
