@@ -20,7 +20,7 @@ void ZG_Tween_Start(ZG_Tween *_this
 		, int _repeat
 		);
 
-void ZG_Tween_Update(ZG_Tween *_this,uint32_t *_msk_active_channels,uint32_t _time);
+void ZG_Tween_Update(ZG_Tween *_this,uint32_t _time);
 
 void ZG_Tween_Delete(ZG_Tween *_this);
 

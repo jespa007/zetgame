@@ -6,16 +6,22 @@
 
 
 
-void ZG_ChannelsInfo_Copy(ZG_ChannelsInfo * dst, ZG_ChannelsInfo * src){
-	uint32_t msk = src->msk_active_channels;
+void ZG_ChannelsInfo_Copy(ZG_ChannelsInfo * _dst, ZG_ChannelsInfo * _src){
 
-	for(unsigned i=0; i < dst->n_channels; i++){
+	if(_dst->n_channels != _src->n_channels){
+		ZG_LOG_ERRORF("ZG_ChannelsInfo_Copy : _dst and _src has not the same number of channels");
+		return;
+	}
+
+	uint32_t msk = _src->msk_active_channels;
+
+	for(unsigned i=0; i < _dst->n_channels; i++){
 		if(msk & (0x1 << i)){
-			dst->channels[i]=(src)->channels[i];
+			_dst->channels[i]=(_src)->channels[i];
 		}
 	}
 
-	dst->msk_active_channels |= msk;
+	_dst->msk_active_channels |= msk;
 }
 
 void ZG_ChannelsInfo_CopyToFloatArray(ZG_ChannelsInfo	*_this,float *_dst){

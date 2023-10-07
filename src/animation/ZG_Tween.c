@@ -37,7 +37,7 @@ void ZG_Tween_Start(ZG_Tween *_this
 	_this->channels_info->msk_active_channels|=0x1<<_idx_channel;
 }
 
-void ZG_Tween_Update(ZG_Tween *_this, uint32_t *_msk_active_channels, uint32_t _time){
+void ZG_Tween_Update(ZG_Tween *_this, uint32_t _time){
 	if(_this->channels_info->msk_active_channels){
 		for(unsigned i = 0; i < _this->channels_info->n_channels; i++){
 			if(_this->channels_info->msk_active_channels & (0x1<<i)){ // update
@@ -53,7 +53,7 @@ void ZG_Tween_Update(ZG_Tween *_this, uint32_t *_msk_active_channels, uint32_t _
 					value=tween_channel->from+ZG_Ease_Linear(t)*(tween_channel->to - tween_channel->from);
 				}else{ // set last and delete active msk
 					value=tween_channel->to;
-					*_msk_active_channels&=~(0x1<<i);
+					_this->channels_info->msk_active_channels&=~(0x1<<i);
 				}
 				_this->channels_info->channels[i]=value;
 			}

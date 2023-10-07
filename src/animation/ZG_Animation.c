@@ -178,10 +178,10 @@ bool ZG_Animation_Update(ZG_Animation * _this, uint32_t _time){
 
 	if(data->tween->channels_info->msk_active_channels != 0){
 		// save current channels
-		uint32_t msk_active_channels=data->tween->channels_info->msk_active_channels;
-		ZG_Tween_Update(data->tween,&msk_active_channels,_time);
+		//uint32_t msk_active_channels=data->tween->channels_info->msk_active_channels;
+		ZG_Tween_Update(data->tween,_time);
 		ZG_ChannelsInfo_Copy(data->channels_info,data->tween->channels_info);
-		data->tween->channels_info->msk_active_channels=msk_active_channels;
+		//data->tween->channels_info->msk_active_channels=msk_active_channels;
 	}
 
 	return updated;

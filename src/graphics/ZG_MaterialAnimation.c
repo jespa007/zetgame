@@ -26,7 +26,6 @@ void ZG_MaterialAnimation_Update(ZG_MaterialAnimation *_this, ZG_Material *_mate
 void					ZG_MaterialAnimation_StartAction(
 		ZG_MaterialAnimation *_this
 		, ZG_MaterialAction *_action
-		,uint32_t _start_time
 		, int _repeat
 ){
 	ZG_MaterialAnimationData *data=_this->data;
@@ -34,14 +33,13 @@ void					ZG_MaterialAnimation_StartAction(
 	ZG_Animation_StartAction(
 			data->animation
 			,ZG_MaterialAction_GetAction(_action)
-			,_start_time
+			,SDL_GetTicks()
 			,_repeat
 	);
 }
 
 void ZG_MaterialAnimation_StartTween(
 		ZG_MaterialAnimation *_this
-		, uint32_t _start_time
 		, ZG_MaterialComponent _material_component
 		, ZG_Ease _ease
 		, float _from
@@ -52,7 +50,7 @@ void ZG_MaterialAnimation_StartTween(
 	ZG_MaterialAnimationData *data=_this->data;
 	ZG_Animation_StartTween(
 		data->animation
-		, _start_time
+		, SDL_GetTicks()
 		, _material_component
 		, _ease
 		, _from

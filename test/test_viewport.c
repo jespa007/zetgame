@@ -8,17 +8,16 @@ int main(int argc, char *argv[]){
 	//ZG_ViewPort *v1;
 	//ZG_TextureManager_SetTextureResourcePath("data/images");
 
-	ZG_Texture * text_png = ZG_Texture_NewFromFile("data/images/test.png");
+	ZG_Texture * text_png = ZG_Texture_NewFromFile("../../../test/data/images/test.png");
 	ZG_TextBox *textbox	=ZG_TextBox_New();
 	ZG_Transform transform=ZG_Transform_DefaultValues();
 
+	int n_view_port_row=2;
+	int w=ZG_Graphics_GetWindowWidth()/n_view_port_row;
+	int h =ZG_Graphics_GetWindowHeight()/n_view_port_row;
+
 	do{
 		ZG_Graphics_BeginRender();
-
-		int n_view_port_row=2;
-		int w=ZG_DEFAULT_SCREEN_WIDTH/n_view_port_row;
-		int h =ZG_DEFAULT_SCREEN_HEIGHT/n_view_port_row;
-
 
 		for(int i=0; i < n_view_port_row*n_view_port_row; i++){
 

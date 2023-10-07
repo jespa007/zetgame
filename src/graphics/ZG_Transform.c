@@ -21,7 +21,7 @@ ZG_Transform  ZG_Transform_New(void){
 
 }
 
-ZG_Matrix4f ZG_Transform_GetRotationMatrix(ZG_Transform *_this){
+ZG_Matrix4f ZG_Transform_CalculeRotationMatrix(ZG_Transform *_this){
 	ZG_Quaternion q=ZG_Quaternion_FromEulerV3f(_this->rotate);
 	return ZG_Quaternion_ToMatrix4f(q);
 }
@@ -31,11 +31,13 @@ void ZG_Transform_Apply(ZG_Transform *_this){
 
 	if(_this == NULL) return;
 
+	ZG_Matrix4f rotation_matrix4x4=ZG_Transform_CalculeRotationMatrix(_this);
+
 	switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
 		case ZG_GRAPHICS_API_GL:
-			ZG_Transform_GL_Apply(_this);
+			ZG_Transform_GL_Apply(_this,&rotation_matrix4x4);
 			break;
 	}
 }

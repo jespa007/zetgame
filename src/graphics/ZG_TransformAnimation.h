@@ -18,12 +18,10 @@ ZG_TransformAnimation 	*	ZG_TransformAnimation_New(void);
 void					ZG_TransformAnimation_StartAction(
 		ZG_TransformAnimation *_this
 		, ZG_TransformAction *_action
-		,uint32_t _start_time
 		, int _repeat
 );
 void					ZG_TransformAnimation_StartTween(
 	ZG_TransformAnimation *_this
-	, uint32_t _start_time
 	, uint8_t _idx_channel
 	, ZG_Ease _ease
 	, float _from

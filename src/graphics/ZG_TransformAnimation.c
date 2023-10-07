@@ -26,7 +26,6 @@ void ZG_TransformAnimation_Update(ZG_TransformAnimation *_this, ZG_Transform *_t
 void					ZG_TransformAnimation_StartAction(
 		ZG_TransformAnimation *_this
 		, ZG_TransformAction *_action
-		,uint32_t _start_time
 		, int _repeat
 ){
 	ZG_TransformAnimationData *data=_this->data;
@@ -34,14 +33,13 @@ void					ZG_TransformAnimation_StartAction(
 	ZG_Animation_StartAction(
 			data->animation
 			,ZG_TransformAction_GetAction(_action)
-			,_start_time
+			,SDL_GetTicks()
 			,_repeat
 	);
 }
 
 void ZG_TransformAnimation_StartTween(
 		ZG_TransformAnimation *_this
-		, uint32_t _start_time
 		, uint8_t _idx_channel
 		, ZG_Ease _ease
 		, float _from
@@ -52,7 +50,7 @@ void ZG_TransformAnimation_StartTween(
 	ZG_TransformAnimationData *data=_this->data;
 	ZG_Animation_StartTween(
 		data->animation
-		, _start_time
+		, SDL_GetTicks()
 		, _idx_channel
 		, _ease
 		, _from

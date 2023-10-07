@@ -30,17 +30,15 @@
 //        |                          |
 //        -------------------------- (ar,-1)
 
-void ZG_Transform_GL_Apply(ZG_Transform *_this){
+void ZG_Transform_GL_Apply(ZG_Transform *_this, ZG_Matrix4f *_rotation_matrix4x4){
 
 	glPushMatrix();
-
-	ZG_Matrix4f m=ZG_Transform_GetRotationMatrix(_this);
 
 
 	glTranslatef(_this->translate.x
 			,_this->translate.y
 			,_this->translate.z);
-	glMultMatrixf((float *)&m);
+	glMultMatrixf((float *)_rotation_matrix4x4);
 	glScalef(
 			_this->scale.x
 			,_this->scale.y

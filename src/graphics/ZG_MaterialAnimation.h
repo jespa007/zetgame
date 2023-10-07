@@ -18,12 +18,10 @@ ZG_MaterialAnimation 	*	ZG_MaterialAnimation_New(void);
 void					ZG_MaterialAnimation_StartAction(
 		ZG_MaterialAnimation *_this
 		, ZG_MaterialAction *_action
-		,uint32_t _start_time
 		, int _repeat
 );
 void					ZG_MaterialAnimation_StartTween(
 	ZG_MaterialAnimation *_this
-	, uint32_t _start_time
 	, ZG_MaterialComponent _material_component
 	, ZG_Ease _ease
 	, float _from

@@ -1,17 +1,11 @@
 #include "zetgame.h"
 
-#define TEXT_WIDTH_BB
 
 #define WIDTH_RESOLUTION	640
 #define HEIGHT_RESOLUTION	480
 
-#ifdef TEXT_WIDTH_BB
 #define TEXTBOX_WIDTH	150
 #define TEXTBOX_HEIGHT	100
-#else
-#define TEXTBOX_WIDTH	0
-#define TEXTBOX_HEIGHT	0
-#endif
 
 typedef struct{
 	const char *text;
@@ -50,7 +44,6 @@ int main(int argc, char * argv[]){
 	ZG_SetDebugMode(true);
 
 	ZG_TextBox *textbox=ZG_TextBox_New();
-	ZG_TextBox_SetFontFile(textbox,"../../../test/data/fonts/Trebuchet MS.ttf");
 	ZG_Transform transform=ZG_Transform_New();
 	ZG_TextBox_SetText(textbox,"H L");
 	ZG_TextBox_SetBorderThickness(textbox,1);
@@ -61,7 +54,6 @@ int main(int argc, char * argv[]){
 
 		TextBoxTest *aux_ptr=(TextBoxTest *)textbox_tests;
 		while(aux_ptr->text !=NULL){
-			//TextBox_SetPosition2i(textbox,aux_ptr->x+(aux_ptr->w>>1),aux_ptr->y+(aux_ptr->h>>1));
 			ZG_TextBox_SetDimensions(textbox,aux_ptr->w,aux_ptr->h);
 			ZG_TextBox_SetText(textbox,aux_ptr->text);
 			ZG_TextBox_SetHorizontalAlignment(textbox,aux_ptr->horizontal_alignment);
@@ -73,9 +65,6 @@ int main(int argc, char * argv[]){
 			aux_ptr++;
 		}
 
-		//Draw blue rectangle
-		//ZG_Graphics_DrawRectangle4i(10,10,20,20,ZG_Color4f_New4f(0,1,0,1),2);
-
 		if(ZG_KP_T){
 			ZG_Graphics_ToggleFullscreen();
 		}
@@ -85,8 +74,6 @@ int main(int argc, char * argv[]){
 		ZG_Input_Update();
 
 	}while(!ZG_KP_ESC);
-
-	//ZG_Transform_Delete(transform);
 
 	ZG_TextBox_Delete(textbox);
 

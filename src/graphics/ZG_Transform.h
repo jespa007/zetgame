@@ -32,7 +32,7 @@ ZG_Transform	ZG_Transform_DefaultValues(void);
 
 void 	  	  	ZG_Transform_Apply(ZG_Transform *_this);
 
-ZG_Matrix4f	  	ZG_Transform_GetRotationMatrix(ZG_Transform *_this);
+ZG_Matrix4f	  	ZG_Transform_CalculeRotationMatrix(ZG_Transform *_this);
 
 // Translate
 void 			ZG_Transform_SetTranslate3f(ZG_Transform *_this, float x,float y, float z);

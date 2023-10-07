@@ -338,7 +338,6 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- Input --
 	input/@zg_input.c
 	
-	
 	#-- Scene --
 	##scene/@zg_scene.c
 	
@@ -381,6 +380,18 @@ add_executable(test_collider2d${POST_NAME}
 )
 
 target_link_libraries(test_collider2d${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+
+add_executable(test_animation${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_animation.c
+)
+
+target_link_libraries(test_animation${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+
+add_executable(test_viewport${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
+)
+
+target_link_libraries(test_viewport${POST_NAME}    ${ZETGAME_LIB_NAME}${POST_NAME}  	${LIB_DEPS})
 
 if(false)
 

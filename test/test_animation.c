@@ -83,7 +83,6 @@ int main(int argc, char *argv[]){
 	ZG_TransformAnimation_StartAction(
 			trs_animation
 			,act_translate
-			,SDL_GetTicks()
 			,1);
 
 	ZG_Appearance *appearance=ZG_Appearance_New();
@@ -103,7 +102,6 @@ int main(int argc, char *argv[]){
 		if(ZG_K_S){
 			ZG_TransformAnimation_StartTween(
 				  trs_animation
-				 , SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_SCALE_Y
 				, ZG_EASE_OUT_SINE
 				, 1.0f
@@ -114,7 +112,6 @@ int main(int argc, char *argv[]){
 
 			ZG_TransformAnimation_StartTween(
 				  trs_animation
-				, SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_SCALE_X
 				, ZG_EASE_OUT_SINE
 				, 1.0f
@@ -125,7 +122,6 @@ int main(int argc, char *argv[]){
 
 			ZG_TransformAnimation_StartTween(
 				 trs_animation
-				, SDL_GetTicks()
 				, ZG_TRANSFORM_COMPONENT_ROTATE_Z
 				, ZG_EASE_LINEAR
 				, 0
