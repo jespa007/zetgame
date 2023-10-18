@@ -4,7 +4,7 @@
 typedef struct{
 	ZG_List 				*widgets;
 	ZG_GUIWidget 			*parent;
-	ZG_Vector2i 			position_local, position_world, position_screen;
+	ZG_Vector2i 			local_position, absolute_position, screen_position;
 	ZG_Vector2i 			dimensions;
 	ZG_Color4f				color,background_color;
 	float 				opacity;
@@ -32,8 +32,8 @@ ZG_GUIWidget  * ZG_GUIWidget_New(int x, int y, uint16_t width, uint16_t height){
 	data->background_color=ZG_COLOR4F_WHITE;
 	data->opacity=ZG_ALPHA_VALUE_SOLID;
 
-	data->position_local.x=x;
-	data->position_local.y=y;
+	data->local_position.x=x;
+	data->local_position.y=y;
 
 	data->dimensions.x=width;
 	data->dimensions.y=height;
@@ -53,12 +53,12 @@ void ZG_GUIWidget_SetWindow(ZG_GUIWidget *_this,ZG_GUIWindow *_window){
 
 void ZG_GUIWidget_SetPositionX(ZG_GUIWidget *_this,int x){
 	ZG_GUIWidgetData *data=_this->data;
-	data->position_local.x=x;
+	data->local_position.x=x;
 }
 
 void ZG_GUIWidget_SetPositionY(ZG_GUIWidget *_this,int y){
 	ZG_GUIWidgetData *data=_this->data;
-	data->position_local.y=y;
+	data->local_position.y=y;
 }
 
 void ZG_GUIWidget_SetPosition2i(ZG_GUIWidget *_this,int x, int y){
@@ -68,8 +68,8 @@ void ZG_GUIWidget_SetPosition2i(ZG_GUIWidget *_this,int x, int y){
 
 void ZG_GUIWidget_SetPositionAbsolute2i(ZG_GUIWidget *_this,int x,int y){
 	ZG_GUIWidgetData *data=_this->data;
-	data->position_world.x=x;
-	data->position_world.y=y;
+	data->absolute_position.x=x;
+	data->absolute_position.y=y;
 }
 
 void ZG_GUIWidget_SetWidth(ZG_GUIWidget *_this,uint16_t width){
@@ -255,25 +255,25 @@ void ZG_GUIWidget_OnSetWidth(ZG_GUIWidget *_this,ZG_CallbackWidgetOnSetDimension
 bool	ZG_GUIWidget_IsPointCollision(ZG_GUIWidget *_this,ZG_Vector2i point){
 	ZG_GUIWidgetData *data=_this->data;
 	return Vector2i_PointRectCollision(
-				 point
-				,data->position_screen
-				,ZG_Vector2i_Add(data->position_screen,data->dimensions)
-			);
+		 point
+		,data->screen_position
+		,ZG_Vector2i_Add(data->screen_position,data->dimensions)
+	);
 }
 
 
 ZG_Vector2i ZG_GUIWidget_GetPosition(ZG_GUIWidget *_this,ZG_GUIWidgetPosition widget_pos){
 	ZG_GUIWidgetData *data=_this->data;
 	switch(widget_pos){
-	case ZG_GUI_WIDGET_POSITION_WORLD:
-		return data->position_world;
-	case ZG_GUI_WIDGET_POSITION_SCREEN:
-		return data->position_screen;
+	case ZG_GUI_WIDGET_ABSOLUTE_POSITION:
+		return data->absolute_position;
+	case ZG_GUI_WIDGET_SCREEN_POSITION:
+		return data->screen_position;
 	default:
 		break;
 	}
 
-	return data->position_local;
+	return data->local_position;
 }
 
 
@@ -288,13 +288,13 @@ void ZG_GUIWidget_UpdateChilds(ZG_GUIWidget *_this){
 
 void ZG_GUIWidget_UpdatePosition(ZG_GUIWidget *_this){
 	ZG_GUIWidgetData *data=_this->data;
-	data->position_world=data->position_local;
-	data->position_screen=data->position_local;
+	data->absolute_position=data->local_position;
+	data->screen_position=data->local_position;
 
 	if(data->parent!=NULL){
 		ZG_GUIWidgetData *parent_data=data->parent->data;
-		data->position_world=ZG_Vector2i_Add(data->position_world,parent_data->position_world);
-		data->position_screen=ZG_Vector2i_Add(data->position_screen,parent_data->position_screen);
+		data->absolute_position=ZG_Vector2i_Add(data->absolute_position,parent_data->absolute_position);
+		data->screen_position=ZG_Vector2i_Add(data->screen_position,parent_data->screen_position);
 	}
 }
 

@@ -30,7 +30,7 @@ void ZG_GUIFrame_Update(void * gui_frame){
 	// update first position...
 	ZG_GUIWidget_UpdatePosition(_this->widget);
 
-	position=ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_POSITION_SCREEN);
+	position=ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_SCREEN_POSITION);
 	dimensions=ZG_GUIWidget_GetDimensions(_this->widget);
 
 	ZG_ViewPort_Push(position.x,position.y,dimensions.x,dimensions.y,ZG_PROJECTION_MODE_ORTHO);

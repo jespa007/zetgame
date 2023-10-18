@@ -73,7 +73,7 @@ static void  ZG_GUIButton_PostUpdateWidget(void *unused, void *gui_button){
 
 	ZG_GUIButton *button=gui_button;
 	ZG_GUIButtonData *data = button->data;
-	ZG_Vector2i ini_pos=ZG_GUIWidget_GetPosition(button->widget,ZG_GUI_WIDGET_POSITION_WORLD);
+	ZG_Vector2i ini_pos=ZG_GUIWidget_GetPosition(button->widget,ZG_GUI_WIDGET_ABSOLUTE_POSITION);
 	ZG_Vector2i dimensions=ZG_GUIWidget_GetDimensions(button->widget);
 
 	ZG_Vector2i end_pos=ZG_Vector2i_New(
@@ -99,10 +99,10 @@ void ZG_GUIButton_Reset(ZG_GUIButton *_this){
 }
 
 
-void ZG_GUIButton_SetupClickOnOver(ZG_GUIButton *_this, uint32_t time_ms, ZG_Color4f color){
+void ZG_GUIButton_SetupClickOnOver(ZG_GUIButton *_this, uint32_t _time_ms, ZG_Color4f _color){
 	ZG_GUIButtonData *data = _this->data;
-	data->auto_click_on_over.relative_time=time_ms;
-	data->auto_click_on_over.color=color;
+	data->auto_click_on_over.relative_time=_time_ms;
+	data->auto_click_on_over.color=_color;
 }
 
 
@@ -154,7 +154,7 @@ static void  ZG_GUIButton_Draw(void *gui_button){
 	ZG_GUIButton *_this=gui_button;
 	ZG_GUIButtonData *data = _this->data;
 	ZG_Transform transform=ZG_Transform_DefaultValues();
-	ZG_Vector2i position=ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_POSITION_WORLD);
+	ZG_Vector2i position=ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_ABSOLUTE_POSITION);
 	ZG_Vector2i dimensions=ZG_GUIWidget_GetDimensions(_this->widget);
 
 	position.x+=dimensions.x>>1;

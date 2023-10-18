@@ -281,7 +281,7 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 		//ZG_LOG_INFO("moving !");
 
 		ZG_Vector2i position = ZG_Vector2i_Add(
-			ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_POSITION_LOCAL)
+			ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_LOCAL_POSITION)
 			,ZG_Vector2i_Sub(ZG_Input_GetMousePosition(),data->start_mouse_position)
 		);
 

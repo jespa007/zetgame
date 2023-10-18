@@ -14,7 +14,7 @@ static void ZG_GUITexture_DrawWidget(void *gui_texture){
 	ZG_Transform transform=ZG_Transform_DefaultValues();
 	ZG_Color4f color=ZG_GUIWidget_GetColor4f(_this->widget);
 
-	ZG_Vector2i position=ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_POSITION_WORLD);
+	ZG_Vector2i position=ZG_GUIWidget_GetPosition(_this->widget,ZG_GUI_WIDGET_ABSOLUTE_POSITION);
 	ZG_Vector2i dimensions=ZG_GUIWidget_GetDimensions(_this->widget);
 
 	position.x+=dimensions.x>>1;
