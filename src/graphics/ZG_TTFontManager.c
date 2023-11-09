@@ -191,6 +191,42 @@ void			ZG_TTFontManager_SetFontName(
 		ZG_LOG_ERROR("Font '%s' not exist",_font_name);
 	}
 }
+
+// TODO: Restore GetFont.
+// 1. Create a MapInt called 'font_pointers'
+// 2. Change the following prototype as,
+//
+//    'void TTFontManager_GetFont(ZG_TTFontManager *_this,ZG_TTFont **_font,const char * _filename,uint8_t _font_size, const char * _src_file, int _line);
+//
+//    Description: Instead of returning a ZG_TTFont, the new function will pass a pointer of the pointer of the calling function.
+//                 It has to pass also the _file and the _line that tells where the function was called.
+//
+// 3. Let's concatenate font name and size as '{font_name}_{size}', find requested '{font_name}_{size}' in the map string that contents the following structure,
+//
+//    typedef struct{
+//       ZG_TTFont *font; // --> initialized as NULL
+//       int ref_count; //--> initialized as 0
+//    }FontInfo;
+//
+//    If not exist create a new slot with the ZG_TTFont instance and ref_count = 1
+//
+// 4. In the function we will find the pointer in the 'font_pointers'.
+//	  If not exist it will create a new slot with the contents of ''{font_name}_{size}' string.
+//    If exist it will find current data from '{font_name}_{size}' in the map and will decrease ref_count by -1
+//    If ref_count == 0 it will delete slot and instance in the map
+//    Find the new '{font_name}_{size}' in the map and increase ref_count by +1.
+//
+// Implement Dereference function
+//
+// 'void TTFontManager_Dereference(ZG_TTFontManager *_this,ZG_TTFont **_font, const char * _src_file, int _line);
+//
+// 1. In the function we will find the pointer in the 'font_pointers'.
+//	  If not exist it will show an error that the pointer is not registered
+//    If exist it will find current data from '{font_name}_{size}' in the map and will decrease ref_count by -1
+//    If ref_count == 0 it will delete slot and instance in the map
+
+
+
 /*
 ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filename,uint8_t _font_size){
 	ZG_TTFontManagerData *data=_this->data;
