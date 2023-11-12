@@ -6,8 +6,8 @@
 #include "ZG_TextureManager.c"
 #include "ZG_Shader.c"
 #include "ZG_Geometry.c"
-#include "ZG_TTFont.c"
-//#include "ZG_TTFontManager.c"
+//#include "ZG_TTFont.c"
+#include "ZG_TTFontManager.c"
 
 #include "ZG_Appearance.c"
 

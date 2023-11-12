@@ -103,6 +103,11 @@ void 		ZG_MapString_Erase(ZG_MapString *_this,const char * key){
 		return;
 	}
 
+	// deallocate
+	if(_this->on_delete != NULL){
+		_this->on_delete(node);
+	}
+
 	// not first...
 	if(node->previous != NULL){
 		node->previous->next=node->next; // link previous
@@ -140,18 +145,18 @@ void ZG_MapString_Clear(ZG_MapString *_this){
 	memset(_this->list,0,sizeof(ZG_MapStringNode*)*_this->count);
 }
 
-void ZG_MapString_Delete(ZG_MapString *t){
+void ZG_MapString_Delete(ZG_MapString *_this){
 	if(t == NULL) return;
 
-    for(unsigned i=0;i<t->count;i++){
-    	ZG_MapStringNode * temp=t->list[i];
+    for(unsigned i=0;i<_this->count;i++){
+    	ZG_MapStringNode * temp=_this->list[i];
 
         while(temp){
         	ZG_MapStringNode * to_deallocate = temp;
         	temp=temp->next;
 
-        	if(t->on_delete != NULL){
-        		t->on_delete(to_deallocate);
+        	if(_this->on_delete != NULL){
+        		_this->on_delete(to_deallocate);
         	}
 
         	free(to_deallocate->key);
@@ -160,6 +165,6 @@ void ZG_MapString_Delete(ZG_MapString *t){
         }
     }
 
-    ZG_FREE(t->list);
-    ZG_FREE(t);
+    ZG_FREE(_this->list);
+    ZG_FREE(_this);
 }

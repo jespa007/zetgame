@@ -9,13 +9,13 @@
 
 typedef struct {
     GLuint texture;   // ID handle of the glyph texture
-}ZG_CharacterDataGL;
+}ZG_GlyphDataGL;
 
 void ZG_TTFont_GL_Init(void){
 	// PRE: OpenGL context is already initialized!
 }
 
-void ZG_TTFont_GL_BuildChar(ZG_TTFontCharacter *_font_character, FT_Face _face){
+void ZG_TTFont_GL_BuildGlyph(ZG_TTFontGlyph *_font_character, FT_Face _face){
 
 	GLuint texture=GL_INVALID_VALUE;
 
@@ -44,22 +44,22 @@ void ZG_TTFont_GL_BuildChar(ZG_TTFontCharacter *_font_character, FT_Face _face){
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    ZG_CharacterDataGL *character_data=ZG_NEW(ZG_CharacterDataGL);
+    ZG_GlyphDataGL *character_data=ZG_NEW(ZG_GlyphDataGL);
     character_data->texture=texture;
 
     _font_character->data=character_data;
 
 }
 
-void ZG_TTFont_GL_DrawCharacter(ZG_TTFontCharacter *_font_character){
-	ZG_CharacterDataGL *ch_data=_font_character->data;
+void ZG_TTFont_GL_DrawGlyph(ZG_TTFontGlyph *_font_character){
+	ZG_GlyphDataGL *ch_data=_font_character->data;
 	glBindTexture(GL_TEXTURE_2D, ch_data->texture); // texture should be ZG_Texture and Bind according
 }
 
 
 
-void ZG_TTFont_GL_DeleteChar(ZG_TTFontCharacter *_font_character){
-	ZG_CharacterDataGL *ch_data=_font_character->data;
+void ZG_TTFont_GL_DeleteChar(ZG_TTFontGlyph *_font_character){
+	ZG_GlyphDataGL *ch_data=_font_character->data;
 	glDeleteTextures(1,&ch_data->texture);
 	ZG_FREE(ch_data);
 }

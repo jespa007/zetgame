@@ -18,7 +18,7 @@ struct ZG_TTFont{
     void 		*data;
 };
 
-
+/*
 // static
 ZG_TTFont * 		ZG_TTFont_NewFromFile(
 		const char *ttf_file
@@ -29,20 +29,20 @@ ZG_TTFont * 		ZG_TTFont_GetEmbeddedFont(void);
 ZG_TTFont * 		ZG_TTFont_NewFromMemory(
 		const uint8_t *buffer
 		, size_t buffer_len
-);
+);*/
 
 // static
-void			ZG_TTFont_Init(void);
-ZG_TTFont * 	ZG_TTFont_GetEmbeddedFont(void);
-void 			ZG_TTFont_SetFontResourcePath(const char * path);
-const char * 	ZG_TTFont_GetFontResourcePath(void);
-void			ZG_TTFont_DeInit(void);
+//void			ZG_TTFont_Init(void);
+//ZG_TTFont * 	ZG_TTFont_GetEmbeddedFont(void);
+//void 			ZG_TTFont_SetFontResourcePath(const char * path);
+//const char * 	ZG_TTFont_GetFontResourcePath(void);
+//void			ZG_TTFont_DeInit(void);
 
 
 // members
-ZG_TTFont * 	ZG_TTFont_New(void);
-void			ZG_TTFont_LoadFromFile(ZG_TTFont *_this,const char *ttf_file);
-void 			ZG_TTFont_LoadFromMemory(ZG_TTFont *_this,const uint8_t *buffer, size_t buffer_len);
+ZG_TTFont * 	ZG_TTFont_New(ZG_TTFontManager *_ttfont_manager);
+//void			ZG_TTFont_LoadFromFile(ZG_TTFont *_this,const char *ttf_file);
+//void 			ZG_TTFont_LoadFromMemory(ZG_TTFont *_this,const uint8_t *buffer, size_t buffer_len);
 void	 		ZG_TTFont_SetStyle(ZG_TTFont *_this,ZG_TTFontStyle _style);
 void	 		ZG_TTFont_SetFontSize(ZG_TTFont *_this,uint16_t _font_size);
 uint16_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this);

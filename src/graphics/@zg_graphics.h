@@ -1,5 +1,5 @@
-#include "../animation/@zg_animation.h"
 #include "math/@zg_math.h"
+#include "animation/@zg_animation.h"
 #include "ZG_Color4f.h"
 #include "ZG_Transform.h"
 #include "ZG_Geometry.h"
@@ -14,7 +14,7 @@
 #include "ZG_Appearance.h"
 #include "ZG_Shader.h"
 #include "ZG_TTFont.h"
-//#include "ZG_TTFontManager.h"
+#include "ZG_TTFontManager.h"
 #include "ZG_Shape.h"
 #include "ZG_TextBox.h"
 

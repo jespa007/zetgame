@@ -9,17 +9,18 @@
 #define ZG_ITALIC_SHEAR 		0.207
 
 typedef struct{
-	const char 	*	font_filename;
-	ZG_MapInt 	*	characters;
-    uint16_t 		font_size;
-    int 			space_width; // in pixels
-    uint32_t 		font_properties;
-	int				ascender;
-	float 			weight,shear;
-	uint8_t 		style;
-    ZG_Geometry 	*geometry;
-    FT_Face 		ft_face;
-    ZG_TTFontStyle	font_style;
+	ZG_TTFontManager 	*	font_manager;
+	const char 			*	font_filename;
+	ZG_MapInt 			*	characters;
+    uint16_t 				font_size;
+    int 					space_width; // in pixels
+    uint32_t 				font_properties;
+	int						ascender;
+	float 					weight,shear;
+	uint8_t 				style;
+    ZG_Geometry 		*	geometry;
+    FT_Face 				ft_face;
+    ZG_TTFontStyle			font_style;
     //int			max_bearing_y;
 }ZG_TTFontData;
 
@@ -30,7 +31,7 @@ typedef struct{
     int 	 advance_y;    		// Horizontal offset to advance to next glyph
     //ZG_Rectangle4i	box;
     void 	* data;   			// ID handle of the glyph texture
-}ZG_TTFontCharacter;
+}ZG_TTFontGlyph;
 
 // prototypes
 
@@ -38,22 +39,22 @@ typedef struct{
 
 //-------
 // GLOBAL
-static ZG_TTFont 		*	g_font_embedded=NULL;
-static FT_Library			g_ft_handler=NULL;
-static char					g_font_resource_path[256]={0};
+//static ZG_TTFont 		*	g_font_embedded=NULL;
+//static FT_Library			g_ft_handler=NULL;
+//static char					g_font_resource_path[256]={0};
 
 // Prototypes
-void 					TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color,const void *_text, ZG_CharType _char_type);
+void 						ZG_TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color,const void *_text, ZG_CharType _char_type);
 
-void 					TTFont_Unload(ZG_TTFont *_this);
-void	 				ZG_TTFont_OnDeleteNode(ZG_MapIntNode *node);
-ZG_TTFont 			* 		TTFont_NewEmpty(void);
-ZG_TTFont 			*		ZG_TTFont_NewFromMemory(
+static void 				ZG_TTFont_Unload(ZG_TTFont *_this);
+static void	 				ZG_TTFont_DeleteNode(ZG_MapIntNode *node);
+static ZG_TTFont 	* 		ZG_TTFont_NewEmpty(void);
+static ZG_TTFont 	*		ZG_TTFont_NewFromMemory(
 	const uint8_t *buffer
 	, size_t buffer_len
 );
 
-
+/*
 // STATIC
 void	ZG_TTFont_Init(void){
 	if(g_ft_handler == NULL){
@@ -78,8 +79,8 @@ void 			ZG_TTFont_SetFontResourcePath(const char * path){
 const char * 	ZG_TTFont_GetFontResourcePath(void){
 	return g_font_resource_path;
 }
-
-ZG_TTFont *ZG_TTFont_NewFromMemory(
+*/
+static ZG_TTFont *ZG_TTFont_NewFromMemory(
 		const uint8_t *buffer
 		, size_t buffer_len
 ){
@@ -88,7 +89,7 @@ ZG_TTFont *ZG_TTFont_NewFromMemory(
 	return font;
 }
 
-ZG_TTFont * ZG_TTFont_NewFromFile(
+static ZG_TTFont * ZG_TTFont_NewFromFile(
 	const char *_filename
 ){
 	ZG_TTFont *font=TTFont_NewEmpty();
@@ -112,9 +113,9 @@ void	ZG_TTFont_DeInit(void){
 
 //--------
 // PRIVATE
-ZG_TTFontCharacter *ZG_TTFont_BuildChar(ZG_TTFont *_this,unsigned long c){
+static ZG_TTFontGlyph *ZG_TTFont_BuildChar(ZG_TTFont *_this,unsigned long c){
 	//GLuint VAO, VBO;
-	ZG_TTFontCharacter *font_character=NULL;
+	ZG_TTFontGlyph *font_character=NULL;
 	ZG_TTFontData *data=_this->data;
 	FT_Face face=data->ft_face;
 
@@ -127,9 +128,9 @@ ZG_TTFontCharacter *ZG_TTFont_BuildChar(ZG_TTFont *_this,unsigned long c){
 	}
 
 	// Now store character for later use
-	font_character = ZG_NEW(ZG_TTFontCharacter);
+	font_character = ZG_NEW(ZG_TTFontGlyph);
 
-	*font_character=(ZG_TTFontCharacter){
+	*font_character=(ZG_TTFontGlyph){
 		.data=NULL
 		,.size=ZG_Vector2i_New(face->glyph->bitmap.width, face->glyph->bitmap.rows)
 		,.bearing=ZG_Vector2i_New(face->glyph->bitmap_left, face->glyph->bitmap_top)
@@ -154,7 +155,7 @@ ZG_TTFontCharacter *ZG_TTFont_BuildChar(ZG_TTFont *_this,unsigned long c){
     return font_character;
 }
 
-void TTFont_BuildChars(
+static void ZG_TTFont_BuildGlyphs(
 	ZG_TTFont *_this
 	,unsigned long char_ini
 	, unsigned long char_end
@@ -191,120 +192,24 @@ void TTFont_BuildChars(
 	//int max_bearing_y=-1;
     for (unsigned long c = char_ini; c < char_end; c++)
     {
-    	ZG_TTFontCharacter *font_character=ZG_TTFont_BuildChar(_this,c);
+    	ZG_TTFontGlyph *font_character=ZG_TTFont_BuildChar(_this,c);
     	//max_bearing_y=MAX(max_bearing_y,font_character->bearing.y);
     	ZG_MapInt_Set(data->characters,c,font_character);
     }
     //data->max_bearing_y=max_bearing_y;
 }
 
-ZG_TTFont * TTFont_NewEmpty(void){
-    ZG_TTFont *font=ZG_NEW(ZG_TTFont);
-    ZG_TTFontData *data=ZG_NEW(ZG_TTFontData);
-    font->data=data;
-
-    data->characters=ZG_MapInt_New();
-    data->characters->on_delete=ZG_TTFont_OnDeleteNode;
-    data->font_size=ZG_DEFAULT_FONT_SIZE;
-
-    // data
-    data->geometry=ZG_Geometry_NewTexturedRectangle2d();
-
-    // TTF load each char flipped vertically, we define inverse uv transform as usually
-	float mesh_texture[]={
-		   0.0f,  0.0f,   // bottom left
-		   1.0f,  0.0f,   // bottom right
-		   0.0f,  1.0f,   // top left
-		   1.0f,  1.0f    // top right
-	};
-	ZG_Geometry_SetMeshTexture(data->geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
-
-	return font;
-}
-
-// transform bold/italic
-void TTFont_SetTransformation(ZG_TTFont * _this, float _weight, float _shear)
-{
-	ZG_TTFontData *data=_this->data;
-
-	FT_Matrix transform;
-	transform.xx = (FT_Fixed)(_weight * 65536.0f);
-	transform.xy = (FT_Fixed)(_shear * 65536.0f);
-	transform.yx = (FT_Fixed)(0);
-	transform.yy = (FT_Fixed)(65536.0f);
-
-	FT_Set_Transform(data->ft_face, &transform, NULL);
-
-	data->weight = _weight;
-	data->shear = _shear;
-}
-
-void ZG_TTFont_SetStyle(ZG_TTFont * _this, ZG_TTFontStyle _style){
-	ZG_TTFontData *data=_this->data;
-	TTFont_SetTransformation(_this,(_style & ZG_TTFONT_STYLE_BOLD)?(ZG_BOLD_WEIGHT):(1.0), (_style & ZG_TTFONT_STYLE_ITALIC)?(ZG_ITALIC_SHEAR):(0.0));
-	data->style = _style;
-}
 
 //---------------
 // PUBLIC MEMBERS
-ZG_TTFont * ZG_TTFont_New(void){
+/*ZG_TTFont * ZG_TTFont_New(void){
 	return ZG_TTFont_NewFromMemory(
 		pf_arma_five_ttf
 		,pf_arma_five_ttf_len
 	);
-}
+}*/
 
-void ZG_TTFont_LoadFromMemory(
-		ZG_TTFont *_this
-		,const uint8_t *_buffer
-		, size_t _buffer_len
-){
-	ZG_TTFontData *data=_this->data;
 
-	TTFont_Unload(_this);
-
-	// Load font as face
-	if (FT_New_Memory_Face(g_ft_handler, _buffer, _buffer_len, 0, &data->ft_face)){
-		ZG_LOG_ERRORF("FT_New_Memory_Face: Failed to load");
-		return;
-	}
-
-	TTFont_BuildChars(
-		_this
-		,0
-		,ZG_MAX_CHARACTER_VALUE
-	);
-}
-
-void ZG_TTFont_LoadFromFile(
-		ZG_TTFont *_this
-		,const char *_filename
-){
-	ZG_BufferByte *buffer= NULL;
-	char filename[ZG_PATH_MAX]={0};
-	bool file_exists=false;
-
-	strcpy(filename,_filename);
-
-	if((file_exists=ZG_File_Exists(filename)) == false){
-		sprintf(filename,"%s/%s",g_font_resource_path,_filename);
-		file_exists=ZG_File_Exists(filename);
-	}
-
-	if(file_exists){
-		buffer=ZG_FileSystem_ReadFile(filename);
-
-		ZG_TTFont_LoadFromMemory(
-				_this
-				,buffer->ptr
-				,buffer->len
-		);
-		ZG_BufferByte_Delete(buffer);
-
-	}else{
-		ZG_LOG_ERROR("File '%s' not exist",_filename);
-	}
-}
 
 int				ZG_TTFont_GetAscender(ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;
@@ -322,7 +227,7 @@ void	 		ZG_TTFont_SetFontSize(ZG_TTFont *_this,uint16_t _font_size){
 	ZG_TTFontData *data=_this->data;
 	data->font_size=_font_size;
 
-	TTFont_BuildChars(
+	TTFont_BuildGlyphs(
 		_this
 		,0
 		,ZG_MAX_CHARACTER_VALUE
@@ -360,10 +265,10 @@ void ZG_TTFont_RenderTextEnd(void){
 //---------------------------------------------------------------------------------
 //
 //
-void TTFont_DrawCharacter(ZG_TTFontCharacter *_ch){
+void ZG_TTFont_DrawGlyph(ZG_TTFontGlyph *_ch){
 	switch(ZG_Graphics_GetGraphicsApi()){
 	case ZG_GRAPHICS_API_GL:
-		ZG_TTFont_GL_DrawCharacter(_ch);
+		ZG_TTFont_GL_DrawGlyph(_ch);
 		break;
 	default:
 		break;
@@ -385,7 +290,7 @@ ZG_BoundingBox TTFont_GetBoundingBoxInternal(ZG_TTFont *_this, const void *_text
 	int x=0;
 
 	while((c=ZG_String_GetCharAndAdvance(&ptr,_char_type))!=0 && (n < len)){
-		ZG_TTFontCharacter *ch=(ZG_TTFontCharacter *)ZG_MapInt_Get(data->characters,c);
+		ZG_TTFontGlyph *ch=(ZG_TTFontGlyph *)ZG_MapInt_Get(data->characters,c);
 		if(ch==NULL){ // build
 			ch=ZG_TTFont_BuildChar(_this,c);
 
@@ -447,7 +352,7 @@ void ZG_TTFont_WPrint(ZG_TTFont *_this,float _x, float _y, ZG_Color4f _color,con
 //
 //
 //----------------------------------------------------------------------------------------------
-uint16_t TTFont_GetWidthBuiltInt(ZG_TTFont *_this, const void *text, size_t len, ZG_CharType fftont_text){
+uint16_t ZG_TTFont_GetWidthBuiltInt(ZG_TTFont *_this, const void *text, size_t len, ZG_CharType fftont_text){
 	ZG_TTFontData *data=_this->data;
 	void *ptr=(void *)text;
 	uint32_t c=0;
@@ -459,7 +364,7 @@ uint16_t TTFont_GetWidthBuiltInt(ZG_TTFont *_this, const void *text, size_t len,
 
 	while((c=ZG_String_GetCharAndAdvance(&ptr,fftont_text))!=0 && (n < len))
 	{
-		ZG_TTFontCharacter *ch=(ZG_TTFontCharacter *)ZG_MapInt_Get(data->characters,c);
+		ZG_TTFontGlyph *ch=(ZG_TTFontGlyph *)ZG_MapInt_Get(data->characters,c);
 		if(ch==NULL){ // build
 			ch=ZG_TTFont_BuildChar(_this,c);
 
@@ -490,7 +395,7 @@ uint16_t 		ZG_TTFont_WGetWidthN(ZG_TTFont *_this, const wchar_t *_text, size_t _
 	return TTFont_GetWidthBuiltInt(_this,_text,_len,ZG_CHAR_TYPE_WCHAR);
 }
 
-void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color,const void *_text, ZG_CharType _char_type){
+void ZG_TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color,const void *_text, ZG_CharType _char_type){
 	ZG_TTFontData *data=_this->data;
 
 	if(_this == NULL) return;
@@ -503,7 +408,7 @@ void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color
 
 	while((c=ZG_String_GetCharAndAdvance(&ptr,_char_type))!=0)
 	{
-		ZG_TTFontCharacter *ch=(ZG_TTFontCharacter *)ZG_MapInt_Get(data->characters,c);
+		ZG_TTFontGlyph *ch=(ZG_TTFontGlyph *)ZG_MapInt_Get(data->characters,c);
 		if(ch==NULL){ // build
 			ch=ZG_TTFont_BuildChar(_this,c);
 
@@ -524,7 +429,7 @@ void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color
 				_x3d+p2_3d.x, _y3d-p2_3d.y,0    // top right
 		};
 
-		TTFont_DrawCharacter(ch);
+		TTFont_DrawGlyph(ch);
 
 		ZG_Geometry_SetMeshVertex(data->geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 		ZG_Geometry_Draw(data->geometry);
@@ -533,8 +438,8 @@ void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color
 	}
 }
 
-void	ZG_TTFont_OnDeleteNode(ZG_MapIntNode *node){
-	ZG_TTFontCharacter * _font_character = node->val;
+void	ZG_TTFont_DeleteNode(ZG_MapIntNode *node){
+	ZG_TTFontGlyph * _font_character = node->val;
 	switch(ZG_Graphics_GetGraphicsApi()){
 	case ZG_GRAPHICS_API_GL:
 		ZG_TTFont_GL_DeleteChar(_font_character);
@@ -544,7 +449,20 @@ void	ZG_TTFont_OnDeleteNode(ZG_MapIntNode *node){
 	ZG_FREE(_font_character);
 }
 
-void	TTFont_Unload(ZG_TTFont *_this){
+
+void	ZG_TTFont_Delete(ZG_TTFont *_this){
+
+	ZG_TTFontData *data=_this->data;
+	ZG_FontManager_DereferenceFont(data->font_manager,_this);
+
+}
+
+
+//------------------------------------
+// PRIVATE
+
+// PRIVATE
+static void	ZG_TTFont_Unload(ZG_TTFont *_this){
 
 	ZG_TTFontData *data=_this->data;
 
@@ -556,13 +474,11 @@ void	TTFont_Unload(ZG_TTFont *_this){
 	}
 }
 
-void	ZG_TTFont_Delete(ZG_TTFont *_this){
-
-	TTFont_Unload(_this);
+static void ZG_TTFont_DeleteFont( ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;
+	ZG_TTFont_Unload(_this);
 	ZG_MapInt_Delete(data->characters);
 	ZG_Geometry_Delete(data->geometry);
 	ZG_FREE(_this);
 	ZG_FREE(data);
-
 }

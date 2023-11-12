@@ -128,6 +128,12 @@ void ZG_MapInt_Erase(ZG_MapInt *_this,intptr_t key){
 	}
 
 	ZG_MapInt *node=_this->list->items[pos];
+
+	// if on delete node callback was specified call
+	if(_this->on_delete != NULL){
+		_this->on_delete(node);
+	}
+
 	ZG_FREE(node);
 
 	ZG_List_Erase(_this->list,pos);

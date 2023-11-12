@@ -1,7 +1,11 @@
 #include "@zg_graphics.h"
 
+#include "ZG_TTFont.c"
+
 typedef struct{
-	ZG_List 		* 	fonts;
+	ZG_MapString	* 	fonts;
+	ZG_MapInt		* 	font_pointers;
+
 	ZG_TTFont 		* 	default_font;
 	const char 		*	font_resource_path;
 	ZG_TTFont 		* 	font_embedded;
@@ -9,8 +13,28 @@ typedef struct{
 
 }ZG_TTFontManagerData;
 
+typedef struct{
+	const char 			*id; // should be deallocated when remove
+	ZG_TTFontManager 	*font_manager;
+	ZG_TTFont			*font; // should be deallocated when remove
+	int					ref_counf; // if ref_count > 0 some resources still using it.
+}ZG_TTFontNode;
+
+typedef struct{
+	ZG_TTFontManager 	*font_manager;
+	ZG_TTFont			**font_pointer;
+	ZG_TTFontNode		*font_node;
+	const char 			*source_file; // should be deallocated
+	int 				source_line;
+}ZG_TTFontPointerNode;
+
 static ZG_TTFont 	*	g_font_embedded=NULL;
 static FT_Library		g_ft_handler=NULL;
+
+
+// prototype
+void ZG_TTFontManager_Dereference(ZG_TTFontManager *_this, ZG_TTFont *_font);
+void ZG_TTFontManager_OnDeleteNode(ZG_MapStringNode *node);
 
 
 
@@ -37,16 +61,45 @@ ZG_TTFontInfo ZG_TTFontManager_GetEmbeddedFontInfo(void){
 
 ZG_TTFont * 		ZG_TTFontManager_GetEmbeddedFont(void){
 	if(g_font_embedded == NULL){
-		g_font_embedded=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,ZG_DEFAULT_FONT_SIZE);
+		g_font_embedded=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len);
 	}
 	return g_font_embedded;
 }
 
-void	 ZG_TTFontManager_OnDeleteNode(ZG_MapStringNode *node){
-	ZG_TTFont * font = node->val;
-	if(font!=NULL){
-		ZG_TTFont_Delete(font);
+
+static void	ZG_TTFontManager_DeleteFontNode(ZG_MapStringNode * _node){
+	ZG_TTFontNode * node = _node->val;
+	ZG_TTFontManager *_this=node->font_manager;
+
+	if(node->ref_counf == 0){
+		ZG_Free(node->id);
+		ZG_TTFontManager_DeleteFont(_this,node->font);
+	}else{
+		LOG_ERROR("ZG_TTFontManager_OnDeleteFontNode : Cannot delete font because there's some references using");
 	}
+
+}
+
+void	 ZG_TTFontManager_DeleteFontPointerNode(ZG_MapStringNode *_node){
+	ZG_TTFontPointerNode * font_pointer_node = _node->val;
+	ZG_TTFontNode * font_node = font_pointer_node->font_node;
+	ZG_TTFontManager *_this=font_pointer_node->font_manager;
+	if(font_node->ref_counf <= 0){
+		LOG_ERROR("ZG_TTFontManager_DeleteFontPointerNode : Internal error unconsistent negative counting references");
+		return;
+	}
+
+	// deallocate source file
+	ZG_Free(font_pointer_node->source_file);
+
+	font_node->ref_counf--;
+
+	///ZG_TTFontManager_DeReference(_this,node->font_pointer);
+	if(font_node->ref_counf == 0){
+		ZG_TTFontManagerData *data=_this->data;
+		ZG_MapString_Erase(data->font_pointers,font_node->id);
+	}
+
 }
 
 
@@ -76,8 +129,10 @@ ZG_TTFontManager *	ZG_TTFontManager_New(void){
 	strcpy(data->default_font_name,ZG_DEFAULT_FONT_FAMILY);
 
 	data->fonts = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
+	data->fonts->on_delete=ZG_TTFontManager_DeleteFontNode;
 
-	data->fonts->on_delete=ZG_TTFontManager_OnDeleteNode;
+	data->font_pointers = ZG_MapInt_New();
+	data->font_pointers->on_delete=ZG_TTFontManager_DeleteFontPointerNode;
 
 	tfm->data=data;
 
@@ -144,14 +199,14 @@ const char * 	ZG_TTFontManager_GetFontResourcePath(ZG_TTFontManager *_this){
 }
 
 // MEMBERS
-ZG_TTFont * 		ZG_TTFontManager_NewFont(ZG_TTFontManager *_this){
+/*ZG_TTFont * 		ZG_TTFontManager_NewFont(ZG_TTFontManager *_this){
 	ZG_TTFontManagerData *data=_this->data;
 	ZG_TTFont *font=NULL;
 
 	if(ZG_STRCMP(data->default_font_name,==,ZG_DEFAULT_FONT_FAMILY)){
 		font=ZG_TTFont_New();
 	}else{
-		char filename[ZG_MAX_PATH]={0};
+		char filename[MAX_PATH]={0};
 		strcpy(filename,data->default_font_name);
 
 		if(ZG_File_Exists(filename) == false){
@@ -170,7 +225,131 @@ ZG_TTFont * 		ZG_TTFontManager_NewFont(ZG_TTFontManager *_this){
 
 	return font;
 
+}*/
+
+//----------------------------------------------------------------------------------------------------
+//
+// PRIVATE
+//
+/*
+static ZG_TTFont * ZG_TTFont_NewFont(void){
+    ZG_TTFont *font=ZG_NEW(ZG_TTFont);
+    ZG_TTFontData *data=ZG_NEW(ZG_TTFontData);
+    font->data=data;
+
+    data->characters=ZG_MapInt_New();
+    data->characters->on_delete=ZG_TTFont_DeleteNode;
+    data->font_size=ZG_DEFAULT_FONT_SIZE;
+
+    // data
+    data->geometry=ZG_Geometry_NewTexturedRectangle2d();
+
+    // TTF load each char flipped vertically, we define inverse uv transform as usually
+	float mesh_texture[]={
+		   0.0f,  0.0f,   // bottom left
+		   1.0f,  0.0f,   // bottom right
+		   0.0f,  1.0f,   // top left
+		   1.0f,  1.0f    // top right
+	};
+	ZG_Geometry_SetMeshTexture(data->geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
+
+	return font;
 }
+
+static ZG_TTFont *ZG_TTFont_NewFromMemory(
+		const uint8_t *buffer
+		, size_t buffer_len
+){
+	ZG_TTFont *font=TTFont_NewEmpty();
+	ZG_TTFont_LoadFromMemory(font, buffer,buffer_len);
+	return font;
+}
+
+ZG_TTFont * ZG_TTFont_NewFromFile(
+	const char *_filename
+){
+	ZG_TTFont *font=TTFont_NewEmpty();
+	ZG_TTFont_LoadFromFile(font,_filename);
+	return font;
+}
+
+
+// transform bold/italic
+static void ZG_TTFont_SetTransformation(ZG_TTFont * _this, float _weight, float _shear)
+{
+	ZG_TTFontData *data=_this->data;
+
+	FT_Matrix transform;
+	transform.xx = (FT_Fixed)(_weight * 65536.0f);
+	transform.xy = (FT_Fixed)(_shear * 65536.0f);
+	transform.yx = (FT_Fixed)(0);
+	transform.yy = (FT_Fixed)(65536.0f);
+
+	FT_Set_Transform(data->ft_face, &transform, NULL);
+
+	data->weight = _weight;
+	data->shear = _shear;
+}
+
+void ZG_TTFont_SetStyle( ZG_TTFont * _this, ZG_TTFontStyle _style){
+	ZG_TTFontData *data=_this->data;
+	TTFont_SetTransformation(_this,(_style & ZG_TTFONT_STYLE_BOLD)?(ZG_BOLD_WEIGHT):(1.0), (_style & ZG_TTFONT_STYLE_ITALIC)?(ZG_ITALIC_SHEAR):(0.0));
+	data->style = _style;
+}
+
+static void ZG_TTFont_LoadFromMemory(
+		ZG_TTFontManager *_this
+		,ZG_TTFont *_font
+		,const uint8_t *_buffer
+		, size_t _buffer_len
+){
+	ZG_TTFontData *data=_this->data;
+
+	//TTFont_Unload(_font);
+
+	// Load font as face
+	if (FT_New_Memory_Face(g_ft_handler, _buffer, _buffer_len, 0, &data->ft_face)){
+		ZG_LOG_ERRORF("FT_New_Memory_Face: Failed to load");
+		return;
+	}
+
+	TTFont_BuildChars(
+		_this
+		,0
+		,ZG_MAX_CHARACTER_VALUE
+	);
+}
+
+static void ZG_TTFont_LoadFromFile(
+		ZG_TTFontManager *_this
+		,ZG_TTFont *_font
+		,const char *_filename
+){
+	ZG_BufferByte *buffer= NULL;
+	char filename[ZG_PATH_MAX]={0};
+	bool file_exists=false;
+
+	strcpy(filename,_filename);
+
+	if((file_exists=ZG_File_Exists(filename)) == false){
+		sprintf(filename,"%s/%s",g_font_resource_path,_filename);
+		file_exists=ZG_File_Exists(filename);
+	}
+
+	if(file_exists){
+		buffer=ZG_FileSystem_ReadFile(filename);
+
+		ZG_TTFont_LoadFromMemory(
+				_this
+				,buffer->ptr
+				,buffer->len
+		);
+		ZG_BufferByte_Delete(buffer);
+
+	}else{
+		ZG_LOG_ERROR("File '%s' not exist",_filename);
+	}
+}*/
 
 void			ZG_TTFontManager_SetFontName(
 		ZG_TTFontManager *_this
@@ -178,7 +357,7 @@ void			ZG_TTFontManager_SetFontName(
 		, const char *_font_name
 ){
 	ZG_TTFontManagerData *data=_this->data;
-	char filename[ZG_MAX_PATH]={0};
+	char filename[MAX_PATH]={0};
 	strcpy(filename,_font_name);
 
 	if(ZG_File_Exists(filename) == false){
@@ -216,24 +395,22 @@ void			ZG_TTFontManager_SetFontName(
 //    If ref_count == 0 it will delete slot and instance in the map
 //    Find the new '{font_name}_{size}' in the map and increase ref_count by +1.
 //
-// Implement Dereference function
-//
-// 'void TTFontManager_Dereference(ZG_TTFontManager *_this,ZG_TTFont **_font, const char * _src_file, int _line);
-//
-// 1. In the function we will find the pointer in the 'font_pointers'.
-//	  If not exist it will show an error that the pointer is not registered
-//    If exist it will find current data from '{font_name}_{size}' in the map and will decrease ref_count by -1
-//    If ref_count == 0 it will delete slot and instance in the map
 
-
-
-/*
-ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filename,uint8_t _font_size){
+void TTFontManager_GetFont(
+		ZG_TTFontManager *_this
+		,ZG_TTFont **_font
+		,  const char * _filename
+		,uint8_t _font_size
+		// ,uint8_t _font_style TODO
+){
 	ZG_TTFontManagerData *data=_this->data;
 	char *id_tmp=0;
 	char id[100]={0};
-	ZG_TTFont * font=NULL,*new_font=NULL;
-	//char filename[ZG_MAX_PATH]={0};
+	ZG_TTFont *font=NULL,*new_font=NULL;
+	ZG_TTFontNode *font_node=NULL;
+	ZG_TTFontPointerNode *font_pointer_node=NULL;
+	//ZG_TTFont * font=NULL,*new_font=NULL;
+	//char filename[MAX_PATH]={0};
 	char *ttf_font_file_to_lower=NULL;
 
 	id_tmp=ZG_Path_GetFilenameWithoutExtension(_filename);
@@ -246,17 +423,18 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 	// 1. get filename for absolute path...
 	ttf_font_file_to_lower=ZG_String_ToLower(id);
 	if(ttf_font_file_to_lower==NULL){
-		return NULL;
+		LOG_ERROR("TTFontManager_GetFont : Cannot convert to 'id' lower")
+		return;
 	}
 
 	sprintf(id,"%s_s%i_hl",ttf_font_file_to_lower,_font_size);
 
-	if((font=ZG_MapString_Get(data->fonts,id,NULL))==NULL){
+	if((font_node=ZG_MapString_Get(data->fonts,id,NULL))==NULL){
 		if(ZG_STRCMP(ttf_font_file_to_lower,==,ZG_DEFAULT_FONT_FAMILY)){
 			new_font=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,_font_size);
 		}
 		else{
-			char filename[ZG_MAX_PATH]={0};
+			char filename[MAX_PATH]={0};
 
 			strcpy(filename,_filename);
 
@@ -264,7 +442,7 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 				sprintf(filename,"%s/%s",data->font_resource_path,_filename);
 			}
 
-			if((new_font=ZG_TTFont_NewFromFile(filename,_font_size))==NULL){
+			if((new_font=ZG_TTFontManager_NewFromFile(_this,filename,_font_size))==NULL){
 				// load default font but configured by font size
 				sprintf(id,"%s_s%i_hl",ZG_DEFAULT_FONT_FAMILY,_font_size);
 				if((font=ZG_MapString_Get(data->fonts,id,NULL))==NULL){ // create new
@@ -284,6 +462,27 @@ ZG_TTFont * 		TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _filena
 
 	return font;
 }
+
+
+// Implement Dereference function
+//
+// 'void TTFontManager_Dereference(ZG_TTFontManager *_this,ZG_TTFont **_font, const char * _src_file, int _line);
+//
+// 1. In the function we will find the pointer in the 'font_pointers'.
+//	  If not exist it will show an error that the pointer is not registered
+//    If exist it will find current data from '{font_name}_{size}' in the map and will decrease ref_count by -1
+//    If ref_count == 0 it will delete slot and instance in the map
+void ZG_TTFontManager_Dereference(ZG_TTFontManager *_this, ZG_TTFont **_font){
+
+	ZG_TTFontManagerData *data=_this->data;
+	ZG_TTFontPointerNode *font_pointer_node=ZG_MapInt_Get(data->font_pointers,_font);
+
+	// remove font pointer
+	ZG_MapInt_Erase(data->font_pointers,font_pointer_node);
+}
+
+
+
 
 ZG_TTFont * 		TTFontManager_GetFontFromMemory(ZG_TTFontManager *_this, const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size){
 	ZG_TTFontManagerData *data=_this->data;
@@ -310,7 +509,7 @@ ZG_TTFont * 		TTFontManager_GetFontFromMemory(ZG_TTFontManager *_this, const uin
 	}
 
 	return font;
-}*/
+}
 
 
 void ZG_TTFontManager_Delete(ZG_TTFontManager *_this){
