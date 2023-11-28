@@ -1,4 +1,4 @@
-#include "../@zg_ecs.h"
+/*#include "../@zg_ecs.h"
 
 //------------------------------------------------------------
 // entities are simply a pointer that hides its entity manager.
@@ -7,8 +7,7 @@
 
 typedef struct {
 	char 			*name; // entity manager name
-	void 			**component_idxs;// The pointer of component giving its component idx
-	void 			**component_names;// The name of each component
+	void 			**component_ids;// The pointer of component giving its component idx
 	ZG_ComponentId	**components_ref; 	// when creates or deletes, entity manager it moves components so each entity should know it new reference
 	size_t 			n_entities; // available components per entity
 
@@ -33,7 +32,7 @@ ZG_Entity  *ZG_EntityType_NewEntity(ZG_EntityType *_this){
 	return entity;
 }
 
-void 	*ZG_EntityType_GetComponent(ZG_EntityType *_this, const char *_component_name, ZG_ComponentId _component_id){
+void 	*ZG_EntityType_GetComponent(ZG_EntityType *_this, ZG_Entity _entity, ZG_ComponentId _component_id){
 	ZG_EntityTypeData *data=_this->data;
 
 	// search components array
@@ -48,14 +47,14 @@ void 	*ZG_EntityType_GetComponent(ZG_EntityType *_this, const char *_component_n
 
 }
 
-void 	*ZG_EntityType_GetComponentIdx(ZG_EntityType *_this, const char *_component_name, ZG_ComponentId _component_position_idx){
+void 	*ZG_EntityType_GetComponentIdx(ZG_EntityType *_this, int _component_id, ZG_ComponentId _component_position){
 	ZG_EntityTypeData *data=_this->data;
 
 	// search components array
 	data->
 
 
-	size_t component_idx=data->components_ref[_component_position_idx];
+	size_t component_idx=data->components_ref[_component_position];
 	void *component_data=data->components[component_idx];
 
 	asset(component_data!=NULL);
@@ -63,5 +62,5 @@ void 	*ZG_EntityType_GetComponentIdx(ZG_EntityType *_this, const char *_componen
 	return component_data;
 
 }
-
+*/
 

@@ -40,7 +40,7 @@ extern int ZG_IDX_EC_COLLIDER_CIRCLE2D;
 
 
 typedef struct{
-	const char **	components;
+	int 	  **	components;
 	size_t			n_components;
 }ZG_ComponentList;
 

@@ -11,6 +11,7 @@ typedef enum{
 }ZG_TTFontStyle;
 
 
+typedef struct ZG_TTFontManager 	ZG_TTFontManager;
 typedef struct ZG_TTFont 			ZG_TTFont;
 
 
@@ -63,6 +64,7 @@ uint16_t 		ZG_TTFont_GetWidth(ZG_TTFont *_this, const char *str);
 uint16_t 		ZG_TTFont_WGetWidth(ZG_TTFont *_this, const wchar_t *str);
 uint16_t 		ZG_TTFont_GetWidthN(ZG_TTFont *_this, const char *str, size_t len);
 uint16_t 		ZG_TTFont_WGetWidthN(ZG_TTFont *_this, const wchar_t *str, size_t len);
+
 void 			ZG_TTFont_Delete(ZG_TTFont *_this);
 
 

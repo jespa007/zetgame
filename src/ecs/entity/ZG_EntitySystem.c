@@ -337,7 +337,7 @@ ZG_Entity *EntitySystem_NewEntity(ZG_EntitySystem *_this,ZG_EComponent *_entity_
 	size_t entity_components_len;
 
 	// 1. check component requirements
-	ZG_EComponent *entity_components=ZG_EntitySystem_GenerateComponentRequireZmentList(_entity_components,_entity_components_len,&entity_components_len);
+	ZG_EComponent *entity_components=ZG_EntitySystem_GenerateComponentRequirementList(_entity_components,_entity_components_len,&entity_components_len);
 
 	// internal type that is generated according used components...
 	for(uint16_t i=0; i < entity_components_len; i++){
@@ -467,7 +467,7 @@ void ZG_EntitySystem_ExtendEntities(ZG_EntitySystem *_this, ZG_EntityTypeData *a
 	archetype_data->n_entities=total_extend;
 }
 
-ZG_EntityType * ZG_EntitySystem_NewEntityType(
+ZG_EntityType ZG_EntitySystem_NewEntityType(
 	ZG_EntitySystem *_this
 	, const char *_str_archetype
 	, uint16_t _max_entities
@@ -484,7 +484,7 @@ ZG_EntityType * ZG_EntitySystem_NewEntityType(
 		return NULL;
 	}
 	// get required components (it has to free after use)
-	ZG_EComponent *req_entity_components=ZG_EntitySystem_GenerateComponentRequireZmentList(
+	ZG_EComponent *req_entity_components=ZG_EntitySystem_GenerateComponentRequirementList(
 			_entity_components
 			,_entity_components_len
 			,&req_entity_components_len);

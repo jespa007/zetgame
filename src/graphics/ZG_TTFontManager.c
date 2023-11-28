@@ -33,7 +33,6 @@ static FT_Library		g_ft_handler=NULL;
 
 
 // prototype
-void ZG_TTFontManager_Dereference(ZG_TTFontManager *_this, ZG_TTFont *_font);
 void ZG_TTFontManager_OnDeleteNode(ZG_MapStringNode *node);
 
 
@@ -144,7 +143,7 @@ ZG_TTFont * 		ZG_TTFontManager_GetFontFromFontInfo(ZG_TTFontManager *_this, ZG_T
 		return ZG_TTFontManager_GetEmbeddedFont();
 	}
 
-	return TTFontManager_GetFont(_this,font_info->font_name, font_info->font_size);
+	return ZG_TTFontManager_GetFont(_this,font_info->font_name, font_info->font_size);
 }
 
 
@@ -396,7 +395,7 @@ void			ZG_TTFontManager_SetFontName(
 //    Find the new '{font_name}_{size}' in the map and increase ref_count by +1.
 //
 
-void TTFontManager_GetFont(
+void ZG_TTFontManager_GetFont(
 		ZG_TTFontManager *_this
 		,ZG_TTFont **_font
 		,  const char * _filename
@@ -484,7 +483,7 @@ void ZG_TTFontManager_Dereference(ZG_TTFontManager *_this, ZG_TTFont **_font){
 
 
 
-ZG_TTFont * 		TTFontManager_GetFontFromMemory(ZG_TTFontManager *_this, const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size){
+ZG_TTFont * 		ZG_TTFontManager_GetFontFromMemory(ZG_TTFontManager *_this, const uint8_t * ptr, unsigned int ptr_len,uint8_t font_size){
 	ZG_TTFontManagerData *data=_this->data;
 	char id[100]={0};
 	ZG_TTFont * font=NULL;

@@ -1,4 +1,4 @@
-#include "../zg_ecs.h"
+/*#include "../zg_ecs.h"
 
 typedef struct{
 	ZG_EntityType *archetype;
@@ -17,12 +17,12 @@ ZG_Entity *ZG_Entity_New(ZG_EntitySystem *_entity_system){
 	return entity;
 }
 
-/*
+
 void Entity_Ini(ZG_Entity *_this){
 	EntityData *data=(EntityData *)_this->data;
 	data->is_active=true;
 }
-*/
+
 void ZG_Entity_Die(ZG_Entity *_this){
 	/*EntityData *data=(EntityData *)_this->data;
 	data->is_active=false;*/
@@ -44,16 +44,16 @@ void *ZG_Entity_GetComponent(ZG_Entity *_this, ZG_ComponentId _component_id){
 	EntityData *data=(EntityData *)_this->data;
 	return ZG_EntityType_GetComponent(data->archetype,_this, _component_id);
 }
-/*
+
 void ZG_Entity_Reset(ZG_Entity *_this){
-}*/
+}
 
 void ZG_Entity_Delete(ZG_Entity *_this){
 	EntityData *data=_this->data;
 	ZG_FREE(_this->components);
 	ZG_FREE(data);
 	ZG_FREE(_this);
-}
+}*/
 /*
 void Entity_AttachComponent(ZG_Entity *_this, uint16_t idx_component, void *ptr_component){
 

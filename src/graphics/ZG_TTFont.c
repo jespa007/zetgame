@@ -48,7 +48,14 @@ void 						ZG_TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color
 
 static void 				ZG_TTFont_Unload(ZG_TTFont *_this);
 static void	 				ZG_TTFont_DeleteNode(ZG_MapIntNode *node);
-static ZG_TTFont 	* 		ZG_TTFont_NewEmpty(void);
+
+
+
+
+
+
+
+
 static ZG_TTFont 	*		ZG_TTFont_NewFromMemory(
 	const uint8_t *buffer
 	, size_t buffer_len
@@ -84,7 +91,7 @@ static ZG_TTFont *ZG_TTFont_NewFromMemory(
 		const uint8_t *buffer
 		, size_t buffer_len
 ){
-	ZG_TTFont *font=TTFont_NewEmpty();
+	ZG_TTFont *font=ZG_TTFont_New();
 	ZG_TTFont_LoadFromMemory(font, buffer,buffer_len);
 	return font;
 }
@@ -92,12 +99,12 @@ static ZG_TTFont *ZG_TTFont_NewFromMemory(
 static ZG_TTFont * ZG_TTFont_NewFromFile(
 	const char *_filename
 ){
-	ZG_TTFont *font=TTFont_NewEmpty();
+	ZG_TTFont *font=ZG_TTFont_New();
 	ZG_TTFont_LoadFromFile(font,_filename);
 	return font;
 }
 
-void	ZG_TTFont_DeInit(void){
+void	ZG_TTFontManager_DeInit(void){
 	// erase all loaded fonts...
 	if(g_font_embedded != NULL){
 		ZG_TTFont_Delete(g_font_embedded);
@@ -209,7 +216,9 @@ static void ZG_TTFont_BuildGlyphs(
 	);
 }*/
 
-
+ZG_TTFont 	* 		ZG_TTFont_New(ZG_TTFontManager *_ttfont_manager){
+	return ZG_TTFontManager_NewFont(_ttfont_manager);
+}
 
 int				ZG_TTFont_GetAscender(ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;
@@ -481,4 +490,9 @@ static void ZG_TTFont_DeleteFont( ZG_TTFont *_this){
 	ZG_Geometry_Delete(data->geometry);
 	ZG_FREE(_this);
 	ZG_FREE(data);
+}
+
+void 			ZG_TTFont_Delete(ZG_TTFont *_this){
+	ZG_TTFontData *data=_this->data;
+	ZG_TTFontManager_DeleteFont(data->font_manager);
 }

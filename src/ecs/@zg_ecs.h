@@ -26,7 +26,7 @@ typedef unsigned int ZG_EntityEntityType;
 // entity
 //#include "entity/ZG_EntityEntityType.h"
 //#include "entity/ZG_EntityEntityType.h"
-#include "ecs/entity/ZG_Entity.h"
+#include "entity/ZG_EntityId.h"
 
 
 
@@ -40,7 +40,7 @@ typedef unsigned int ZG_EntityEntityType;
 
 
 // Animation
-#include "animation/ZG_AnimationManager.h"
+#include "animation/ZG_AnimationSystem.h"
 
 // Animation Component
 #include "ecs/animation/component/ZG_ACTransformAnimation.h"
