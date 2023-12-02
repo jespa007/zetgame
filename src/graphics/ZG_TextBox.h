@@ -38,7 +38,7 @@ void	 		ZG_TextBox_SetVerticalAlignment(ZG_TextBox *_this, ZG_VerticalAlignment 
 void     		ZG_TextBox_SetText(ZG_TextBox *_this,const char *s, ...);
 const char 	*	ZG_TextBox_GetText(ZG_TextBox *_this);
 void     		ZG_TextBox_WSetText(ZG_TextBox *_this,const wchar_t *s, ...);
-void     		ZG_TextBox_SetFontFile(ZG_TextBox *_this, const char *_font_file);
+void     		ZG_TextBox_SetFont(ZG_TextBox *_this, ZG_TTFont *_ttfont);
 void     		ZG_TextBox_SetFontSize(ZG_TextBox *_this, uint16_t _font_file);
 uint16_t   		ZG_TextBox_GetFontSize(ZG_TextBox *_this);
 void	 		ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform, ZG_Color4f *color);

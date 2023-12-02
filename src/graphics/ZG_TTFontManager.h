@@ -1,6 +1,7 @@
 #ifndef __ZG_TTFONT_MANAGER_H__
 #define __ZG_TTFONT_MANAGER_H__
 
+typedef struct ZG_TTFontManager ZG_TTFontManager;
 
 struct ZG_TTFontManager{
 	void *data;
@@ -22,13 +23,9 @@ ZG_TTFont * 		ZG_TTFontManager_GetEmbeddedFont(void);
 ZG_TTFontManager *	ZG_TTFontManager_New(void);
 ZG_TTFont *			ZG_TTFontManager_GetFont(
 	ZG_TTFontManager *_this
-	,ZG_TTFont **_font
 	,const char *_font_name
-	,uint8_t	_font_size
-	// more things
 );
 
-void				ZG_TTFontManager_Dereference(ZG_TTFontManager * _this, ZG_TTFont **_font);
 /*
 ZG_TTFontInfo 		ZG_TTFontManager_GetDefaultFontInfo(ZG_TTFontManager *_this);
 ZG_TTFont * 		ZG_TTFontManager_GetFontFromFontInfo(ZG_TTFontManager *_this, ZG_TTFontInfo * font_info);

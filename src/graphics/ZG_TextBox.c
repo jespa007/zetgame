@@ -42,14 +42,15 @@ typedef struct{
 
 
 typedef struct{
-	ZG_TTFont 				*		font; // init font
-	void 				*		text; // text to show, from reserved memory
+	ZG_TTFont 				*	font; // init font
+	void 					*	text; // text to show, from reserved memory
 	ZG_CharType					char_type;
-	ZG_VerticalAlignment 			vertical_alignment;
+	uint8_t						font_size;
+	ZG_VerticalAlignment 		vertical_alignment;
 	ZG_HorizontalAlignment 		horizontal_alignment;
 	ZG_Vector2i					dimensions;
 	ZG_TBRenderText				render_text;
-	ZG_Color4f						border_color;
+	ZG_Color4f					border_color;
 	int							border_tickness;
 }ZG_TextBoxData;
 
@@ -58,7 +59,7 @@ ZG_TextBox *ZG_TextBox_New(void){
 	ZG_TextBoxData *data=ZG_NEW(ZG_TextBoxData);
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
-	data->font=ZG_TTFont_New();
+	data->font=ZG_TTFontManager_GetEmbeddedFont();
 	ZG_TextBox_SetText(textbox,"");
 	return textbox;
 }
@@ -364,17 +365,14 @@ void     ZG_TextBox_WSetText(ZG_TextBox *_this,const wchar_t *in, ...){
 	ZG_TextBox_RT_Build(_this);
 }
 
-void     ZG_TextBox_SetFontFile(ZG_TextBox *_this, const char *_font_file){
+void     ZG_TextBox_SetFont(ZG_TextBox *_this, ZG_TTFont *_font){
 	ZG_TextBoxData *data=_this->data;
-	ZG_TTFont_LoadFromFile(data->font,_font_file);
-	ZG_TextBox_RT_Build(_this);
-
+	data->font=_font;
 }
 
 void     		ZG_TextBox_SetFontSize(ZG_TextBox *_this, uint16_t _font_size){
 	ZG_TextBoxData *data=_this->data;
-	ZG_TTFont_SetFontSize(data->font,_font_size);
-	ZG_TextBox_RT_Build(_this);
+	data->font_size=_font_size;
 }
 
 uint16_t     		ZG_TextBox_GetFontSize(ZG_TextBox *_this){
@@ -580,8 +578,6 @@ void ZG_TextBox_Delete(ZG_TextBox * _this){
 	}
 
 	ZG_TextBox_RT_Delete(data);
-
-	ZG_TTFont_Delete(data->font);
 
 	free(_this->data);
 	free(_this);

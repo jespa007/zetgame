@@ -5,7 +5,7 @@ struct ZG_GUIWindowManager{
 	void *data;
 };
 
-ZG_GUIWindowManager 	*	ZG_GUIWindowManager_New(ZG_TextureManager	* _texture_manager/*, ZG_TTFontManager * _ttfont_manager*/);
+ZG_GUIWindowManager 	*	ZG_GUIWindowManager_New(ZG_TextureManager	* _texture_manager, ZG_TTFontManager * _ttfont_manager);
 bool 						ZG_GUIWindowManager_Load(ZG_GUIWindowManager *_this,const char *_xml_filename);
 ZG_TextureManager		*	ZG_GUIWindowManager_GetTextureManager(ZG_GUIWindowManager *_this);
 //ZG_TTFontManager		*	ZG_GUIWindowManager_GetTTFontManager(ZG_GUIWindowManager *_this);

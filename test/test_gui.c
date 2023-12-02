@@ -14,13 +14,14 @@ int main(int argc, char *argv[]){
 	ZG_SetDebugMode(true);
 
 	ZG_TextureManager * texture_manager= ZG_TextureManager_New();
-	//ZG_TTFontManager * ttfont_manager= ZG_TTFontManager_New();
+	ZG_TTFontManager * ttfont_manager= ZG_TTFontManager_New();
 
-	ZG_TTFont_SetFontResourcePath("../../../test/data/fonts");
+
+	ZG_TTFontManager_SetFontResourcePath(ttfont_manager,"../../../test/data/fonts");
 	ZG_TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
 
 
-	ZG_GUIWindowManager *window_manager= ZG_GUIWindowManager_New(texture_manager);
+	ZG_GUIWindowManager *window_manager= ZG_GUIWindowManager_New(texture_manager,ttfont_manager);
 	ZG_GUIWindow * window=NULL;
 
 	if(ZG_GUIWindowManager_Load(

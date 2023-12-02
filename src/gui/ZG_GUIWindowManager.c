@@ -3,16 +3,16 @@
 typedef struct{
 	ZG_MapString 			* 	windows;
 	ZG_TextureManager   	*   texture_manager;
-	//ZG_TTFontManager   	*   ttfont_manager;
+	ZG_TTFontManager   		*   ttfont_manager;
 }ZG_GUIWindowManagerData;
 
 typedef struct{
-	ZG_GUIWindow			*window;
-	ZG_List				*buttons;
-	ZG_List				*viewers;
-	ZG_List				*frames;
-	ZG_List				*textboxes;
-	ZG_GUIWindowManagerData *gui_window_manager_data;
+	ZG_GUIWindow			*	window;
+	ZG_List					*	buttons;
+	ZG_List					*	viewers;
+	ZG_List					*	frames;
+	ZG_List					*	textboxes;
+	ZG_GUIWindowManagerData *	gui_window_manager_data;
 }GUIWMWindowData;
 
 void ZG_GUIWindowManager_OnDeleteGUIWMWindowData(ZG_MapStringNode *node){
@@ -58,14 +58,14 @@ void ZG_GUIWindowManager_OnDeleteTexture(ZG_MapStringNode *node){
 // MEMBERS
 ZG_GUIWindowManager *ZG_GUIWindowManager_New(
 		ZG_TextureManager	* _texture_manager
-		//, ZG_TTFontManager * _ttfont_manager
+		, ZG_TTFontManager * _ttfont_manager
 ){
 	ZG_GUIWindowManager *window_manager=ZG_NEW(ZG_GUIWindowManager);
 	ZG_GUIWindowManagerData *data=ZG_NEW(ZG_GUIWindowManagerData);
 
 	data->windows = ZG_MapString_New();//new std::map<std::string,ZG_TTFont *>();
 	data->texture_manager = _texture_manager;
-	//data->ttfont_manager = _ttfont_manager;
+	data->ttfont_manager = _ttfont_manager;
 
 	data->windows->on_delete=ZG_GUIWindowManager_OnDeleteGUIWMWindowData;
 
@@ -173,7 +173,7 @@ bool ZG_GUIWindowManager_NewTexture(GUIWMWindowData *_window_data,ZG_GUIWidget *
 					 ZG_TextBox_SetFontSize(gui_texture->textbox,int_value);
 				 }
 			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 ZG_TextBox_SetFontFile(gui_texture->textbox,attribute->value);
+				 ZG_TextBox_SetFont(gui_texture->textbox,ZG_TTFontManager_GetFont(_window_data->gui_window_manager_data->ttfont_manager, attribute->value));
 			 }else if(ZG_STRCMP(attribute->name,==,"color")){
 				 ZG_GUIWidget_SetColor4f(gui_texture->widget,ZG_Color4f_FromHtml(attribute->value));
 			 }else if(ZG_STRCMP(attribute->name,==,"source")){
@@ -291,7 +291,13 @@ bool ZG_GUIWindowManager_NewTextBox(GUIWMWindowData *_window_data,ZG_GUIWidget *
 					 ZG_TextBox_SetFontSize(gui_textbox->textbox,int_value);
 				 }
 			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 ZG_TextBox_SetFontFile(gui_textbox->textbox,attribute->value);
+				 ZG_TextBox_SetFont(
+						 gui_textbox->textbox
+						 ,ZG_TTFontManager_GetFont(
+								 _window_data->gui_window_manager_data->ttfont_manager
+								 ,attribute->value
+						)
+				);
 			 }else if(ZG_STRCMP(attribute->name,==,"text")){
 				 ZG_TextBox_SetText(gui_textbox->textbox,attribute->value);
 			 }else if(ZG_STRCMP(attribute->name,==,"horizontal-alignment")){

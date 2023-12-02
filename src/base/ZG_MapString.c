@@ -146,7 +146,7 @@ void ZG_MapString_Clear(ZG_MapString *_this){
 }
 
 void ZG_MapString_Delete(ZG_MapString *_this){
-	if(t == NULL) return;
+	if(_this == NULL) return;
 
     for(unsigned i=0;i<_this->count;i++){
     	ZG_MapStringNode * temp=_this->list[i];
