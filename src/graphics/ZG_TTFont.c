@@ -15,6 +15,7 @@ typedef struct{
     int 			space_width; // in pixels
     uint32_t 		font_properties;
 	int				ascender;
+	int				descender;
 	float 			weight,shear;
 	uint8_t 		style;
     ZG_Geometry 	*geometry;
@@ -44,7 +45,7 @@ static FT_Library			g_ft_handler=NULL;
 static char					g_font_resource_path[256]={0};
 */
 // Prototypes
-void 					TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color,const void *_text, ZG_CharType _char_type);
+void 					TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d, float _scale, ZG_Color4f _color,const void *_text, ZG_CharType _char_type);
 
 void 					TTFont_Unload(ZG_TTFont *_this);
 void	 				ZG_TTFont_OnDeleteNode(ZG_MapIntNode *node);
@@ -176,6 +177,7 @@ void TTFont_BuildChars(
 
 	// main
     data->ascender=data->ft_face->ascender>>6;
+    data->descender=data->ft_face->descender>>6;
 
 	//int max_bearing_y=-1;
     for (unsigned long c = char_ini; c < char_end; c++)
@@ -287,6 +289,12 @@ int				ZG_TTFont_GetAscender(ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;
 	return data->ascender;
 }
+
+int				ZG_TTFont_GetDescender(ZG_TTFont *_this){
+	ZG_TTFontData *data=_this->data;
+	return data->descender;
+}
+
 
 int				ZG_TTFont_GetSpaceWidth(ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;
@@ -401,25 +409,25 @@ ZG_BoundingBox 	ZG_TTFont_WGetBoundingBoxN(ZG_TTFont *_this, const wchar_t *_tex
 	return TTFont_GetBoundingBoxInternal(_this,_text,len,ZG_CHAR_TYPE_WCHAR);
 }
 
-void ZG_TTFont_Print(ZG_TTFont *_this,float _x, float _y, ZG_Color4f _color, const char *in,...){
+void ZG_TTFont_Print(ZG_TTFont *_this,float _x, float _y, float _scale, ZG_Color4f _color, const char *in,...){
 
 	if(_this==NULL) return;
 
 	char out[1024]={0};
 	ZG_VARGS(out,in);
 
-	TTFont_RenderText(_this,_x,_y,_color,out,ZG_CHAR_TYPE_CHAR);
+	TTFont_RenderText(_this,_x,_y,_scale,_color,out,ZG_CHAR_TYPE_CHAR);
 
 }
 
-void ZG_TTFont_WPrint(ZG_TTFont *_this,float _x, float _y, ZG_Color4f _color,const wchar_t *in,...){
+void ZG_TTFont_WPrint(ZG_TTFont *_this,float _x, float _y,float _scale, ZG_Color4f _color,const wchar_t *in,...){
 
 	if(_this==NULL) return;
 
 	wchar_t out[1024]={0};
 	ZG_WVARGS(out,in);
 
-	TTFont_RenderText(_this,_x,_y,_color,out,ZG_CHAR_TYPE_WCHAR);
+	TTFont_RenderText(_this,_x,_y,_scale, _color,out,ZG_CHAR_TYPE_WCHAR);
 }
 //
 //
@@ -467,7 +475,7 @@ uint16_t 		ZG_TTFont_WGetWidthN(ZG_TTFont *_this, const wchar_t *_text, size_t _
 	return TTFont_GetWidthBuiltInt(_this,_text,_len,ZG_CHAR_TYPE_WCHAR);
 }
 
-void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color,const void *_text, ZG_CharType _char_type){
+void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d, float _scale, ZG_Color4f _color,const void *_text, ZG_CharType _char_type){
 	ZG_TTFontData *data=_this->data;
 
 	if(_this == NULL) return;
@@ -489,10 +497,15 @@ void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color
 			}
 		}
 
-		//int end_y=ch->size.y-ch->bearing.y+data->ascender;
 		// calcule p1 and p2 center
-		ZG_Vector3f p1_3d=ZG_ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y);
-		ZG_Vector3f p2_3d=ZG_ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y);
+		ZG_Vector3f p1_3d=ZG_Vector3f_MulFactor(
+						ZG_ViewPort_ScreenToWorldDimension2i(ch->bearing.x,-ch->bearing.y)
+						,_scale
+					);
+		ZG_Vector3f p2_3d=ZG_Vector3f_MulFactor(
+						ZG_ViewPort_ScreenToWorldDimension2i(ch->bearing.x+ch->size.x,ch->size.y-ch->bearing.y)
+						,_scale
+					);
 
 		const float mesh_vertex []={
 				_x3d+p1_3d.x, _y3d-p1_3d.y,0,  // bottom left
@@ -506,7 +519,7 @@ void TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d,ZG_Color4f _color
 		ZG_Geometry_SetMeshVertex(data->geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 		ZG_Geometry_Draw(data->geometry);
 
-		_x3d += ZG_ViewPort_ScreenToWorldWidth(ch->advance_x >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		_x3d += (ZG_ViewPort_ScreenToWorldWidth(ch->advance_x >> 6))*_scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 }
 

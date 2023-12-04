@@ -1,5 +1,7 @@
 #include "@zg_graphics.h"
 
+#define ZG_TTFONT_MANAGER_FONT_SIZE_QUALITY	64
+
 typedef struct{
 	ZG_MapString	* 	fonts;
 	ZG_TTFont 		* 	default_font;
@@ -116,7 +118,7 @@ ZG_TTFont * 		ZG_TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _fil
 	char id[100]={0};
 	ZG_TTFont * font=NULL,*new_font=NULL;
 	//char filename[ZG_MAX_PATH]={0};
-	uint8_t _font_size=32; // decide which resolution is better
+	uint8_t _font_size=ZG_TTFONT_MANAGER_FONT_SIZE_QUALITY; // decide which resolution is better
 	char *ttf_font_file_to_lower=NULL;
 
 	id_tmp=ZG_Path_GetFilenameWithoutExtension(_filename);
@@ -150,9 +152,7 @@ ZG_TTFont * 		ZG_TTFontManager_GetFont(ZG_TTFontManager *_this,const char * _fil
 				return NULL;
 			}
 
-			if((new_font=ZG_TTFont_NewFromFile(filename,_font_size))==NULL){
-			}
-
+			new_font=ZG_TTFont_NewFromFile(filename,_font_size);
 		}
 
 		if(new_font != NULL){

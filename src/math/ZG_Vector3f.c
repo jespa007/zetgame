@@ -54,3 +54,11 @@ ZG_Vector3f  ZG_Vector3f_Mul(ZG_Vector3f  v1,ZG_Vector3f  v2){
 		,.z=v1.z * v2.z
 	};
 }
+
+ZG_Vector3f  ZG_Vector3f_MulFactor(ZG_Vector3f  v1, float _factor){
+	return (ZG_Vector3f){
+		.x=v1.x *_factor
+		,.y=v1.y * _factor
+		,.z=v1.z * _factor
+	};
+}

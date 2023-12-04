@@ -21,6 +21,8 @@ int main(int argc, char *argv[]){
 	ZG_TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
 
 
+	//ZG_TTFont *font=ZG_TTFontManager_GetFont(ttfont_manager,"Trebuchet MS.ttf");
+
 	ZG_GUIWindowManager *window_manager= ZG_GUIWindowManager_New(texture_manager,ttfont_manager);
 	ZG_GUIWindow * window=NULL;
 
@@ -34,17 +36,17 @@ int main(int argc, char *argv[]){
 		}
 	}
 
-
-	//window=ZG_GUIWindow_New(10,10,200,100);
-	//ZG_GUITexture * gui_viewer=ZG_GUITexture_New(10,10,42,42);
-
 	if(window){
 
 		//ZG_TextBox_SetText(gui_viewer->widget->textbox,"1");
 		//ZG_GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
-			ZG_Graphics_BeginRender();
+			// input management
+			if(ZG_KP_F9){
+				ZG_Graphics_ToggleFullscreen();
+			}
 
+			ZG_Graphics_BeginRender();
 
 			ZG_GUIWidget_Update(window->widget);
 
@@ -55,10 +57,8 @@ int main(int argc, char *argv[]){
 		}while(!ZG_KP_ESC);
 	}
 
-	//ZG_GUITexture_Delete(gui_viewer);
-	//ZG_GUIWindow_Delete(window);
 	ZG_TextureManager_Delete(texture_manager);
-//	ZG_TTFontManager_Delete(ttfont_manager);
+	ZG_TTFontManager_Delete(ttfont_manager);
 	ZG_GUIWindowManager_Delete(window_manager);
 
 	ZG_DeInit();

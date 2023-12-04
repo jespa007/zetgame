@@ -46,7 +46,7 @@ void  MEMSDL_PrintStatus()
 	}
 
 	if(n_unllocated==0){
-		ZG_LOG_INFOF("SDLMem: ok");
+		ZG_LOG_INFOF("SDLMem: OK");
 	}
 
 }

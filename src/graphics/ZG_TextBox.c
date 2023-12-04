@@ -60,6 +60,7 @@ ZG_TextBox *ZG_TextBox_New(void){
 	textbox->data=data;
 	//data->shape2d=Shape2d_New();
 	data->font=ZG_TTFontManager_GetEmbeddedFont();
+	data->font_size=ZG_TTFont_GetFontSize(data->font);
 	ZG_TextBox_SetText(textbox,"");
 	return textbox;
 }
@@ -123,7 +124,10 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 	ZG_TextBoxData *data=_this->data;
 	unsigned long ch_space=(unsigned long)' ';
 	size_t sizeof_char=sizeof(char);
-	int ascender=ZG_TTFont_GetAscender(data->font);
+	float font_scale=(float)data->font_size/(float)ZG_TTFont_GetFontSize(data->font);
+
+	int char_height=data->font_size;////(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
+
 	if(data->char_type==ZG_CHAR_TYPE_WCHAR){
 		sizeof_char=sizeof(wchar_t);
 		ch_space=(unsigned long)L' ';
@@ -144,10 +148,14 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 	ZG_TextBox_RT_Init(data);
 
 	if(data->char_type==ZG_CHAR_TYPE_WCHAR){
-		if(ZG_String_WIsNullOrEmpty((wchar_t *)data->text)) return;
+		if(ZG_String_WIsNullOrEmpty((wchar_t *)data->text)) {
+			return;
+		}
 	}
 	else{
-		if(ZG_String_IsNullOrEmpty(data->text)) return;
+		if(ZG_String_IsNullOrEmpty(data->text)) {
+			return;
+		}
 	}
 
 	ZG_List *lines=NULL;
@@ -164,7 +172,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 
 	uint16_t word_width=0;
 	ZG_BoundingBox bb_word;//=ZG_TTFont_GetBoundingBox(data->font,);
-	uint16_t space_width=ZG_TTFont_GetSpaceWidth(data->font);
+	uint16_t space_width=ZG_TTFont_GetSpaceWidth(data->font)*font_scale;
 	int y=0;
 
 	// for each line
@@ -218,11 +226,15 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 
 			// get length rendered word...
 			if(data->char_type==ZG_CHAR_TYPE_WCHAR){
-				bb_word=ZG_TTFont_WGetBoundingBoxN(data->font,word_ini,word_len);
-				//word_width=ZG_TTFont_WGetWidthN(data->font,word_ini,word_len);
+				bb_word=ZG_BoundingBox_MulFactor(
+						ZG_TTFont_WGetBoundingBoxN(data->font,word_ini,word_len)
+						,font_scale
+						);
 			}else{
-				bb_word=ZG_TTFont_GetBoundingBoxN(data->font,word_ini,word_len);
-				//word_width=ZG_TTFont_GetWidthN(data->font,word_ini,word_len);
+				bb_word=ZG_BoundingBox_MulFactor(
+						ZG_TTFont_GetBoundingBoxN(data->font,word_ini,word_len)
+						,font_scale
+						);
 			}
 
 			word_width=bb_word.maxx-bb_word.minx;
@@ -241,7 +253,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 						tbrt_token_line->space_width/=(tbrt_token_line->tbrt_tokens->count-1);
 					}
 
-					tbrt_token_line->space_width=MAX(tbrt_token_line->space_width,ZG_TTFont_GetSpaceWidth(data->font));
+					tbrt_token_line->space_width=MAX(tbrt_token_line->space_width,ZG_TTFont_GetSpaceWidth(data->font)*font_scale);
 
 					// update max x and y intervals
 					bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
@@ -249,7 +261,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 
 				tbrt_token_line=ZG_TextBox_RT_NewLine(data);
 				total_space_width=0;
-				y+=ascender;
+				y+=char_height;
 			}else{
 				// update max x and y intervals
 				//bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
@@ -265,10 +277,9 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 			// ... and spaces width
 			total_space_width+=space_width;
 
-
 		}while(ch!=0); // not end line...
 
-		y+=ascender;
+		y+=char_height;
 	}
 
 	ZG_List_DeleteAndFreeAllItems(lines);
@@ -368,16 +379,18 @@ void     ZG_TextBox_WSetText(ZG_TextBox *_this,const wchar_t *in, ...){
 void     ZG_TextBox_SetFont(ZG_TextBox *_this, ZG_TTFont *_font){
 	ZG_TextBoxData *data=_this->data;
 	data->font=_font;
+	ZG_TextBox_RT_Build(_this);
 }
 
 void     		ZG_TextBox_SetFontSize(ZG_TextBox *_this, uint16_t _font_size){
 	ZG_TextBoxData *data=_this->data;
 	data->font_size=_font_size;
+	ZG_TextBox_RT_Build(_this);
 }
 
 uint16_t     		ZG_TextBox_GetFontSize(ZG_TextBox *_this){
 	ZG_TextBoxData *data=_this->data;
-	return ZG_TTFont_GetFontSize(data->font);
+	return data->font_size;
 }
 
 
@@ -432,8 +445,9 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	uint16_t text_total_width=0;
 	uint16_t text_total_height=0;
 	ZG_Vector3f dim3d;
-	int ascender=0;
+	//int char_height=0;
 	int space_width=0;
+	float font_scale=(float)data->font_size/(float)ZG_TTFont_GetFontSize(data->font);
 
 	// TODO: pos is at center box by default, do a wat yo change render center
 	if(transform != NULL){
@@ -447,8 +461,8 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	x=0;
 
 	dim3d=ZG_ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
-	ascender=ZG_TTFont_GetAscender(data->font);
-	space_width=ZG_TTFont_GetSpaceWidth(data->font);
+	//char_height=(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
+	space_width=ZG_TTFont_GetSpaceWidth(data->font)*font_scale;
 
 	if(data->vertical_alignment == ZG_VERTICAL_ALIGNMENT_CENTER){
 		y=-(text_total_height>>1)-data->render_text.bounding_box.miny;
@@ -458,7 +472,7 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	}
 
 	y_draw=-ZG_ViewPort_ScreenToWorldHeight(y);
-	y_draw_inc=-ZG_ViewPort_ScreenToWorldHeight(ascender);
+	y_draw_inc=-ZG_ViewPort_ScreenToWorldHeight(data->font_size);
 
 	if(data->border_tickness>0){
 		ZG_Graphics_DrawRectangle4f(
@@ -531,8 +545,7 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 			ZG_TBRT_Token *token=NULL;
 			if(inc_x > 0){
 				token=token_line->tbrt_tokens->items[w];
-			}
-			else{
+			}else{
 				token=token_line->tbrt_tokens->items[token_line->tbrt_tokens->count-w-1];
 			}
 
@@ -543,17 +556,16 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 			case ZG_TBRT_TOKEN_TYPE_WORD:
 				token_word=((ZG_TBRT_TokenWord*)token->token_data);
 				if(w>0){ // render space
-					//ZG_TTFont_Print(data->font,x,y,ZG_COLOR4F_WHITE," ");
 					x+=(space_per_word)*inc_x;
 				}
 
 				x_draw=ZG_ViewPort_ScreenToWorldWidth(x+(inc_x<1?-token_word->word_width:0));
 
 				if(data->char_type==ZG_CHAR_TYPE_WCHAR){
-					ZG_TTFont_WPrint(data->font,x_draw,y_draw,color,token_word->word);
+					ZG_TTFont_WPrint(data->font,x_draw,y_draw,font_scale,color,token_word->word);
 				}
 				else{ // char by default.
-					ZG_TTFont_Print(data->font,x_draw,y_draw,color,token_word->word);
+					ZG_TTFont_Print(data->font,x_draw,y_draw,font_scale,color,token_word->word);
 				}
 				x+=(token_word->word_width)*inc_x;
 				break;

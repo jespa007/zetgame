@@ -39,11 +39,12 @@ void	 		ZG_TTFont_SetStyle(ZG_TTFont *_this,ZG_TTFontStyle _style);
 //void	 		ZG_TTFont_SetFontSize(ZG_TTFont *_this,uint16_t _font_size);
 uint16_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this);
 int				ZG_TTFont_GetAscender(ZG_TTFont *_this);
+int				ZG_TTFont_GetDescender(ZG_TTFont *_this);
 int				ZG_TTFont_GetSpaceWidth(ZG_TTFont *_this);
 void 			ZG_TTFont_RenderTextBegin(ZG_Color4f *color);
 void 			ZG_TTFont_RenderTextEnd(void);
-void 			ZG_TTFont_Print(ZG_TTFont *_this,float posx, float posy,ZG_Color4f _color, const char *str,...);
-void 			ZG_TTFont_WPrint(ZG_TTFont *_this,float posx, float posy,ZG_Color4f _color, const wchar_t *str,...);
+void 			ZG_TTFont_Print(ZG_TTFont *_this,float _posx, float _posy, float _font_scale, ZG_Color4f _color, const char *str,...);
+void 			ZG_TTFont_WPrint(ZG_TTFont *_this,float _posx, float _posy, float _font_scale, ZG_Color4f _color, const wchar_t *str,...);
 
 
 // Metrics

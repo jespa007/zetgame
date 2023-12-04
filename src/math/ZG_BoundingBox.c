@@ -23,3 +23,13 @@ ZG_BoundingBox  ZG_BoundingBox_New4f(
 		,.maxy=_maxy
 	};
 }
+
+ZG_BoundingBox  ZG_BoundingBox_MulFactor(ZG_BoundingBox _bb, float _factor){
+
+	return (ZG_BoundingBox){
+		.minx=_bb.minx *_factor
+		,.miny=_bb.miny * _factor
+		,.maxx=_bb.maxx * _factor
+		,.maxy=_bb.maxy * _factor
+	};
+}

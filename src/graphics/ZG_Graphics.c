@@ -786,7 +786,7 @@ void ZG_Graphics_Print(int x, int y, ZG_Color4f color, const char *in, ...){
 	ZG_Vector3f pos3d=ZG_ViewPort_ScreenToWorld(x,y);
 
 	ZG_TTFont_RenderTextBegin(NULL);
-	ZG_TTFont_Print(ZG_TTFontManager_GetEmbeddedFont(),pos3d.x,pos3d.y,color,out);
+	ZG_TTFont_Print(ZG_TTFontManager_GetEmbeddedFont(),pos3d.x,pos3d.y,1,color,out);
 	ZG_TTFont_RenderTextEnd();
 }
 
@@ -795,7 +795,7 @@ void ZG_Graphics_WPrint(int x, int y, ZG_Color4f color, const wchar_t *in, ...){
 	ZG_WVARGS(out,in);
 
 	ZG_TTFont_RenderTextBegin(NULL);
-	ZG_TTFont_WPrint(ZG_TTFontManager_GetEmbeddedFont(),x,y,color,out);
+	ZG_TTFont_WPrint(ZG_TTFontManager_GetEmbeddedFont(),x,y,1,color,out);
 	ZG_TTFont_RenderTextEnd();
 }
 //---------------------------------------------------------------------------------------------------------------------------

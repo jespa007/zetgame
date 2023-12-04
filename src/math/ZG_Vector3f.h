@@ -15,6 +15,7 @@ ZG_Vector3f  ZG_Vector3f_Normalize(ZG_Vector3f  v);
 ZG_Vector3f  ZG_Vector3f_Add(ZG_Vector3f  v1,ZG_Vector3f  v2);
 ZG_Vector3f  ZG_Vector3f_Sub(ZG_Vector3f  v1,ZG_Vector3f  v2);
 ZG_Vector3f  ZG_Vector3f_Mul(ZG_Vector3f  v1,ZG_Vector3f  v2);
+ZG_Vector3f  ZG_Vector3f_MulFactor(ZG_Vector3f  v1, float _factor);
 
 
 #endif

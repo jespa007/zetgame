@@ -397,11 +397,22 @@ int main(int argc, char *argv[]){
 			,ZG_ARRAY_SIZE(alpha_fade_in_out_keyframes)
 	);*/
 
-	Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
+	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
 
 
 	//ZG_Transform transform_camera=ZG_Transform_DefaultValues();
 	do{
+
+		ZG_Input_Update();
+
+		// input management
+		if(ZG_KP_F9){
+			ZG_Graphics_ToggleFullscreen();
+		}
+
+		if(ZG_Input_IsLeftButtonPressed()){
+			printf("Mouse coordinates: %i %i\n",ZG_Input_GetMousePositionPtr()->x, ZG_Input_GetMousePositionPtr()->y);
+		}
 
 		ZG_Graphics_BeginRender();
 
@@ -414,17 +425,8 @@ int main(int argc, char *argv[]){
 		}*/
 
 
-		if(ZG_Input_IsLeftButtonPressed()){
-			printf("Mouse coordinates: %i %i\n",ZG_Input_GetMousePositionPtr()->x, ZG_Input_GetMousePositionPtr()->y);
-		}
-
-		if(K_T){
-			Graphics_ToggleFullscreen();
-		}
-
 		ZG_Graphics_EndRender();
 
-		ZG_Input_Update();
 
 	}while(!ZG_KP_ESC);
 

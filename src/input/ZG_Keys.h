@@ -337,6 +337,7 @@ typedef enum {
 #define  ZG_KP_TAB	       		g_zg_key_pressed[ZG_KEY_ID_TAB]
 
 #define  ZG_KP_F8	    		g_zg_key_pressed[ZG_KEY_ID_F8]
+#define  ZG_KP_F9	    		g_zg_key_pressed[ZG_KEY_ID_F9]
 #define  ZG_KP_F1	    		g_zg_key_pressed[ZG_KEY_ID_F1]
 #define  ZG_KP_F2	    		g_zg_key_pressed[ZG_KEY_ID_F2]
 #define  ZG_KP_F12	    		g_zg_key_pressed[ZG_KEY_ID_F12]

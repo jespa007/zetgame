@@ -15,5 +15,6 @@ ZG_BoundingBox  ZG_BoundingBox_New4f(
 	,float _ymax
 );
 
+ZG_BoundingBox  ZG_BoundingBox_MulFactor(ZG_BoundingBox _bb, float _factor);
 
 #endif
