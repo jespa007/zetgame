@@ -34,12 +34,10 @@ typedef struct{
 	ZG_TBRT_TokenType tbrt_token_type;
 }ZG_TBRT_Token;
 
-
 typedef struct{
 	ZG_List	*		token_lines; // each line a list of tb_tokens word, end line, format, etc
 	ZG_BoundingBox		bounding_box; // bounding total rendered text
 }ZG_TBRenderText;
-
 
 typedef struct{
 	ZG_TTFont 				*	font; // init font
@@ -126,7 +124,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 	size_t sizeof_char=sizeof(char);
 	float font_scale=(float)data->font_size/(float)ZG_TTFont_GetFontSize(data->font);
 
-	int char_height=data->font_size;////(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
+	float char_height=(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
 
 	if(data->char_type==ZG_CHAR_TYPE_WCHAR){
 		sizeof_char=sizeof(wchar_t);
@@ -172,8 +170,8 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 
 	uint16_t word_width=0;
 	ZG_BoundingBox bb_word;//=ZG_TTFont_GetBoundingBox(data->font,);
-	uint16_t space_width=ZG_TTFont_GetSpaceWidth(data->font)*font_scale;
-	int y=0;
+	float space_width=ZG_TTFont_GetSpaceWidth(data->font)*font_scale;
+	float y=0;
 
 	// for each line
 	for(unsigned i=0; i < lines->count; i++){
@@ -181,7 +179,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 		tbrt_token_line=ZG_TextBox_RT_NewLine(data);
 
 		unsigned long ch=0;
-		uint16_t total_space_width=0;
+		float total_space_width=0;
 
 		do{
 
@@ -440,13 +438,13 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	float x_draw=0;
 	float y_draw=0;
 	float y_draw_inc=0;
-	int y=0;
-	int x=0;
-	uint16_t text_total_width=0;
-	uint16_t text_total_height=0;
+	float y=0;
+	float x=0;
+	int text_total_width=0;
+	int text_total_height=0;
 	ZG_Vector3f dim3d;
-	//int char_height=0;
-	int space_width=0;
+	float char_height=0;
+	float space_width=0;
 	float font_scale=(float)data->font_size/(float)ZG_TTFont_GetFontSize(data->font);
 
 	// TODO: pos is at center box by default, do a wat yo change render center
@@ -461,7 +459,7 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	x=0;
 
 	dim3d=ZG_ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
-	//char_height=(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
+	char_height=(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
 	space_width=ZG_TTFont_GetSpaceWidth(data->font)*font_scale;
 
 	if(data->vertical_alignment == ZG_VERTICAL_ALIGNMENT_CENTER){
@@ -472,7 +470,7 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	}
 
 	y_draw=-ZG_ViewPort_ScreenToWorldHeight(y);
-	y_draw_inc=-ZG_ViewPort_ScreenToWorldHeight(data->font_size);
+	y_draw_inc=-ZG_ViewPort_ScreenToWorldHeight(char_height);
 
 	if(data->border_tickness>0){
 		ZG_Graphics_DrawRectangle4f(

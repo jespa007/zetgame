@@ -1,6 +1,6 @@
 #include "@zg_graphics.h"
 
-#define ZG_TTFONT_MANAGER_FONT_SIZE_QUALITY	64
+#define ZG_TTFONT_MANAGER_FONT_SIZE_QUALITY	32
 
 typedef struct{
 	ZG_MapString	* 	fonts;
@@ -13,8 +13,6 @@ typedef struct{
 
 static ZG_TTFont 	*	g_font_embedded=NULL;
 static FT_Library		g_ft_handler=NULL;
-
-
 
 // STATIC
 void	ZG_TTFontManager_Init(void){
@@ -51,7 +49,6 @@ void	 ZG_TTFontManager_OnDeleteNode(ZG_MapStringNode *node){
 	}
 }
 
-
 void	ZG_TTFontManager_DeInit(void){
 
 	// erase all loaded fonts...
@@ -67,7 +64,6 @@ void	ZG_TTFontManager_DeInit(void){
 }
 
 // MEMBERS
-
 ZG_TTFontManager *	ZG_TTFontManager_New(void){
 	ZG_TTFontManager *tfm=ZG_NEW(ZG_TTFontManager);
 	ZG_TTFontManagerData *data=ZG_NEW(ZG_TTFontManagerData);
@@ -98,7 +94,6 @@ const char *	ZG_TTFontManager_GetDefaultFontName(ZG_TTFontManager *_this){
 	ZG_TTFontManagerData *data=_this->data;
 	return data->default_font_name;
 }
-
 
 void 			ZG_TTFontManager_SetFontResourcePath(ZG_TTFontManager *_this,const char * path){
 	ZG_TTFontManagerData *data=_this->data;
