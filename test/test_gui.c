@@ -42,8 +42,15 @@ int main(int argc, char *argv[]){
 		//ZG_GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
 			// input management
+
+			// toggle fullscreen
 			if(ZG_KP_F9){
 				ZG_Graphics_ToggleFullscreen();
+			}
+
+			// screen shoot
+			if(ZG_KP_F12){
+				ZG_Graphics_MakeScreenShot();
 			}
 
 			ZG_Graphics_BeginRender();

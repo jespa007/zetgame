@@ -67,7 +67,7 @@ bool SDL_SaveJPG(const char * filename, SDL_Surface * srf){
 	if(srf!=NULL){
 		SDL_Surface *aux=NULL;
 		if(srf->format->BitsPerPixel != 24){ // convert in 24 bits auxiliary
-			aux=SDL_ConvertSurfaceExt(srf,0,24);
+			aux=SDL_ConvertSurfaceExt(srf,0,3); // 3 bytes per pixel -> 24bits per pixel
 			if(aux==NULL){
 				return false;
 			}
@@ -77,6 +77,8 @@ bool SDL_SaveJPG(const char * filename, SDL_Surface * srf){
 		if((out=jpeg_encode_mem(srf->pixels, srf->w, srf->h, 80, &outsize))!=NULL){
 			ZG_BufferByte bb=(ZG_BufferByte){.ptr=out,.len=outsize};
 			ok=File_Write(filename,&bb);
+
+			ZG_FREE(bb.ptr);
 		}
 		else{
 			ZG_LOG_ERROR("Error saving %s",filename);
@@ -121,22 +123,30 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 
 	if(srf!=NULL){
 		SDL_Surface *aux=NULL;
-		if(srf->format->BitsPerPixel != 32){ // convert in 32 bits auxiliary
-			aux=SDL_ConvertSurfaceExt(srf,0,32);
-			if(aux==NULL){
-				return false;
-			}
-			srf=aux;
+		LodePNGColorType color_type=0;
+
+		switch(srf->format->BitsPerPixel){
+		case 24:
+			color_type=LCT_RGB;
+			break;
+		case 32:
+			color_type=LCT_RGBA;
+			break;
+		default:
+			ZG_LOG_ERROR("SDL_SavePNG : Error saving %s. Unsupported bit depth",filename);
+			return false;
+
 		}
 
 		//unsigned lodepng_encode_memory(unsigned char** out, size_t* outsize, const unsigned char* image,
 		//                               unsigned w, unsigned h, LodePNGColorType colortype, unsigned bitdepth)
-		error=lodepng_encode_memory(&out,&outsize,srf->pixels,srf->w,srf->h,LCT_RGBA,32);
+		error=lodepng_encode_memory(&out,&outsize,srf->pixels,srf->w,srf->h,color_type,8);
 		if(!error){
 			ZG_BufferByte bb=(ZG_BufferByte){.ptr=out,.len=outsize};
 			ok=File_Write(filename,&bb);
+			ZG_FREE(bb.ptr);
 		}else{
-			ZG_LOG_ERROR("Error saving %s",filename);
+			ZG_LOG_ERROR("SDL_SavePNG : Error saving %s. %s",filename,lodepng_error_text(error));
 		}
 
 		if(aux != NULL){

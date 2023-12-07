@@ -65,7 +65,7 @@ int main(int argc, char * argv[]){
 			aux_ptr++;
 		}
 
-		if(ZG_KP_T){
+		if(ZG_KP_F9){
 			ZG_Graphics_ToggleFullscreen();
 		}
 

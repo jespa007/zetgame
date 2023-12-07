@@ -23,14 +23,14 @@
 		font-file="half_bold_pixel-7.ttf"
 	></textbox>
 
-	<texture 
+	<image 
 		id="img_time_left" 
 		left="10" 
 		top="55" 
 		height="25"
 		width="25"
 		source="clock.png" 
-	></texture>		
+	></image>		
 	    
 	<textbox 
 		id="lbl_time_left" 
@@ -53,7 +53,7 @@
 		font-file="half_bold_pixel-7.ttf"
 	 ></textbox>
 	 
-	<texture  
+	<image  
 		id="star1" 
 		source="star_on.png"
 		text="1" 
@@ -64,9 +64,9 @@
 		color="#0"
 		font-file="half_bold_pixel-7.ttf"
 		font-size="25"
-	></texture>
+	></image>
 	
-	<texture  
+	<image  
 		id="star2" 
 		top="155" 
 		left="540" 
@@ -77,9 +77,9 @@
 		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></texture>
+	></image>
 	
-	<texture  
+	<image  
 		id="star3" 
 		top="155" 
 		left="600" 
@@ -90,9 +90,9 @@
 		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></texture>
+	></image>
 	
-	<texture  
+	<image  
 		id="star4" 
 		top="155" 
 		left="660" 
@@ -103,9 +103,9 @@
 		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></texture>
+	></image>
 	
-	<texture  	
+	<image  	
 		id="star5" 
 		top="155" 
 		left="720" 
@@ -116,7 +116,7 @@
 		color="#0"
 		font-size="25"
 		font-file="half_bold_pixel-7.ttf"
-	></texture>
+	></image>
 
 	<textbox 
 		id="lbl_title" 

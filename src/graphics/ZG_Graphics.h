@@ -55,7 +55,7 @@ float ZG_Graphics_GetOneOverAspectRatio(void);
 void ZG_Graphics_PrintGraphicsInfo(void);
 void ZG_Graphics_SetBackgroundColor(ZG_Color4f color);
 
-void ZG_Graphics_MakeScreenShoot(void);
+void ZG_Graphics_MakeScreenShot(void);
 
 void ZG_Graphics_ClearScreen(ZG_Color4f color);
 

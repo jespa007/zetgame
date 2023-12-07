@@ -355,7 +355,7 @@ bool ZG_GUIWindowManager_ProcessTag(GUIWMWindowData *_window_data,ZG_GUIWidget *
 		 return ZG_GUIWindowManager_NewTextBox(_window_data,_parent,e);
 	 }else if(ZG_STRCMP(e->name,==,"button")){
 		 return ZG_GUIWindowManager_NewButton(_window_data,_parent,e);
-	 }else if(ZG_STRCMP(e->name,==,"texture")){
+	 }else if(ZG_STRCMP(e->name,==,"image")){
 		 return ZG_GUIWindowManager_NewTexture(_window_data,_parent,e);
 	 }else if(ZG_STRCMP(e->name,==,"textbox")){
 		 return ZG_GUIWindowManager_NewTextBox(_window_data,_parent,e);

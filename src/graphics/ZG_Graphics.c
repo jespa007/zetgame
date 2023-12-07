@@ -527,6 +527,10 @@ void ZG_Graphics_SetBackgroundColor3i(ZG_Color4f c){
 	g_graphics_vars->background_color = c;
 }
 
+void ZG_Graphics_MakeScreenShot(void){
+	g_graphics_vars->screenshoot_request=true;
+}
+
 void ZG_Graphics_ClearScreen(ZG_Color4f color){
 	g_graphics_vars->start_ms=SDL_GetTicks();
 	switch(g_graphics_vars->graphics_api){
