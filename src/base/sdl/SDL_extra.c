@@ -122,7 +122,6 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 	bool ok=false;
 
 	if(srf!=NULL){
-		SDL_Surface *aux=NULL;
 		LodePNGColorType color_type=0;
 
 		switch(srf->format->BitsPerPixel){
@@ -147,10 +146,6 @@ bool SDL_SavePNG(const char * filename, SDL_Surface * srf){
 			ZG_FREE(bb.ptr);
 		}else{
 			ZG_LOG_ERROR("SDL_SavePNG : Error saving %s. %s",filename,lodepng_error_text(error));
-		}
-
-		if(aux != NULL){
-			SDL_FreeSurface(aux);
 		}
 	}
 
