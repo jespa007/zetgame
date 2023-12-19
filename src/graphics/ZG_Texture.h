@@ -25,10 +25,6 @@ struct ZG_Texture{
 	ZG_TextureType texture_type;
 };
 
-// static
-void	  	ZG_Texture_Init(void);
-void	  	ZG_Texture_DeInit(void);
-
 // public
 void 		ZG_Texture_SetTextureResourcePath(const char *resource_path);
 

@@ -269,10 +269,10 @@ int main(int argc, char *argv[]){
 	ZG_TTFont_SetFontResourcePath("../../../test/data/fonts");
 	ZG_TextureManager_SetTextureResourcePath(tm,"../../../test/data/images");
 
-	ZG_Texture * text_ground=ZG_TextureManager_Get(tm,"ground.png");
-	ZG_Texture * text_sun=ZG_TextureManager_Get(tm,"sun.png");
-	ZG_Texture * text_vane=ZG_TextureManager_Get(tm,"vane.png");
-	ZG_Texture * text_wheel=ZG_TextureManager_Get(tm,"wheel.png");
+	ZG_Texture * text_ground=ZG_TextureManager_GetTexture(tm,"ground.png");
+	ZG_Texture * text_sun=ZG_TextureManager_GetTexture(tm,"sun.png");
+	ZG_Texture * text_vane=ZG_TextureManager_GetTexture(tm,"vane.png");
+	ZG_Texture * text_wheel=ZG_TextureManager_GetTexture(tm,"wheel.png");
 
 	// setup animations/actions (update material action function)...
 	ZG_MaterialAction 	  	 			*mat_act_fade_in_out=MaterialAction_New();//ZG_MATERIAL_COMPONENT_MAX);

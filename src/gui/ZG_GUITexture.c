@@ -61,7 +61,7 @@ void			ZG_GUITexture_SetTexture(ZG_GUITexture *_this, const char *_source){
 	ZG_TextureManager *texture_manager=ZG_GUIWidget_GetTextureManager(_this->widget);
 
 	if(texture_manager!=NULL){
-		data->texture=ZG_TextureManager_Get(texture_manager,_source);
+		data->texture=ZG_TextureManager_GetTexture(texture_manager,_source);
 	}
 }
 

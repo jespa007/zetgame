@@ -97,7 +97,7 @@ bool ZG_SpriteKeyFrameManager_LoadFromMemory(
 		sprintf(filename,"%s/%s",path,image->valuestring);
 
 		// everything ok, so we can proceed with loading
-		texture=ZG_TextureManager_Get(data->texture_manager,filename);
+		texture=ZG_TextureManager_GetTexture(data->texture_manager,filename);
 		if(texture!=NULL){
 			// create sprite frame packs and add to list/map
 			ZG_SpriteKeyFrameResource *skp=ZG_SpriteKeyFrameResource_New(cJSON_GetArraySize(layers),texture);

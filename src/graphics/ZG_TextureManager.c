@@ -3,7 +3,6 @@
 typedef struct{
 	ZG_MapString 	* 	textures;
 	const char 	*	texture_resource_path;
-	ZG_Texture		* 	texture_embedded;
 }ZG_TextureManagerData;
 
 static ZG_Texture		* 	g_default_texture=NULL;
@@ -53,7 +52,7 @@ void 		ZG_TextureManager_SetTextureResourcePath(ZG_TextureManager *_this,const c
 	data->texture_resource_path=path;
 }
 
-ZG_Texture * 		ZG_TextureManager_Get(ZG_TextureManager *_this,const char * _filename){
+ZG_Texture * 		ZG_TextureManager_GetTexture(ZG_TextureManager *_this,const char * _filename){
 
 	if(_this==NULL){
 		return NULL;

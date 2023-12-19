@@ -184,7 +184,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 		}
 
 		sprintf(filename,"%s/%s",_path,image->valuestring);
-		if((texture=ZG_TextureManager_Get(data->texture_manager,filename)) == NULL){
+		if((texture=ZG_TextureManager_GetTexture(data->texture_manager,filename)) == NULL){
 			goto tmm_load_error;
 		}
 
