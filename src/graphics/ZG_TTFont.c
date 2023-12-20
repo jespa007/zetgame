@@ -11,7 +11,7 @@
 typedef struct{
 	const char 	*	font_filename;
 	ZG_MapInt 	*	characters;
-    uint16_t 		font_size;
+    uint8_t 		font_size;
     int 			space_width; // in pixels
     uint32_t 		font_properties;
 	int				ascender;
@@ -39,63 +39,11 @@ typedef struct{
 
 //-------
 // GLOBAL
-/*
-static ZG_TTFont 		*	g_font_embedded=NULL;
-static FT_Library			g_ft_handler=NULL;
-static char					g_font_resource_path[256]={0};
-*/
 // Prototypes
 void 					TTFont_RenderText(ZG_TTFont *_this,float _x3d, float _y3d, float _scale, ZG_Color4f _color,const void *_text, ZG_CharType _char_type);
 
 void 					TTFont_Unload(ZG_TTFont *_this);
 void	 				ZG_TTFont_OnDeleteNode(ZG_MapIntNode *node);
-/*ZG_TTFont 			* 		TTFont_NewEmpty(void);
-ZG_TTFont 			*		ZG_TTFont_NewFromMemory(
-	const uint8_t *buffer
-	, size_t buffer_len
-);*/
-
-/*
-// STATIC
-void	ZG_TTFont_Init(void){
-	if(g_ft_handler == NULL){
-		// All functions return a value different than 0 whenever an error occurred
-		if (FT_Init_FreeType(&g_ft_handler)){
-			ZG_LOG_ERRORF("FREETYPE: Could not init FreeType Library");
-		}
-	}
-}
-
-ZG_TTFont * 		ZG_TTFont_GetEmbeddedFont(void){
-	if(g_font_embedded == NULL){
-		g_font_embedded=ZG_TTFont_NewFromMemory(pf_arma_five_ttf,pf_arma_five_ttf_len,16);
-	}
-	return g_font_embedded;
-}
-
-void 			ZG_TTFont_SetFontResourcePath(const char * path){
-	strcpy(g_font_resource_path,path);
-}
-
-const char * 	ZG_TTFont_GetFontResourcePath(void){
-	return g_font_resource_path;
-}
-
-
-void	ZG_TTFont_DeInit(void){
-	// erase all loaded fonts...
-	if(g_font_embedded != NULL){
-		ZG_TTFont_Delete(g_font_embedded);
-		g_font_embedded = NULL;
-	}
-
-
-	if(g_ft_handler != NULL){
-		FT_Done_FreeType(g_ft_handler);
-		g_ft_handler=NULL;
-	}
-}
-*/
 
 //--------
 // PRIVATE
@@ -154,18 +102,13 @@ void TTFont_BuildChars(
 
 	data->font_size=_font_size;
 
-    FT_Set_Pixel_Sizes(data->ft_face, 0, data->font_size);
-    if(FT_Set_Char_Size(
+	if(FT_Set_Pixel_Sizes(
 		data->ft_face
-		, (FT_F26Dot6)(0)
-		, (FT_F26Dot6)(_font_size << 6)
 		, 0
-		, 0
+		, data->font_size
 	)!=0){
-    	ZG_LOG_ERRORF("FREETYTPE: Can't set pizel size");
-    }
-
-   // TTFont_setStyle(_this,data->font_style);
+		ZG_LOG_ERRORF("TTFont_BuildChars: Can't set pixel size");
+	}
 
 	// Load space character
 	if (FT_Load_Char(data->ft_face, ' ', FT_LOAD_RENDER)==0)
@@ -179,14 +122,11 @@ void TTFont_BuildChars(
     data->ascender=data->ft_face->ascender>>6;
     data->descender=data->ft_face->descender>>6;
 
-	//int max_bearing_y=-1;
     for (unsigned long c = char_ini; c < char_end; c++)
     {
     	ZG_TTFontCharacter *font_character=ZG_TTFont_BuildChar(_this,c);
-    	//max_bearing_y=MAX(max_bearing_y,font_character->bearing.y);
     	ZG_MapInt_Set(data->characters,c,font_character);
     }
-    //data->max_bearing_y=max_bearing_y;
 }
 
 
@@ -228,7 +168,6 @@ ZG_TTFont *ZG_TTFont_NewFromMemory(
 
     data->characters=ZG_MapInt_New();
     data->characters->on_delete=ZG_TTFont_OnDeleteNode;
-    data->font_size=ZG_DEFAULT_FONT_SIZE;
 
     // data
     data->geometry=ZG_Geometry_NewTexturedRectangle2d();
@@ -314,7 +253,7 @@ void	 		ZG_TTFont_SetFontSize(ZG_TTFont *_this,uint16_t _font_size){
 	);
 }
 */
-uint16_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this){
+uint8_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;
 	return data->font_size;
 }

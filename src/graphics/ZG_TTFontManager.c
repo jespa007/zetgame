@@ -1,10 +1,9 @@
 #include "@zg_graphics.h"
 
-#define ZG_TTFONT_MANAGER_FONT_SIZE_QUALITY	32
+#define ZG_TTFONT_MANAGER_FONT_SIZE_QUALITY	10
 
 typedef struct{
 	ZG_MapString	* 	fonts;
-	ZG_TTFont 		* 	default_font;
 	const char 		*	font_resource_path;
 	char 				default_font_name[ZG_MAX_FONT_NAME];
 
@@ -68,7 +67,6 @@ ZG_TTFontManager *	ZG_TTFontManager_New(void){
 	ZG_TTFontManagerData *data=ZG_NEW(ZG_TTFontManagerData);
 
 	data->fonts=NULL;
-	data->default_font=NULL;
 	data->font_resource_path=".";
 	g_font_embedded=NULL;
 	strcpy(data->default_font_name,ZG_DEFAULT_FONT_FAMILY);

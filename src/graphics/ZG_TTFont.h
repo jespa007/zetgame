@@ -24,20 +24,14 @@ ZG_TTFont *		ZG_TTFont_NewFromFile(const char *ttf_file, uint8_t _font_size);
 ZG_TTFont *		ZG_TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, uint8_t _font_size);
 
 
-//ZG_TTFont * 	ZG_TTFont_GetEmbeddedFont(void);
-
 // static
 void			ZG_TTFont_Init(void);
-//ZG_TTFont * 	ZG_TTFont_GetEmbeddedFont(void);
-//void 			ZG_TTFont_SetFontResourcePath(const char * path);
-//const char * 	ZG_TTFont_GetFontResourcePath(void);
 void			ZG_TTFont_DeInit(void);
 
 
 // members
 void	 		ZG_TTFont_SetStyle(ZG_TTFont *_this,ZG_TTFontStyle _style);
-//void	 		ZG_TTFont_SetFontSize(ZG_TTFont *_this,uint16_t _font_size);
-uint16_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this);
+uint8_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this);
 int				ZG_TTFont_GetAscender(ZG_TTFont *_this);
 int				ZG_TTFont_GetDescender(ZG_TTFont *_this);
 int				ZG_TTFont_GetSpaceWidth(ZG_TTFont *_this);
