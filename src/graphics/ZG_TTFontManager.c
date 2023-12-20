@@ -6,7 +6,6 @@ typedef struct{
 	ZG_MapString	* 	fonts;
 	ZG_TTFont 		* 	default_font;
 	const char 		*	font_resource_path;
-	ZG_TTFont 		* 	font_embedded;
 	char 				default_font_name[ZG_MAX_FONT_NAME];
 
 }ZG_TTFontManagerData;
