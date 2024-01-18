@@ -77,13 +77,13 @@ ZG_TBRT_Token *ZG_TextBox_RT_NewTokenWord(
 	return token;
 }
 
-ZG_TBRT_TokenLine *ZG_TextBox_RT_NewLine(ZG_TextBoxData *data){
+ZG_TBRT_TokenLine *ZG_TextBox_RT_NewLine(ZG_TextBoxData *data, float _scale){
 
 	ZG_TBRT_TokenLine *tbrt_token_line=ZG_NEW(ZG_TBRT_TokenLine);
 	tbrt_token_line->tbrt_tokens=ZG_List_New();
 
 	ZG_List_Add(data->render_text.token_lines,tbrt_token_line);
-	tbrt_token_line->space_width=ZG_TTFont_GetSpaceWidth(data->font);
+	tbrt_token_line->space_width=ZG_TTFont_GetSpaceWidth(data->font)*_scale;
 	return tbrt_token_line;
 }
 
@@ -176,7 +176,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 	// for each line
 	for(unsigned i=0; i < lines->count; i++){
 		void *text_line=lines->items[i];
-		tbrt_token_line=ZG_TextBox_RT_NewLine(data);
+		tbrt_token_line=ZG_TextBox_RT_NewLine(data,font_scale);
 
 		unsigned long ch=0;
 		float total_space_width=0;
@@ -257,7 +257,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 					bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
 				}
 
-				tbrt_token_line=ZG_TextBox_RT_NewLine(data);
+				tbrt_token_line=ZG_TextBox_RT_NewLine(data,font_scale);
 				total_space_width=0;
 				y+=char_height;
 			}else{

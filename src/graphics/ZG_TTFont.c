@@ -118,7 +118,7 @@ void TTFont_BuildChars(
 		ZG_LOG_ERRORF("FREETYTPE: Failed to load Glyph");
 	}
 
-	// main
+	// Ascender/Descender
     data->ascender=data->ft_face->ascender>>6;
     data->descender=data->ft_face->descender>>6;
 
