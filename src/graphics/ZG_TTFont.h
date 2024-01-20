@@ -34,6 +34,7 @@ void	 		ZG_TTFont_SetStyle(ZG_TTFont *_this,ZG_TTFontStyle _style);
 uint8_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this);
 int				ZG_TTFont_GetAscender(ZG_TTFont *_this);
 int				ZG_TTFont_GetDescender(ZG_TTFont *_this);
+int				ZG_TTFont_GetCharHeight(ZG_TTFont *_this);
 int				ZG_TTFont_GetSpaceWidth(ZG_TTFont *_this);
 void 			ZG_TTFont_RenderTextBegin(ZG_Color4f *color);
 void 			ZG_TTFont_RenderTextEnd(void);

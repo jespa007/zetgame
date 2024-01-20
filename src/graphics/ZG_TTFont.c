@@ -16,6 +16,7 @@ typedef struct{
     uint32_t 		font_properties;
 	int				ascender;
 	int				descender;
+	int				char_height;
 	float 			weight,shear;
 	uint8_t 		style;
     ZG_Geometry 	*geometry;
@@ -122,11 +123,19 @@ void TTFont_BuildChars(
     data->ascender=data->ft_face->ascender>>6;
     data->descender=data->ft_face->descender>>6;
 
+    int min_height_char=INT_MAX;
+    int max_height_char=-INT_MAX;
+
     for (unsigned long c = char_ini; c < char_end; c++)
     {
     	ZG_TTFontCharacter *font_character=ZG_TTFont_BuildChar(_this,c);
     	ZG_MapInt_Set(data->characters,c,font_character);
+
+    	min_height_char=MIN(min_height_char,-font_character->bearing.y);
+		max_height_char=MAX(max_height_char,font_character->size.y-font_character->bearing.y);
     }
+
+    data->char_height=max_height_char-min_height_char;
 }
 
 
@@ -234,6 +243,11 @@ int				ZG_TTFont_GetDescender(ZG_TTFont *_this){
 	return data->descender;
 }
 
+
+int				ZG_TTFont_GetCharHeight(ZG_TTFont *_this){
+	ZG_TTFontData *data=_this->data;
+	return data->char_height;
+}
 
 int				ZG_TTFont_GetSpaceWidth(ZG_TTFont *_this){
 	ZG_TTFontData *data=_this->data;

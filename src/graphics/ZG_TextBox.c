@@ -124,7 +124,7 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 	size_t sizeof_char=sizeof(char);
 	float font_scale=(float)data->font_size/(float)ZG_TTFont_GetFontSize(data->font);
 
-	float char_height=(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
+	float char_height=ZG_TTFont_GetCharHeight(data->font)*font_scale;//(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
 
 	if(data->char_type==ZG_CHAR_TYPE_WCHAR){
 		sizeof_char=sizeof(wchar_t);
@@ -459,7 +459,7 @@ void	 ZG_TextBox_Draw(ZG_TextBox *_this, ZG_Transform *transform,ZG_Color4f *_co
 	x=0;
 
 	dim3d=ZG_ViewPort_ScreenToWorldDimension2i(data->dimensions.x,data->dimensions.y);
-	char_height=(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
+	char_height=ZG_TTFont_GetCharHeight(data->font)*font_scale;//(ZG_TTFont_GetAscender(data->font)-ZG_TTFont_GetDescender(data->font))*font_scale;
 	space_width=ZG_TTFont_GetSpaceWidth(data->font)*font_scale;
 
 	if(data->vertical_alignment == ZG_VERTICAL_ALIGNMENT_CENTER){
