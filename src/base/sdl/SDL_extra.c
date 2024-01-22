@@ -60,8 +60,8 @@ SDL_Surface * SDL_LoadJPGFromMemory(const uint8_t *buffer_src, size_t buffer_src
 }
 
 bool SDL_SaveJPG(const char * filename, SDL_Surface * srf){
-	uint8_t *out;
-	unsigned long outsize;
+	uint8_t *out=NULL;
+	unsigned long outsize=0;
 	bool ok=false;
 
 	if(srf!=NULL){

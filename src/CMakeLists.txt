@@ -153,6 +153,82 @@ endif()
 MESSAGE ("-- Target : " ${CMAKE_BUILD_TYPE})
 MESSAGE ("-- Compiler: " ${COMPILER})
 
+#-------------------------------------------------------
+#
+# ZETPACKER
+#
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
+	file(READ "${PROJECT_SOURCE_DIR}/../../zetpacker/src/zetpacker.h" zetpacker_h)
+ELSE()
+	file(READ "${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetpacker/zetpacker.h" zetpacker_h)
+ENDIF()
+	
+string(REGEX MATCH "ZETPACKER_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetpacker_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_MAJOR)
+
+string(REGEX MATCH "ZETPACKER_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetpacker_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_MINOR)
+
+string(REGEX MATCH "ZETPACKER_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetpacker_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_PATCH)
+
+set(ZETPACKER_LIB_NAME "zetpacker-${ZETPACKER_VERSION_MAJOR}-${ZETPACKER_VERSION_MINOR}-${ZETPACKER_VERSION_PATCH}")
+
+
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
+	MESSAGE ("-- zetpacker_dev: ON" )
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../../zetpacker/src
+	) 	
+
+	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetpacker/bin/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETPACKER_LIB_NAME}-static_d.a)
+else()
+	MESSAGE ("-- zetpacker_dev: OFF" )
+	
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetpacker
+	)
+	
+	set( LIB_DEPS ${LIB_DEPS}   ${ZETPACKER_LIB_NAME}-static )
+endif()
+
+#-------------------------------------------------------
+#
+# ZETNET
+#
+
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
+	file(READ "${PROJECT_SOURCE_DIR}/../../zetpacker/src/zetnet.h" zetnet_h)
+ELSE()
+	file(READ "${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet/zetnet.h" zetnet_h)
+ENDIF()
+
+string(REGEX MATCH "ZETNET_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetnet_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_MAJOR)
+
+string(REGEX MATCH "ZETNET_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetnet_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_MINOR)
+
+string(REGEX MATCH "ZETNET_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetnet_h})
+string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_PATCH)
+	
+set(ZETNET_LIB_NAME "zetnet-${ZETNET_VERSION_MAJOR}-${ZETNET_VERSION_MINOR}-${ZETNET_VERSION_PATCH}")
+
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
+	MESSAGE ("-- zetnet_dev: ON" )
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../../zetnet/src
+	) 	
+	
+	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetnet/bin/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETNET_LIB_NAME}-static_d.a)
+else()
+	MESSAGE ("-- zetnet_dev: OFF" )
+	include_directories (
+		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet
+	)
+	
+	set( LIB_DEPS ${LIB_DEPS}  ${ZETNET_LIB_NAME}-static )
+endif()
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #
@@ -164,84 +240,8 @@ LINK_DIRECTORIES (
 )
 
 
-# 3rd party libraries
-set( LIB_DEPS
-		jpeg 
-		freetype
-		xmp-lite 
-		SDL2
-) 
 
-
-if ( "${FFMPEG}" STREQUAL "true" )
-
-	set( LIB_DEPS ${LIB_DEPS} avformat avcodec avutil swscale swresample )
-
-endif()
-
-
-IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
-	MESSAGE ("-- zetpacker_dev: ON" )
-	include_directories (
-		${PROJECT_SOURCE_DIR}/../../zetpacker/src
-	) 	
-	
-	file(READ "${PROJECT_SOURCE_DIR}/../../zetpacker/src/zetpacker.h" zetpacker_h)
-	
-	string(REGEX MATCH "ZETPACKER_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetpacker_h})
-	string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_MAJOR)
-	
-	string(REGEX MATCH "ZETPACKER_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetpacker_h})
-	string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_MINOR)
-	
-	string(REGEX MATCH "ZETPACKER_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetpacker_h})
-	string(STRIP "${CMAKE_MATCH_1}" ZETPACKER_VERSION_PATCH)
-	
-	set(ZETPACKER_LIB_NAME "zetpacker-${ZETPACKER_VERSION_MAJOR}-${ZETPACKER_VERSION_MINOR}-${ZETPACKER_VERSION_PATCH}")
-	
-	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetpacker/bin/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETPACKER_LIB_NAME}_d.a)
-else()
-	IF (IS_DEBUG )
-		MESSAGE ("-- zetpacker_dev: OFF" )
-	ENDIF()
-	include_directories (
-		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetpacker
-	)
-	
-	set( LIB_DEPS ${LIB_DEPS}   zetpacker )
-endif()
-
-IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
-	MESSAGE ("-- zetnet_dev: ON" )
-	include_directories (
-		${PROJECT_SOURCE_DIR}/../../zetnet/src
-	) 	
-	
-	file(READ "${PROJECT_SOURCE_DIR}/../../zetnet/src/zetnet.h" zetnet_h)
-	
-	string(REGEX MATCH "ZETNET_VERSION_MAJOR([\t-\ ][0-9])*" _ ${zetnet_h})
-	string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_MAJOR)
-	
-	string(REGEX MATCH "ZETNET_VERSION_MINOR([\t-\ ][0-9])*" _ ${zetnet_h})
-	string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_MINOR)
-	
-	string(REGEX MATCH "ZETNET_VERSION_PATCH([\t-\ ][0-9])*" _ ${zetnet_h})
-	string(STRIP "${CMAKE_MATCH_1}" ZETNET_VERSION_PATCH)
-	
-	set(ZETNET_LIB_NAME "zetnet-${ZETNET_VERSION_MAJOR}-${ZETNET_VERSION_MINOR}-${ZETNET_VERSION_PATCH}")
-	
-	set( LIB_DEPS ${LIB_DEPS}  ${PROJECT_SOURCE_DIR}/../../zetnet/bin/${COMPILER}/${CMAKE_BUILD_TYPE}/lib${ZETNET_LIB_NAME}_d.a)
-else()
-	IF (IS_DEBUG )
-		MESSAGE ("-- zetnet_dev: OFF" )
-	ENDIF()
-	include_directories (
-		${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet
-	)
-	
-	set( LIB_DEPS ${LIB_DEPS}   zetnet )
-endif()
-
+#  3rdparty libs
 set(
  LIB_DEPS ${LIB_DEPS} 
  jpeg
@@ -251,11 +251,16 @@ set(
  
 )
 
+if ( "${FFMPEG}" STREQUAL "true" )
+	set( LIB_DEPS ${LIB_DEPS} avformat avcodec avutil swscale swresample )
+endif()
 
-# 3rd party libraries
-if(MSVC)
+
+# Specific OS libraries
+if(MSVC OR MINGW)
 	  # Add dependency platform libraries
   	set( LIB_DEPS  ${LIB_DEPS} 
+  			SDL2	 # SDL2
 		  	opengl32 # OpenGL for windows
 		  	Rpcrt4   # Win32 uuid create 
 		  	ws2_32	 # Win32 winsock2
@@ -263,53 +268,42 @@ if(MSVC)
 			winmm    # Win32 Audio
 			version  # Win32 GetVersion Info
 			setupapi # Win32 DiGet class
-			SDL2	 # SDL2
-			SDL2main # SDL2_main
 			Iphlpapi # Win32 network functions
 	)
-else()
-	list(APPEND CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/lib/cmake/SDL2/)
-	find_package(PkgConfig REQUIRED)
-	find_package(SDL2 REQUIRED)
 	
-
 	if(MINGW)
 		set(LIB_DEPS ${LIB_DEPS} 
 			mingw32
-			Rpcrt4	 # Win32 uuid create 
-			Opengl32 # OpenGL for windows
-			ws2_32	 # Win32 winsock2
-			Iphlpapi # Win32 network functions
-			
 		)
 		
+		# Disable console output if Release
 		if(NOT IS_DEBUG)
 			set(LIB_DEPS ${LIB_DEPS} 
 				 -mwindows
 			)
 		endif()
-		
-	else()
-		set(LIB_DEPS ${LIB_DEPS} 
-			GL		# OpenGL
-			uuid
-		)
-	endif()
+	endif()	
 	
-	set(LIB_DEPS ${LIB_DEPS} 
-		
-	   SDL2main 
-	   SDL2
+	
+	set( LIB_DEPS  ${LIB_DEPS} 
+		SDL2main # SDL2_main
+	)
+else()
+	# Linux or MacOS
+	
+	list(APPEND CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/lib/cmake/SDL2/)
+	find_package(PkgConfig REQUIRED)
+	find_package(SDL2 REQUIRED)
+
+	set(LIB_DEPS ${LIB_DEPS}
+		GL		# OpenGL
+		uuid
+	   ${SDL2_LIBRARIES}
 	   ${SDL2_EXTRA_LINK_FLAGS_STATIC}
 	)		
 endif()
 
-set( LINK_PARAMS "-Wl,--no-as-needed" )
-IF(MINGW)
-	set( LINK_PARAMS "${LINK_PARAMS},--export-all-symbols" )
-ENDIF()
-
-
+MESSAGE("LIB_DEPS ${LIB_DEPS}")
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #

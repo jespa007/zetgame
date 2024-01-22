@@ -2,7 +2,7 @@
 
 #define basic
 ZLIB_VERSION="zlib-1.2.8"
-SDL2_VERSION="SDL2-2.0.14"
+SDL2_VERSION="SDL2-2.24.1"
 LIBJPEG_VERSION="jpeg-9b"
 FREETYPE2_VERSION="freetype-2.5.2"
 LIBXMP_VERSION="libxmp-lite-4.5.0"
@@ -67,7 +67,7 @@ if [ $machine = "mingw" ]; then
 	BUILD=$HOST
 	TARGET_OS=mingw32
 	COMMON_CONFIGURE_OPTIONS=$COMMON_CONFIGURE_OPTIONS" --build=$BUILD"
-	CMAKE_CONFIG=($COMMON_CMAKE_OPTIONS -DCMAKE_COLOR_MAKEFILE=0xFF -G 'MinGW Makefiles' -DCMAKE_SH='CMAKE_SH-NOTFOUND')
+	CMAKE_CONFIG=($COMMON_CMAKE_OPTIONS -DCMAKE_COLOR_MAKEFILE=0xFF -G 'MinGW Makefiles')
 	export BINARY_PATH=$THIRD_PARTY_INSTALL_DIR"/bin"
 	export INCLUDE_PATH=$THIRD_PARTY_INSTALL_DIR"/include"
 	export LIBRARY_PATH=$THIRD_PARTY_INSTALL_DIR"/lib"
@@ -143,17 +143,16 @@ cd $SDL2_VERSION
 if ! [ -f $THIRD_PARTY_INSTALL_DIR"/lib/libSDL2"$EXTENSION_STATIC_LIB ] 
 then
 
-	#rm -rf build/gcc #CMakeCache.txt CMakeFiles
-	#cmake "${CMAKE_CONFIG[@]}" -DBUILD_SHARED_LIBS:BOOL=OFF
-	./configure $COMMON_CONFIGURE_OPTIONS --host=$HOST
+	rm -rf build
+	cmake "${CMAKE_CONFIG[@]}" -DBUILD_SHARED_LIBS:BOOL=false
 
 	if ! [ $? -eq 0 ] 
 	then
 		exit 1
 	fi
 
-	make clean #-C $BUILD_DIR
-	make -j2  install #-C $BUILD_DIR
+	make clean -C $BUILD_DIR
+	make -j2  install -C $BUILD_DIR
 
 	if ! [ $? -eq 0 ] 
 	then

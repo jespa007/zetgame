@@ -79,9 +79,10 @@ char *			ZG_String_CloneN(const char *in_str, size_t len){
 	char *out_str=NULL;
 	size_t size=strlen(in_str);
 	if(size > 0){
-		out_str=malloc(size+1);
+		size_t min_size=MIN(size,len);
+		out_str=malloc(min_size+1);
 		memset(out_str,0,size+1);
-		strncpy(out_str,in_str,MIN(size,len));
+		memcpy(out_str,in_str,min_size);
 	}else{
 		ZG_LOG_WARNINGF("input lenght string 0");
 	}
@@ -144,7 +145,7 @@ ZG_List *  ZG_String_SplitString(const char *str_in, const char *delim) {
     size_end=strlen(str_it)+1;
 	token=malloc((size_end+1)*sizeof(char));
     memset(token,0,(size_end+1)*sizeof(char));
-    strncpy(token,str_it,size_end);
+    memcpy(token,str_it,size_end);
     ZG_List_Add(elems,token);
     return elems;
 }
