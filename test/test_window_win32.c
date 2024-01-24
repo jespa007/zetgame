@@ -2,8 +2,6 @@
 #include <GL/gl.h>
 #include <Windows.h>
 
-#include <windows.h>
-
 const char g_szClassName[] = "myWindowClass";
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
