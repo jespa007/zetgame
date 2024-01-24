@@ -30,6 +30,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     WNDCLASSEX wc;
     HWND hwnd;
     MSG Msg;
+	
+	RECT wr = {0, 0, 800, 600};    // set the size, but not the position
+	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);    // adjust the size
 
     //Step 1: Registering the Window Class
     wc.cbSize        = sizeof(WNDCLASSEX);
@@ -54,12 +57,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     // Step 2: Creating the Window
     hwnd = CreateWindowEx(
-        WS_EX_CLIENTEDGE,
-        g_szClassName,
-		"OpenGL Window",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
-        NULL, NULL, hInstance, NULL);
+        0
+        ,g_szClassName
+		,"OpenGL Window"
+        ,WS_OVERLAPPEDWINDOW
+        ,CW_USEDEFAULT
+		, CW_USEDEFAULT
+		, wr.right - wr.left    // width of the window
+        ,  wr.bottom - wr.top    // height of the window
+        ,NULL
+		, NULL
+		, hInstance
+		, NULL);
 
     if(hwnd == NULL)
     {
