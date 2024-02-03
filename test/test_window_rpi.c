@@ -1,519 +1,355 @@
-/*
-Copyright (c) 2012, Broadcom Europe Ltd
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the copyright holder nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-// OpenGL|ES 2 demo using shader to compute mandelbrot/julia sets
-// Thanks to Peter de Rivas for original Python code
-
 #include <stdio.h>
-#include <fcntl.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #include <assert.h>
-#include <unistd.h>
-
-#include "bcm_host.h"
-
+#include <stdbool.h>
+#include <bcm_host.h>
 #include "GLES2/gl2.h"
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
 
-//#include "revision.h"
-
-typedef struct
-{
-   uint32_t screen_width;
-   uint32_t screen_height;
-// OpenGL|ES objects
-   EGLDisplay display;
-   EGLSurface surface;
-   EGLContext context;
-
-   GLuint verbose;
-   GLuint vshader;
-   GLuint fshader;
-   GLuint mshader;
-   GLuint program;
-   GLuint program2;
-   GLuint tex_fb;
-   GLuint tex;
-   GLuint buf;
-// julia attribs
-   GLuint unif_color, attr_vertex, unif_scale, unif_offset, unif_tex, unif_centre;
-// mandelbrot attribs
-   GLuint attr_vertex2, unif_scale2, unif_offset2, unif_centre2;
-} CUBE_STATE_T;
-
-static CUBE_STATE_T _state, *state=&_state;
+typedef struct{
+	DISPMANX_DISPLAY_HANDLE_T 	dispmanx_display;
+	EGL_DISPMANX_WINDOW_T 		dispmanx_window;
+	EGLDisplay egl_display;
+	EGLSurface egl_surface;
+}Window_RPI;
 
 #define check() assert(glGetError() == 0)
 
-static void showlog(GLint shader)
-{
-   // Prints the compile log for a shader
-   char log[1024];
-   glGetShaderInfoLog(shader,sizeof log,NULL,log);
-   printf("%d:shader:\n%s\n", shader, log);
-}
+void Window_RPI_Create(Window_RPI *_rpi_window){
+	memset(_rpi_window,0,sizeof(Window_RPI));
+	EGLBoolean result;
+	EGLContext egl_context;
+	EGLint egl_major=0;
+	EGLint egl_minor=0;
 
-static void showprogramlog(GLint shader)
-{
-   // Prints the information log for a program object
-   char log[1024];
-   glGetProgramInfoLog(shader,sizeof log,NULL,log);
-   printf("%d:program:\n%s\n", shader, log);
-}
+	if (bcm_host_get_processor_id() == BCM_HOST_PROCESSOR_BCM2838){
+	   puts("Cannot create window on the Pi4\n\n");
+	   exit(0);
+	}
 
-/***********************************************************
- * Name: init_ogl
- *
- * Arguments:
- *       CUBE_STATE_T *state - holds OGLES model info
- *
- * Description: Sets the display, OpenGL|ES context and screen stuff
- *
- * Returns: void
- *
- ***********************************************************/
-static void init_ogl(CUBE_STATE_T *state)
-{
-   int32_t success = 0;
-   EGLBoolean result;
-   EGLint num_config;
+    // Initialize Broadcom host library
+    bcm_host_init();
 
-   static EGL_DISPMANX_WINDOW_T nativewindow;
+    // Open a dispman_display on the default screen
+    _rpi_window->dispmanx_display = vc_dispmanx_display_open(0);
 
-   DISPMANX_ELEMENT_HANDLE_T dispman_element;
-   DISPMANX_DISPLAY_HANDLE_T dispman_display;
-   DISPMANX_UPDATE_HANDLE_T dispman_update;
-   VC_RECT_T dst_rect;
-   VC_RECT_T src_rect;
+    // Set up the dispman_display configuration
+    DISPMANX_MODEINFO_T mode_info;
+    vc_dispmanx_display_get_info(_rpi_window->dispmanx_display, &mode_info);
 
-   static const EGLint attribute_list[] =
-   {
-      EGL_RED_SIZE, 8,
-      EGL_GREEN_SIZE, 8,
-      EGL_BLUE_SIZE, 8,
-      EGL_ALPHA_SIZE, 8,
-      EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-      EGL_NONE
-   };
 
-   static const EGLint context_attributes[] =
-   {
+    // Create an EGL dispman_display
+    _rpi_window->egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    assert( _rpi_window->egl_display!=EGL_NO_DISPLAY);
+    check();
+
+    // Initialize EGL
+    result = eglInitialize(_rpi_window->egl_display, &egl_major, &egl_minor);
+    assert(EGL_TRUE== result);
+    check();
+
+    printf("egl_client_api:%s\n",eglQueryString(_rpi_window->egl_display,EGL_CLIENT_APIS));
+    printf("egl_version:%s\n",eglQueryString(_rpi_window->egl_display,EGL_VERSION));
+    printf("egl_vendor:%s\n",eglQueryString(_rpi_window->egl_display,EGL_VENDOR));
+    printf("egl_vendor:%s\n",eglQueryString(_rpi_window->egl_display,EGL_EXTENSIONS));
+
+    //-----------
+    // Available context configs
+
+    // Get the number of available configurations
+    EGLint num_configs;
+    result = eglGetConfigs(_rpi_window->egl_display, NULL, 0, &num_configs);
+    assert(EGL_TRUE == result);
+    check();
+
+    // Allocate memory for the configurations
+    EGLConfig* configs = malloc(num_configs * sizeof(EGLConfig));
+    result=eglGetConfigs(_rpi_window->egl_display, configs, num_configs, &num_configs);
+    assert(EGL_TRUE== result);
+    check();
+
+    bool egl_opengles2_support=false;
+
+    // Iterate through the configurations
+    for (int i = 0; i < num_configs; i++) {
+        EGLint renderable_type;
+
+        // check EGL_RENDERABLE_TYPE attribute ...
+        eglGetConfigAttrib(_rpi_window->egl_display, configs[i], EGL_RENDERABLE_TYPE, &renderable_type);
+
+        // You can inspect other attributes of the configuration here
+           // For example, color depth, depth buffer size, stencil buffer size, etc.
+       	/*EGL_ALPHA_SIZE
+		Returns the number of bits of alpha stored in the color buffer.
+
+		EGL_ALPHA_MASK_SIZE
+		Returns the number of bits in the alpha mask buffer.
+
+		EGL_BIND_TO_TEXTURE_RGB
+		Returns EGL_TRUE if color buffers can be bound to an RGB texture, EGL_FALSE otherwise.
+
+		EGL_BIND_TO_TEXTURE_RGBA
+		Returns EGL_TRUE if color buffers can be bound to an RGBA texture, EGL_FALSE otherwise.
+
+		EGL_BLUE_SIZE
+		Returns the number of bits of blue stored in the color buffer.
+
+		EGL_BUFFER_SIZE
+		Returns the depth of the color buffer. It is the sum of EGL_RED_SIZE, EGL_GREEN_SIZE, EGL_BLUE_SIZE, and EGL_ALPHA_SIZE.
+
+		EGL_COLOR_BUFFER_TYPE
+		Returns the color buffer type. Possible types are EGL_RGB_BUFFER and EGL_LUMINANCE_BUFFER.
+
+		EGL_CONFIG_CAVEAT
+		Returns the caveats for the frame buffer configuration. Possible caveat values are EGL_NONE, EGL_SLOW_CONFIG, and EGL_NON_CONFORMANT.
+
+		EGL_CONFIG_ID
+		Returns the ID of the frame buffer configuration.
+
+		EGL_CONFORMANT
+		Returns a bitmask indicating which client API contexts created with respect to this config are conformant.
+
+		EGL_DEPTH_SIZE
+		Returns the number of bits in the depth buffer.
+
+		EGL_GREEN_SIZE
+		Returns the number of bits of green stored in the color buffer.
+
+		EGL_LEVEL
+		Returns the frame buffer level. Level zero is the default frame buffer. Positive levels correspond to frame buffers that overlay the default buffer and negative levels correspond to frame buffers that underlay the default buffer.
+
+		EGL_LUMINANCE_SIZE
+		Returns the number of bits of luminance stored in the luminance buffer.
+
+		EGL_MAX_PBUFFER_WIDTH
+		Returns the maximum width of a pixel buffer surface in pixels.
+
+		EGL_MAX_PBUFFER_HEIGHT
+		Returns the maximum height of a pixel buffer surface in pixels.
+
+		EGL_MAX_PBUFFER_PIXELS
+		Returns the maximum size of a pixel buffer surface in pixels.
+
+		EGL_MAX_SWAP_INTERVAL
+		Returns the maximum value that can be passed to eglSwapInterval.
+
+		EGL_MIN_SWAP_INTERVAL
+		Returns the minimum value that can be passed to eglSwapInterval.
+
+		EGL_NATIVE_RENDERABLE
+		Returns EGL_TRUE if native rendering APIs can render into the surface, EGL_FALSE otherwise.
+
+		EGL_NATIVE_VISUAL_ID
+		Returns the ID of the associated native visual.
+
+		EGL_NATIVE_VISUAL_TYPE
+		Returns the type of the associated native visual.
+
+		EGL_RED_SIZE
+		Returns the number of bits of red stored in the color buffer.
+
+		EGL_RENDERABLE_TYPE
+		Returns a bitmask indicating the types of supported client API contexts.
+
+		EGL_SAMPLE_BUFFERS
+		Returns the number of multisample buffers.
+
+		EGL_SAMPLES
+		Returns the number of samples per pixel.
+
+		EGL_STENCIL_SIZE
+		Returns the number of bits in the stencil buffer.
+
+		EGL_SURFACE_TYPE
+		Returns a bitmask indicating the types of supported EGL surfaces.
+
+		EGL_TRANSPARENT_TYPE
+		Returns the type of supported transparency. Possible transparency values are: EGL_NONE, and EGL_TRANSPARENT_RGB.
+
+		EGL_TRANSPARENT_RED_VALUE
+		Returns the transparent red value.
+
+		EGL_TRANSPARENT_GREEN_VALUE
+		Returns the transparent green value.
+
+		EGL_TRANSPARENT_BLUE_VALUE
+		Returns the transparent blue value.
+		*/
+
+        // Check if OpenGL ES 2.0 is supported
+        if (renderable_type & EGL_OPENGL_ES2_BIT) {
+            // Output the supported OpenGL ES version
+            printf("Configuration %d supports OpenGL ES 2.0\n", i);
+            egl_opengles2_support=true;
+        }
+    }
+
+    // Cleanup
+    free(configs);
+
+    //-----------
+    // Create an EGL surface
+    EGLConfig egl_config;
+
+    EGLint attributes[] = {
+        EGL_RED_SIZE, 8,
+        EGL_GREEN_SIZE, 8,
+        EGL_BLUE_SIZE, 8,
+        EGL_ALPHA_SIZE, 8,
+        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+        EGL_NONE
+    };
+
+
+    static const EGLint context_attributes[] = {
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
-   };
-   EGLConfig config;
+    };
 
-   // get an EGL display connection
-   state->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-   assert(state->display!=EGL_NO_DISPLAY);
-   check();
 
-   // initialize the EGL display connection
-   result = eglInitialize(state->display, NULL, NULL);
-   assert(EGL_FALSE != result);
-   check();
+    result = eglChooseConfig(_rpi_window->egl_display, attributes, &egl_config, 1, &num_configs);
+    assert(EGL_TRUE== result);
+    check();
 
-   // get an appropriate EGL frame buffer configuration
-   result = eglChooseConfig(state->display, attribute_list, &config, 1, &num_config);
-   assert(EGL_FALSE != result);
-   check();
+    // get an appropriate EGL frame buffer configuration
+  /*  result = eglBindAPI(EGL_OPENGL_ES_API);
+    assert(EGL_TRUE== result);
+    check();*/
 
-   // get an appropriate EGL frame buffer configuration
-   result = eglBindAPI(EGL_OPENGL_ES_API);
-   assert(EGL_FALSE != result);
-   check();
+    // Create a DispmanX window
+    DISPMANX_UPDATE_HANDLE_T update = vc_dispmanx_update_start(0);
+    VC_RECT_T dst_rect = {0, 0, mode_info.width, mode_info.height};
+    VC_RECT_T src_rect = {0, 0, mode_info.width << 16, mode_info.height << 16};
 
-   // create an EGL rendering context
-   state->context = eglCreateContext(state->display, config, EGL_NO_CONTEXT, context_attributes);
-   assert(state->context!=EGL_NO_CONTEXT);
-   check();
+    VC_DISPMANX_ALPHA_T alpha = {DISPMANX_FLAGS_ALPHA_FROM_SOURCE, 255, 0};
 
-   // create an EGL window surface
-   success = graphics_get_display_size(0 /* LCD */, &state->screen_width, &state->screen_height);
-   assert( success >= 0 );
+    DISPMANX_ELEMENT_HANDLE_T element = vc_dispmanx_element_add(
+		update
+		, _rpi_window->dispmanx_display
+		, 0
+		, &dst_rect
+		, 0
+		, &src_rect
+		, DISPMANX_PROTECTION_NONE
+		, &alpha
+		, 0
+		, DISPMANX_NO_ROTATE
+	);
 
-   dst_rect.x = 0;
-   dst_rect.y = 0;
-   dst_rect.width = state->screen_width;
-   dst_rect.height = state->screen_height;
+    vc_dispmanx_update_submit_sync(update);
 
-   src_rect.x = 0;
-   src_rect.y = 0;
-   src_rect.width = state->screen_width << 16;
-   src_rect.height = state->screen_height << 16;
 
-   dispman_display = vc_dispmanx_display_open( 0 /* LCD */);
-   dispman_update = vc_dispmanx_update_start( 0 );
+    _rpi_window->dispmanx_window.element = element;
+    _rpi_window->dispmanx_window.width = mode_info.width;
+    _rpi_window->dispmanx_window.height = mode_info.height;
 
-   dispman_element = vc_dispmanx_element_add ( dispman_update, dispman_display,
-      0/*layer*/, &dst_rect, 0/*src*/,
-      &src_rect, DISPMANX_PROTECTION_NONE, 0 /*alpha*/, 0/*clamp*/, 0/*transform*/);
+    _rpi_window->egl_surface = eglCreateWindowSurface(
+		_rpi_window->egl_display
+		, egl_config
+		, &_rpi_window->dispmanx_window
+		, NULL
+	);
 
-   nativewindow.element = dispman_element;
-   nativewindow.width = state->screen_width;
-   nativewindow.height = state->screen_height;
-   vc_dispmanx_update_submit_sync( dispman_update );
+    assert(_rpi_window->egl_surface != EGL_NO_SURFACE);
+    check();
 
-   check();
+    egl_context=eglCreateContext(
+		_rpi_window->egl_display
+		, egl_config
+		, EGL_NO_CONTEXT
+		, context_attributes
+	);
 
-   state->surface = eglCreateWindowSurface( state->display, config, &nativewindow, NULL );
-   assert(state->surface != EGL_NO_SURFACE);
-   check();
+    assert(egl_context!=EGL_NO_CONTEXT);
+    check();
 
-   // connect the context to the surface
-   result = eglMakeCurrent(state->display, state->surface, state->surface, state->context);
-   assert(EGL_FALSE != result);
-   check();
+    // Set the current rendering egl_context
+    eglMakeCurrent(
+		_rpi_window->egl_display
+		, _rpi_window->egl_surface
+		, _rpi_window->egl_surface
+		, egl_context
+	);
+}
 
-   // Set background color and clear buffers
-   glClearColor(0.15f, 0.25f, 0.35f, 1.0f);
-   glClear( GL_COLOR_BUFFER_BIT );
-
-   check();
+void Window_RPI_Destroy(Window_RPI *_rpi_window){
+    // Clean up
+    eglMakeCurrent(_rpi_window->egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroySurface(_rpi_window->egl_display, _rpi_window->egl_surface);
+    eglTerminate(_rpi_window->egl_display);
+    vc_dispmanx_element_remove(_rpi_window->dispmanx_display, _rpi_window->dispmanx_window.element);
+    vc_dispmanx_display_close(_rpi_window->dispmanx_display);
+    bcm_host_deinit();
 }
 
 
-static void init_shaders(CUBE_STATE_T *state)
-{
-   static const GLfloat vertex_data[] = {
-        -1.0,-1.0,1.0,1.0,
-        1.0,-1.0,1.0,1.0,
-        1.0,1.0,1.0,1.0,
-        -1.0,1.0,1.0,1.0
-   };
-   const GLchar *vshader_source =
-              "attribute vec4 vertex;"
-              "varying vec2 tcoord;"
-              "void main(void) {"
-              " vec4 pos = vertex;"
-              " gl_Position = pos;"
-              " tcoord = vertex.xy*0.5+0.5;"
-              "}";
+int main() {
 
-   //Mandelbrot
-   const GLchar *mandelbrot_fshader_source =
-"uniform vec4 color;"
-"uniform vec2 scale;"
-"uniform vec2 centre;"
-"varying vec2 tcoord;"
-"void main(void) {"
-"  float intensity;"
-"  vec4 color2;"
-"  float cr=(gl_FragCoord.x-centre.x)*scale.x;"
-"  float ci=(gl_FragCoord.y-centre.y)*scale.y;"
-"  float ar=cr;"
-"  float ai=ci;"
-"  float tr,ti;"
-"  float col=0.0;"
-"  float p=0.0;"
-"  int i=0;"
-"  for(int i2=1;i2<16;i2++)"
-"  {"
-"    tr=ar*ar-ai*ai+cr;"
-"    ti=2.0*ar*ai+ci;"
-"    p=tr*tr+ti*ti;"
-"    ar=tr;"
-"    ai=ti;"
-"    if (p>16.0)"
-"    {"
-"      i=i2;"
-"      break;"
-"    }"
-"  }"
-"  color2 = vec4(float(i)*0.0625,0,0,1);"
-"  gl_FragColor = color2;"
-"}";
+	Window_RPI rpi_window;
 
-   // Julia
-   const GLchar *julia_fshader_source =
-"uniform vec4 color;"
-"uniform vec2 scale;"
-"uniform vec2 centre;"
-"uniform vec2 offset;"
-"varying vec2 tcoord;"
-"uniform sampler2D tex;"
-"void main(void) {"
-"  float intensity;"
-"  vec4 color2;"
-"  float ar=(gl_FragCoord.x-centre.x)*scale.x;"
-"  float ai=(gl_FragCoord.y-centre.y)*scale.y;"
-"  float cr=(offset.x-centre.x)*scale.x;"
-"  float ci=(offset.y-centre.y)*scale.y;"
-"  float tr,ti;"
-"  float col=0.0;"
-"  float p=0.0;"
-"  int i=0;"
-"  vec2 t2;"
-"  t2.x=tcoord.x+(offset.x-centre.x)*(0.5/centre.y);"
-"  t2.y=tcoord.y+(offset.y-centre.y)*(0.5/centre.x);"
-"  for(int i2=1;i2<16;i2++)"
-"  {"
-"    tr=ar*ar-ai*ai+cr;"
-"    ti=2.0*ar*ai+ci;"
-"    p=tr*tr+ti*ti;"
-"    ar=tr;"
-"    ai=ti;"
-"    if (p>16.0)"
-"    {"
-"      i=i2;"
-"      break;"
-"    }"
-"  }"
-"  color2 = vec4(0,float(i)*0.0625,0,1);"
-"  color2 = color2+texture2D(tex,t2);"
-"  gl_FragColor = color2;"
-"}";
-
-        state->vshader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(state->vshader, 1, &vshader_source, 0);
-        glCompileShader(state->vshader);
-        check();
-
-        if (state->verbose)
-            showlog(state->vshader);
-
-        state->fshader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(state->fshader, 1, &julia_fshader_source, 0);
-        glCompileShader(state->fshader);
-        check();
-
-        if (state->verbose)
-            showlog(state->fshader);
-
-        state->mshader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(state->mshader, 1, &mandelbrot_fshader_source, 0);
-        glCompileShader(state->mshader);
-        check();
-
-        if (state->verbose)
-            showlog(state->mshader);
-
-        // julia
-        state->program = glCreateProgram();
-        glAttachShader(state->program, state->vshader);
-        glAttachShader(state->program, state->fshader);
-        glLinkProgram(state->program);
-        check();
-
-        if (state->verbose)
-            showprogramlog(state->program);
-
-        state->attr_vertex = glGetAttribLocation(state->program, "vertex");
-        state->unif_color  = glGetUniformLocation(state->program, "color");
-        state->unif_scale  = glGetUniformLocation(state->program, "scale");
-        state->unif_offset = glGetUniformLocation(state->program, "offset");
-        state->unif_tex    = glGetUniformLocation(state->program, "tex");
-        state->unif_centre = glGetUniformLocation(state->program, "centre");
-
-        // mandelbrot
-        state->program2 = glCreateProgram();
-        glAttachShader(state->program2, state->vshader);
-        glAttachShader(state->program2, state->mshader);
-        glLinkProgram(state->program2);
-        check();
-
-        if (state->verbose)
-            showprogramlog(state->program2);
-
-        state->attr_vertex2 = glGetAttribLocation(state->program2, "vertex");
-        state->unif_scale2  = glGetUniformLocation(state->program2, "scale");
-        state->unif_offset2 = glGetUniformLocation(state->program2, "offset");
-        state->unif_centre2 = glGetUniformLocation(state->program2, "centre");
-        check();
-
-        glClearColor ( 0.0, 1.0, 1.0, 1.0 );
-
-        glGenBuffers(1, &state->buf);
-
-        check();
-
-        // Prepare a texture image
-        glGenTextures(1, &state->tex);
-        check();
-        glBindTexture(GL_TEXTURE_2D,state->tex);
-        check();
-        // glActiveTexture(0)
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,state->screen_width,state->screen_height,0,GL_RGB,GL_UNSIGNED_SHORT_5_6_5,0);
-        check();
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        check();
-        // Prepare a framebuffer for rendering
-        glGenFramebuffers(1,&state->tex_fb);
-        check();
-        glBindFramebuffer(GL_FRAMEBUFFER,state->tex_fb);
-        check();
-        glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,state->tex,0);
-        check();
-        glBindFramebuffer(GL_FRAMEBUFFER,0);
-        check();
-        // Prepare viewport
-        glViewport ( 0, 0, state->screen_width, state->screen_height );
-        check();
-
-        // Upload vertex data to a buffer
-        glBindBuffer(GL_ARRAY_BUFFER, state->buf);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data),
-                             vertex_data, GL_STATIC_DRAW);
-        glVertexAttribPointer(state->attr_vertex, 4, GL_FLOAT, 0, 16, 0);
-        glEnableVertexAttribArray(state->attr_vertex);
-        glVertexAttribPointer(state->attr_vertex2, 4, GL_FLOAT, 0, 16, 0);
-        glEnableVertexAttribArray(state->attr_vertex2);
-
-        check();
-}
+	Window_RPI_Create(&rpi_window);
 
 
-static void draw_mandelbrot_to_texture(CUBE_STATE_T *state, GLfloat cx, GLfloat cy, GLfloat scale)
-{
-        // Draw the mandelbrot to a texture
-        glBindFramebuffer(GL_FRAMEBUFFER,state->tex_fb);
-        check();
-        glBindBuffer(GL_ARRAY_BUFFER, state->buf);
+    // OpenGL ES code
+    glClearColor(0.2f, 0.4f, 0.8f, 1.0f); // Set clear color to blue
+    glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram ( state->program2 );
-        check();
+    // Define vertices of the triangle
+    GLfloat vertices[] = {
+        0.0f,  0.5f,  // Top vertex
+       -0.5f, -0.5f,  // Bottom-left vertex
+        0.5f, -0.5f   // Bottom-right vertex
+    };
 
-        glUniform2f(state->unif_scale2, scale, scale);
-        glUniform2f(state->unif_centre2, cx, cy);
-        check();
-        glDrawArrays ( GL_TRIANGLE_FAN, 0, 4 );
-        check();
+    // Create vertex buffer object (VBO)
+    GLuint vertexBuffer;
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-        glFlush();
-        glFinish();
-        check();
-}
+    // Create and compile the vertex shader
+    const char* vertexShaderSource =
+        "attribute vec2 position;\n"
+        "void main() {\n"
+        "   gl_Position = vec4(position, 0.0, 1.0);\n"
+        "}\n";
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
 
-static void draw_triangles(CUBE_STATE_T *state, GLfloat cx, GLfloat cy, GLfloat scale, GLfloat x, GLfloat y)
-{
-        // Now render to the main frame buffer
-        glBindFramebuffer(GL_FRAMEBUFFER,0);
-        // Clear the background (not really necessary I suppose)
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        check();
+    // Create and compile the fragment shader
+    const char* fragmentShaderSource =
+        "void main() {\n"
+        "   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n" // Red color
+        "}\n";
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
 
-        glBindBuffer(GL_ARRAY_BUFFER, state->buf);
-        check();
-        glUseProgram ( state->program );
-        check();
-        glBindTexture(GL_TEXTURE_2D,state->tex);
-        check();
-        glUniform4f(state->unif_color, 0.5, 0.5, 0.8, 1.0);
-        glUniform2f(state->unif_scale, scale, scale);
-        glUniform2f(state->unif_offset, x, y);
-        glUniform2f(state->unif_centre, cx, cy);
-        glUniform1i(state->unif_tex, 0); // I don't really understand this part, perhaps it relates to active texture?
-        check();
+    // Create the shader program and link it
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glBindAttribLocation(shaderProgram, 0, "position");
+    glLinkProgram(shaderProgram);
+    glUseProgram(shaderProgram);
 
-        glDrawArrays ( GL_TRIANGLE_FAN, 0, 4 );
-        check();
+    // Specify the layout of the vertex data
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // Draw the triangle
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    check();
 
-        glFlush();
-        glFinish();
-        check();
+    // Swap buffers
+    eglSwapBuffers(rpi_window.egl_display, rpi_window.egl_surface);
 
-        eglSwapBuffers(state->display, state->surface);
-        check();
-}
+    // Wait for a few seconds
+    sleep(5);
 
-static int get_mouse(CUBE_STATE_T *state, int *outx, int *outy)
-{
-    static int fd = -1;
-    const int width=state->screen_width, height=state->screen_height;
-    static int x=800, y=400;
-    const int XSIGN = 1<<4, YSIGN = 1<<5;
-    if (fd<0) {
-       fd = open("/dev/input/mouse0",O_RDONLY|O_NONBLOCK);
-    }
-    if (fd>=0) {
-        struct {char buttons, dx, dy; } m;
-        while (1) {
-           int bytes = read(fd, &m, sizeof m);
-           if (bytes < (int)sizeof m) goto _exit;
-           if (m.buttons&8) {
-              break; // This bit should always be set
-           }
-           read(fd, &m, 1); // Try to sync up again
-        }
-        if (m.buttons&3)
-           return m.buttons&3;
-        x+=m.dx;
-        y+=m.dy;
-        if (m.buttons&XSIGN)
-           x-=256;
-        if (m.buttons&YSIGN)
-           y-=256;
-        if (x<0) x=0;
-        if (y<0) y=0;
-        if (x>width) x=width;
-        if (y>height) y=height;
-   }
-_exit:
-   if (outx) *outx = x;
-   if (outy) *outy = y;
-   return 0;
-}
+    Window_RPI_Destroy(&rpi_window);
 
-//==============================================================================
-
-int main ()
-{
-   int terminate = 0;
-   GLfloat cx, cy;
-   bcm_host_init();
-
-   if (bcm_host_get_processor_id() == BCM_HOST_PROCESSOR_BCM2838)
-   {
-      puts("This demo application is not available on the Pi4\n\n");
-      exit(0);
-   }
-
-   // Clear application state
-   memset( state, 0, sizeof( *state ) );
-
-   // Start OGLES
-   init_ogl(state);
-   init_shaders(state);
-   cx = state->screen_width/2;
-   cy = state->screen_height/2;
-
-   draw_mandelbrot_to_texture(state, cx, cy, 0.003);
-   while (!terminate)
-   {
-      int x, y, b;
-      b = get_mouse(state, &x, &y);
-      if (b) break;
-      draw_triangles(state, cx, cy, 0.003, x, y);
-   }
-   return 0;
+    return 0;
 }

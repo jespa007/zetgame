@@ -9,15 +9,17 @@
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
 #include <GLES2/gl2.h>
-GLuint compile_shader(GLenum shaderType, const char *src)
-{
+
+GLuint compile_shader(GLenum shaderType, const char *src){
+
   GLuint shader = glCreateShader(shaderType);
   glShaderSource(shader, 1, &src, NULL);
   glCompileShader(shader);
   GLint isCompiled = 0;
+
   glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
-  if (!isCompiled)
-  {
+
+  if (!isCompiled){
     GLint maxLength = 0;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
     char *buf = (char*)malloc(maxLength+1);
@@ -26,10 +28,12 @@ GLuint compile_shader(GLenum shaderType, const char *src)
     free(buf);
     return 0;
   }
-   return shader;
+
+  return shader;
 }
-GLuint create_program(GLuint vertexShader, GLuint fragmentShader)
-{
+
+GLuint create_program(GLuint vertexShader, GLuint fragmentShader){
+
    GLuint program = glCreateProgram();
    glAttachShader(program, vertexShader);
    glAttachShader(program, fragmentShader);
@@ -38,10 +42,12 @@ GLuint create_program(GLuint vertexShader, GLuint fragmentShader)
    glLinkProgram(program);
    return program;
 }
-int main()
-{
+
+int main(){
+
   EmscriptenWebGLContextAttributes attr;
   emscripten_webgl_init_context_attributes(&attr);
+
 #ifdef EXPLICIT_SWAP
   attr.explicitSwapControl = 1;
 #endif
@@ -49,8 +55,11 @@ int main()
   // This test verifies that drawing from client-side memory when enableExtensionsByDefault==false works.
   attr.enableExtensionsByDefault = 0;
 #endif
+
   EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx = emscripten_webgl_create_context("#canvas", &attr);
+
   emscripten_webgl_make_context_current(ctx);
+
   static const char vertex_shader[] =
     "attribute vec4 apos;"
     "attribute vec4 acolor;"
@@ -59,22 +68,29 @@ int main()
       "color = acolor;"
       "gl_Position = apos;"
     "}";
+
   GLuint vs = compile_shader(GL_VERTEX_SHADER, vertex_shader);
+
   static const char fragment_shader[] =
     "precision lowp float;"
     "varying vec4 color;"
     "void main() {"
       "gl_FragColor = color;"
     "}";
+
   GLuint fs = compile_shader(GL_FRAGMENT_SHADER, fragment_shader);
+
   GLuint program = create_program(vs, fs);
+
   glUseProgram(program);
+
   static const float pos_and_color[] = {
-  //     x,     y, r, g, b
+  //     x  ,y    ,r ,g ,b
      -0.6f, -0.6f, 1, 0, 0,
       0.6f, -0.6f, 0, 1, 0,
       0.f,   0.6f, 0, 0, 1,
   };
+
 #ifdef DRAW_FROM_CLIENT_MEMORY
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 20, pos_and_color);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 20, (void*)(pos_and_color+2));
@@ -86,11 +102,13 @@ int main()
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 20, 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 20, (void*)8);
 #endif
+
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glClearColor(0.3f,0.3f,0.3f,1);
   glClear(GL_COLOR_BUFFER_BIT);
   glDrawArrays(GL_TRIANGLES, 0, 3);
+
 #ifdef EXPLICIT_SWAP
   emscripten_webgl_commit_frame();
 #endif
