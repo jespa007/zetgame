@@ -4,9 +4,6 @@
 
 const char g_szClassName[] = "myWindowClass";
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-
 // Step 4: the Window Procedure
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -143,16 +140,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     ReleaseDC(hwnd, hdc);
     DestroyWindow(hwnd);
 
-    return 0;
-}
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    switch (uMsg) {
-    case WM_CLOSE:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hwnd, uMsg, wParam, lParam);
-    }
     return 0;
 }
