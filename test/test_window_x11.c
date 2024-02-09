@@ -3,6 +3,40 @@
 #include <GL/glx.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <X11/extensions/Xrandr.h>
+
+typedef struct{
+	int x,y,w,h;
+}Rectangle;
+
+void MonitorInfo(Display *display){
+	int numMonitors;
+
+	int screen = DefaultScreen(display);
+
+	XRRScreenResources *resources = XRRGetScreenResources(display, RootWindow(display, screen));
+	if (resources != NULL) {
+	    numMonitors = resources->noutput;
+	    printf("Number of monitors: %d\n", numMonitors);
+
+	    for (int i = 0; i < numMonitors; i++) {
+	        XRROutputInfo *outputInfo = XRRGetOutputInfo(display, resources, resources->outputs[i]);
+	        if (outputInfo != NULL) {
+	            if (outputInfo->crtc != None) {
+	                XRRCrtcInfo *crtcInfo = XRRGetCrtcInfo(display, resources, outputInfo->crtc);
+	                if (crtcInfo != NULL) {
+	                    printf("Monitor %d: Resolution %dx%d, Offset: (%d,%d)\n",
+	                            i+1, crtcInfo->width, crtcInfo->height,
+	                            crtcInfo->x, crtcInfo->y);
+	                    XRRFreeCrtcInfo(crtcInfo);
+	                }
+	            }
+	            XRRFreeOutputInfo(outputInfo);
+	        }
+	    }
+	    XRRFreeScreenResources(resources);
+	}
+}
 
 // Function to set up OpenGL
 void initOpenGL() {
@@ -44,6 +78,9 @@ int main() {
         printf("Cannot open display\n");
         exit(1);
     }
+
+    // Monitor information
+    MonitorInfo(display);
 
     // Create a window
     vi = glXChooseVisual(display, 0, att);

@@ -8,6 +8,9 @@
 #include "EGL/eglext.h"
 #include <fcntl.h>
 #include <linux/input.h>
+#include <linux/input.h>
+#include <libudev.h>
+
 
 typedef struct{
 	DISPMANX_DISPLAY_HANDLE_T 	dispmanx_display;
@@ -19,7 +22,8 @@ typedef struct{
 #define check() assert(glGetError() == 0)
 
 typedef struct{
-	int fd;
+	 struct udev *udev;
+	 struct udev_monitor *monitor;
 }Input_RPI;
 
 // Define the path to the input event device
@@ -29,11 +33,26 @@ void Input_RPI_Create(Input_RPI *_input_rpi){
 
 	memset(_input_rpi,0,sizeof(Input_RPI));
 
-    // Open the input event device
-    int fd = open(INPUT_EVENT_DEVICE, O_RDONLY);
-    if (fd < 0) {
-        exit(EXIT_FAILURE);
-    }
+	 // Initialize libudev context
+	_input_rpi->udev = udev_new();
+	if (!_input_rpi->udev) {
+		fprintf(stderr, "Failed to initialize libudev\n");
+		exit(EXIT_FAILURE);
+	}
+
+   // Create a udev monitor
+	_input_rpi->monitor = udev_monitor_new_from_netlink(_input_rpi->udev, "udev");
+	if (!_input_rpi->monitor) {
+		fprintf(stderr, "Failed to create udev monitor\n");
+		udev_unref(_input_rpi->udev);
+		exit(EXIT_FAILURE);
+	}
+
+	// Add filter for input devices
+	udev_monitor_filter_add_match_subsystem_devtype(_input_rpi->monitor, "input", NULL);
+
+	// Enable the monitor
+	udev_monitor_enable_receiving(_input_rpi->monitor);
 
 }
 
@@ -41,29 +60,56 @@ bool pressed_esc=false;
 
 
 void Input_RPI_Update(Input_RPI *_input_rpi){
-	 struct input_event ev;
-	ssize_t bytes = read(_input_rpi->fd, &ev, sizeof(ev));
-	if (bytes == sizeof(ev)) {
-		printf("Print key\n");
-		// Check if the event is a key press event and if the ESC key is pressed
-		if (ev.type == EV_KEY && ev.code == KEY_ESC && ev.value == 1) {
-			printf("ESC key pressed\n");
-			pressed_esc=true;
-			// Perform actions when the ESC key is pressed
-			// For example, exit the application
-		} else if (bytes == -1) {
-            perror("Error reading input event");
-            // Exit the loop or handle the error condition
-        } else if (bytes == 0) {
-            // End of file (EOF) reached, no more events to read
-        }
+	// Read events from the monitor
+	struct udev_device *dev = udev_monitor_receive_device(_input_rpi->monitor);
+	if (dev) {
+		const char *action = udev_device_get_action(dev);
+		if (action && strcmp(action, "add") == 0) {
+			const char *devnode = udev_device_get_devnode(dev);
+			if (devnode) {
+				int fd = open(devnode, O_RDONLY);
+				if (fd >= 0) {
+					struct input_event ev;
+					ssize_t bytes;
+					while (1) {
+						bytes = read(fd, &ev, sizeof(ev));
+						if (bytes == sizeof(ev)) {
+							if (ev.type == EV_KEY && ev.code == KEY_A) {
+								if (ev.value == 1) {
+									printf("'A' key pressed\n");
+								} else if (ev.value == 0) {
+									printf("'A' key released\n");
+								}
+							} else if (ev.type == EV_REL && (ev.code == REL_X || ev.code == REL_Y)) {
+								printf("Mouse movement: X=%d, Y=%d\n", ev.value, ev.code);
+							} else if (ev.type == EV_KEY && (ev.code == BTN_LEFT || ev.code == BTN_RIGHT || ev.code == BTN_MIDDLE)) {
+								if (ev.value == 1) {
+									printf("Mouse button %d pressed\n", ev.code);
+								} else if (ev.value == 0) {
+									printf("Mouse button %d released\n", ev.code);
+								}
+							}
+						} else if (bytes == -1) {
+							perror("Error reading input event");
+							break;
+						} else if (bytes == 0) {
+							break;
+						}
+					}
+					close(fd);
+				}
+			}
+			// Cleanup
+			udev_device_unref(dev);
+		}
 	}
 }
 
 void Input_RPI_Destroy(Input_RPI *_input_rpi){
 
-    // Cleanup
-	 close(_input_rpi->fd);
+   // Cleanup
+    udev_monitor_unref(_input_rpi->monitor);
+    udev_unref(_input_rpi->udev);
 
 
 }
@@ -277,8 +323,9 @@ int main() {
 	Window_RPI window_rpi;
 	Input_RPI  input_rpi;
 
-	Window_RPI_Create(&window_rpi);
 	Input_RPI_Create(&input_rpi);
+	/*Window_RPI_Create(&window_rpi);
+
 
 
     // Define vertices of the triangle
@@ -319,11 +366,11 @@ int main() {
     glAttachShader(shaderProgram, fragmentShader);
     glBindAttribLocation(shaderProgram, 0, "position");
     glLinkProgram(shaderProgram);
-    glUseProgram(shaderProgram);
+    glUseProgram(shaderProgram);*/
 
     do{
     	// Set clear color to blue
-        glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
+        /*glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
     	// Specify the layout of the vertex data
@@ -335,14 +382,14 @@ int main() {
     	check();
 
     	// Swap buffers
-    	eglSwapBuffers(window_rpi.egl_display, window_rpi.egl_surface);
+    	eglSwapBuffers(window_rpi.egl_display, window_rpi.egl_surface);*/
 
     	Input_RPI_Update(&input_rpi);
 
     // Wait for a few seconds
 	}while(!pressed_esc);
 
-    Window_RPI_Destroy(&window_rpi);
+   // Window_RPI_Destroy(&window_rpi);
     Input_RPI_Destroy(&input_rpi);
 
     return 0;
