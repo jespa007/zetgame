@@ -199,27 +199,6 @@ ZG_TTFontManager 	*ZG_GUIWidget_GetTTFontManager(ZG_GUIWidget *_this){
 	return ZG_GUIWindow_GetTTFontManager(window);
 }
 */
-ZG_TextureManager 	*ZG_GUIWidget_GetTextureManager(ZG_GUIWidget *_this){
-	ZG_GUIWindow *window=ZG_GUIWidget_GetWindow(_this);
-
-	if(window == NULL){
-		ZG_LOG_ERRORF("Cannot get ZG_TextureManager because there's not window attached in this widget");
-	}
-
-	return ZG_GUIWindow_GetTextureManager(window);
-}
-
-
-void ZG_GUIWidget_AttachWidget(ZG_GUIWidget *_this, ZG_GUIWidget *widget_to_attach){
-
-	ZG_GUIWidgetData *data=_this->data;
-
-	if(data->attach_widget.ptr_function!=NULL){
-		data->attach_widget.ptr_function(data->attach_widget.calling_widget,widget_to_attach);
-	}else{
-		ZG_GUIWidget_AttachWidgetBase(_this,widget_to_attach);
-	}
-}
 
 void ZG_GUIWidget_AttachWidgetFunctionOverride(ZG_GUIWidget *_this,ZG_CallbackWidgetAttachWidget attach_widget){
 	ZG_GUIWidgetData *data=_this->data;

@@ -6,11 +6,12 @@ struct ZG_GUIWindowManager{
 };
 
 ZG_GUIWindowManager 	*	ZG_GUIWindowManager_New(ZG_TextureManager	* _texture_manager, ZG_TTFontManager * _ttfont_manager);
-bool 						ZG_GUIWindowManager_Load(ZG_GUIWindowManager *_this,const char *_xml_filename);
+int							ZG_GUIWindowManager_NewWindow(ZG_GUIWindowManager *_this,const char *_wnd_id);
+int							ZG_GUIWindowManager_NewWindowFromFile(ZG_GUIWindowManager *_this,const char *_wnd_id, const char *_xml_filename);
 ZG_TextureManager		*	ZG_GUIWindowManager_GetTextureManager(ZG_GUIWindowManager *_this);
 //ZG_TTFontManager		*	ZG_GUIWindowManager_GetTTFontManager(ZG_GUIWindowManager *_this);
 ZG_GUIWindow 	  		*	ZG_GUIWindowManager_Get(ZG_GUIWindowManager *_this,const char *_wnd_id);
 
-void ZG_GUIWindowManager_Delete(ZG_GUIWindowManager *_this);
+void 						ZG_GUIWindowManager_Delete(ZG_GUIWindowManager *_this);
 
 #endif

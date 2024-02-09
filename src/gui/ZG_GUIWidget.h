@@ -85,7 +85,6 @@ void 				ZG_GUIWidget_Draw(ZG_GUIWidget *_this);
 
 ZG_GUIWindow 		*ZG_GUIWidget_GetWindow(ZG_GUIWidget *_this);
 //ZG_TTFontManager 	*ZG_GUIWidget_GetTTFontManager(ZG_GUIWidget *_this);
-ZG_TextureManager 	*ZG_GUIWidget_GetTextureManager(ZG_GUIWidget *_this);
 
 void 				ZG_GUIWidget_AttachWidget(ZG_GUIWidget *_this, ZG_GUIWidget *widget);
 ZG_GUIWidget * 		ZG_GUIWidget_GetParent(ZG_GUIWidget *_this);
