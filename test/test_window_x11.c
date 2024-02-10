@@ -108,8 +108,13 @@ int main() {
             glXSwapBuffers(display, window);
         }
 
-        if (event.type == KeyPress)
-            break;
+        if (event.type == KeyPress){
+        	printf("keycode %i\n",event.xkey.keycode);
+        	if(event.xkey.keycode == 38){
+        		break;
+        	}
+        }
+
     }
 
     // Cleanup
