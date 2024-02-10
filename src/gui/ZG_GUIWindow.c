@@ -41,7 +41,7 @@ void ZG_GUIWindow_AttachChild(void *gui_window, ZG_GUIWidget * widget_to_attach)
 
 
 
-ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height, ZG_GUIWindow *_window_manager){
+ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height){
 
 	ZG_GUIWindow *window = ZG_NEW(ZG_GUIWindow);
 	ZG_GUIWindowData *data = ZG_NEW(ZG_GUIWindowData);
@@ -135,313 +135,7 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height,
 
 }
 
-/**
- * ZG_GUIWindowManager_NewWindowFromFile from xml
- * @_this: ZG_GUIWindowManager object
- * @_wnd_id: window id
- * @_xml_file: xml file
-  */
-ZG_GUIWindow * ZG_GUIWindow_NewFromFile(const char *_file){
 
-	bool exists=false;
-	ZG_GUIWindowManagerData *data=_this->data;
-	ZG_MapString_Get(data->windows,_wnd_id,&exists);
-
-	if(exists){
-		ZG_LOG_ERROR("Window '%s' already exists",_wnd_id);
-		return false;
-	}
-
-	ZG_MapString_Set(data->windows,_wnd_id,window_data);
-
-	return ok;
-}
-
-bool ZG_GUIWindow_ProcessTagFrame(ZG_GUIWindow *_window,ZG_GUIWidget *_parent, const XmlElement *e ){
-	ZG_GUIWindowData *data=_window->data;
-	bool ok=true;
-	int int_value=0;
-	XmlAttribute *attribute=e->attributes;
-	ZG_GUIFrame *frame= ZG_GUIFrame_New(0,0,10,10);
-	ZG_List_Add(data->frames,frame);
-
-	if(_parent != NULL){
-		ZG_GUIWidget_AttachWidget(_parent,frame->widget);
-	}
-
-	 if(attribute != NULL){
-		 do{
-			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
-			 if(ZG_STRCMP(attribute->name,==,"id")){
-				 // set id
-			 }else if(ZG_STRCMP(attribute->name,==,"left")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionX(frame->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"top")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionY(frame->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"width")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetWidth(frame->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"height")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetHeight(frame->widget,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else{
-				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
-				 ok=false;
-			 }
-			 attribute=attribute->next;
-		 }while(attribute != attribute->parent->attributes);
-		// process attributes
-	}
-	return ok;
-}
-
-bool ZG_GUIWindow_ProcessTagTexture(ZG_GUIWindow *_window,ZG_GUIWidget *_parent, const XmlElement *e ){
-	ZG_GUIWindowData *data=_window->data;
-	bool ok=true;
-	int int_value=0;
-	XmlAttribute *attribute=e->attributes;
-	ZG_GUITexture *gui_texture=ZG_GUITexture_New(0,0,10,10);
-
-
-	if(_parent != NULL){
-		ZG_GUIWidget_AttachWidget(_parent,gui_texture->widget);
-	}
-
-	 if(attribute != NULL){
-		 do{
-			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
-			 if(ZG_STRCMP(attribute->name,==,"id")){
-				 // set id
-			 }else if(ZG_STRCMP(attribute->name,==,"left")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionX(gui_texture->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"top")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionY(gui_texture->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"width")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetWidth(gui_texture->widget,int_value);
-					 ZG_TextBox_SetWidth(gui_texture->textbox,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"height")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetHeight(gui_texture->widget,int_value);
-					 ZG_TextBox_SetHeight(gui_texture->textbox,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"text")){
-				 ZG_TextBox_SetText(gui_texture->textbox,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"horizontal-alignment")){
-				 ZG_TextBox_SetHorizontalAlignment(gui_texture->textbox,ZG_TextBox_ParseTextAlign(attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"vertical-alignment")){
-				 ZG_TextBox_SetVerticalAlignment(gui_texture->textbox,ZG_TextBox_ParseVerticalAlignment(attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_TextBox_SetFontSize(gui_texture->textbox,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 ZG_TextBox_SetFont(gui_texture->textbox,ZG_TTFontManager_GetFont(data->gui_window_manager_data->ttfont_manager, attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"color")){
-				 ZG_GUIWidget_SetColor4f(gui_texture->widget,ZG_Color4f_FromHtml(attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"source")){
-				 ZG_GUITexture_SetTexture(gui_texture,attribute->value);
-			 }else{
-				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
-				 ok=false;
-			 }
-
-			 attribute=attribute->next;
-		 }while(attribute != attribute->parent->attributes);
-		// process attributes
-	}
-
-	 ZG_List_Add(data->viewers,gui_texture);
-
-	return ok;
-}
-
-
-bool ZG_GUIWindow_ProcessTagButton(ZG_GUIWindow *_window,ZG_GUIWidget *_parent, const XmlElement *e ){
-	ZG_GUIWindowData *data=_window->data;
-	bool ok=true;
-	int int_value=0;
-	XmlAttribute *attribute=e->attributes;
-	ZG_GUIButton *button=ZG_GUIButton_New(0,0,10,10);
-
-	if(_parent != NULL){
-		ZG_GUIWidget_AttachWidget(_parent,button->widget);
-	}
-
-	 if(attribute != NULL){
-		 do{
-			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
-
-			 if(ZG_STRCMP(attribute->name,==,"id")){
-				 // set id
-			 }else if(ZG_STRCMP(attribute->name,==,"left")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionX(button->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"top")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionY(button->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"width")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetWidth(button->widget,int_value);
-				 }
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"height")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetHeight(button->widget,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-			 }else{
-				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
-				 ok=false;
-			 }
-
-			 attribute=attribute->next;
-		 }while(attribute != attribute->parent->attributes);
-		// process attributes
-	}
-
-	 ZG_List_Add(data->buttons,button);
-
-	return ok;
-}
-
-bool ZG_GUIWindow_ProcessTagTextBox(ZG_GUIWindow *_window,ZG_GUIWidget *_parent, const XmlElement *e ){
-	ZG_GUIWindowData *data=_window->data;
-	bool ok=true;
-	int int_value=0;
-	XmlAttribute *attribute=e->attributes;
-	ZG_GUITextBox *gui_textbox=ZG_GUITextBox_New(0,0,10,10);
-
-
-	if(_parent != NULL){
-		ZG_GUIWidget_AttachWidget(_parent,gui_textbox->widget);
-	}
-
-	 if(attribute != NULL){
-		 do{
-			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
-
-			 if(ZG_STRCMP(attribute->name,==,"id")){
-				 // set id
-			 }else if(ZG_STRCMP(attribute->name,==,"left")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionX(gui_textbox->widget,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"top")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionY(gui_textbox->widget,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"width")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetWidth(gui_textbox->widget,int_value);
-					 ZG_TextBox_SetWidth(gui_textbox->textbox,int_value);
-
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"height")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetHeight(gui_textbox->widget,int_value);
-					 ZG_TextBox_SetHeight(gui_textbox->textbox,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_TextBox_SetFontSize(gui_textbox->textbox,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 ZG_TextBox_SetFont(
-						 gui_textbox->textbox
-						 ,ZG_TTFontManager_GetFont(
-								 data->gui_window_manager_data->ttfont_manager
-								 ,attribute->value
-						)
-				);
-			 }else if(ZG_STRCMP(attribute->name,==,"text")){
-				 ZG_TextBox_SetText(gui_textbox->textbox,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"horizontal-alignment")){
-				 ZG_TextBox_SetHorizontalAlignment(gui_textbox->textbox,ZG_TextBox_ParseTextAlign(attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"vertical-alignment")){
-				 ZG_TextBox_SetVerticalAlignment(gui_textbox->textbox,ZG_TextBox_ParseVerticalAlignment(attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"border-thickness")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_TextBox_SetBorderThickness(gui_textbox->textbox,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"border-color")){
-				 ZG_TextBox_SetBorderColor4f(gui_textbox->textbox,ZG_Color4f_FromHtml(attribute->value));
-			 }else{
-				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
-				 ok=false;
-			 }
-
-			 attribute=attribute->next;
-		 }while(attribute != attribute->parent->attributes);
-		// process attributes
-	}
-
-	 ZG_List_Add(data->textboxes,gui_textbox);
-
-	return ok;
-}
-
-bool ZG_GUIWindowManager_ProcessTag(ZG_GUIWindow *_window,ZG_GUIWidget *_parent, const XmlElement *e){
-	ZG_GUIWindowData *data=_window->data;
-	bool ok=true;
-	 XmlElement *children=e->children;
-
-	 ZG_LOG_DEBUG("[tag]: %s", e->name);
-
-	 // create widget from its tag name
-	 if(ZG_STRCMP(e->name,==,"textbox")){
-		 return ZG_GUIWindowManager_NewTextBox(data,_parent,e);
-	 }else if(ZG_STRCMP(e->name,==,"button")){
-		 return ZG_GUIWindowManager_NewButton(data,_parent,e);
-	 }else if(ZG_STRCMP(e->name,==,"image")){
-		 return ZG_GUIWindowManager_NewTexture(data,_parent,e);
-	 }else if(ZG_STRCMP(e->name,==,"textbox")){
-		 return ZG_GUIWindowManager_NewTextBox(data,_parent,e);
-	 }else{
-		ZG_LOG_ERROR("unexpected tag '%s'",e->name);
-		ok=false;
-	 }
-
-
-	// process childs
-	 if(children != NULL){
-		 do{
-			 ok&=ZG_GUIWindowManager_ProcessTag(data,_parent,children);
-			 children=children->next;
-		 }while(children != children->parent->children);
-	 }
-
-
-	return ok;
-}
 
 ZG_GUIWindow ZG_GUIWindow_NewFromMemory(
 		uint8_t *_xml_buf
@@ -688,7 +382,6 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 		return;
 	}
 
-
 	if(data->start_dragging) {
 
 		//ZG_LOG_INFO("moving !");
@@ -702,7 +395,6 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 
 
 		data->start_mouse_position=ZG_Input_GetMousePosition();
-
 	}
 
 	return;
@@ -725,6 +417,29 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 		data->start_dragging = false;
 	}
 }
+
+ ZG_GUIButton		*	ZG_GUIWindow_NewButton(ZG_GUIWindow * _this){
+
+ }
+
+ ZG_GUITextBox		* 	ZG_GUIWindow_NewTextBox(ZG_GUIWindow * _this){
+
+ }
+
+ ZG_GUITexture		* 	ZG_GUIWindow_NewTexture(ZG_GUIWindow * _this){
+
+ }
+
+ ZG_GUIFrame			* 	ZG_GUIWindow_NewFrame(ZG_GUIWindow * _this){
+	 ZG_GUIWindowData *data=_this->data;
+
+	 ZG_GUIFrame *frame=new ZG_GUIFrame(0,0,0,0);
+	 ZG_List_Add(data->frames,frame);
+ }
+
+
+
+
 
 void ZG_GUIWindow_Delete(ZG_GUIWindow *_this) {
 	if(_this == NULL) return;
