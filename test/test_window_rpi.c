@@ -11,6 +11,7 @@
 #include <linux/input.h>
 #include <libudev.h>
 
+#define BLOCK_SIZE 512
 
 typedef struct{
 	DISPMANX_DISPLAY_HANDLE_T 	dispmanx_display;
@@ -24,6 +25,7 @@ typedef struct{
 typedef struct{
 	 struct udev *udev;
 	 struct udev_monitor *monitor;
+	 int fd;
 }Input_RPI;
 
 // Define the path to the input event device
@@ -32,27 +34,99 @@ typedef struct{
 void Input_RPI_Create(Input_RPI *_input_rpi){
 
 	memset(_input_rpi,0,sizeof(Input_RPI));
+	struct udev_device *dev;
+	struct udev_enumerate *enumerate;
+	struct udev_list_entry *devices, *dev_list_entry;
 
 	 // Initialize libudev context
 	_input_rpi->udev = udev_new();
-	if (!_input_rpi->udev) {
+	if (_input_rpi->udev == NULL) {
 		fprintf(stderr, "Failed to initialize libudev\n");
 		exit(EXIT_FAILURE);
 	}
 
    // Create a udev monitor
 	_input_rpi->monitor = udev_monitor_new_from_netlink(_input_rpi->udev, "udev");
-	if (!_input_rpi->monitor) {
+	if (_input_rpi->monitor == NULL) {
 		fprintf(stderr, "Failed to create udev monitor\n");
 		udev_unref(_input_rpi->udev);
 		exit(EXIT_FAILURE);
 	}
 
+	/* create enumerate object */
+	enumerate = udev_enumerate_new(_input_rpi->udev);
+	if (!enumerate) {
+		udev_unref(_input_rpi->udev);
+		fprintf(stderr, "Cannot create enumerate context.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	udev_enumerate_add_match_subsystem(enumerate, "block");
+	udev_enumerate_scan_devices(enumerate);
+
+	/* fillup device list */
+	devices = udev_enumerate_get_list_entry(enumerate);
+	if (!devices) {
+		udev_unref(_input_rpi->udev);
+		fprintf(stderr, "Failed to get device list.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	udev_list_entry_foreach(dev_list_entry, devices) {
+		const char *path, *tmp;
+		unsigned long long disk_size = 0;
+		unsigned short int block_size = BLOCK_SIZE;
+
+		path = udev_list_entry_get_name(dev_list_entry);
+		dev = udev_device_new_from_syspath(_input_rpi->udev, path);
+
+		/* skip if device/disk is a partition or loop device */
+		if (strncmp(udev_device_get_devtype(dev), "partition", 9) != 0 &&
+		    strncmp(udev_device_get_sysname(dev), "loop", 4) != 0) {
+			printf("I: DEVNODE=%s\n", udev_device_get_devnode(dev));
+			printf("I: KERNEL=%s\n", udev_device_get_sysname(dev));
+			printf("I: DEVPATH=%s\n", udev_device_get_devpath(dev));
+			printf("I: DEVTYPE=%s\n", udev_device_get_devtype(dev));
+
+			tmp = udev_device_get_sysattr_value(dev, "size");
+			if (tmp)
+				disk_size = strtoull(tmp, NULL, 10);
+
+			tmp = udev_device_get_sysattr_value(dev, "queue/logical_block_size");
+			if (tmp){
+				block_size = atoi(tmp);
+			}
+
+			printf("I: DEVSIZE=");
+			if (strncmp(udev_device_get_sysname(dev), "sr", 2) != 0)
+				printf("%lld GB\n", (disk_size * block_size) / 1000000000);
+			else
+				printf("n/a\n");
+		}
+
+		/* free dev */
+		udev_device_unref(dev);
+	}
+	/* free enumerate */
+	udev_enumerate_unref(enumerate);
+
 	// Add filter for input devices
-	udev_monitor_filter_add_match_subsystem_devtype(_input_rpi->monitor, "input", NULL);
+	if(udev_monitor_filter_add_match_subsystem_devtype(_input_rpi->monitor, "input", NULL) < 0){
+		fprintf(stderr, "Failed to udev_monitor_filter_add_match_subsystem_devtype\n");
+		udev_unref(_input_rpi->udev);
+		exit(EXIT_FAILURE);
+	}
 
 	// Enable the monitor
-	udev_monitor_enable_receiving(_input_rpi->monitor);
+	if(udev_monitor_enable_receiving(_input_rpi->monitor) < 0){
+		fprintf(stderr, "Failed to udev_monitor_enable_receiving\n");
+		udev_unref(_input_rpi->udev);
+		exit(EXIT_FAILURE);
+	}
+
+	_input_rpi->fd = udev_monitor_get_fd(_input_rpi->monitor);
+
+	printf("libudev initialized!\n");
 
 }
 
@@ -60,15 +134,41 @@ bool pressed_esc=false;
 
 
 void Input_RPI_Update(Input_RPI *_input_rpi){
+	fd_set fds;
+	struct timeval tv;
+	int ret;
+
+	FD_ZERO(&fds);
+	FD_SET(_input_rpi->fd, &fds);
+	tv.tv_sec = 0;
+	tv.tv_usec = 0;
+
+	ret = select(_input_rpi->fd+1, &fds, NULL, NULL, &tv);
+	if (ret > 0 && FD_ISSET(_input_rpi->fd, &fds)) {
+		struct udev_device *dev = udev_monitor_receive_device(_input_rpi->monitor);
+		if (dev) {
+			printf("I: ACTION=%s\n", udev_device_get_action(dev));
+			printf("I: DEVNAME=%s\n", udev_device_get_sysname(dev));
+			printf("I: DEVPATH=%s\n", udev_device_get_devpath(dev));
+			printf("I: MACADDR=%s\n", udev_device_get_sysattr_value(dev, "address"));
+			printf("---\n");
+
+			/* free dev */
+			udev_device_unref(dev);
+		}
+	}
 	// Read events from the monitor
-	struct udev_device *dev = udev_monitor_receive_device(_input_rpi->monitor);
+	/*struct udev_device *dev = udev_monitor_receive_device(_input_rpi->monitor);
 	if (dev) {
 		const char *action = udev_device_get_action(dev);
 		if (action && strcmp(action, "add") == 0) {
+			printf("added \n");
 			const char *devnode = udev_device_get_devnode(dev);
 			if (devnode) {
+				printf("devnode \n");
 				int fd = open(devnode, O_RDONLY);
 				if (fd >= 0) {
+					printf("there's events \n");
 					struct input_event ev;
 					ssize_t bytes;
 					while (1) {
@@ -102,7 +202,10 @@ void Input_RPI_Update(Input_RPI *_input_rpi){
 			// Cleanup
 			udev_device_unref(dev);
 		}
-	}
+	}else{
+		fprintf(stderr,"libudev NULL!\n");
+	}*/
+
 }
 
 void Input_RPI_Destroy(Input_RPI *_input_rpi){
