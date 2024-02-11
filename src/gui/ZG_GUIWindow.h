@@ -20,6 +20,12 @@ ZG_GUIWindow 		*	ZG_GUIWindow_New(
 		, uint16_t height
 );
 
+ZG_GUIWindow 		*	ZG_GUIWindow_NewFromXml(
+	const char *_file_xml
+	,ZG_TextureManager *_texture_manager
+	,ZG_TTFontManager *_font_manager
+);
+
 void 					ZG_GUIWindow_SetWidth(ZG_GUIWindow *_this,uint16_t _width);
 void 					ZG_GUIWindow_SetHeight(ZG_GUIWindow *_this,uint16_t _height);
 void 					ZG_GUIWindow_SetBackgroundColor3i(ZG_GUIWindow * _this, uint8_t r, uint8_t g, uint8_t b);
@@ -28,10 +34,17 @@ void 					ZG_GUIWindow_SetCaptionTitle(ZG_GUIWindow * _this,const char *_text);
 void 					ZG_GUIWindow_SetWindowStyle(ZG_GUIWindow * _this, ZG_GUIWindowStyle _window_style);
 ZG_TextureManager 	*	ZG_GUIWindow_GetTextureManager(ZG_GUIWindow * _this);
 
-ZG_GUIButton		*	ZG_GUIWindow_NewButton(ZG_GUIWindow * _this);
-ZG_GUITextBox		* 	ZG_GUIWindow_NewTextBox(ZG_GUIWindow * _this);
-ZG_GUITexture		* 	ZG_GUIWindow_NewTexture(ZG_GUIWindow * _this);
-ZG_GUIFrame			* 	ZG_GUIWindow_NewFrame(ZG_GUIWindow * _this);
+// Window generates other gui on its context
+ZG_GUIButton		*	ZG_GUIWindow_NewGUIButton(ZG_GUIWindow * _this, const char *_id);
+ZG_GUITextBox		* 	ZG_GUIWindow_NewGUITextBox(ZG_GUIWindow * _this, const char *_id);
+ZG_GUITexture		* 	ZG_GUIWindow_NewGUITexture(ZG_GUIWindow * _this, const char *_id);
+ZG_GUIFrame			* 	ZG_GUIWindow_NewGUIFrame(ZG_GUIWindow * _this, const char *_id);
+
+ZG_GUIButton		*	ZG_GUIWindow_GetGUIButton(ZG_GUIWindow * _this, const char *_id);
+ZG_GUITextBox		* 	ZG_GUIWindow_GetGUITextBox(ZG_GUIWindow * _this, const char *_id);
+ZG_GUITexture		* 	ZG_GUIWindow_GetGUITexture(ZG_GUIWindow * _this, const char *_id);
+ZG_GUIFrame			* 	ZG_GUIWindow_GetGUIFrame(ZG_GUIWindow * _this, const char *_id);
+
 
 //ZG_TTFontManager	*	ZG_GUIWindow_GetTTFontManager(ZG_GUIWindow * _this);
 void 					ZG_GUIWindow_Delete(ZG_GUIWindow * _this);

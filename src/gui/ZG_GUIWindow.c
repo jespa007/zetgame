@@ -6,23 +6,23 @@
 
 typedef struct{
 
-	ZG_GUIFrame		*	frame_content,
-					*	frame_caption;
+	ZG_GUIFrame			*	frame_content,
+						*	frame_caption;
 
 	ZG_GUITextBox		* 	textbox_caption;
 	ZG_GUIButton		*	button_close;
 
-	bool				visible_caption;
-	bool				start_dragging;
+	bool					visible_caption;
+	bool					start_dragging;
 	ZG_Vector2i 			start_mouse_position;
 
-	ZG_GUIWindowStyle			window_style;
+	ZG_GUIWindowStyle		window_style;
 
 	//
-	ZG_MapString			*	buttons;
-	ZG_MapString			*	textures;
-	ZG_MapString			*	frames;
-	ZG_MapString			*	textboxes;
+	ZG_MapString		*	buttons;
+	ZG_MapString		*	textures;
+	ZG_MapString		*	frames;
+	ZG_MapString		*	textboxes;
 
 }ZG_GUIWindowData;
 
@@ -37,9 +37,7 @@ void ZG_GUIWindow_OnSetWidth(void *gui_window,uint16_t width);
 void ZG_GUIWindow_OnSetHeight(void *gui_window,uint16_t width);
 void ZG_GUIWindow_AttachChild(void *gui_window, ZG_GUIWidget * widget_to_attach);
 
-
-
-
+#include "ZG_GUIWindowXml.c"
 
 ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height){
 
@@ -95,8 +93,12 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height)
 
 	data->visible_caption=true;
 	data->start_dragging=false;
-	data->window_manager=_window_manager;
 	data->window_style=ZG_GUI_WINDOW_STYLE_NORMAL;
+
+	data->buttons=ZG_MapString_New();
+	data->textboxes=ZG_MapString_New();
+	data->textures=ZG_MapString_New();
+	data->frames=ZG_MapString_New();
 
 
 	ZG_Input_AddCallbackOnMouseButtonDown((ZG_MouseEventCallback){
@@ -132,98 +134,6 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height)
 	//ZG_GUIWindow_SetHeight(window,_height);
 
 	return window;
-
-}
-
-
-
-ZG_GUIWindow ZG_GUIWindow_NewFromMemory(
-		uint8_t *_xml_buf
-		,size_t _xml_len
-	){
-
-	ZG_GUIWindowManagerData *data=_this->data;
-
-	ZG_UNUSUED_PARAM(_xml_len);
-
-	bool ok=false;
-
-
-	// first read tilesets...
-	XmlDoc *doc = parseDoc((char *)_xml_buf);
-
-	 if (xmlDocError(doc) != XML_SUCCESS)
-	 {
-		/* unparsable XML was read from stdin */
-		ZG_LOG_ERRORF("Cannot parse xml");
-		goto wm_load_from_memmory_exit;
-	}
-
-	 if(ZG_STRCMP(doc->root->name,!=,"window")){
-			ZG_LOG_ERROR("Expected first tag as 'window' but it was '%s'",doc->root->name);
-			goto wm_load_from_memmory_exit;
-	 }
-
-	 //GUIWMWindowData *window_data=ZG_NEW(GUIWMWindowData);
-
-
-	 // setup gui elements
-	 window_data->buttons=ZG_List_New();
-	 window_data->textboxes=ZG_List_New();
-	 window_data->viewers=ZG_List_New();
-	 window_data->frames=ZG_List_New();
-	 //window_data->gui_window_manager_data=data;
-
-
-	 window_data->window=ZG_GUIWindow_New(0,0,ZG_Graphics_GetWidth(),ZG_Graphics_GetHeight()-ZG_DEFAULT_WINDOW_CAPTION_HEIGHT,_this);
-	 XmlAttribute *attribute=doc->root->attributes;
-	 XmlElement *children=doc->root->children;
-
-	 // setup window
-	 if(attribute != NULL){
-		 do{
-			 int int_value=0;
-			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
-			 if(ZG_STRCMP(attribute->name,==,"background-color")){
-				 ZG_GUIWindow_SetBackgroundColor4f(window_data->window,ZG_Color4f_FromHtml(attribute->value));
-			 }else if(ZG_STRCMP(attribute->name,==,"window-style")){
-				 if(ZG_STRCMP(attribute->value,==,"none")){
-					 ZG_GUIWindow_SetWindowStyle(window_data->window,ZG_GUI_WINDOW_STYLE_NONE);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"caption")){
-				 ZG_GUIWindow_SetCaptionTitle(window_data->window,attribute->value);
-			 }else if(ZG_STRCMP(attribute->name,==,"width")){
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWindow_SetWidth(window_data->window,int_value);
-				 }
-			 }else if(ZG_STRCMP(attribute->name,==,"height")){
-				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
-				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWindow_SetHeight(window_data->window,int_value);
-				 }
-			 }else{
-				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
-			 }
-
-			 attribute=attribute->next;
-		 }while(attribute != attribute->parent->attributes);
-		// process attributes
-	}
-	 // process window childs
-	 if(children != NULL){
-		 do{
-			 ZG_GUIWindowManager_ProcessTag(window_data,window_data->window->widget,children);
-			 children=children->next;
-		 }while(children != children->parent->children);
-	 }
-
-	 ok=true;
-
-wm_load_from_memmory_exit:
-
-	freeDoc(doc);
-
-	return ok;
 
 }
 
@@ -274,7 +184,7 @@ void 		ZG_GUIWindow_SetCaptionTitle(ZG_GUIWindow * _this, const char *_caption){
 	ZG_GUIWindowData *data=_this->data;
 	ZG_TextBox_SetText(data->textbox_caption->textbox,_caption);//frame_content->widget->background_color=Color4f_FromHexStr(color);
 }
-
+/*
 ZG_TextureManager 		*ZG_GUIWindow_GetTextureManager(ZG_GUIWindow * _this){
 
 	if(_this == NULL){
@@ -287,7 +197,7 @@ ZG_TextureManager 		*ZG_GUIWindow_GetTextureManager(ZG_GUIWindow * _this){
 	}
 	return NULL;
 }
-/*
+
 ZG_TTFontManager 		*ZG_GUIWindow_GetTTFontManager(ZG_GUIWindow * _this){
 	ZG_GUIWindowData *data=_this->data;
 	if(data->window_manager){
@@ -418,38 +328,146 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 	}
 }
 
- ZG_GUIButton		*	ZG_GUIWindow_NewButton(ZG_GUIWindow * _this){
-
- }
-
- ZG_GUITextBox		* 	ZG_GUIWindow_NewTextBox(ZG_GUIWindow * _this){
-
- }
-
- ZG_GUITexture		* 	ZG_GUIWindow_NewTexture(ZG_GUIWindow * _this){
-
- }
-
- ZG_GUIFrame			* 	ZG_GUIWindow_NewFrame(ZG_GUIWindow * _this){
+ ZG_GUIButton		*	ZG_GUIWindow_NewButton(ZG_GUIWindow * _this, const char *_id){
 	 ZG_GUIWindowData *data=_this->data;
+	 char *id=_id;
+	 bool exist=false;
+	 ZG_Guid *guid=NULL;
 
-	 ZG_GUIFrame *frame=new ZG_GUIFrame(0,0,0,0);
-	 ZG_List_Add(data->frames,frame);
+	 if(id == NULL){
+		 guid=ZG_Guid_New();
+		 id=guid->uuid;
+	 }
+
+	 ZG_GUIFrame *button=ZG_GUIButton_New(0,0,0,0);
+	 ZG_MapString_Set(data->buttons, id,button);
+
+	 if(guid!=NULL){
+		 ZG_Guid_Delete(guid);
+	 }
+
+	 return button;
+ }
+
+ ZG_GUITextBox		* 	ZG_GUIWindow_NewTextBox(ZG_GUIWindow * _this, const char *_id){
+	 ZG_GUIWindowData *data=_this->data;
+	 char *id=_id;
+	 bool exist=false;
+	 ZG_Guid *guid=NULL;
+
+	 if(id == NULL){
+		 guid=ZG_Guid_New();
+		 id=guid->uuid;
+	 }
+
+	 ZG_GUIFrame *textbox=ZG_GUITextBox_New(0,0,0,0);
+	 ZG_MapString_Set(data->textboxes, id,textbox);
+
+	 if(guid!=NULL){
+		 ZG_Guid_Delete(guid);
+	 }
+
+	 return textbox;
+ }
+
+ ZG_GUITexture		* 	ZG_GUIWindow_NewTexture(ZG_GUIWindow * _this, const char *_id){
+	 ZG_GUIWindowData *data=_this->data;
+	 char *id=_id;
+	 bool exist=false;
+	 ZG_Guid *guid=NULL;
+
+	 if(id == NULL){
+		 guid=ZG_Guid_New();
+		 id=guid->uuid;
+	 }
+
+	 ZG_GUIFrame *texture=ZG_GUITexture_New(0,0,0,0);
+	 ZG_MapString_Set(data->textures, id,texture);
+
+	 if(guid!=NULL){
+		 ZG_Guid_Delete(guid);
+	 }
+
+	 return texture;
+ }
+
+ ZG_GUIFrame			* 	ZG_GUIWindow_NewGUIFrame(ZG_GUIWindow * _this, const char *_id){
+	 ZG_GUIWindowData *data=_this->data;
+	 char *id=_id;
+	 bool exist=false;
+	 ZG_Guid *guid=NULL;
+
+	 if(id == NULL){
+		 guid=ZG_Guid_New();
+		 id=guid->uuid;
+	 }
+
+	 ZG_GUIFrame *frame=ZG_GUIFrame_New(0,0,0,0);
+	 ZG_MapString_Set(data->frames,id,frame);
+
+	 if(guid!=NULL){
+		 ZG_Guid_Delete(guid);
+	 }
+
+	 return frame;
  }
 
 
+ZG_GUIButton		*	ZG_GUIWindow_GetGUIButton(ZG_GUIWindow * _this, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	return ZG_MapString_Get(data->buttons,_id,NULL);
+}
 
+ZG_GUITextBox		* 	ZG_GUIWindow_GetGUITextBox(ZG_GUIWindow * _this, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	return ZG_MapString_Get(data->textboxes,_id,NULL);
+}
+
+ZG_GUITexture		* 	ZG_GUIWindow_GetGUITexture(ZG_GUIWindow * _this, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	return ZG_MapString_Get(data->textures,_id,NULL);
+}
+
+ZG_GUIFrame			* 	ZG_GUIWindow_GetGUIFrame(ZG_GUIWindow * _this, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	return ZG_MapString_Get(data->frames,_id,NULL);
+}
 
 
 void ZG_GUIWindow_Delete(ZG_GUIWindow *_this) {
 	if(_this == NULL) return;
 	ZG_GUIWindowData *data=_this->data;
 
+	// erase window components
 	ZG_GUIWidget_Delete(_this->widget);
 	ZG_GUIFrame_Delete(data->frame_caption);
 	ZG_GUIFrame_Delete(data->frame_content);
 	ZG_GUITextBox_Delete(data->textbox_caption);
 	ZG_GUIButton_Delete(data->button_close);
+
+	struct{
+		ZG_MapString	*widgets;
+		void (*delete_callback)(void *_this);
+	}widget_deallocate_collections[]={
+		{data->buttons,(void (*)(void *))ZG_GUIButton_Delete}
+		,{data->textboxes,(void (*)(void *))ZG_GUITextBox_Delete}
+		,{data->textures,(void (*)(void *))ZG_GUITexture_Delete}
+		,{data->frames,(void (*)(void *))ZG_GUIFrame_Delete}
+	};
+
+	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_deallocate_collections); j++){
+
+		ZG_MapStringIterator *iterator=ZG_MapStringIterator_New(widget_deallocate_collections[j].widgets);
+		for(; !ZG_MapStringIterator_End(iterator);ZG_MapStringIterator_Next(iterator)){
+
+			// deallocate all widgets
+			widget_deallocate_collections[j].delete_callback(ZG_MapStringIterator_GetValue(iterator));
+		}
+
+		ZG_MapStringIterator_Delete(iterator);
+		ZG_MapString_Delete(widget_deallocate_collections[j].widgets);
+	}
+
 
 	ZG_FREE(data);
 	ZG_FREE(_this);
