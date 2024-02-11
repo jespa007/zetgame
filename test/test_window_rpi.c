@@ -8,8 +8,7 @@
 #include "EGL/eglext.h"
 #include <fcntl.h>
 #include <linux/input.h>
-#include <linux/input.h>
-#include <libudev.h>
+//#include <libudev.h>
 
 #define BLOCK_SIZE 512
 
@@ -23,9 +22,10 @@ typedef struct{
 #define check() assert(glGetError() == 0)
 
 typedef struct{
-	 struct udev *udev;
-	 struct udev_monitor *monitor;
+	/* struct udev *udev;
+	 struct udev_monitor *monitor;*/
 	 int fd;
+
 }Input_RPI;
 
 // Define the path to the input event device
@@ -34,7 +34,13 @@ typedef struct{
 void Input_RPI_Create(Input_RPI *_input_rpi){
 
 	memset(_input_rpi,0,sizeof(Input_RPI));
-	struct udev_device *dev;
+
+	_input_rpi->fd = open(INPUT_EVENT_DEVICE, O_RDONLY);
+    if (_input_rpi->fd < 0) {
+        perror("Failed to open input event device");
+        exit(EXIT_FAILURE);
+    }
+	/*struct udev_device *dev;
 	struct udev_enumerate *enumerate;
 	struct udev_list_entry *devices, *dev_list_entry;
 
@@ -53,7 +59,7 @@ void Input_RPI_Create(Input_RPI *_input_rpi){
 		exit(EXIT_FAILURE);
 	}
 
-	/* create enumerate object */
+	// create enumerate object
 	enumerate = udev_enumerate_new(_input_rpi->udev);
 	if (!enumerate) {
 		udev_unref(_input_rpi->udev);
@@ -64,7 +70,7 @@ void Input_RPI_Create(Input_RPI *_input_rpi){
 	udev_enumerate_add_match_subsystem(enumerate, "block");
 	udev_enumerate_scan_devices(enumerate);
 
-	/* fillup device list */
+	// fillup device list
 	devices = udev_enumerate_get_list_entry(enumerate);
 	if (!devices) {
 		udev_unref(_input_rpi->udev);
@@ -80,7 +86,7 @@ void Input_RPI_Create(Input_RPI *_input_rpi){
 		path = udev_list_entry_get_name(dev_list_entry);
 		dev = udev_device_new_from_syspath(_input_rpi->udev, path);
 
-		/* skip if device/disk is a partition or loop device */
+		// skip if device/disk is a partition or loop device
 		if (strncmp(udev_device_get_devtype(dev), "partition", 9) != 0 &&
 		    strncmp(udev_device_get_sysname(dev), "loop", 4) != 0) {
 			printf("I: DEVNODE=%s\n", udev_device_get_devnode(dev));
@@ -104,10 +110,10 @@ void Input_RPI_Create(Input_RPI *_input_rpi){
 				printf("n/a\n");
 		}
 
-		/* free dev */
+		// free dev
 		udev_device_unref(dev);
 	}
-	/* free enumerate */
+	// free enumerate
 	udev_enumerate_unref(enumerate);
 
 	// Add filter for input devices
@@ -124,9 +130,9 @@ void Input_RPI_Create(Input_RPI *_input_rpi){
 		exit(EXIT_FAILURE);
 	}
 
-	_input_rpi->fd = udev_monitor_get_fd(_input_rpi->monitor);
+	_input_rpi->fd = udev_monitor_get_fd(_input_rpi->monitor);*/
 
-	printf("libudev initialized!\n");
+	printf("input initialized!\n");
 
 }
 
@@ -134,7 +140,26 @@ bool pressed_esc=false;
 
 
 void Input_RPI_Update(Input_RPI *_input_rpi){
-	fd_set fds;
+
+	 ssize_t bytes;
+	 struct input_event ev;
+    // Main event loop
+
+
+	bytes = read(_input_rpi->fd, &ev, sizeof(ev));
+		if (bytes == sizeof(ev)) {
+			// Handle input event
+			// Process the event structure
+			printf("\n key event");
+		} else if (bytes == -1) {
+			perror("Error reading input event");
+			// Exit the loop or handle the error condition
+		} else if (bytes == 0) {
+			// End of file (EOF) reached, no more events to read
+			//break;
+		}
+
+	/*fd_set fds;
 	struct timeval tv;
 	int ret;
 
@@ -153,11 +178,11 @@ void Input_RPI_Update(Input_RPI *_input_rpi){
 			printf("I: MACADDR=%s\n", udev_device_get_sysattr_value(dev, "address"));
 			printf("---\n");
 
-			/* free dev */
+			// free dev
 			udev_device_unref(dev);
 		}
 	}
-	// Read events from the monitor
+	// Read events from the monitor*/
 	/*struct udev_device *dev = udev_monitor_receive_device(_input_rpi->monitor);
 	if (dev) {
 		const char *action = udev_device_get_action(dev);
@@ -211,9 +236,10 @@ void Input_RPI_Update(Input_RPI *_input_rpi){
 void Input_RPI_Destroy(Input_RPI *_input_rpi){
 
    // Cleanup
-    udev_monitor_unref(_input_rpi->monitor);
-    udev_unref(_input_rpi->udev);
+   /* udev_monitor_unref(_input_rpi->monitor);
+    udev_unref(_input_rpi->udev);*/
 
+	 close(_input_rpi->fd);
 
 }
 
@@ -427,7 +453,7 @@ int main() {
 	Input_RPI  input_rpi;
 
 	Input_RPI_Create(&input_rpi);
-	/*Window_RPI_Create(&window_rpi);
+	Window_RPI_Create(&window_rpi);
 
 
 
@@ -469,11 +495,11 @@ int main() {
     glAttachShader(shaderProgram, fragmentShader);
     glBindAttribLocation(shaderProgram, 0, "position");
     glLinkProgram(shaderProgram);
-    glUseProgram(shaderProgram);*/
+    glUseProgram(shaderProgram);
 
     do{
     	// Set clear color to blue
-        /*glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
+        glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
     	// Specify the layout of the vertex data
@@ -485,15 +511,16 @@ int main() {
     	check();
 
     	// Swap buffers
-    	eglSwapBuffers(window_rpi.egl_display, window_rpi.egl_surface);*/
+    	eglSwapBuffers(window_rpi.egl_display, window_rpi.egl_surface);
 
     	Input_RPI_Update(&input_rpi);
 
     // Wait for a few seconds
 	}while(!pressed_esc);
 
-   // Window_RPI_Destroy(&window_rpi);
+    Window_RPI_Destroy(&window_rpi);
     Input_RPI_Destroy(&input_rpi);
 
     return 0;
 }
+
