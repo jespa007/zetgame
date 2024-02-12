@@ -1,0 +1,1 @@
+gcc -O2 test_freetype_win32.c -lgdi32 -lole32 -lversion -lsetupapi -limm32 -loleaut32 -lmingw32 -lopengl32 -lfreetype -L..\3rdparty\gcc\lib -I..\3rdparty\gcc\include -I..\3rdparty\gcc\include\freetype2 -o test_freetype_win32.exe
