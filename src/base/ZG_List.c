@@ -32,7 +32,7 @@ ZG_List * ZG_List_New(){
 
 
 
-void ZG_List_Set(ZG_List *v, uint16_t idx, void *e){
+void ZG_List_Set(ZG_List *v, size_t idx, void *e){
 	if (idx >= v->count) {
 		ZG_LOG_ERRORF("idx out of bounds");
 		return;
@@ -44,7 +44,7 @@ size_t ZG_List_Count(ZG_List *v){
 	return v->count;
 }
 
-void *ZG_List_Get(ZG_List *v, uint16_t idx){
+void *ZG_List_Get(ZG_List *v, size_t idx){
 	if (idx >= v->count) {
 		ZG_LOG_ERRORF("idx out of bounds");
 		return NULL;
@@ -53,7 +53,7 @@ void *ZG_List_Get(ZG_List *v, uint16_t idx){
 	return v->items[idx];
 }
 
-void ZG_List_Erase(ZG_List *_this, uint16_t idx){
+void ZG_List_Erase(ZG_List *_this, size_t idx){
 	if (idx >= _this->count) {
 		ZG_LOG_ERRORF("idx out of bounds");
 		return;
@@ -61,7 +61,7 @@ void ZG_List_Erase(ZG_List *_this, uint16_t idx){
 
 	_this->items[idx] = NULL;
 
-	for (uint16_t i = idx; i < (_this->count-1); i++) {
+	for (size_t i = idx; i < (_this->count-1); i++) {
 		_this->items[i] = _this->items[i+1];
 	}
 
@@ -104,11 +104,13 @@ void ZG_List_Concat(ZG_List *_this, ZG_List *list){
 	}
 }
 
-void 		ZG_List_Insert(ZG_List *v, uint16_t idx, void *e){
-	if(idx > (v->count+1)){
+void 		ZG_List_Insert(ZG_List *v, size_t _idx, void *e){
+	if(_idx > (v->count+1)){
 		ZG_LOG_ERROR("idx should be 0 to %i",v->count+1);
 		return;
 	}
+
+	int idx=(int)_idx;
 
 	if(ZG_List_AddSlot(v)){
 		// 1. move all elements...

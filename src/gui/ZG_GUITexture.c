@@ -56,13 +56,9 @@ ZG_GUITexture *ZG_GUITexture_New(int x, int y, uint16_t width, uint16_t height){
 	return viewer;
 }
 
-void			ZG_GUITexture_SetTexture(ZG_GUITexture *_this, const char *_source){
+void			ZG_GUITexture_SetTexture(ZG_GUITexture *_this, ZG_Texture *_texture){
 	ZG_GUITextureData *data=_this->data;
-	ZG_TextureManager *texture_manager=ZG_GUIWidget_GetTextureManager(_this->widget);
-
-	if(texture_manager!=NULL){
-		data->texture=ZG_TextureManager_GetTexture(texture_manager,_source);
-	}
+	data->texture=_texture;
 }
 
 

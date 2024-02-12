@@ -146,7 +146,7 @@ ZG_Vector2i ZG_GUIWidget_GetDimensions(ZG_GUIWidget *_this){
 	return data->dimensions;
 }
 
-void ZG_GUIWidget_AttachWidgetBase(ZG_GUIWidget *_this, ZG_GUIWidget *widget_to_attach){
+void ZG_GUIWidget_AttachWidget(ZG_GUIWidget *_this, ZG_GUIWidget *widget_to_attach){
 
 	ZG_GUIWidgetData *data=_this->data;
 	ZG_GUIWidgetData *data_widget=NULL;

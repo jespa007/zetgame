@@ -5,6 +5,11 @@
 
 
 typedef struct{
+	ZG_List *list;
+	ZG_MapString *ids;
+}ZG_GUIWindowWidgetContainer;
+
+typedef struct{
 
 	ZG_GUIFrame			*	frame_content,
 						*	frame_caption;
@@ -19,10 +24,7 @@ typedef struct{
 	ZG_GUIWindowStyle		window_style;
 
 	//
-	ZG_MapString		*	buttons;
-	ZG_MapString		*	textures;
-	ZG_MapString		*	frames;
-	ZG_MapString		*	textboxes;
+	ZG_GUIWindowWidgetContainer gui_buttons,gui_textures,gui_frames,gui_textboxes;
 
 }ZG_GUIWindowData;
 
@@ -44,11 +46,20 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height)
 	ZG_GUIWindow *window = ZG_NEW(ZG_GUIWindow);
 	ZG_GUIWindowData *data = ZG_NEW(ZG_GUIWindowData);
 
+	// list of widget container to ALLOCATE
+	struct{
+		ZG_GUIWindowWidgetContainer	widgets;
+	}widget_allocate_containers[]={
+		{data->gui_buttons}
+		,{data->gui_textboxes}
+		,{data->gui_textures}
+		,{data->gui_frames}
+	};
 
-	 data->buttons=ZG_MapString_New();
-	 data->textboxes=ZG_MapString_New();
-	 data->viewers=ZG_MapString_New();
-	 data->frames=ZG_MapString_New();
+	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_allocate_containers); j++){
+		widget_allocate_containers[j].widgets.ids=ZG_MapString_New();
+		widget_allocate_containers[j].widgets.list=ZG_List_New();
+	}
 
 	window->data=data;
 
@@ -94,12 +105,6 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height)
 	data->visible_caption=true;
 	data->start_dragging=false;
 	data->window_style=ZG_GUI_WINDOW_STYLE_NORMAL;
-
-	data->buttons=ZG_MapString_New();
-	data->textboxes=ZG_MapString_New();
-	data->textures=ZG_MapString_New();
-	data->frames=ZG_MapString_New();
-
 
 	ZG_Input_AddCallbackOnMouseButtonDown((ZG_MouseEventCallback){
 		.ptr_function=ZG_GUIWindow_OnMouseButtonDown
@@ -242,7 +247,7 @@ void ZG_GUIWindow_AttachChild(void *gui_window, ZG_GUIWidget * widget_to_attach)
 	ZG_GUIWindow *_this=gui_window;
 	ZG_GUIWindowData *data=_this->data;
 
-	ZG_GUIWidget_AttachWidgetBase(data->frame_content->widget,widget_to_attach);
+	ZG_GUIWidget_AttachWidget(data->frame_content->widget,widget_to_attach);
 }
 
 void ZG_GUIWindow_OnSetHeight(void *gui_window,uint16_t height){
@@ -329,108 +334,117 @@ void  ZG_GUIWindow_OnMouseMotion(ZG_MouseEvent * event, void *gui_window){
 }
 
  ZG_GUIButton		*	ZG_GUIWindow_NewButton(ZG_GUIWindow * _this, const char *_id){
-	 ZG_GUIWindowData *data=_this->data;
-	 char *id=_id;
-	 bool exist=false;
-	 ZG_Guid *guid=NULL;
-
-	 if(id == NULL){
-		 guid=ZG_Guid_New();
-		 id=guid->uuid;
-	 }
-
-	 ZG_GUIFrame *button=ZG_GUIButton_New(0,0,0,0);
-	 ZG_MapString_Set(data->buttons, id,button);
-
-	 if(guid!=NULL){
-		 ZG_Guid_Delete(guid);
-	 }
-
-	 return button;
+	 ZG_GUIButton *gui_button=ZG_GUIButton_New(0,0,0,0);
+	 ZG_GUIWindow_AddGUIButton(_this,gui_button,_id);
+	 return gui_button;
  }
 
  ZG_GUITextBox		* 	ZG_GUIWindow_NewTextBox(ZG_GUIWindow * _this, const char *_id){
-	 ZG_GUIWindowData *data=_this->data;
-	 char *id=_id;
-	 bool exist=false;
-	 ZG_Guid *guid=NULL;
-
-	 if(id == NULL){
-		 guid=ZG_Guid_New();
-		 id=guid->uuid;
-	 }
-
-	 ZG_GUIFrame *textbox=ZG_GUITextBox_New(0,0,0,0);
-	 ZG_MapString_Set(data->textboxes, id,textbox);
-
-	 if(guid!=NULL){
-		 ZG_Guid_Delete(guid);
-	 }
-
-	 return textbox;
+	 ZG_GUITextBox *gui_textbox=ZG_GUITextBox_New(0,0,0,0);
+	 ZG_GUIWindow_AddGUITextBox(_this,gui_textbox,_id);
+	 return gui_textbox;
  }
 
- ZG_GUITexture		* 	ZG_GUIWindow_NewTexture(ZG_GUIWindow * _this, const char *_id){
-	 ZG_GUIWindowData *data=_this->data;
-	 char *id=_id;
-	 bool exist=false;
-	 ZG_Guid *guid=NULL;
-
-	 if(id == NULL){
-		 guid=ZG_Guid_New();
-		 id=guid->uuid;
-	 }
-
-	 ZG_GUIFrame *texture=ZG_GUITexture_New(0,0,0,0);
-	 ZG_MapString_Set(data->textures, id,texture);
-
-	 if(guid!=NULL){
-		 ZG_Guid_Delete(guid);
-	 }
-
-	 return texture;
+ ZG_GUITexture		* 	ZG_GUIWindow_NewGUITexture(ZG_GUIWindow * _this, const char *_id){
+	 ZG_GUITexture *gui_texture=ZG_GUITexture_New(0,0,0,0);
+	 ZG_GUIWindow_AddGUITexture(_this,gui_texture,_id);
+	 return gui_texture;
  }
 
  ZG_GUIFrame			* 	ZG_GUIWindow_NewGUIFrame(ZG_GUIWindow * _this, const char *_id){
-	 ZG_GUIWindowData *data=_this->data;
-	 char *id=_id;
-	 bool exist=false;
-	 ZG_Guid *guid=NULL;
+	 ZG_GUIFrame *gui_frame=ZG_GUIFrame_New(0,0,0,0);
+	 ZG_GUIWindow_AddGUIFrame(_this,gui_frame,_id);
+	 return gui_frame;
+}
 
-	 if(id == NULL){
-		 guid=ZG_Guid_New();
-		 id=guid->uuid;
-	 }
+//----
 
-	 ZG_GUIFrame *frame=ZG_GUIFrame_New(0,0,0,0);
-	 ZG_MapString_Set(data->frames,id,frame);
 
-	 if(guid!=NULL){
-		 ZG_Guid_Delete(guid);
-	 }
+ void 	ZG_GUIWindow_AddGUIWidget(ZG_GUIWindowWidgetContainer _window_gui_widget_container,void *_gui_widget, const char *_id){
 
-	 return frame;
+ 	 size_t idx_pos=ZG_List_Count(_window_gui_widget_container.list);
+
+ 	 ZG_List_Add(_window_gui_widget_container.list, _gui_widget);
+
+ 	 if(_id!=NULL){
+ 		 ZG_MapString_Set(_window_gui_widget_container.ids, _id, (void *)idx_pos);
+ 	 }
  }
 
 
-ZG_GUIButton		*	ZG_GUIWindow_GetGUIButton(ZG_GUIWindow * _this, const char *_id){
+void	ZG_GUIWindow_AddGUIButton(ZG_GUIWindow * _this,ZG_GUIButton *_gui_button, const char *_id){
 	ZG_GUIWindowData *data=_this->data;
-	return ZG_MapString_Get(data->buttons,_id,NULL);
+	ZG_GUIWindow_AddGUIWidget(data->gui_buttons,_gui_button,_id);
+}
+
+void 	ZG_GUIWindow_AddGUITextBox(ZG_GUIWindow * _this,ZG_GUITextBox *_gui_textbox, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	ZG_GUIWindow_AddGUIWidget(data->gui_textboxes,_gui_textbox,_id);
+}
+
+void 	ZG_GUIWindow_AddGUITexture(ZG_GUIWindow * _this,ZG_GUITexture *_gui_texture, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	ZG_GUIWindow_AddGUIWidget(data->gui_textures,_gui_texture,_id);
+}
+
+void 	ZG_GUIWindow_AddGUIFrame(ZG_GUIWindow * _this,ZG_GUIFrame *_gui_frame, const char *_id){
+	ZG_GUIWindowData *data=_this->data;
+	ZG_GUIWindow_AddGUIWidget(data->gui_textures,_gui_frame,_id);
+}
+
+
+ZG_GUIButton		*	ZG_GUIWindow_GetGUIButton(ZG_GUIWindow * _this, const char *_id){
+	bool exists=false;
+	ZG_GUIWindowData *data=_this->data;
+	size_t pos_idx=(size_t)ZG_MapString_Get(data->gui_buttons.ids,_id,&exists);
+
+	if(exists == false){
+		ZG_LOG_ERROR("ZG_GUIWindow_GetGUIButton : GUIButton '%s' does not exist",_id);
+		return NULL;
+	}
+
+	return ZG_List_Get(data->gui_buttons.list,pos_idx);
+
+
 }
 
 ZG_GUITextBox		* 	ZG_GUIWindow_GetGUITextBox(ZG_GUIWindow * _this, const char *_id){
+	bool exists=false;
 	ZG_GUIWindowData *data=_this->data;
-	return ZG_MapString_Get(data->textboxes,_id,NULL);
+	size_t pos_idx=(size_t)ZG_MapString_Get(data->gui_textboxes.ids,_id,&exists);
+
+	if(exists == false){
+		ZG_LOG_ERROR("ZG_GUIWindow_GetGUITextBox : GUITextBox '%s' does not exist",_id);
+		return NULL;
+	}
+
+	return ZG_List_Get(data->gui_textboxes.list,pos_idx);
 }
 
 ZG_GUITexture		* 	ZG_GUIWindow_GetGUITexture(ZG_GUIWindow * _this, const char *_id){
+	bool exists=false;
 	ZG_GUIWindowData *data=_this->data;
-	return ZG_MapString_Get(data->textures,_id,NULL);
+	size_t pos_idx=(size_t)ZG_MapString_Get(data->gui_textures.ids,_id,&exists);
+
+	if(exists == false){
+		ZG_LOG_ERROR("ZG_GUIWindow_GetGUITexture : GUITexture '%s' does not exist",_id);
+		return NULL;
+	}
+
+	return ZG_List_Get(data->gui_textures.list,pos_idx);
 }
 
 ZG_GUIFrame			* 	ZG_GUIWindow_GetGUIFrame(ZG_GUIWindow * _this, const char *_id){
+	bool exists=false;
 	ZG_GUIWindowData *data=_this->data;
-	return ZG_MapString_Get(data->frames,_id,NULL);
+	size_t pos_idx=(size_t)ZG_MapString_Get(data->gui_frames.ids,_id,&exists);
+
+	if(exists == false){
+		ZG_LOG_ERROR("ZG_GUIWindow_GetGUITexture : GUIFrame '%s' does not exist",_id);
+		return NULL;
+	}
+
+	return ZG_List_Get(data->gui_frames.list,pos_idx);
 }
 
 
@@ -446,26 +460,43 @@ void ZG_GUIWindow_Delete(ZG_GUIWindow *_this) {
 	ZG_GUIButton_Delete(data->button_close);
 
 	struct{
-		ZG_MapString	*widgets;
+		ZG_GUIWindowWidgetContainer	widgets;
+	}widget_allocate_containers[]={
+		{data->gui_buttons}
+		,{data->gui_textboxes}
+		,{data->gui_textures}
+		,{data->gui_frames}
+	};
+
+	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_allocate_containers); j++){
+		widget_allocate_containers[j].widgets.ids=ZG_MapString_New();
+		widget_allocate_containers[j].widgets.list=ZG_List_New();
+	}
+
+	// list of widget container to DEALLOCATE
+	struct{
+		ZG_GUIWindowWidgetContainer	widget_containers;
 		void (*delete_callback)(void *_this);
 	}widget_deallocate_collections[]={
-		{data->buttons,(void (*)(void *))ZG_GUIButton_Delete}
-		,{data->textboxes,(void (*)(void *))ZG_GUITextBox_Delete}
-		,{data->textures,(void (*)(void *))ZG_GUITexture_Delete}
-		,{data->frames,(void (*)(void *))ZG_GUIFrame_Delete}
+		{data->gui_buttons,(void (*)(void *))ZG_GUIButton_Delete}
+		,{data->gui_textboxes,(void (*)(void *))ZG_GUITextBox_Delete}
+		,{data->gui_textures,(void (*)(void *))ZG_GUITexture_Delete}
+		,{data->gui_frames,(void (*)(void *))ZG_GUIFrame_Delete}
 	};
 
 	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_deallocate_collections); j++){
+		ZG_List *list_widgets=widget_deallocate_collections[j].widget_containers.list;
+		void (*delete_callback)(void *_this) = widget_deallocate_collections[j].delete_callback;
 
-		ZG_MapStringIterator *iterator=ZG_MapStringIterator_New(widget_deallocate_collections[j].widgets);
-		for(; !ZG_MapStringIterator_End(iterator);ZG_MapStringIterator_Next(iterator)){
+		for(unsigned i = 0; ZG_List_Count(list_widgets);i++){
 
+			void *widget=ZG_List_Get(list_widgets,i);
 			// deallocate all widgets
-			widget_deallocate_collections[j].delete_callback(ZG_MapStringIterator_GetValue(iterator));
+			delete_callback(widget);
 		}
 
-		ZG_MapStringIterator_Delete(iterator);
-		ZG_MapString_Delete(widget_deallocate_collections[j].widgets);
+		ZG_MapString_Delete(widget_deallocate_collections[j].widget_containers.ids);
+		ZG_List_Delete(widget_deallocate_collections[j].widget_containers.list);
 	}
 
 

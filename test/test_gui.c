@@ -21,19 +21,15 @@ int main(int argc, char *argv[]){
 	ZG_TextureManager_SetTextureResourcePath(texture_manager,"../../../test/data/images");
 
 
-	//ZG_TTFont *font=ZG_TTFontManager_GetFont(ttfont_manager,"Trebuchet MS.ttf");
 
-	ZG_GUIWindowManager *window_manager= ZG_GUIWindowManager_New(texture_manager,ttfont_manager);
 	ZG_GUIWindow * window=NULL;
 
-	if(ZG_GUIWindowManager_Load(
-			window_manager
-			,"../../../test/data/windows/"WINDOW_NAME".xml"
-		)){
-
-		if((window=ZG_GUIWindowManager_Get(window_manager,WINDOW_NAME))==NULL) {
-			ZG_LOG_ERROR("Cannot get window '%s'",WINDOW_NAME);
-		}
+	if((window=ZG_GUIWindow_NewFromFile(
+		"../../../test/data/windows/"WINDOW_NAME".xml"
+		,texture_manager
+		,ttfont_manager
+	))==NULL){
+		ZG_LOG_ERROR("Cannot get window '%s'",WINDOW_NAME);
 	}
 
 	if(window){
@@ -66,7 +62,7 @@ int main(int argc, char *argv[]){
 
 	ZG_TextureManager_Delete(texture_manager);
 	ZG_TTFontManager_Delete(ttfont_manager);
-	ZG_GUIWindowManager_Delete(window_manager);
+	ZG_GUIWindow_Delete(window);
 
 	ZG_DeInit();
 

@@ -156,7 +156,7 @@ void ZG_Tilemap_Update(ZG_Tilemap *_this){
 
 	if(data->tilesets != NULL){
 		if(data->tilesets->animations){
-			for(int j=0; j < data->tilesets->animations->count; j++){
+			for(size_t j=0; j < data->tilesets->animations->count; j++){
 
 				ZG_TileAnimation *tile_animation=data->tilesets->animations->items[j];
 
@@ -185,10 +185,10 @@ void ZG_Tilemap_Delete(ZG_Tilemap *_this){
 
 	if(data->tilesets != NULL){
 		if(data->tilesets->animations != NULL){
-			for(int j=0; j < data->tilesets->animations->count; j++){
+			for(size_t j=0; j < data->tilesets->animations->count; j++){
 				ZG_TileAnimation *tile_animation=data->tilesets->animations->items[j];
 
-				for(int k=0; k < tile_animation->frames->count; k++){
+				for(size_t k=0; k < tile_animation->frames->count; k++){
 					ZG_TileAnimationFrame *frame=tile_animation->frames->items[k];
 					ZG_FREE(frame);
 				}

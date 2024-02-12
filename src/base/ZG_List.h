@@ -5,15 +5,15 @@ typedef struct ZG_List ZG_List;
 
 struct ZG_List{
 	void** items;
-	uint16_t size; // size vector (user count for iterate through items)
-	uint16_t count; //number of items
+	size_t size; // size vector (user count for iterate through items)
+	size_t count; //number of items
 };
 
 ZG_List  	*	ZG_List_New(void);
 
-void 		ZG_List_Set(ZG_List *_this, uint16_t idx, void *e);
-void	*	ZG_List_Get(ZG_List *_this, uint16_t idx);
-void 		ZG_List_Erase(ZG_List *_this, uint16_t idx);
+void 		ZG_List_Set(ZG_List *_this, size_t idx, void *e);
+void	*	ZG_List_Get(ZG_List *_this, size_t idx);
+void 		ZG_List_Erase(ZG_List *_this, size_t idx);
 bool 		ZG_List_Exist(ZG_List *_this, void *e);
 bool 		ZG_List_RemoveIfExist(ZG_List *_this, void *e);
 
@@ -25,7 +25,7 @@ void 		ZG_List_Add(ZG_List *_this, void *e);
 /**
  * Insert item at position idx.
  */
-void 		ZG_List_Insert(ZG_List *_this, uint16_t idx, void *e);
+void 		ZG_List_Insert(ZG_List *_this, size_t idx, void *e);
 void 		ZG_List_Concat(ZG_List *_this, ZG_List *list);
 /**
  * Removes last item

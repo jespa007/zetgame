@@ -197,8 +197,8 @@ endif()
 # ZETNET
 #
 
-IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetpacker )
-	file(READ "${PROJECT_SOURCE_DIR}/../../zetpacker/src/zetnet.h" zetnet_h)
+IF ( IS_DEBUG AND EXISTS ${PROJECT_SOURCE_DIR}/../../zetnet )
+	file(READ "${PROJECT_SOURCE_DIR}/../../zetnet/src/zetnet.h" zetnet_h)
 ELSE()
 	file(READ "${PROJECT_SOURCE_DIR}/../3rdparty/${COMPILER}/include/zetnet/zetnet.h" zetnet_h)
 ENDIF()

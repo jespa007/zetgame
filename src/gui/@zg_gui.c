@@ -4,7 +4,6 @@
 #include "ZG_GUITextBox.c"
 #include "ZG_GUITexture.c"
 #include "ZG_GUIWindow.c"
-#include "ZG_GUIWindowManager.c"
 
 
 ZG_GUIWindow *g_active_window=NULL;

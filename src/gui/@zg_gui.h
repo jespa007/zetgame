@@ -10,7 +10,7 @@
 #include "ZG_GUITextBox.h"
 #include "ZG_GUITexture.h"
 #include "ZG_GUIWindow.h"
-#include "ZG_GUIWindowManager.h"
+//#include "ZG_GUIWindowManager.h"
 
 
 void ZG_GUI_Init(void);

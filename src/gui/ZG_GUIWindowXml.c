@@ -3,16 +3,16 @@ bool ZG_GUIWindow_ProcessTagFrame(
 		,ZG_GUIWidget *_parent
 		, const XmlElement *e
 ){
-	ZG_GUIWindowData *data=_window->data;
 	bool ok=true;
 	int int_value=0;
+	const char *id=NULL;
 	XmlAttribute *attribute=e->attributes;
 	// TODO set id
-	ZG_GUIFrame *frame= ZG_GUIWindow_NewFrame(_window,NULL);
+	ZG_GUIFrame *gui_frame= ZG_GUIFrame_New(0,0,0,0);
 
 
 	if(_parent != NULL){
-		ZG_GUIWidget_AttachWidget(_parent,frame->widget);
+		ZG_GUIWidget_AttachWidget(_parent,gui_frame->widget);
 	}
 
 	 if(attribute != NULL){
@@ -20,24 +20,25 @@ bool ZG_GUIWindow_ProcessTagFrame(
 			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
+				 id=attribute->value;
 			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionX(frame->widget,int_value);
+					 ZG_GUIWidget_SetPositionX(gui_frame->widget,int_value);
 				 }
 				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(ZG_STRCMP(attribute->name,==,"top")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetPositionY(frame->widget,int_value);
+					 ZG_GUIWidget_SetPositionY(gui_frame->widget,int_value);
 				 }
 				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(ZG_STRCMP(attribute->name,==,"width")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetWidth(frame->widget,int_value);
+					 ZG_GUIWidget_SetWidth(gui_frame->widget,int_value);
 				 }
 				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
 			 }else if(ZG_STRCMP(attribute->name,==,"height")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
-					 ZG_GUIWidget_SetHeight(frame->widget,int_value);
+					 ZG_GUIWidget_SetHeight(gui_frame->widget,int_value);
 				 }
 			 }else if(ZG_STRCMP(attribute->name,==,"font-size")){
 				 //ZG_GUIWindow_SetWindowStyle(window_data->window->widget,attribute->value);
@@ -51,6 +52,10 @@ bool ZG_GUIWindow_ProcessTagFrame(
 		 }while(attribute != attribute->parent->attributes);
 		// process attributes
 	}
+
+
+	 ZG_GUIWindow_AddGUIFrame(_window,gui_frame,id);
+
 	return ok;
 }
 
@@ -59,15 +64,15 @@ bool ZG_GUIWindow_ProcessTagTexture(
 		,ZG_GUIWidget *_parent
 		, const XmlElement *e
 		,ZG_TextureManager *_texture_manager
-		,ZG_TTFontManager *_font_manager
+		,ZG_TTFontManager *_ttfont_manager
 ){
-	ZG_GUIWindowData *data=_window->data;
 	bool ok=true;
 	int int_value=0;
+	const char *id=NULL;
 	XmlAttribute *attribute=e->attributes;
 
 	// TODO set id
-	ZG_GUITexture *gui_texture=ZG_GUIWindow_NewGUITexture(_window,NULL);
+	ZG_GUITexture *gui_texture=ZG_GUITexture_New(0,0,0,0);
 
 
 	if(_parent != NULL){
@@ -79,6 +84,7 @@ bool ZG_GUIWindow_ProcessTagTexture(
 			 ZG_LOG_DEBUG("[attribute] %s:%s", attribute->name, attribute->value);
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
+				 id=attribute->value;
 			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 ZG_GUIWidget_SetPositionX(gui_texture->widget,int_value);
@@ -111,11 +117,11 @@ bool ZG_GUIWindow_ProcessTagTexture(
 					 ZG_TextBox_SetFontSize(gui_texture->textbox,int_value);
 				 }
 			 }else if(ZG_STRCMP(attribute->name,==,"font-file")){
-				 ZG_TextBox_SetFont(gui_texture->textbox,ZG_TTFontManager_GetFont(data->gui_window_manager_data->ttfont_manager, attribute->value));
+				 ZG_TextBox_SetFont(gui_texture->textbox,ZG_TTFontManager_GetFont(_ttfont_manager, attribute->value));
 			 }else if(ZG_STRCMP(attribute->name,==,"color")){
 				 ZG_GUIWidget_SetColor4f(gui_texture->widget,ZG_Color4f_FromHtml(attribute->value));
 			 }else if(ZG_STRCMP(attribute->name,==,"source")){
-				 ZG_GUITexture_SetTexture(gui_texture,attribute->value);
+				 ZG_GUITexture_SetTexture(gui_texture,ZG_TextureManager_GetTexture(_texture_manager,attribute->value));
 			 }else{
 				 ZG_LOG_ERROR("unexpected attribute '%s'",attribute->name);
 				 ok=false;
@@ -126,7 +132,7 @@ bool ZG_GUIWindow_ProcessTagTexture(
 		// process attributes
 	}
 
-	 ZG_List_Add(data->viewers,gui_texture);
+	 ZG_GUIWindow_AddGUITexture(_window,gui_texture,id);
 
 	return ok;
 }
@@ -136,14 +142,14 @@ bool ZG_GUIWindow_ProcessTagButton(
 		,ZG_GUIWidget *_parent
 		, const XmlElement *e
 		,ZG_TextureManager *_texture_manager
-		,ZG_TTFontManager *_font_manager
+		,ZG_TTFontManager *_ttfont_manager
 ){
-	ZG_GUIWindowData *data=_window->data;
 	bool ok=true;
 	int int_value=0;
+	const char *id=NULL;
 	XmlAttribute *attribute=e->attributes;
-	// TODO set id
-	ZG_GUIButton *button=ZG_GUIWindow_NewGUIButton(_window,NULL);
+
+	ZG_GUIButton *button=ZG_GUIButton_New(0,0,0,0);
 
 	if(_parent != NULL){
 		ZG_GUIWidget_AttachWidget(_parent,button->widget);
@@ -155,6 +161,7 @@ bool ZG_GUIWindow_ProcessTagButton(
 
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
+				 id=attribute->value;
 			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 ZG_GUIWidget_SetPositionX(button->widget,int_value);
@@ -188,7 +195,7 @@ bool ZG_GUIWindow_ProcessTagButton(
 		// process attributes
 	}
 
-	 ZG_List_Add(data->buttons,button);
+	 ZG_GUIWindow_AddGUIButton(_window,button,id);
 
 	return ok;
 }
@@ -198,14 +205,13 @@ bool ZG_GUIWindow_ProcessTagTextBox(
 	,ZG_GUIWidget *_parent
 	, const XmlElement *e
 	,ZG_TextureManager *_texture_manager
-	,ZG_TTFontManager *_font_manager
+	,ZG_TTFontManager *_ttfont_manager
 ){
-	ZG_GUIWindowData *data=_window->data;
 	bool ok=true;
 	int int_value=0;
 	XmlAttribute *attribute=e->attributes;
-	// TODO set id
-	ZG_GUITextBox *gui_textbox=ZG_GUIWindow_NewGUITextBox(_window,NULL);
+	const char *id=NULL;
+	ZG_GUITextBox *gui_textbox=ZG_GUITextBox_New(0,0,0,0);
 
 
 	if(_parent != NULL){
@@ -218,6 +224,7 @@ bool ZG_GUIWindow_ProcessTagTextBox(
 
 			 if(ZG_STRCMP(attribute->name,==,"id")){
 				 // set id
+				 id=attribute->value;
 			 }else if(ZG_STRCMP(attribute->name,==,"left")){
 				 if(ZG_String_StringToInt(&int_value,attribute->value,10)){
 					 ZG_GUIWidget_SetPositionX(gui_textbox->widget,int_value);
@@ -245,8 +252,8 @@ bool ZG_GUIWindow_ProcessTagTextBox(
 				 ZG_TextBox_SetFont(
 					 gui_textbox->textbox
 					 ,ZG_TTFontManager_GetFont(
-							 data->gui_window_manager_data->ttfont_manager
-							 ,attribute->value
+						 _ttfont_manager
+						 ,attribute->value
 					)
 				);
 			 }else if(ZG_STRCMP(attribute->name,==,"text")){
@@ -271,17 +278,17 @@ bool ZG_GUIWindow_ProcessTagTextBox(
 		// process attributes
 	}
 
-	 ZG_List_Add(data->textboxes,gui_textbox);
+	 ZG_GUIWindow_AddGUITextBox(_window,gui_textbox,id);
 
 	return ok;
 }
 
-bool ZG_GUIWindowManager_ProcessTag(
+bool ZG_GUIWindow_ProcessTag(
 	ZG_GUIWindow *_window
 	,ZG_GUIWidget *_parent
 	,const XmlElement *e
 	,ZG_TextureManager *_texture_manager
-	,ZG_TTFontManager *_font_manager
+	,ZG_TTFontManager *_ttfont_manager
 ){
 	bool ok=true;
 	 XmlElement *children=e->children;
@@ -295,7 +302,7 @@ bool ZG_GUIWindowManager_ProcessTag(
 				 ,_parent
 				 ,e
 				,_texture_manager
-				,_font_manager
+				,_ttfont_manager
 		);
 	 }else if(ZG_STRCMP(e->name,==,"button")){
 		 return ZG_GUIWindow_ProcessTagButton(
@@ -303,7 +310,7 @@ bool ZG_GUIWindowManager_ProcessTag(
 				 ,_parent
 				 ,e
 				,_texture_manager
-				,_font_manager
+				,_ttfont_manager
 		);
 	 }else if(ZG_STRCMP(e->name,==,"image")){
 		 return ZG_GUIWindow_ProcessTagTexture(
@@ -311,7 +318,7 @@ bool ZG_GUIWindowManager_ProcessTag(
 				 ,_parent
 				 ,e
 				,_texture_manager
-				,_font_manager
+				,_ttfont_manager
 		);
 	 }else if(ZG_STRCMP(e->name,==,"textbox")){
 		 return ZG_GUIWindow_ProcessTagTextBox(
@@ -319,7 +326,7 @@ bool ZG_GUIWindowManager_ProcessTag(
 				 ,_parent
 				 ,e
 				,_texture_manager
-				,_font_manager
+				,_ttfont_manager
 		);
 	 }else{
 		ZG_LOG_ERROR("unexpected tag '%s'",e->name);
@@ -334,7 +341,7 @@ bool ZG_GUIWindowManager_ProcessTag(
 					 ,_parent
 					 ,children
 					,_texture_manager
-					,_font_manager
+					,_ttfont_manager
 			);
 			 children=children->next;
 		 }while(children != children->parent->children);
@@ -343,16 +350,14 @@ bool ZG_GUIWindowManager_ProcessTag(
 	return ok;
 }
 
-ZG_GUIWindow ZG_GUIWindow_NewFromMemory(
+ZG_GUIWindow *ZG_GUIWindow_NewFromMemory(
 		uint8_t *_xml_buf
 		,size_t _xml_len
 		,ZG_TextureManager *_texture_manager
-		,ZG_TTFontManager *_font_manager
+		,ZG_TTFontManager *_ttfont_manager
 	){
 
 	ZG_UNUSUED_PARAM(_xml_len);
-
-	bool ok=false;
 
 	// first read tilesets...
 	XmlDoc *doc = parseDoc((char *)_xml_buf);
@@ -409,24 +414,23 @@ ZG_GUIWindow ZG_GUIWindow_NewFromMemory(
 	 // process window childs
 	 if(children != NULL){
 		 do{
-			 ZG_GUIWindowManager_ProcessTag(
+			 ZG_GUIWindow_ProcessTag(
 					 window
 					 ,window->widget
 					 ,children
 					,_texture_manager
-					,_font_manager
+					,_ttfont_manager
 				);
 			 children=children->next;
 		 }while(children != children->parent->children);
 	 }
 
-	 ok=true;
 
 wm_load_from_memmory_exit:
 
 	freeDoc(doc);
 
-	return ok;
+	return window;
 
 }
 
@@ -439,19 +443,18 @@ wm_load_from_memmory_exit:
 ZG_GUIWindow *ZG_GUIWindow_NewFromFile(
 	const char *_xml_file
 	,ZG_TextureManager *_texture_manager
-	,ZG_TTFontManager *_font_manager
+	,ZG_TTFontManager *_ttfont_manager
 ){
 
 	ZG_BufferByte *_xml_buf=NULL;
 	ZG_GUIWindow *window=NULL;
-	char *file=NULL;
 
 	if((_xml_buf=ZG_File_Read(_xml_file))!=NULL){
-		window=ZG_GUIWindowManager_NewFromMemory(
+		window=ZG_GUIWindow_NewFromMemory(
 				_xml_buf->ptr
 				,_xml_buf->len
 				,_texture_manager
-				,_font_manager
+				,_ttfont_manager
 		);
 	}
 
