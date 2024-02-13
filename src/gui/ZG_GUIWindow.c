@@ -48,17 +48,17 @@ ZG_GUIWindow * ZG_GUIWindow_New(int x, int y, uint16_t _width, uint16_t _height)
 
 	// list of widget container to ALLOCATE
 	struct{
-		ZG_GUIWindowWidgetContainer	widgets;
+		ZG_GUIWindowWidgetContainer	*widgets;
 	}widget_allocate_containers[]={
-		{data->gui_buttons}
-		,{data->gui_textboxes}
-		,{data->gui_textures}
-		,{data->gui_frames}
+		{&data->gui_buttons}
+		,{&data->gui_textboxes}
+		,{&data->gui_textures}
+		,{&data->gui_frames}
 	};
 
 	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_allocate_containers); j++){
-		widget_allocate_containers[j].widgets.ids=ZG_MapString_New();
-		widget_allocate_containers[j].widgets.list=ZG_List_New();
+		widget_allocate_containers[j].widgets->ids=ZG_MapString_New();
+		widget_allocate_containers[j].widgets->list=ZG_List_New();
 	}
 
 	window->data=data;
@@ -459,44 +459,33 @@ void ZG_GUIWindow_Delete(ZG_GUIWindow *_this) {
 	ZG_GUITextBox_Delete(data->textbox_caption);
 	ZG_GUIButton_Delete(data->button_close);
 
-	struct{
-		ZG_GUIWindowWidgetContainer	widgets;
-	}widget_allocate_containers[]={
-		{data->gui_buttons}
-		,{data->gui_textboxes}
-		,{data->gui_textures}
-		,{data->gui_frames}
-	};
-
-	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_allocate_containers); j++){
-		widget_allocate_containers[j].widgets.ids=ZG_MapString_New();
-		widget_allocate_containers[j].widgets.list=ZG_List_New();
-	}
-
 	// list of widget container to DEALLOCATE
 	struct{
-		ZG_GUIWindowWidgetContainer	widget_containers;
+		ZG_GUIWindowWidgetContainer	*widget_containers;
 		void (*delete_callback)(void *_this);
 	}widget_deallocate_collections[]={
-		{data->gui_buttons,(void (*)(void *))ZG_GUIButton_Delete}
-		,{data->gui_textboxes,(void (*)(void *))ZG_GUITextBox_Delete}
-		,{data->gui_textures,(void (*)(void *))ZG_GUITexture_Delete}
-		,{data->gui_frames,(void (*)(void *))ZG_GUIFrame_Delete}
+		{&data->gui_buttons,(void (*)(void *))ZG_GUIButton_Delete}
+		,{&data->gui_textboxes,(void (*)(void *))ZG_GUITextBox_Delete}
+		,{&data->gui_textures,(void (*)(void *))ZG_GUITexture_Delete}
+		,{&data->gui_frames,(void (*)(void *))ZG_GUIFrame_Delete}
 	};
 
 	for(unsigned j=0; j < ZG_ARRAY_SIZE(widget_deallocate_collections); j++){
-		ZG_List *list_widgets=widget_deallocate_collections[j].widget_containers.list;
+		ZG_List *list_widgets=widget_deallocate_collections[j].widget_containers->list;
 		void (*delete_callback)(void *_this) = widget_deallocate_collections[j].delete_callback;
 
-		for(unsigned i = 0; ZG_List_Count(list_widgets);i++){
+		for(unsigned i = 0; i < ZG_List_Count(list_widgets);i++){
 
 			void *widget=ZG_List_Get(list_widgets,i);
 			// deallocate all widgets
 			delete_callback(widget);
 		}
 
-		ZG_MapString_Delete(widget_deallocate_collections[j].widget_containers.ids);
-		ZG_List_Delete(widget_deallocate_collections[j].widget_containers.list);
+		ZG_MapString_Delete(widget_deallocate_collections[j].widget_containers->ids);
+		ZG_List_Delete(widget_deallocate_collections[j].widget_containers->list);
+
+		widget_deallocate_collections[j].widget_containers->ids=NULL;
+		widget_deallocate_collections[j].widget_containers->list=NULL;
 	}
 
 
