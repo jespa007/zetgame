@@ -1,6 +1,6 @@
 #include "zetgame.h"
 
-#define WINDOW_NAME "window"
+#define WINDOW_NAME "gui_window"
 
 int main(int argc, char *argv[]){
 	ZG_UNUSUED_PARAM(argc);
@@ -22,23 +22,19 @@ int main(int argc, char *argv[]){
 
 
 
-	ZG_GUIWindow * window=NULL;
+	ZG_GUIWindow * gui_window=NULL;
 
-	if((window=ZG_GUIWindow_NewFromFile(
+	if((gui_window=ZG_GUIWindow_NewFromXmlFile(
 		"../../../test/data/windows/"WINDOW_NAME".xml"
 		,texture_manager
 		,ttfont_manager
 	))==NULL){
-		ZG_LOG_ERROR("Cannot get window '%s'",WINDOW_NAME);
+		ZG_LOG_ERROR("Cannot get gui_window '%s'",WINDOW_NAME);
 	}
 
-	if(window){
+	if(gui_window){
 
-		//ZG_TextBox_SetText(gui_viewer->widget->textbox,"1");
-		//ZG_GUIWidget_AttachWidget(window->widget,gui_viewer->widget);
 		do{
-			// input management
-
 			// toggle fullscreen
 			if(ZG_KP_F9){
 				ZG_Graphics_ToggleFullscreen();
@@ -51,7 +47,7 @@ int main(int argc, char *argv[]){
 
 			ZG_Graphics_BeginRender();
 
-			ZG_GUIWidget_Update(window->widget);
+			ZG_GUIWidget_Update(gui_window->widget);
 
 			ZG_Graphics_EndRender();
 
@@ -62,7 +58,7 @@ int main(int argc, char *argv[]){
 
 	ZG_TextureManager_Delete(texture_manager);
 	ZG_TTFontManager_Delete(ttfont_manager);
-	ZG_GUIWindow_Delete(window);
+	ZG_GUIWindow_Delete(gui_window);
 
 	ZG_DeInit();
 

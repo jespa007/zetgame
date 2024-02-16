@@ -20,7 +20,7 @@ ZG_GUIWindow 		*	ZG_GUIWindow_New(
 	, uint16_t height
 );
 
-ZG_GUIWindow 		*	ZG_GUIWindow_NewFromFile(
+ZG_GUIWindow 		*	ZG_GUIWindow_NewFromXmlFile(
 	const char *_file_xml
 	,ZG_TextureManager *_texture_manager
 	,ZG_TTFontManager *_font_manager

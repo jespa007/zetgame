@@ -350,7 +350,7 @@ bool ZG_GUIWindow_ProcessTag(
 	return ok;
 }
 
-ZG_GUIWindow *ZG_GUIWindow_NewFromMemory(
+ZG_GUIWindow *ZG_GUIWindow_NewFromXmlMemory(
 		uint8_t *_xml_buf
 		,size_t _xml_len
 		,ZG_TextureManager *_texture_manager
@@ -440,7 +440,7 @@ wm_load_from_memmory_exit:
  * @_wnd_id: window id
  * @_xml_file: xml file
   */
-ZG_GUIWindow *ZG_GUIWindow_NewFromFile(
+ZG_GUIWindow *ZG_GUIWindow_NewFromXmlFile(
 	const char *_xml_file
 	,ZG_TextureManager *_texture_manager
 	,ZG_TTFontManager *_ttfont_manager
@@ -450,7 +450,7 @@ ZG_GUIWindow *ZG_GUIWindow_NewFromFile(
 	ZG_GUIWindow *window=NULL;
 
 	if((_xml_buf=ZG_File_Read(_xml_file))!=NULL){
-		window=ZG_GUIWindow_NewFromMemory(
+		window=ZG_GUIWindow_NewFromXmlMemory(
 				_xml_buf->ptr
 				,_xml_buf->len
 				,_texture_manager

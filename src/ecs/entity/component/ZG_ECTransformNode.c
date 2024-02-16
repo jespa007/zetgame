@@ -2,11 +2,11 @@
 
 
 typedef struct{
-	ZG_ECTransformNode		*parent;
-	ZG_List		*child_nodes;
-	ZG_Transform 	transform_default;
-	ZG_Transform 	*transform_local;
-	uint16_t	transform_attributes;
+	ZG_ECTransformNode		*	parent;
+	ZG_List					*	child_nodes;
+	ZG_Transform 				transform_default;
+	ZG_Transform 			*	transform_local;
+	uint16_t					transform_attributes;
 }ZG_ECTransformData;
 
 void SetParent(ZG_ECTransformNode *_this, ZG_ECTransformNode *_parent);
@@ -148,7 +148,7 @@ void ZG_ECTransformNode_PostUpdate(ZG_ECTransformNode *_this){
 }
 
 //--------------------------- MAIN UPDATE SCENEGRAPH ----------------------------
-void UpdateSceneGraph(ZG_ECTransformNode *_this) {
+void ZG_ECTransformNode_UpdateSceneGraph(ZG_ECTransformNode *_this) {
 
 	ZG_ECTransformData *data = _this->data;
 
