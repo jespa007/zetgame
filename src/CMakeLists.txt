@@ -385,6 +385,13 @@ add_executable(test_viewport${POST_NAME}
 
 target_link_libraries(test_viewport${POST_NAME}    ${ZETGAME_LIB_NAME}${POST_NAME}  	${LIB_DEPS})
 
+#--- TEST SCENEGRAPH
+add_executable(test_scenegraph${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
+)
+
+target_link_libraries(test_scenegraph${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+
 if(false)
 
 add_executable(test_mixer${POST_NAME} 
@@ -412,12 +419,6 @@ add_executable(test_animation${POST_NAME}
 
 target_link_libraries(test_animation${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
-#--- SCENEGRAPH
-#add_executable(test_scenegraph${POST_NAME} 
-#	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
-#)
-
-#target_link_libraries(test_scenegraph${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 #--- SPRITE
 add_executable(test_sprite${POST_NAME} 
