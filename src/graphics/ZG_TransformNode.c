@@ -63,9 +63,26 @@ void ZG_TransformNode_ClearNodes(ZG_TransformNode *_this){
 	ZG_List_Clear(data->child_nodes);
 }
 
-void ZG_TransformNode_SetTranslate3f(ZG_TransformNode *_this,float x, float y, float z){
-	ZG_Transform_SetTranslate3f(&_this->world_transform,x,y,z);
+void ZG_TransformNode_SetTranslate3f(ZG_TransformNode *_this,float _x, float _y, float _z){
+	ZG_TransformData *data=_this->data;
+	ZG_Transform_SetTranslate3f(&data->local_transform,_x,_y,_z);
 }
+
+void ZG_TransformNode_SetRotate3f(ZG_TransformNode *_this,float _x, float _y, float _z){
+	ZG_TransformData *data=_this->data;
+	ZG_Transform_SetRotate3f(&data->local_transform,_x,_y,_z);
+}
+
+void ZG_TransformNode_SetDisplacement2i(ZG_TransformNode *_this, int _offset_x, int _offset_y){
+	ZG_TransformData *data=_this->data;
+	ZG_Transform_SetDisplacement2i(&data->local_transform,_offset_x,_offset_y);
+}
+
+void ZG_TransformNode_SetPosition2i(ZG_TransformNode *_this, int _x,int _y){
+	ZG_TransformData *data=_this->data;
+	ZG_Transform_SetPosition2i(&data->local_transform,_x,_y);
+}
+
 
 bool ZG_TransformNode_IsParentNodeRoot(ZG_TransformNode *_this){
 	ZG_TransformData *data=_this->data;
@@ -90,7 +107,7 @@ ZG_TransformNode	*	ZG_TransformNode_GetParent(ZG_TransformNode *_this){
 	return data->parent;
 }
 
-bool ZG_TransformNode_AttachNode(ZG_TransformNode *_this,ZG_TransformNode * _transform_node) {
+bool ZG_TransformNode_Attach(ZG_TransformNode *_this,ZG_TransformNode * _transform_node) {
 
 	ZG_TransformData *data = _this->data;
 	if(_transform_node == NULL){

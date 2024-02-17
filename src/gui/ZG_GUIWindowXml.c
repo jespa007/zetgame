@@ -204,7 +204,6 @@ bool ZG_GUIWindow_ProcessTagTextBox(
 	ZG_GUIWindow *_window
 	,ZG_GUIWidget *_parent
 	, const XmlElement *e
-	,ZG_TextureManager *_texture_manager
 	,ZG_TTFontManager *_ttfont_manager
 ){
 	bool ok=true;
@@ -301,7 +300,6 @@ bool ZG_GUIWindow_ProcessTag(
 				 _window
 				 ,_parent
 				 ,e
-				,_texture_manager
 				,_ttfont_manager
 		);
 	 }else if(ZG_STRCMP(e->name,==,"button")){
@@ -325,7 +323,6 @@ bool ZG_GUIWindow_ProcessTag(
 				 _window
 				 ,_parent
 				 ,e
-				,_texture_manager
 				,_ttfont_manager
 		);
 	 }else{

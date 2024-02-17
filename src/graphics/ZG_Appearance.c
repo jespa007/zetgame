@@ -1,8 +1,13 @@
 #include "ZG_Appearance_GL.c"
 
+typedef struct{
+	ZG_Material material_default;
+}ZG_AppearanceData;
+
 ZG_Appearance * ZG_Appearance_New(void){
 	ZG_Appearance * appearance=ZG_NEW(ZG_Appearance);
-	appearance->material=NULL;//appearance->material_default=ZG_Material_New(0);
+	ZG_AppearanceData *data=ZG_NEW(ZG_AppearanceData);
+	appearance->material=&data->material_default;
 	appearance->transform_texture=NULL;
 	appearance->texture=NULL;//Texture_GetDefault();
 
@@ -10,6 +15,7 @@ ZG_Appearance * ZG_Appearance_New(void){
 				ZG_APPEARANCE_TRANSPARENCY;
 			//|   ZG_APPEARANCE_LIGHT;
 
+	appearance->data=data;
 	return appearance;
 }
 /*
@@ -49,6 +55,8 @@ void ZG_Appearance_Restore(ZG_Appearance *_this){
 
 void ZG_Appearance_Delete(ZG_Appearance * _this){
 	if(_this != NULL){
+		ZG_AppearanceData *data=_this->data;
+		ZG_FREE(data);
 		ZG_FREE(_this);
 	}
 }

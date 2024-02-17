@@ -16,6 +16,7 @@ struct ZG_Appearance{
 	ZG_Texture  	*	texture;
 	ZG_Transform 	* 	transform_texture;
 	uint32_t 			properties;
+	void			*	data;
 };
 
 ZG_Appearance * ZG_Appearance_New(void);

@@ -1,31 +1,37 @@
 #include "zetgame.h"
 
-#define MAX_ENTITIES 10
-
 void MS_OnDeleteTexture(void *text){
 	ZG_Texture_Delete(text);
 }
 
-ZG_Entity *NewEntityTransform(
-		ZG_EntityType *_em_transforms
-		, int _posx
-		, int _posy
-		, bool _set_displacement
-){
 
-	ZG_Entity *entity_transform=ZG_EntityType_NewEntity(_em_transforms);
+typedef struct{
+	ZG_TransformNode *transform_node;
+	ZG_Appearance *appearance;
+	ZG_Geometry *geometry;
+}ZG_TransformTextureNode;
+
+ZG_TransformNode *NewTransformNode(
+	ZG_List *_transform_nodes
+	, int _posx
+	, int _posy
+	, bool _set_displacement
+){
+	ZG_TransformNode *transform_node=ZG_TransformNode_New();
 
 	if(_set_displacement){
-		ZG_ECTransform_SetDisplacement2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
+		ZG_TransformNode_SetDisplacement2i(transform_node,_posx,_posy);
 	}else{
-		ZG_ECTransform_SetPosition2i(entity_transform->components[EC_TRANSFORM],_posx,_posy);
+		ZG_TransformNode_SetPosition2i(transform_node,_posx,_posy);
 	}
 
-	return entity_transform;
+	ZG_List_Add(_transform_nodes,transform_node);
+
+	return transform_node;
 }
 
-ZG_Entity *NewEntityTexture(
-	ZG_EntityType *_em_textures
+ZG_TransformTextureNode *NewTransformTextureNode(
+	ZG_List *_transform_texture_nodes
 	,int _posx
 	, int _posy
 	, uint16_t _width
@@ -33,43 +39,38 @@ ZG_Entity *NewEntityTexture(
 	, ZG_Texture *_texture
 	, bool _set_displacement
 ){
-	ZG_Entity *entity_texture=ZG_EntityType_NewEntity(_em_textures);
+	ZG_TransformTextureNode *transform_texture_node=ZG_NEW(ZG_TransformTextureNode);
+	ZG_TransformNode *transform_node=ZG_TransformNode_New();
+	ZG_Geometry *geometry=ZG_Geometry_NewRectangle2d();
+	ZG_Appearance *appearance=ZG_Appearance_New();
 
 	if(_set_displacement){
-		ZG_ECTransform_SetDisplacement2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
+		ZG_TransformNode_SetDisplacement2i(transform_node,_posx,_posy);
 	}else{
-		ZG_ECTransform_SetPosition2i(entity_texture->components[EC_TRANSFORM],_posx,_posy);
+		ZG_TransformNode_SetPosition2i(transform_node,_posx,_posy);
 	}
 
-	ZG_ECTexture_SetTexture(entity_texture->components[EC_TEXTURE],_texture);
-	ZG_ECSpriteRenderer_SetDimensions(entity_texture->components[EC_SPRITE_RENDERER],_width, _height);
+	ZG_Vector3f p=ZG_ViewPort_ScreenToWorldDimension2i(_width>>1,_height>>1);
 
-	return entity_texture;
-}
+	float vertexs[ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN]={
+			   -p.x,-p.y,0.0f,  // bottom left
+			   +p.x,-p.y,0.0f,  // bottom right
+			   -p.x,+p.y,0.0f,  // top left
+			   +p.x,+p.y,0.0f   // top right
 
-ZG_Entity *NewEntityTextBox(
-	ZG_EntityType *_em_textboxes
-	,int _posx
-	, int _posy
-	, uint16_t _width
-	, uint16_t _height
-	, const char *_text
-	, bool _set_displacement
-){
+	};
 
-	ZG_Entity *entity_textbox=ZG_EntityType_NewEntity(_em_textboxes);
+	//.. and set vertex to geometry
+   ZG_Geometry_SetMeshVertex(geometry,vertexs,ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN);
 
-	if(_set_displacement){
-		ZG_ECTransform_SetDisplacement2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);
-	}else{
-		ZG_ECTransform_SetPosition2i(entity_textbox->components[EC_TRANSFORM],_posx,_posy);
-	}
+   transform_texture_node->transform_node=transform_node;
+   transform_texture_node->geometry=geometry;
+   transform_texture_node->appearance=appearance;
+   transform_texture_node->appearance->texture=_texture;
 
-	ZG_ECTextBoxRenderer *ec_textbox_renderer=entity_textbox->components[EC_TEXTBOX_RENDERER];
-	ZG_TextBox_SetText(ec_textbox_renderer->textbox,_text);
-	ZG_TextBox_SetDimensions(ec_textbox_renderer->textbox,_width,_height);
+	ZG_List_Add(_transform_texture_nodes,transform_texture_node);
 
-	return entity_textbox;
+	return transform_texture_node;
 }
 
 int main(int argc, char *argv[]){
@@ -202,17 +203,6 @@ int main(int argc, char *argv[]){
 			}
 		};
 
-	ZG_EComponent transform_components[]={
-		EC_TRANSFORM,
-	};
-
-	ZG_EComponent texture_components[]={
-		EC_SPRITE_RENDERER
-	};
-
-	ZG_EComponent textbox_components[]={
-			EC_TEXTBOX_RENDERER
-	};
 	//----------------------------------------------------------------------------------------------------
 	//ZG_SetupParams setup;
 	//memset(&setup,0,sizeof(setup));
@@ -224,49 +214,18 @@ int main(int argc, char *argv[]){
 	// Initializes zetgame with viewport as 640x480 by default
 	ZG_Init(NULL);
 
-	ZG_EntitySystem  *entity_system=ZG_EntitySystem_New();
-
-
-	ZG_EntityType *em_transforms=ZG_EntitySystem_NewEntityType(
-		entity_system
-		,"nodes"
-		,MAX_ENTITIES
-		,transform_components
-		,ZG_ARRAY_SIZE(transform_components)
-	);//TextureNode_New());
-
-	ZG_EntityType *em_textures=ZG_EntitySystem_NewEntityType(
-		entity_system
-		,"textures"
-		,MAX_ENTITIES
-		,texture_components
-		,ZG_ARRAY_SIZE(texture_components)
-	);//TextureNode_New());
-
-
-
-
-	ZG_EntityType *em_textboxes=ZG_EntitySystem_NewEntityType(
-		entity_system
-		,"textboxes"
-		,MAX_ENTITIES
-		,textbox_components
-		,ZG_ARRAY_SIZE(textbox_components)
-	);
-
-
 	ZG_TextureManager *tm=ZG_TextureManager_New();
 	//ZG_TTFontManager *ttfm=ZG_TTFontManager_New();
-	ZG_Entity
+	ZG_TransformTextureNode
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
 				,*spr_image_car_part2=NULL
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
-	ZG_Entity *spr_base_car=NULL,*spr_track_car=NULL;
+	ZG_TransformNode 		*spr_base_car=NULL,*spr_track_car=NULL;
 
 
-	ZG_TTFont_SetFontResourcePath("../../../test/data/fonts");
+	//ZG_TTFontMananger_SetFontResourcePath("../../../test/data/fonts");
 	ZG_TextureManager_SetTextureResourcePath(tm,"../../../test/data/images");
 
 	ZG_Texture * text_ground=ZG_TextureManager_GetTexture(tm,"ground.png");
@@ -275,29 +234,32 @@ int main(int argc, char *argv[]){
 	ZG_Texture * text_wheel=ZG_TextureManager_GetTexture(tm,"wheel.png");
 
 	// setup animations/actions (update material action function)...
-	ZG_MaterialAction 	  	 			*mat_act_fade_in_out=MaterialAction_New();//ZG_MATERIAL_COMPONENT_MAX);
+	ZG_MaterialAction 	  	 			*mat_act_fade_in_out=ZG_MaterialAction_New();//ZG_MATERIAL_COMPONENT_MAX);
+
+	ZG_List *transform_nodes=ZG_List_New();
+	ZG_List *transform_texture_nodes=ZG_List_New();
 
 	//---
 	// ground
-	NewEntityTexture(
-		em_textures
+	/*NewEntityTexture(
+		nodes
 		,ZG_Graphics_GetWidth()>>1
 		,ZG_Graphics_GetHeight()>>1
 		,ZG_Graphics_GetWidth()
 		, ZG_Graphics_GetHeight()
 		,text_ground
 		,false
-	);
+	);*/
 
 	//----------------------------------
 	// SETUP FAN...
 	for(unsigned i=0; i < ZG_ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		ZG_Entity *spr_image_fan_base=NULL;
-		ZG_Entity *spr_base_van=NULL;
+		ZG_TransformTextureNode *spr_image_fan_base=NULL;
+		ZG_TransformNode *spr_base_van=NULL;
 
-		spr_image_fan_base=NewEntityTexture(
-				em_textures
+		spr_image_fan_base=NewTransformTextureNode(
+				transform_texture_nodes
 				,info->x
 				,info->y
 				,info->w
@@ -308,16 +270,16 @@ int main(int argc, char *argv[]){
 
 
 		// van base
-		spr_base_van=NewEntityTransform(
-				em_transforms
+		spr_base_van=NewTransformNode(
+				transform_nodes
 				,info->vane_disp.x
 				,info->vane_disp.y
 				,true
 		);
 
-		ZG_ECTransform_Attach(
-			spr_image_fan_base->components[EC_TRANSFORM]
-			,spr_base_van->components[EC_TRANSFORM]
+		ZG_TransformNode_Attach(
+			spr_image_fan_base->transform_node
+			,spr_base_van
 		);
 
 		/*Scene_StartTweenTransform(
@@ -332,8 +294,8 @@ int main(int argc, char *argv[]){
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
-			ZG_Entity *spr_image_van=NewEntityTexture(
-				em_textures
+			ZG_TransformTextureNode *spr_image_van=NewTransformTextureNode(
+				transform_texture_nodes
 				,info->vane_disp.info_vane[j].x
 				,info->vane_disp.info_vane[j].y
 				,62
@@ -342,8 +304,8 @@ int main(int argc, char *argv[]){
 				,true
 			);
 
-			ZG_ECTransform_SetRotate3f(spr_image_van->components[EC_TRANSFORM],0,0,info->vane_disp.info_vane[j].rot);
-			ZG_ECTransform_Attach(spr_base_van->components[EC_TRANSFORM],spr_image_van->components[EC_TRANSFORM]);
+			ZG_TransformNode_SetRotate3f(spr_image_van->transform_node,0,0,info->vane_disp.info_vane[j].rot);
+			ZG_TransformNode_Attach(spr_base_van,spr_image_van->transform_node);
 
 		}
 	}
@@ -351,18 +313,18 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SETUP CAR
-	spr_base_car=NewEntityTransform(em_transforms,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
-	spr_track_car=NewEntityTransform(em_transforms,0,0,true);
-	spr_image_car_part1=NewEntityTexture(em_textures,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
-	spr_image_car_part2=NewEntityTexture(em_textures,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
-	spr_image_car_left_wheel=NewEntityTexture(em_textures,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
-	spr_image_car_right_wheel=NewEntityTexture(em_textures,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
+	spr_base_car=NewTransformNode(transform_nodes,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
+	spr_track_car=NewTransformNode(transform_nodes,0,0,true);
+	spr_image_car_part1=NewTransformTextureNode(transform_texture_nodes,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
+	spr_image_car_part2=NewTransformTextureNode(transform_texture_nodes,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
+	spr_image_car_left_wheel=NewTransformTextureNode(transform_texture_nodes,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
+	spr_image_car_right_wheel=NewTransformTextureNode(transform_texture_nodes,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
 
-	ZG_ECTransform_Attach(spr_base_car->components[EC_TRANSFORM],spr_track_car->components[EC_TRANSFORM]);
-	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part1->components[EC_TRANSFORM]);
-	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_part2->components[EC_TRANSFORM]);
-	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_left_wheel->components[EC_TRANSFORM]);
-	ZG_ECTransform_Attach(spr_track_car->components[EC_TRANSFORM],spr_image_car_right_wheel->components[EC_TRANSFORM]);
+	ZG_TransformNode_Attach(spr_base_car,spr_track_car);
+	ZG_TransformNode_Attach(spr_track_car,spr_image_car_part1->transform_node);
+	ZG_TransformNode_Attach(spr_track_car,spr_image_car_part2->transform_node);
+	ZG_TransformNode_Attach(spr_track_car,spr_image_car_left_wheel->transform_node);
+	ZG_TransformNode_Attach(spr_track_car,spr_image_car_right_wheel->transform_node);
 
 	/*TransformNode_StartTween(
 		spr_base_car
@@ -386,8 +348,8 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SUN
-	spr_image_sun=NewEntityTexture(em_textures,ZG_Graphics_GetWidth()-200,100,100,100,text_sun,false);
-	ZG_ECMaterial_SetAlpha(spr_image_sun->components[EC_MATERIAL],ZG_ALPHA_VALUE_TRANSPARENT);
+	spr_image_sun=NewTransformTextureNode(transform_texture_nodes,ZG_Graphics_GetWidth()-200,100,100,100,text_sun,false);
+	ZG_Material_SetAlpha(spr_image_sun->appearance->material,ZG_ALPHA_VALUE_TRANSPARENT);
 
 	// ani
 	/*MaterialAction_SetKeyframesTrack(
@@ -416,6 +378,26 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_BeginRender();
 
+		// draw background
+		ZG_Graphics_DrawTexturedRectangle4i(
+			(ZG_Graphics_GetWidth()>>1)
+			,(ZG_Graphics_GetHeight()>>1)
+			,ZG_Graphics_GetWidth()
+			,ZG_Graphics_GetHeight()
+			,ZG_COLOR4F_WHITE
+			,text_ground
+			,NULL
+		);
+
+		for(size_t i=0; i < transform_texture_nodes->count; i++){
+			ZG_TransformTextureNode *transform_texture_node=transform_texture_nodes->items[i];
+			ZG_Graphics_Draw(
+				ZG_TransformNode_GetTransform(transform_texture_node->transform_node,ZG_TRANSFORM_NODE_TYPE_WORLD)
+				,transform_texture_node->geometry
+				,transform_texture_node->appearance
+			);
+		}
+
 		/*if(K_SPACE){
 			// todo start action from TextureNode_StartMaterialAction
 			TextureNode_StartMaterialAction(
@@ -432,11 +414,9 @@ int main(int argc, char *argv[]){
 
 
 	ZG_TextureManager_Delete(tm);
-	ZG_EntitySystem_Delete(entity_system);
+
 	//ZG_TTFontManager_Delete(ttfm);
-
-
-	MaterialAction_Delete(mat_act_fade_in_out);
+	ZG_MaterialAction_Delete(mat_act_fade_in_out);
 
 
 	ZG_DeInit();
