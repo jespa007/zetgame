@@ -12,6 +12,7 @@
 #include "ZG_Appearance.c"
 
 #include "ZG_Transform.c"
+#include "ZG_TransformNode.c"
 #include "ZG_Material.c"
 
 #include "ZG_Shape.c"

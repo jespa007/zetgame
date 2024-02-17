@@ -2,6 +2,7 @@
 #include "animation/@zg_animation.h"
 #include "ZG_Color4f.h"
 #include "ZG_Transform.h"
+#include "ZG_TransformNode.h"
 #include "ZG_Geometry.h"
 #include "ZG_Texture.h"
 #include "ZG_TextureRect.h"

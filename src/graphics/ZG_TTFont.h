@@ -24,11 +24,6 @@ ZG_TTFont *		ZG_TTFont_NewFromFile(const char *ttf_file, uint8_t _font_size);
 ZG_TTFont *		ZG_TTFont_NewFromMemory(const uint8_t *buffer, size_t buffer_len, uint8_t _font_size);
 
 
-// static
-void			ZG_TTFont_Init(void);
-void			ZG_TTFont_DeInit(void);
-
-
 // members
 void	 		ZG_TTFont_SetStyle(ZG_TTFont *_this,ZG_TTFontStyle _style);
 uint8_t 		ZG_TTFont_GetFontSize(ZG_TTFont *_this);

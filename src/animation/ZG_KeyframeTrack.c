@@ -269,7 +269,7 @@ bool ZG_KeyframeTrack_Interpolate(ZG_KeyframeTrack * _this,float _t, float * _va
 	}
 
 	// search span and interpolate usign ease function
-	for(int i = 0; i <_this->keyframe_points->count-1; i++)
+	for(size_t i = 0; i <_this->keyframe_points->count-1; i++)
 	{
 		ok=true;
 		ZG_KeyframePoint *point_i1 = (ZG_KeyframePoint *)_this->keyframe_points->items[i];
