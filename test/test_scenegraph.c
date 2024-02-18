@@ -4,14 +4,13 @@ void MS_OnDeleteTexture(void *text){
 	ZG_Texture_Delete(text);
 }
 
-
 typedef struct{
 	ZG_TransformNode *transform_node;
 	ZG_Appearance *appearance;
 	ZG_Geometry *geometry;
-}ZG_TransformTextureNode;
+}ZG_TransformGraphicNode;
 
-ZG_TransformNode *NewTransformNode(
+ZG_TransformNode *ZG_NewTransformNode(
 	ZG_List *_transform_nodes
 	, int _posx
 	, int _posy
@@ -30,8 +29,8 @@ ZG_TransformNode *NewTransformNode(
 	return transform_node;
 }
 
-ZG_TransformTextureNode *NewTransformTextureNode(
-	ZG_List *_transform_texture_nodes
+ZG_TransformGraphicNode *ZG_NewTransformGraphicNode(
+	ZG_List *_transform_graphic_nodes
 	,int _posx
 	, int _posy
 	, uint16_t _width
@@ -39,7 +38,7 @@ ZG_TransformTextureNode *NewTransformTextureNode(
 	, ZG_Texture *_texture
 	, bool _set_displacement
 ){
-	ZG_TransformTextureNode *transform_texture_node=ZG_NEW(ZG_TransformTextureNode);
+	ZG_TransformGraphicNode *transform_graphic_node=ZG_NEW(ZG_TransformGraphicNode);
 	ZG_TransformNode *transform_node=ZG_TransformNode_New();
 	ZG_Geometry *geometry=ZG_Geometry_NewRectangle2d();
 	ZG_Appearance *appearance=ZG_Appearance_New();
@@ -63,14 +62,21 @@ ZG_TransformTextureNode *NewTransformTextureNode(
 	//.. and set vertex to geometry
    ZG_Geometry_SetMeshVertex(geometry,vertexs,ZG_N_VERTEXS_QUAD*ZG_VERTEX_COORDS_LEN);
 
-   transform_texture_node->transform_node=transform_node;
-   transform_texture_node->geometry=geometry;
-   transform_texture_node->appearance=appearance;
-   transform_texture_node->appearance->texture=_texture;
+   transform_graphic_node->transform_node=transform_node;
+   transform_graphic_node->geometry=geometry;
+   transform_graphic_node->appearance=appearance;
+   transform_graphic_node->appearance->texture=_texture;
 
-	ZG_List_Add(_transform_texture_nodes,transform_texture_node);
+	ZG_List_Add(_transform_graphic_nodes,transform_graphic_node);
 
-	return transform_texture_node;
+	return transform_graphic_node;
+}
+
+void ZG_TransformGraphicNode_Delete(ZG_TransformGraphicNode *_this){
+	ZG_Geometry_Delete(_this->geometry);
+	ZG_Appearance_Delete(_this->appearance);
+	ZG_TransformNode_Delete(_this->transform_node);
+	ZG_FREE(_this);
 }
 
 int main(int argc, char *argv[]){
@@ -216,7 +222,7 @@ int main(int argc, char *argv[]){
 
 	ZG_TextureManager *tm=ZG_TextureManager_New();
 	//ZG_TTFontManager *ttfm=ZG_TTFontManager_New();
-	ZG_TransformTextureNode
+	ZG_TransformGraphicNode
 				*spr_image_sun=NULL
 				,*spr_image_car_part1=NULL
 				,*spr_image_car_part2=NULL
@@ -237,7 +243,8 @@ int main(int argc, char *argv[]){
 	ZG_MaterialAction 	  	 			*mat_act_fade_in_out=ZG_MaterialAction_New();//ZG_MATERIAL_COMPONENT_MAX);
 
 	ZG_List *transform_nodes=ZG_List_New();
-	ZG_List *transform_texture_nodes=ZG_List_New();
+	ZG_List *transform_graphic_nodes=ZG_List_New();
+	ZG_List *root_nodes=ZG_List_New();
 
 	//---
 	// ground
@@ -255,22 +262,25 @@ int main(int argc, char *argv[]){
 	// SETUP FAN...
 	for(unsigned i=0; i < ZG_ARRAY_SIZE(fan_info); i++){
 		_fan_info *info=&fan_info[i];
-		ZG_TransformTextureNode *spr_image_fan_base=NULL;
+		ZG_TransformGraphicNode *spr_image_fan_base=NULL;
 		ZG_TransformNode *spr_base_van=NULL;
 
-		spr_image_fan_base=NewTransformTextureNode(
-				transform_texture_nodes
-				,info->x
-				,info->y
-				,info->w
-				,info->h
-				,NULL
-				,false
-				);
+		spr_image_fan_base=ZG_NewTransformGraphicNode(
+			transform_graphic_nodes
+			,info->x
+			,info->y
+			,info->w
+			,info->h
+			,NULL
+			,false
+		);
+
+		// root node of fan
+		ZG_List_Add(root_nodes,spr_image_fan_base->transform_node);
 
 
 		// van base
-		spr_base_van=NewTransformNode(
+		spr_base_van=ZG_NewTransformNode(
 				transform_nodes
 				,info->vane_disp.x
 				,info->vane_disp.y
@@ -294,8 +304,8 @@ int main(int argc, char *argv[]){
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
-			ZG_TransformTextureNode *spr_image_van=NewTransformTextureNode(
-				transform_texture_nodes
+			ZG_TransformGraphicNode *spr_image_van=ZG_NewTransformGraphicNode(
+				transform_graphic_nodes
 				,info->vane_disp.info_vane[j].x
 				,info->vane_disp.info_vane[j].y
 				,62
@@ -313,12 +323,16 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SETUP CAR
-	spr_base_car=NewTransformNode(transform_nodes,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
-	spr_track_car=NewTransformNode(transform_nodes,0,0,true);
-	spr_image_car_part1=NewTransformTextureNode(transform_texture_nodes,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
-	spr_image_car_part2=NewTransformTextureNode(transform_texture_nodes,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
-	spr_image_car_left_wheel=NewTransformTextureNode(transform_texture_nodes,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
-	spr_image_car_right_wheel=NewTransformTextureNode(transform_texture_nodes,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
+	spr_base_car=ZG_NewTransformNode(transform_nodes,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
+	spr_track_car=ZG_NewTransformNode(transform_nodes,0,0,true);
+	spr_image_car_part1=ZG_NewTransformGraphicNode(transform_graphic_nodes,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
+	spr_image_car_part2=ZG_NewTransformGraphicNode(transform_graphic_nodes,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
+	spr_image_car_left_wheel=ZG_NewTransformGraphicNode(transform_graphic_nodes,car_info.wheel[0].x,car_info.wheel[0].y,car_info.wheel[0].w,car_info.wheel[0].h,text_wheel,true);
+	spr_image_car_right_wheel=ZG_NewTransformGraphicNode(transform_graphic_nodes,car_info.wheel[1].x,car_info.wheel[1].y,car_info.wheel[1].w,car_info.wheel[1].h,text_wheel,true);
+
+	// root node of fan
+	ZG_List_Add(root_nodes,spr_base_car);
+
 
 	ZG_TransformNode_Attach(spr_base_car,spr_track_car);
 	ZG_TransformNode_Attach(spr_track_car,spr_image_car_part1->transform_node);
@@ -348,7 +362,7 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SUN
-	spr_image_sun=NewTransformTextureNode(transform_texture_nodes,ZG_Graphics_GetWidth()-200,100,100,100,text_sun,false);
+	spr_image_sun=ZG_NewTransformGraphicNode(transform_graphic_nodes,ZG_Graphics_GetWidth()-200,100,100,100,text_sun,false);
 	ZG_Material_SetAlpha(spr_image_sun->appearance->material,ZG_ALPHA_VALUE_TRANSPARENT);
 
 	// ani
@@ -389,12 +403,16 @@ int main(int argc, char *argv[]){
 			,NULL
 		);
 
-		for(size_t i=0; i < transform_texture_nodes->count; i++){
-			ZG_TransformTextureNode *transform_texture_node=transform_texture_nodes->items[i];
+		for(size_t i=0; i < root_nodes->count;i++){
+			ZG_TransformNode_Update(root_nodes->items[i]);
+		}
+
+		for(size_t i=0; i < transform_graphic_nodes->count; i++){
+			ZG_TransformGraphicNode *transform_graphic_node=transform_graphic_nodes->items[i];
 			ZG_Graphics_Draw(
-				ZG_TransformNode_GetTransform(transform_texture_node->transform_node,ZG_TRANSFORM_NODE_TYPE_WORLD)
-				,transform_texture_node->geometry
-				,transform_texture_node->appearance
+				ZG_TransformNode_GetTransform(transform_graphic_node->transform_node,ZG_TRANSFORM_NODE_TYPE_WORLD)
+				,transform_graphic_node->geometry
+				,transform_graphic_node->appearance
 			);
 		}
 
@@ -411,6 +429,19 @@ int main(int argc, char *argv[]){
 
 
 	}while(!ZG_KP_ESC);
+
+	// delete all nodes
+	for(size_t i=0; i < transform_nodes->count;i++){
+		ZG_TransformNode_Delete(transform_nodes->items[i]);
+	}
+
+	for(size_t i=0; i < transform_graphic_nodes->count;i++){
+		ZG_TransformGraphicNode_Delete(transform_graphic_nodes->items[i]);
+	}
+
+	ZG_List_Delete(transform_nodes);
+	ZG_List_Delete(transform_graphic_nodes);
+	ZG_List_Delete(root_nodes);
 
 
 	ZG_TextureManager_Delete(tm);

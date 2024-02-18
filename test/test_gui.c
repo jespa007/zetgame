@@ -1,6 +1,6 @@
 #include "zetgame.h"
 
-#define WINDOW_NAME "gui_window"
+#define WINDOW_NAME "window"
 
 int main(int argc, char *argv[]){
 	ZG_UNUSUED_PARAM(argc);
