@@ -34,6 +34,9 @@ int main(int argc, char *argv[]){
 		SDL_FreeSurface(srf);
 	}
 
+	// custom textures
+	ZG_List_Add(textures,ZG_Texture_NewFromFile("../../../test/data/images/orientation.png"));
+
 	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFF));
 
 	ZG_Geometry *geometry=ZG_Geometry_NewTexturedRectangle2d();
