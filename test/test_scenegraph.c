@@ -40,7 +40,7 @@ ZG_TransformGraphicNode *ZG_NewTransformGraphicNode(
 ){
 	ZG_TransformGraphicNode *transform_graphic_node=ZG_NEW(ZG_TransformGraphicNode);
 	ZG_TransformNode *transform_node=ZG_TransformNode_New();
-	ZG_Geometry *geometry=ZG_Geometry_NewRectangle2d();
+	ZG_Geometry *geometry=ZG_Geometry_NewTexturedRectangle2d();
 	ZG_Appearance *appearance=ZG_Appearance_New();
 
 	if(_set_displacement){

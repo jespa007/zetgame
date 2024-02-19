@@ -63,13 +63,15 @@ bool ZG_Graphics_GL_Init(void){
 	  * OpenGL checks all the faces that are front facing towards the viewer and renders those while discarding all the faces that are back facing
 	  * , saving us a lot of fragment shader calls. We do need to tell OpenGL which of the faces we use are actually the front faces and which faces
 	  * are the back faces. OpenGL uses a clever trick for this by analyzing the winding order of the vertex data.
-	  */
-	 glCullFace(GL_BACK); // we want to (cull or erase) the back faces
-	 /**
+	  *
 	  * Facet culling is initially disabled. To enable and disable facet culling, call the glEnable and glDisable commands with the argument GL_CULL_FACE.
 	  * Facets include triangles, quadrilaterals, polygons, and rectangles.
 	  * glFrontFace specifies which of the clockwise and counterclockwise facets are front-facing and back-facing. See glFrontFace.
+	  *
 	  */
+	 glCullFace(GL_BACK); // we want to (cull or erase) the back faces
+
+	 // By default front faces is set as GL_CCW (Counter Clock Wise). Set as clock wise order
 	 glFrontFace(GL_CW); // we stablish front face side in ClockWise order
 
 	glClearDepth(1.0f);                         // 0 is near, 1 is far

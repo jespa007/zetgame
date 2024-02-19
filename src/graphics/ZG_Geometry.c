@@ -88,7 +88,7 @@ ZG_Geometry	* ZG_Geometry_NewPoints(void){
 
 ZG_Geometry	* ZG_Geometry_NewRectangle2d(void){
 	short indices[]={
-		0,1,2,3
+		0,1,2,3	// Indices of 1st and 2nd triangle. 1st triangle uses the vertexs according indices 0,1,2. 2nd triangle shares ones of the first triangle (i.e 0,1,2) + the rest one (i.e 3)		0,1,2,3
 	};
 
 	// A quarter of screen as size...
@@ -118,8 +118,7 @@ ZG_Geometry	* ZG_Geometry_NewFilledRectangle2d(void){
 	ZG_Geometry *geometry=NULL;
 
 	short indices[]={
-		0,1,2	// 1st triangle
-	   ,1,3,2 	// 2nd triangle
+		0,1,2,3	// Indices of 1st and 2nd triangle. 1st triangle uses the vertexs according indices 0,1,2. 2nd triangle shares ones of the first triangle (i.e 0,1,2) + the rest one (i.e 3)
 	};
 
 	// A quarter of screen as size...
@@ -148,8 +147,7 @@ ZG_Geometry	* ZG_Geometry_NewTexturedRectangle2d(void){
 	ZG_Geometry *geometry=NULL;
 
 	short indices[]={
-		0,1,2	// 1st triangle
-	   ,1,3,2 	// 2nd triangle
+		0,1,2,3	// Indices of 1st and 2nd triangle. 1st triangle uses the vertexs according indices 0,1,2. 2nd triangle shares ones of the first triangle (i.e 0,1,2) + the rest one (i.e 3)
 	};
 
 	// A quarter of screen as size...
@@ -169,10 +167,10 @@ ZG_Geometry	* ZG_Geometry_NewTexturedRectangle2d(void){
 		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 
 		float mesh_texture[]={
-			   0.0f,  1.0f,   // bottom left
-			   1.0f,  1.0f,   // bottom right
-			   0.0f,  0.0f,   // top left
-			   1.0f,  0.0f    // top right
+			   0.0f,  0.0f,   // bottom left
+			   0.0f,  1.0f,   // top left
+			   1.0f,  0.0f,   // bottom right
+			   1.0f,  1.0f    // top right
 		};
 
 		ZG_Geometry_SetMeshTexture(geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));

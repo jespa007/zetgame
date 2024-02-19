@@ -725,11 +725,12 @@ void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float
 	// setup crop
    if(_text_crop == NULL){
 
+	    // set mesh texture according indexes
 		float mesh_texture[]={
-			   0.0f,  1.0f,   // bottom left
-			   1.0f,  1.0f,   // bottom right
-			   0.0f,  0.0f,   // top left
-			   1.0f,  0.0f    // top right
+			   0.0f,  0.0f,   // bottom left
+			   0.0f,  1.0f,   // top left
+			   1.0f,  0.0f,   // bottom right
+			   1.0f,  1.0f    // top right
 		};
 
 		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
