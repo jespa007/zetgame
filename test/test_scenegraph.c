@@ -229,6 +229,7 @@ int main(int argc, char *argv[]){
 				,*spr_image_car_left_wheel=NULL
 				,*spr_image_car_right_wheel=NULL;
 	ZG_TransformNode 		*spr_base_car=NULL,*spr_track_car=NULL;
+	ZG_TransformAnimation 			*tra_vans=ZG_TransformAnimation_New();
 
 
 	//ZG_TTFontMananger_SetFontResourcePath("../../../test/data/fonts");
@@ -245,6 +246,7 @@ int main(int argc, char *argv[]){
 	ZG_List *transform_nodes=ZG_List_New();
 	ZG_List *transform_graphic_nodes=ZG_List_New();
 	ZG_List *root_nodes=ZG_List_New();
+	ZG_List *base_van_nodes=ZG_List_New();
 
 	//---
 	// ground
@@ -260,7 +262,7 @@ int main(int argc, char *argv[]){
 
 	//----------------------------------
 	// SETUP FAN...
-	for(unsigned i=0; i < ZG_ARRAY_SIZE(fan_info); i++){
+	for(unsigned i=0; i < 1/*ZG_ARRAY_SIZE(fan_info)*/; i++){
 		_fan_info *info=&fan_info[i];
 		ZG_TransformGraphicNode *spr_image_fan_base=NULL;
 		ZG_TransformNode *spr_base_van=NULL;
@@ -292,15 +294,7 @@ int main(int argc, char *argv[]){
 			,spr_base_van
 		);
 
-		/*Scene_StartTweenTransform(
-			spr_base_van
-			,ZG_TRANSFORM_COMPONENT_ROTATE_Z
-			, ZG_EASE_LINEAR
-			, 0
-			, 360
-			, 1000
-			, ANIMATION_LOOP_REPEAT_INFINITE
-		);*/
+		ZG_List_Add(base_van_nodes,spr_base_van);
 
 		// setup vans & animation
 		for(unsigned j=0; j < 3; j++){
@@ -323,7 +317,7 @@ int main(int argc, char *argv[]){
 
 	//----
 	// SETUP CAR
-	spr_base_car=ZG_NewTransformNode(transform_nodes,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
+	/*spr_base_car=ZG_NewTransformNode(transform_nodes,ZG_Graphics_GetWidth()>>1,ZG_Graphics_GetHeight()-150,false); // --> empty entity without id ? It can be but then it cannot be referenced
 	spr_track_car=ZG_NewTransformNode(transform_nodes,0,0,true);
 	spr_image_car_part1=ZG_NewTransformGraphicNode(transform_graphic_nodes,car_info.part1.x,car_info.part1.y,car_info.part1.w,car_info.part1.h,NULL,true);
 	spr_image_car_part2=ZG_NewTransformGraphicNode(transform_graphic_nodes,car_info.part2.x,car_info.part2.y,car_info.part2.w,car_info.part2.h,NULL,true);
@@ -338,7 +332,7 @@ int main(int argc, char *argv[]){
 	ZG_TransformNode_Attach(spr_track_car,spr_image_car_part1->transform_node);
 	ZG_TransformNode_Attach(spr_track_car,spr_image_car_part2->transform_node);
 	ZG_TransformNode_Attach(spr_track_car,spr_image_car_left_wheel->transform_node);
-	ZG_TransformNode_Attach(spr_track_car,spr_image_car_right_wheel->transform_node);
+	ZG_TransformNode_Attach(spr_track_car,spr_image_car_right_wheel->transform_node);*/
 
 	/*TransformNode_StartTween(
 		spr_base_car
@@ -373,8 +367,20 @@ int main(int argc, char *argv[]){
 			,ZG_ARRAY_SIZE(alpha_fade_in_out_keyframes)
 	);*/
 
-	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
 
+
+	ZG_TransformAnimation_StartTween(
+		 tra_vans
+		, ZG_TRANSFORM_COMPONENT_ROTATE_Z
+		, ZG_EASE_LINEAR
+		, 0
+		, 90
+		, 2000
+		, true
+	);
+
+	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
+	ZG_Transform tr_vans;
 
 	//ZG_Transform transform_camera=ZG_Transform_DefaultValues();
 	do{
@@ -390,9 +396,40 @@ int main(int argc, char *argv[]){
 			printf("Mouse coordinates: %i %i\n",ZG_Input_GetMousePositionPtr()->x, ZG_Input_GetMousePositionPtr()->y);
 		}
 
+		//--------------------
+		//
+		// Update logic
+		//
+		// Update animations
+		ZG_TransformAnimation_Update(tra_vans,&tr_vans);
+
+		// update vans
+		for(size_t i=0; i < base_van_nodes->count;i++){
+			ZG_TransformNode *node=base_van_nodes->items[i];
+			ZG_TransformNode_SetRotate3f(
+				node
+				,tr_vans.rotate.x
+				,tr_vans.rotate.y
+				,tr_vans.rotate.z
+			);
+		}
+
+		// update scene_root
+		for(size_t i=0; i < root_nodes->count;i++){
+			ZG_TransformNode_Update(root_nodes->items[i]);
+		}
+		//
+		//
+		//--------------------
+
+
 		ZG_Graphics_BeginRender();
 
-		// draw background
+		//------------------------
+		//
+		// Draw process
+		//
+		// Draw background
 		ZG_Graphics_DrawTexturedRectangle4i(
 			(ZG_Graphics_GetWidth()>>1)
 			,(ZG_Graphics_GetHeight()>>1)
@@ -403,10 +440,8 @@ int main(int argc, char *argv[]){
 			,NULL
 		);
 
-		for(size_t i=0; i < root_nodes->count;i++){
-			ZG_TransformNode_Update(root_nodes->items[i]);
-		}
 
+		// Draw all elemens
 		for(size_t i=0; i < transform_graphic_nodes->count; i++){
 			ZG_TransformGraphicNode *transform_graphic_node=transform_graphic_nodes->items[i];
 			ZG_Graphics_Draw(
@@ -415,6 +450,9 @@ int main(int argc, char *argv[]){
 				,transform_graphic_node->appearance
 			);
 		}
+		//
+		//
+		//--------------
 
 		/*if(K_SPACE){
 			// todo start action from TextureNode_StartMaterialAction
@@ -442,6 +480,7 @@ int main(int argc, char *argv[]){
 	ZG_List_Delete(transform_nodes);
 	ZG_List_Delete(transform_graphic_nodes);
 	ZG_List_Delete(root_nodes);
+	ZG_List_Delete(base_van_nodes);
 
 
 	ZG_TextureManager_Delete(tm);
@@ -449,6 +488,7 @@ int main(int argc, char *argv[]){
 	//ZG_TTFontManager_Delete(ttfm);
 	ZG_MaterialAction_Delete(mat_act_fade_in_out);
 
+	ZG_TransformAnimation_Delete(tra_vans);
 
 	ZG_DeInit();
 

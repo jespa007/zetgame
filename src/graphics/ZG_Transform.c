@@ -111,8 +111,6 @@ ZG_Vector2i 	ZG_Transform_GetPosition2i(ZG_Transform *_this){
 //------------------
 // ROTATION
 
-
-
 void ZG_Transform_SetRotate3f(ZG_Transform *_this,float x, float y, float z){
 		_this->rotate.x=x;
 		_this->rotate.y=y;

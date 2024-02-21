@@ -732,16 +732,15 @@ void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float
 			   0.0f,  0.0f,   // top left
 			   1.0f,  1.0f,   // bottom right
 			   1.0f,  0.0f    // top right
-
 		};
 
 		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 	}else{
 		float mesh_texture[]={
-				_text_crop->u1, _text_crop->v2, // bottom left
-				_text_crop->u2, _text_crop->v2, // bottom right
-				_text_crop->u1, _text_crop->v1, // top left
-				_text_crop->u2, _text_crop->v1  // top right
+			_text_crop->u1, _text_crop->v2, // bottom left
+			_text_crop->u2, _text_crop->v2, // bottom right
+			_text_crop->u1, _text_crop->v1, // top left
+			_text_crop->u2, _text_crop->v1  // top right
 		};
 
 		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));

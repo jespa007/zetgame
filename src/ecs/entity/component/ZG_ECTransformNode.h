@@ -23,9 +23,9 @@ struct ZG_ECTransformNode{
 ZG_TransformNode *	ZG_ECTransformNode_New(void);
 bool		ZG_ECTransformNode_AttachNode(ZG_TransformNode *_this, ZG_TransformNode *node);
 bool		ZG_TransformNode_DetachNode(ZG_TransformNode *_this, ZG_TransformNode *node);
-ZG_TransformNode	*	ZG_TransformNode_GetParent(ZG_TransformNode *_this);
+ZG_TransformNode	*	ZG_ECTransformNode_GetParent(ZG_TransformNode *_this);
 
-ZG_Transform *ZG_ECTransformNode_GetTransform(ZG_TransformNode *node, TransformNodeType sgtransform);
+ZG_Transform *ZG_ECTransformNode_GetTransform(ZG_TransformNode *node, ZG_ECTransformNodeType sgtransform);
 void		ZG_ECTransformNode_Update(ZG_TransformNode *_this);
 void 	 	ZG_ECTransformNode_Delete(ZG_TransformNode *_this);
 

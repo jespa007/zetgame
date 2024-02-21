@@ -166,11 +166,13 @@ ZG_Geometry	* ZG_Geometry_NewTexturedRectangle2d(void){
 
 		ZG_Geometry_SetMeshVertex(geometry,mesh_vertex,ZG_ARRAY_SIZE(mesh_vertex));
 
+	    // set mesh texture according indexes
+	    // Mesh texture are inverted due the fact that OpenGL considers first Y starting at the span-1 (Y is flipped)
 		float mesh_texture[]={
-			   0.0f,  0.0f,   // bottom left
-			   0.0f,  1.0f,   // top left
-			   1.0f,  0.0f,   // bottom right
-			   1.0f,  1.0f    // top right
+			   0.0f,  1.0f,   // bottom left
+			   0.0f,  0.0f,   // top left
+			   1.0f,  1.0f,   // bottom right
+			   1.0f,  0.0f    // top right
 		};
 
 		ZG_Geometry_SetMeshTexture(geometry,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));

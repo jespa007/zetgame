@@ -86,15 +86,7 @@ void ZG_TransformNode_SetPosition2i(ZG_TransformNode *_this, int _x,int _y){
 
 bool ZG_TransformNode_IsParentNodeRoot(ZG_TransformNode *_this){
 	ZG_TransformData *data=_this->data;
-	if(data->parent != NULL){
-		ZG_TransformData *parent_data = data->parent->data;
-
-		return (parent_data->parent==NULL);
-
-	}else{ // is the scene itself
-		return true;
-	}
-	return false;
+	return data->parent==NULL;
 }
 
 void	ZG_TransformNode_SetParent(ZG_TransformNode *_this, ZG_TransformNode *_parent){
@@ -160,11 +152,6 @@ void ZG_TransformNode_UpdateChilds(ZG_TransformNode *_this) {
 
 void ZG_TransformNode_Update(ZG_TransformNode *_this) {
 
-	ZG_TransformData *data = _this->data;
-	if(data->parent!=NULL){ // it has parent, not update
-		return;
-	}
-
 	// update coord3d  scene graph...
 	ZG_TransformNode_UpdateTransformNode(_this);
 	ZG_TransformNode_UpdateChilds(_this);
@@ -222,8 +209,15 @@ void ZG_TransformNode_UpdateTransformNode(ZG_TransformNode *_this) {
 		}
 
 		transform_translate_from_parent=ZG_Quaternion_InverseTransformV3f(parent->world_quaternion,transform_translate_from_parent);
+
 		world_transform->translate=ZG_Vector3f_Add(world_transform->translate,transform_translate_from_parent);
+
+		// Temporal way to calcule Euler angles rotation...
+		world_transform->rotate=ZG_Vector3f_Add(world_transform->rotate,parent_world_transform->rotate);
+
 		*world_quaternion=ZG_Quaternion_Mul(local_quaternion,parent->world_quaternion);
+
+
 
 	}
 	else { // Is the root, then add origin on their initial values ...
