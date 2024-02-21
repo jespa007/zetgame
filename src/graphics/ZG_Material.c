@@ -14,11 +14,11 @@ ZG_Material * ZG_Material_New(uint32_t properties){
 
 ZG_Material ZG_Material_DefaultValues(void){
 	ZG_Material material;
-	material.color=(ZG_Color4f){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f};
-	material.diffuse=(ZG_Color4f){.r=0.7f,.g=0.7f,.b=0.7f,.a=1.0f};
-	material.emissive=(ZG_Color4f){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f};
-	material.specular=(ZG_Color4f){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f};
-	material.ambient=(ZG_Color4f){.r=1.0f,.g=0.2f,.b=1.0f,.a=1.0f};
+	material.color=(ZG_Color4f){.r=1.0f,.g=1.0f,.b=1.0f,.a=ZG_ALPHA_SOLID};
+	material.diffuse=(ZG_Color4f){.r=0.7f,.g=0.7f,.b=0.7f,.a=ZG_ALPHA_SOLID};
+	material.emissive=(ZG_Color4f){.r=0.0f,.g=0.0f,.b=0.0f,.a=ZG_ALPHA_SOLID};
+	material.specular=(ZG_Color4f){.r=1.0f,.g=1.0f,.b=1.0f,.a=ZG_ALPHA_SOLID};
+	material.ambient=(ZG_Color4f){.r=1.0f,.g=0.2f,.b=1.0f,.a=ZG_ALPHA_SOLID};
 	material.shininess=0;
 
 	material.properties=0;

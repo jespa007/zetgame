@@ -18,7 +18,7 @@ typedef struct{
 	bool press_backspace;
 	bool press_home;
 	bool press_end;
-}ZG_KeyEvent,EventRepeatKey;
+}ZG_KeyEvent,ZG_EventRepeatKey;
 
 typedef struct{
 	ZG_Vector2i position;
@@ -61,12 +61,7 @@ typedef struct{
 }ZG_DropEventCallback;
 
 
-
-
-
 //------------------------------------------------------------------------------------------
-
-
 void 			ZG_Input_Init(void);
 ZG_MouseInfo	ZG_Input_GetMouseInfo(void);
 ZG_Vector2i  	ZG_Input_GetMousePosition(void);

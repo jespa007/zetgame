@@ -7,6 +7,10 @@ typedef struct{
 ZG_Appearance * ZG_Appearance_New(void){
 	ZG_Appearance * appearance=ZG_NEW(ZG_Appearance);
 	ZG_AppearanceData *data=ZG_NEW(ZG_AppearanceData);
+
+	// Assign default values for material (A thing I miss in C++)
+	data->material_default=ZG_Material_DefaultValues();
+
 	appearance->material=&data->material_default;
 	appearance->transform_texture=NULL;
 	appearance->texture=NULL;//Texture_GetDefault();

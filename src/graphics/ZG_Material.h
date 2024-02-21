@@ -2,6 +2,9 @@
 #define __ZG_MATERIAL_H__
 
 
+#define ZG_ALPHA_SOLID 			1.0f
+#define ZG_ALPHA_TRANSPARENT 	0.0f
+
 #define ZG_MATERIAL_LIGHT	(0x1 << 0)
 
 typedef enum{
