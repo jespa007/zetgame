@@ -632,6 +632,16 @@ void ZG_Graphics_Draw(ZG_Transform *transform, ZG_Geometry *geometry, ZG_Appeara
 	if(transform) 	ZG_Transform_Restore(transform);
 }
 
+void ZG_Graphics_DrawTransformNode(ZG_TransformNode *_transform_node, ZG_Geometry *geometry, ZG_Appearance *appearance){
+	ZG_TransformNode_Apply(_transform_node);
+	if(appearance)  ZG_Appearance_Apply(appearance);
+
+	if(geometry) 	ZG_Geometry_Draw(geometry);
+
+	if(appearance) 	ZG_Appearance_Restore(appearance);
+	ZG_TransformNode_Restore(_transform_node);
+}
+
 void ZG_Graphics_DrawPoint2f(float _x, float _y, ZG_Color4f _color, uint8_t _point_size){
 	ZG_Transform t=ZG_Transform_New();
 	t.translate.x=_x;

@@ -17,8 +17,6 @@ typedef struct ZG_TransformNode ZG_TransformNode;
 
 
 struct ZG_TransformNode{
-	ZG_Transform  			world_transform; // world coordinates
-	ZG_Quaternion			world_quaternion;
 	void 					*data;
 };
 
@@ -32,6 +30,9 @@ void					ZG_TransformNode_SetDisplacement2i(ZG_TransformNode *_this, int _offset
 void					ZG_TransformNode_SetPosition2i(ZG_TransformNode *_this, int _x,int _y);
 void 					ZG_TransformNode_SetTranslate3f(ZG_TransformNode *_this,float _x, float _y, float _z);
 void					ZG_TransformNode_SetRotate3f(ZG_TransformNode *_this,float _x, float _y, float _z);
+void					ZG_TransformNode_Apply(ZG_TransformNode *_this);
+void					ZG_TransformNode_Restore(ZG_TransformNode *_this);
+
 
 ZG_Transform 		*	ZG_TransformNode_GetTransform(ZG_TransformNode *node, ZG_TransformNodeType _transform_node_type);
 void					ZG_TransformNode_Update(ZG_TransformNode *_this);

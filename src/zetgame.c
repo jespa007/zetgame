@@ -33,7 +33,7 @@ void ZG_Init(ZG_SetupParams * info){
 #endif
 	ZN_Init();
 
-	ZG_Mixer_Init();
+	//ZG_Mixer_Init();
 
 	if(!ZG_Graphics_Init(
 			 info->wposx
@@ -71,7 +71,7 @@ void ZG_DeInit(void){
 	ZG_GUI_DeInit();
 	//SGRender_DeInit();
 
-	ZG_Mixer_DeInit();
+	//ZG_Mixer_DeInit();
 	ZG_Input_DeInit();
 	ZG_Graphics_DeInit();
 	//ZG_ECS_DeInit();

@@ -75,7 +75,7 @@ class CParticleSystem;
 class CParticleEmitter: public CDrawableObject{
 
 
-	Uint32 			emitter_attribs;
+	uint32_t 			emitter_attribs;
 	int 			MAX_PARTICLES;
 	CInterpolator1d m_intVelocity,
 					m_intLife,
@@ -103,8 +103,8 @@ class CParticleEmitter: public CDrawableObject{
 		        WAIT_TIME_MILLIS_TO_CREATE_NEW_PARTICLE;
 
 
-	Uint32 timer_waitNextParticle;
-	Uint32 timer_createNewParticle;
+	uint32_t timer_waitNextParticle;
+	uint32_t timer_createNewParticle;
 	int PARTICLES_PER_FRAME;
 
 	CParticleSystem *m_system_particle;
@@ -175,9 +175,9 @@ public:
 
 	bool load(
 			CParticleSystem *  _system_particle,
-			Uint32 _attribs,
-			Uint32 _ap_attribs,
-			Uint32 _angle,
+			uint32_t _attribs,
+			uint32_t _ap_attribs,
+			uint32_t _angle,
 			//CVector3f color,
 			const FLOAT_VECTOR  & _pointRef,
 			const string & texture_name,

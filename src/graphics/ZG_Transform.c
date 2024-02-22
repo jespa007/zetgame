@@ -128,21 +128,21 @@ void ZG_Transform_SetScale3f(ZG_Transform *_this,float x, float y, float z){
 	_this->scale=ZG_Vector3f_New3f(x,y,z);
 }
 
-void ZG_Transform_Restore(ZG_Transform *transform){
+void ZG_Transform_Restore(ZG_Transform *_this){
 
-	if(transform == NULL) return;
+	if(_this == NULL) return;
 
 	switch(ZG_Graphics_GetGraphicsApi()){
 		default:
 			break;
 		case ZG_GRAPHICS_API_GL:
-			ZG_Transform_GL_Restore(transform);
+			ZG_Transform_GL_Restore(_this);
 			break;
 	}
 }
 
-void ZG_Transform_Delete(ZG_Transform *transform){
-	if(transform!=NULL){
-		ZG_FREE(transform);
+void ZG_Transform_Delete(ZG_Transform *_this){
+	if(_this!=NULL){
+		ZG_FREE(_this);
 	}
 }

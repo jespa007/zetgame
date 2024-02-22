@@ -374,9 +374,9 @@ int main(int argc, char *argv[]){
 		, ZG_TRANSFORM_COMPONENT_ROTATE_Z
 		, ZG_EASE_LINEAR
 		, 0
-		, 90
+		, 360
 		, 2000
-		, true
+		, ANIMATION_LOOP_REPEAT_INFINITE
 	);
 
 	ZG_Graphics_SetBackgroundColor(ZG_Color4f_FromHex(0xFFFF));
@@ -444,8 +444,8 @@ int main(int argc, char *argv[]){
 		// Draw all elemens
 		for(size_t i=0; i < transform_graphic_nodes->count; i++){
 			ZG_TransformGraphicNode *transform_graphic_node=transform_graphic_nodes->items[i];
-			ZG_Graphics_Draw(
-				ZG_TransformNode_GetTransform(transform_graphic_node->transform_node,ZG_TRANSFORM_NODE_TYPE_WORLD)
+			ZG_Graphics_DrawTransformNode(
+				 transform_graphic_node->transform_node
 				,transform_graphic_node->geometry
 				,transform_graphic_node->appearance
 			);

@@ -9,8 +9,8 @@ CParticle::CParticle(
 		float 			 *_scale_pointer,
 		float 			 *_rotate_pointer,
 		unsigned char 			 *_color_pointer,
-		Uint32			 _m_attribs,
-		Uint32			_particle_angle,
+		uint32_t			 _m_attribs,
+		uint32_t			_particle_angle,
 		const CVector3f 		&  _ref_Pos, // relative position from particle emitter ..
 		CParticleEmitter *_m_emitter,
 		CInterpolator1d *_m_intVelocity,

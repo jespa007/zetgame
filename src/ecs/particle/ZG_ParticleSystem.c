@@ -61,19 +61,19 @@ CParticleSystem::CParticleSystem(){
 }
 
 void CParticleSystem::setup(
-		Uint32 m_life ,
-		Uint32 m_numberParticles,
-		Uint32 m_size,
-		Uint32 m_velocity,
-		Uint32 m_weight,
-		Uint32 m_spinVelocity,
-		Uint32 m_motionRandom,
-		Uint32 m_bounce,
-		Uint32 m_zoom,
-		Uint32 m_visibility,
-		Uint32 m_tintStrenght,
-		Uint32 m_emissionAngle,
-		Uint32 m_emissionRange
+		uint32_t m_life ,
+		uint32_t m_numberParticles,
+		uint32_t m_size,
+		uint32_t m_velocity,
+		uint32_t m_weight,
+		uint32_t m_spinVelocity,
+		uint32_t m_motionRandom,
+		uint32_t m_bounce,
+		uint32_t m_zoom,
+		uint32_t m_visibility,
+		uint32_t m_tintStrenght,
+		uint32_t m_emissionAngle,
+		uint32_t m_emissionRange
 )
 {
 	/*this->m_psData->m_life = _life;

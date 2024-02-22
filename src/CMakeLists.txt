@@ -321,9 +321,6 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- Animation --
 	animation/@zg_animation.c
 	
-	#-- Multimedia -- 
-	mmedia/@zg_mmedia.c
-	
 	#-- Math --
 	math/@zg_math.c
 	
@@ -344,6 +341,9 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 
 	#-- ZG_Tilemap --
 	tilemap/@zg_tilemap.c
+	
+	#-- Multimedia -- 
+	#mmedia/@zg_mmedia.c
 	
 	#-- ZG_Entity Component System --
 	#ecs/@zg_ecs.c
@@ -383,14 +383,21 @@ add_executable(test_viewport${POST_NAME}
 	${PROJECT_SOURCE_DIR}/../test/test_viewport.c
 )
 
-target_link_libraries(test_viewport${POST_NAME}    ${ZETGAME_LIB_NAME}${POST_NAME}  	${LIB_DEPS})
+target_link_libraries(test_viewport${POST_NAME}    ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
-#--- TEST SCENEGRAPH
-add_executable(test_scenegraph${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_scenegraph.c
+#--- TEST SCENEGRAPH2D
+add_executable(test_scenegraph2d${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_scenegraph2d.c
 )
 
-target_link_libraries(test_scenegraph${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+target_link_libraries(test_scenegraph2d${POST_NAME}   ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
+
+#--- TEST SCENEGRAPH3D
+add_executable(test_scenegraph3d${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_scenegraph3d.c
+)
+
+target_link_libraries(test_scenegraph3d${POST_NAME}   ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
 if(false)
 

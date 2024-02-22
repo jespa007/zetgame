@@ -107,8 +107,8 @@ bool CParticleEmitter::loadFromEmitterInfo(
 	};
 
 
-	Uint32  m_attribs = 0;
-	Uint32  m_app_attribs = 0;
+	uint32_t  m_attribs = 0;
+	uint32_t  m_app_attribs = 0;
 
 	vector<string> list_attribs = CStringUtils::split(peData->m_attribs, '|');
 	vector<string> list_app_attribs = CStringUtils::split(peData->m_appearanceAttribs, '|');
@@ -193,9 +193,9 @@ bool CParticleEmitter::loadFromEmitterInfo(
 // internal add p_emitter.
 bool CParticleEmitter::load(
 		CParticleSystem *  _system_particle,
-		Uint32 m_attribs,
-		Uint32 m_appearanceAttribs,
-		Uint32 m_angle,
+		uint32_t m_attribs,
+		uint32_t m_appearanceAttribs,
+		uint32_t m_angle,
 		const FLOAT_VECTOR  & _pointRef,
 		//CVector3f color,
 		const string & m_imageParticle ,

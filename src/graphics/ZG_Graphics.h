@@ -69,6 +69,7 @@ void ZG_Graphics_EndRender(void);
  * 2D Drawing functions
  */
 void ZG_Graphics_Draw(ZG_Transform *transform, ZG_Geometry *geometry, ZG_Appearance *appearance);
+void ZG_Graphics_DrawTransformNode(ZG_TransformNode *transform, ZG_Geometry *geometry, ZG_Appearance *appearance);
 
 void ZG_Graphics_DrawPoint2f(float _x, float _y, ZG_Color4f _color, uint8_t _point_size);
 void ZG_Graphics_DrawPoint2i(int _x, int _y, ZG_Color4f _color, uint8_t _point_size);

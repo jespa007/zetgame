@@ -45,14 +45,14 @@ public:
 					m_ini_pos,
 					m_vdir,
 					m_refPoint;
-		Uint32 relative_rotate_z_fp;
+		uint32_t relative_rotate_z_fp;
 
 		CAppearance *m_appearance;
 
 		FloatBuffer m_color_from_interpolator;
 		float m_aspectX, m_aspectY;
 
-		Uint32      m_attribs;
+		uint32_t      m_attribs;
 
 		//CTransform3d t3d;
 
@@ -102,8 +102,8 @@ public:
 					float 			 *_rotate_pointer,
 					unsigned char 			 *_color_pointer,
 
-					Uint32			_m_attribs,
-					Uint32			_angle,
+					uint32_t			_m_attribs,
+					uint32_t			_angle,
 					const CVector3f 	&	  _ref_Pos, // relative position from particle emitter ..
 					CParticleEmitter * _m_emitter,
 					CInterpolator1d * _m_intVelocity,

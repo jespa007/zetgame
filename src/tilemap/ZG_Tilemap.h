@@ -16,7 +16,7 @@ typedef struct{
 typedef struct{
 	ZG_List		*frames;
 	int			u1,v1;
-	Uint32		time_change_frame;
+	uint32_t	time_change_frame;
 	int			current_frame;
 }ZG_TileAnimation;
 
