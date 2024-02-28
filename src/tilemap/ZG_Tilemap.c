@@ -58,7 +58,7 @@ ZG_Tilemap *ZG_Tilemap_New(
 	int mesh_vertexs_len=n_vertexs*3; // *3 because it has 3d coords (xyz)
 	int mesh_texture_len=n_vertexs*2; // *2 because it has 2d coords (uv)
 
-	short *indices = malloc(sizeof(short)*n_indices);
+	uint32_t *indices = malloc(sizeof(short)*n_indices);
 	float *mesh_vertexs=malloc(sizeof(float)*mesh_vertexs_len);
 	float *mesh_texture=malloc(sizeof(float)*mesh_texture_len);
 
