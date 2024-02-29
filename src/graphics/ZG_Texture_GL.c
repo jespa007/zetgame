@@ -16,42 +16,41 @@ void ZG_Texture_GL_New(ZG_Texture *text,GLvoid *_pixels, uint16_t _width, uint16
 	texture_data->texture = GL_INVALID_VALUE;
 	texture_data->internal_format = GL_INVALID_VALUE;
 
-
 	if(_width == 0 || _height == 0){
 		ZG_LOG_ERRORF("height=0 width=0 texture cannot be rebuilt");
 		return;
 	}
 
-
 	glPushAttrib( GL_TEXTURE_BIT);
 
 	//glActiveTexture(_GL_TEXTURE0);
 	glEnable(GL_TEXTURE_2D);
+
 	// Have OpenGL generate a texture object handle for us
 	glGenTextures( 1, &texture_data->texture );
-
 
 	// Bind the texture object
 	glBindTexture( GL_TEXTURE_2D, texture_data->texture );
 
 	// Set the texture's stretching properties
-	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-	 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-	 texture_data->internal_format = ZG_Texture_GL_BytesPerPixelToGLInternalFormat(_bytes_per_pixel);
+	texture_data->internal_format = ZG_Texture_GL_BytesPerPixelToGLInternalFormat(_bytes_per_pixel);
 
 
 	// Edit the texture object's image data using the information SDL_Surface gives us
-	glTexImage2D( GL_TEXTURE_2D,
-				  0,
-				  texture_data->internal_format,
-				  _width,
-				  _height,
-				  0,
-				  texture_data->internal_format,
-				  GL_UNSIGNED_BYTE,
-				  _pixels);
-
+	glTexImage2D(
+		GL_TEXTURE_2D
+		, 0
+		,texture_data->internal_format
+		,_width
+		,_height
+		,0
+		,texture_data->internal_format
+		,GL_UNSIGNED_BYTE
+		,_pixels
+	);
 
 	text->height=_height;
 	text->width=_width;
@@ -142,7 +141,7 @@ void	ZG_Texture_GL_SetRepeatUV(ZG_Texture * _this, bool _repeat_uv){
 	glBindTexture( GL_TEXTURE_2D,  texture_data->texture);
 
 	GLuint clamp_method=GL_CLAMP_TO_BORDER;
-	if(_repeat_uv){
+	if(_repeat_uv == true){
 		clamp_method=GL_REPEAT;
 	}
 

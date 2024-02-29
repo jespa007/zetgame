@@ -130,6 +130,7 @@ int main(int argc, char *argv[]){
 	ZG_Appearance *appearance=ZG_Appearance_New();
 	ZG_Texture *texture=ZG_Texture_NewFromFile("../../../test/data/images/mars.jpg");
 	ZG_TransformAnimation 			*ta=ZG_TransformAnimation_New();
+	ZG_Texture_SetRepeatUV(texture,true);
 
 	ZG_Graphics_SetProjectionMode(ZG_PROJECTION_MODE_PERSPECTIVE);
 
