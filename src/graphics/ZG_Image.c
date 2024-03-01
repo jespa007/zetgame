@@ -5,9 +5,10 @@
 typedef struct{
 	uint8_t *	pixels;
 	uint8_t 	bytes_per_pixel;
-	uint8_t 	bits_per_pixel;
+	uint8_t		bits_per_pixel;
 	uint16_t	width;
 	uint16_t	height;
+	uint16_t	pitch;
 }ZG_ImageData;
 
 /*{
@@ -18,7 +19,7 @@ typedef struct{
  }*/
 ZG_Image * ZG_Image_LoadJPGFromMemory(const uint8_t *buffer_src, size_t buffer_src_len);
 ZG_Image * ZG_Image_LoadPNGFromMemory(const uint8_t *buffer_src, size_t buffer_src_len);
-ZG_Image *ZG_Image_LoadImageFromMemory(const uint8_t * image_src, size_t length, uint32_t properties, uint8_t convert_to_bpp);
+ZG_Image *ZG_Image_LoadFromMemory(const uint8_t * image_src, size_t length, uint32_t properties, uint8_t convert_to_bpp);
 
 typedef struct {
 	const char *file_type;
@@ -36,7 +37,7 @@ static ZG_Image * default_image=NULL;
 
 ZG_Image * 	ZG_Image_GetDefaultImage(void){
 	if(default_image == NULL){
-		default_image=ZG_Image_LoadImageFromMemory(default_png,default_png_len,0,0);
+		default_image=ZG_Image_LoadFromMemory(default_png,default_png_len,0,0);
 	}
 	return default_image;
 }
@@ -50,21 +51,22 @@ void			ZG_Image_DestroyResources(void){
 
 
 ZG_Image * ZG_Image_LoadJPGFromMemory(const uint8_t *buffer_src, size_t buffer_src_len){
-	ZG_Image *srf = NULL;
-	unsigned w, h;
+	ZG_Image *image = NULL;
+	uint16_t width, heigth;
 	uint8_t *buffer_dst;
 
 
-	if(jpeg_decode_mem(buffer_src,buffer_src_len, &buffer_dst, &w,&h)){
+	if(jpeg_decode_mem(buffer_src,buffer_src_len, &buffer_dst, &width,&heigth)){
 
-		// create surface from buffer into 24 bits ...
-		srf=ZG_Image_CreateImageFrom(w,h,3,buffer_dst);
+		// create image from buffer into 24 bits ...
+		//srf=ZG_Image_NewFromData(buffer_dst,w,h,3);
+		image=ZG_Image_NewFrom(buffer_dst,width,heigth,3);
 
 		// release memory.
 		free(buffer_dst);
 	}
 
-	return srf;
+	return image;
 }
 
 bool ZG_Image_SaveJPG(ZG_Image * _this, const char * filename){
@@ -76,11 +78,13 @@ bool ZG_Image_SaveJPG(ZG_Image * _this, const char * filename){
 		ZG_Image *aux=NULL;
 		ZG_ImageData *data=_this->data;
 		if(data->bits_per_pixel != 24){ // convert in 24 bits auxiliary
-			aux=ZG_Image_ConvertSurfaceExt(srf,0,3); // 3 bytes per pixel -> 24bits per pixel
+			aux=ZG_Image_Convert(_this,0,3); // 3 bytes per pixel -> 24bits per pixel
 			if(aux==NULL){
 				return false;
 			}
-			srf=aux;
+
+			// update covnerted information
+			data=aux->data;
 		}
 
 		if((out=jpeg_encode_mem(data->pixels, data->width, data->height, 80, &outsize))!=NULL){
@@ -165,14 +169,14 @@ bool ZG_Image_SavePNG(ZG_Image * _image, const char * filename){
 ZG_Image *ZG_Image_LoadImageFromMemory(
 		const uint8_t * _image_src
 		, size_t _length
-		, uint32_t _properties
-		, uint8_t _convert_to_bpp
+		, uint32_t _dst_format
+		, uint8_t _dst_bytes_per_pixel
 ) {
 	ZG_Image *new_image_surface = NULL;
 
 	size_t size_image_load_info=ZG_ARRAY_SIZE(image_load_info);
 
-	if(length < 10){
+	if(_length < 10){
 		ZG_LOG_ERRORF("Cannot load from memory. Insuficient buffer");
 		return NULL;
 	}
@@ -180,13 +184,13 @@ ZG_Image *ZG_Image_LoadImageFromMemory(
 	for(unsigned i=0; i < size_image_load_info &&new_image_surface==NULL ; i++){
 		ImageLoadInfo *img_info= &image_load_info[i];
 		if(strncmp((const char *)img_info->signature,(const char *)_image_src,img_info->signature_len)==0){
-			if((new_image_surface=img_info->load_mem(_image_src,length))==NULL){
+			if((new_image_surface=img_info->load_mem(_image_src,_length))==NULL){
 				return NULL;
 			}
 		}
 	}
 
-	ZG_Image *aux_surf = ZG_Image_ConvertSurfaceExt(new_image_surface, properties, convert_to_bpp);
+	ZG_Image *aux_surf = ZG_Image_Convert(new_image_surface, _dst_format, _dst_bytes_per_pixel);
 	ZG_Image_FreeSurface(new_image_surface);
 
 	return aux_surf;
@@ -194,18 +198,18 @@ ZG_Image *ZG_Image_LoadImageFromMemory(
 //--------------------------------------------------------------------------------------------------------------------------------
 ZG_Image	*	ZG_Image_LoadImageFromFile(
 	const char * filename
-	, uint32_t properties
-	, uint8_t convert_to_bpp
+	, uint32_t _dst_format
+	, uint8_t _dst_bytes_per_pixel
 ) {
 	ZG_BufferByte *buf=ZG_FileSystem_ReadFile(filename);
 	ZG_Image *new_image_surface = NULL;
 	if(!buf){return NULL;}
 
-	new_image_surface = ZG_Image_LoadImageFromMemory(buf->ptr,buf->len,properties,convert_to_bpp);
+	new_image_surface = ZG_Image_LoadImageFromMemory(buf->ptr,buf->len,_dst_format,_dst_bytes_per_pixel);
 	ZG_BufferByte_Delete(buf);
 
 	if(new_image_surface!=NULL){
-		ZG_Image *aux = ZG_Image_ConvertSurfaceExt(new_image_surface, properties, convert_to_bpp);
+		ZG_Image *aux = ZG_Image_ConvertSurfaceExt(new_image_surface, _dst_format, _dst_bytes_per_pixel);
 		ZG_Image_FreeSurface(new_image_surface);
 		return aux;
 	}
@@ -215,14 +219,14 @@ ZG_Image	*	ZG_Image_LoadImageFromFile(
 }
 //--------------------------------------------------------------------------------------------------------------------------------
 
-ZG_Image * ZG_Image_NewImageFromFile(const char *_filename){
+ZG_Image * ZG_Image_LoadFromFile(const char *_filename){
 	ZG_BufferByte *buffer= NULL;
 	ZG_Image *image = NULL;
 
 	if(ZG_FileSystem_FileExists(_filename)){
 		buffer=ZG_FileSystem_ReadFile(_filename);
 
-		image=ZG_Image_NewImageFromMemory(buffer->ptr,buffer->len);
+		image=ZG_Image_LoadFromMemory(buffer->ptr,buffer->len);
 		ZG_BufferByte_Delete(buffer);
 
 	}else{
@@ -232,16 +236,37 @@ ZG_Image * ZG_Image_NewImageFromFile(const char *_filename){
 }
 
 
-ZG_Image *ZG_Image_New(uint16_t _width, uint16_t _height){
+ZG_Image *ZG_Image_New(
+	uint16_t _width
+	,uint16_t _height
+	,uint8_t _bytes_per_pixel
+){
+	if(_bytes_per_pixel<3 && _bytes_per_pixel > 4){
+		ZG_LOG_ERROR("ZG_Image_New : Invalid bytes per pixel");
+		return NULL;
+	}
+
 	ZG_Image *img=ZG_NEW(ZG_Image);
 	ZG_ImageData *data=ZG_NEW(ZG_ImageData);
-	uint8_t bytes_per_pixel=ZG_Graphics_GetBytesPerPixel();
-	ZG_Image *img = ZG_Image_NewImageBytesPerPixel(_width,_height,bytes_per_pixel);;
-
+	uint8_t bytes_per_pixel=_bytes_per_pixel;
+	data->pixels = (uint8 *)malloc(_width*_height*bytes_per_pixel);
+	data->bits_per_pixel=bytes_per_pixel*8;
 	img->data=data;
 
 	return img;
 }
+
+ZG_Image * ZG_Image_NewFrom(
+	uint8_t *_pixels
+	, uint16_t _width
+	, uint16_t _height
+	, uint8_t _bytes_per_pixel
+){
+	ZG_Image *image=ZG_Image_New(_width,_height,_bytes_per_pixel);
+	ZG_ImageData *data=image->data;
+	memcpy(data->pixels,_pixels,_width*_height*_bytes_per_pixel);
+}
+
 
 uint16_t 		ZG_Image_GetHeight(ZG_Image *_this){
 	ZG_ImageData *data=_this->data;
@@ -259,7 +284,6 @@ uint8_t 	*	ZG_Image_GetPixels(ZG_Image *_this){
 	return data->pixels;
 }
 
-
 /*
  * This is a 32-bit pixel function created with help from this
  * You will need to make changes if you want it to work with
@@ -268,7 +292,7 @@ uint8_t 	*	ZG_Image_GetPixels(ZG_Image *_this){
 void ZG_Image_SetPixel(ZG_Image *_this, int _x, int _y, uint32_t _pixel){
 	ZG_ImageData *data=_this->data;
 	uint8_t bytes_per_pixel=data->bytes_per_pixel;
-	uint8_t *target_pixel = (uint8_t *)data->pixels + _y * data->pitch + x * bytes_per_pixel;
+	uint8_t *target_pixel = (uint8_t *)data->pixels + _y * data->pitch + _x * bytes_per_pixel;
 	memcpy(target_pixel, &_pixel,bytes_per_pixel);
 }
 
@@ -412,9 +436,9 @@ ZG_Image * ZG_Image_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t wid
 		ZG_Image_FillCircle( srf1, radius,radius,radius, border_color);
 		ZG_Image_FillCircle( srf2, radius-width_border,radius-width_border,radius-width_border, fill_color);
 
-		ZG_Image_Rect rect={width_border,width_border,srf2_data->width, srf2_data->height};
+		ZG_Rectangle rect={width_border,width_border,srf2_data->width, srf2_data->height};
 		ZG_Image_BlitSurface(srf2,NULL, srf1,&rect);
-		ZG_Image_FreeSurface(srf2);
+		ZG_Image_Delete(srf2);
 
 		//draw_circle();
 		return srf1;
@@ -430,21 +454,57 @@ ZG_Image * ZG_Image_NewTriangle(uint16_t dimension, uint32_t fill_color, uint16_
 }
 */
 
-void ZG_Image_BlitImage(
+void ZG_Image_Blit(
 		ZG_Image * _src_image
 		,ZG_Rectangle *_src_rect
 		,ZG_Image * _dst_image
 		,ZG_Rectangle *_dst_rect
 ){
+	ZG_ImageData *src_data=_src_image->data;
+	ZG_ImageData *dst_data=_dst_image->data;
+	ZG_Rectangle src_rect,dst_rect;
+
 	// operation step by step
-	// set start pixel offset for each src/dst
+	// 1. set start pixel offset for each src/dst
+	uint16_t src_offset=0;
+	uint16_t dst_offset=0;
+	float dst_pixel=0;
+	float dst_scale_x=1;
+	float dst_scale_y=1;
+
+	if(_src_rect != NULL){
+		src_offset=_src_rect->y*src_data->width*src_data->bytes_per_pixel+_src_rect->x*src_data->bytes_per_pixel;
+		src_rect=*_src_rect;
+	}else{
+		src_rect=(ZG_Rectangle){
+			.x=0
+			,.y=0
+			,.width=src_data->width
+			,.height=src_data->height
+		};
+	}
+
+	if(_dst_rect != NULL){
+		dst_offset=_dst_rect->y*dst_data->width*dst_data->bytes_per_pixel+_dst_rect->x*dst_data->bytes_per_pixel;
+		dst_rect=*_dst_rect;
+	}else{
+		dst_rect=(ZG_Rectangle){
+			.x=0
+			,.y=0
+			,.width=dst_data->width
+			,.height=dst_data->height
+		};
+	}
+
+
+
 	// if dimensions src/dst are equal or fill whole image scale=1 otherwise, if calcule dst scale respect from src
 	// read 1 src pixel
 	// write 1 dst pixel
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_properties_format,	uint8_t _dst_bytes_per_pixel) {
+ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_convert_properties,	uint8_t _dst_bytes_per_pixel) {
 
 	ZG_Image *new_image=NULL;
 	ZG_Image *allocated_image = NULL;
@@ -470,7 +530,7 @@ ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_properties_forma
 			}*/
 		}
 		else{
-			new_image = ZG_Image_CreateImageFrom(data->width, data->height, _dst_bytes_per_pixel,NULL);
+			new_image = ZG_Image_New(data->width, data->height, _dst_bytes_per_pixel);
 			ZG_Image_BlitImage(_src_image,NULL,new_image,NULL);
 		}
 
@@ -482,38 +542,34 @@ ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_properties_forma
 	uint16_t dest_height = data->height;
 
 
-	if((_dst_properties_format & ZG_Image_LOAD_IMAGE_POWER_OF_2_ORIGINAL_RESOLUTION) ==ZG_Image_LOAD_IMAGE_POWER_OF_2_ORIGINAL_RESOLUTION ||
+	if((_dst_convert_properties & ZG_IMAGE_CONVERT_PROPERTY_POWER_OF_2_ORIGINAL_RESOLUTION) ==ZG_IMAGE_CONVERT_PROPERTY_POWER_OF_2_ORIGINAL_RESOLUTION ||
 			((dest_width == data->width) && (dest_height == data->height))
 	){ // simple copy original image...
-		new_image = ZG_Image_CreateImageFrom(dest_width, dest_height, data->bytes_per_pixel,NULL);
+		new_image = ZG_Image_NewImage(dest_width, dest_height, data->bytes_per_pixel);
 		// and just blit...
-		ZG_Image_BlitSurface(_src_image,NULL,new_image,NULL);
+		ZG_Image_Blit(_src_image,NULL,new_image,NULL);
 
 	}else{ //scale to fit image (warning may have a bug with copying rgb values !!!)...
 		new_image = ZG_Image_NewImage(dest_width,dest_height,data->bytes_per_pixel);
 		if(ZG_Image_BlitScaled(
-				src_surface,
+				_src_image,
 				NULL,
 				new_image,
 				NULL)!=0
 		){
 			ZG_LOG_ERROR("ZG_Image_BlitScaled:%s",ZG_Image_GetError());
 		}
-
 	}
 
-
-	if (_dst_properties_format & ZG_Image_LOAD_IMAGE_FLIP_Y) {
+	if (_dst_convert_properties & ZG_IMAGE_CONVERT_PROPERTY_FLIP_Y) {
 		ZG_Image_FlipY(new_image);
 	}
 
-	if(allocated_image != NULL)
-	{
+	if(allocated_image != NULL){
 		ZG_Image_Delete(allocated_image);
 	}
 
 	return new_image;
-
 }
 
 void ZG_Image_FlipY(ZG_Image *_this){
@@ -530,7 +586,6 @@ void ZG_Image_FlipY(ZG_Image *_this){
 
 		src_up	+=size_scanline;
 		src_down-=size_scanline;
-
 	}
 
 	free(aux_scanline);
@@ -550,19 +605,18 @@ void ZG_Image_SetBytesPerPixel(ZG_Image **_image, uint8_t _new_bytes_per_pixel){
 	}
 }
 
-ZG_Image *	ZG_Image_Crop(ZG_Image *_src_surface,ZG_Rectangle _src_rect){
-	ZG_ImageData *data=_src_surface->data;
+ZG_Image *	ZG_Image_Crop(ZG_Image *_src_image,ZG_Rectangle _src_rect){
+	ZG_ImageData *data=_src_image->data;
 	//ZG_Image_Rect dst_rect={0,0,_src_rect.w,_src_rect.h};
-	ZG_Image *dst_surface=ZG_Image_CreateImageFrom(
+	ZG_Image *dst_image=ZG_Image_NewImageFrom(
 		data->width
 		, data->height
 		,data->bytes_per_pixel
-		,NULL // we don't want to copy pixels
     );
 
-	ZG_Image_Blit(_src_surface, & _src_rect, dst_surface, NULL);
+	ZG_Image_Blit(_src_image, & _src_rect, dst_image, NULL);
 
-	return dst_surface;
+	return dst_image;
 
 }
 

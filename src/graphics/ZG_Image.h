@@ -7,25 +7,25 @@ struct ZG_Image{
 	void *data;
 };
 
+#define		ZG_IMAGE_CONVERT_PROPERTY_FLIP_Y			 				(0x1 << 1)
+#define		ZG_IMAGE_CONVERT_PROPERTY_POWER_OF_2_ORIGINAL_RESOLUTION	(0x1 << 2)
+
 //-------
 // STATIC
 ZG_Image 	* 	ZG_Image_GetDefaultImage(void);
 
-ZG_Image	* 	ZG_Image_NewFromData(
-	uint8_t *_pixels
-	, uint16_t _width
-	, uint16_t _height
-	, uint8_t bytes_per_pixel
-);
-
 ZG_Image	* 	ZG_Image_Convert(
 	ZG_Image *_src_image
-	, uint32_t _dest_properties_format
-	, uint8_t _dest_bytes_per_pixel
+	, uint32_t _dst_convert_properties
+	, uint8_t _dst_bytes_per_pixel
 );
 
-ZG_Image 	*	ZG_Image_LoadImageFromFile(const char *_file);
-ZG_Image 	*	ZG_Image_LoadImageFromMemory(const char *_file);
+ZG_Image 	*	ZG_Image_LoadFromFile(const char *_file);
+ZG_Image 	*	ZG_Image_LoadFromMemory(uint8_t *_ptr, size_t _ptr_len);
+
+//
+// Create from image formats from file or memory
+//
 void			ZG_Image_DestroyResources(void);
 
 //-------
@@ -34,13 +34,16 @@ void			ZG_Image_DestroyResources(void);
 ZG_Image 	*	ZG_Image_New(
 	uint16_t _with
 	,uint16_t _height
-);
-
-ZG_Image	*	ZG_Image_NewCustom(
-	uint16_t _with
-	,uint16_t _height
 	,uint8_t _bytes_per_pixel
 );
+
+ZG_Image	* 	ZG_Image_NewFrom(
+	uint8_t *_pixels
+	, uint16_t _width
+	, uint16_t _height
+	, uint8_t bytes_per_pixel
+);
+
 
 
 uint16_t 		ZG_Image_GetHeight(ZG_Image *_this);
