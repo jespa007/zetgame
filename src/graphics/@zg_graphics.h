@@ -1,5 +1,6 @@
 #include "math/@zg_math.h"
 #include "animation/@zg_animation.h"
+#include "ZG_Rectangle.h"
 #include "ZG_Color4f.h"
 #include "ZG_Transform.h"
 #include "ZG_TransformNode.h"

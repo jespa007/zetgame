@@ -300,8 +300,6 @@ void setFullscreen(Win32Window *_window, bool _fullscreen){
 		);
 
 	}
-
-
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
