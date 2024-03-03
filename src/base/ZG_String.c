@@ -79,7 +79,7 @@ char *			ZG_String_CloneN(const char *in_str, size_t len){
 	char *out_str=NULL;
 	size_t size=strlen(in_str);
 	if(size > 0){
-		size_t min_size=MIN(size,len);
+		size_t min_size=ZG_MIN(size,len);
 		out_str=malloc(min_size+1);
 		memset(out_str,0,size+1);
 		memcpy(out_str,in_str,min_size);

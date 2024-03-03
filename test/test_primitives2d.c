@@ -23,15 +23,15 @@ int main(int argc, char *argv[]){
 	// foreach image create a texture...
 	for(unsigned i=0; i < ZG_ARRAY_SIZE(circle_info);i++){
 		ZG_Texture *texture=NULL;
-		SDL_Surface *srf= SDL_NewCircle(
+		ZG_Image *img= ZG_Image_NewCircle(
 				circle_info[i].width,
 				circle_info[i].fill_color,
 				circle_info[i].border_width,
 				circle_info[i].border_color
 		);
-		ZG_List_Add(textures,texture=ZG_Texture_NewFromSurface(srf));
+		ZG_List_Add(textures,texture=ZG_Texture_NewFromImage(img));
 
-		SDL_FreeSurface(srf);
+		ZG_Image_Delete(img);
 	}
 
 	// custom textures

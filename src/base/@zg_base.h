@@ -116,10 +116,8 @@
 #include	"ZG_Guid.h"
 
 
-#if  !defined(MAX)
-#define  MAX(a,  b)              ((a)  >  (b)  ?  (a)  :  (b))
-#define  MIN(a,  b)              ((a)  <  (b)  ?  (a)  :  (b))
-#endif
+#define  ZG_MAX(a,  b)              ((a)  >  (b)  ?  (a)  :  (b))
+#define  ZG_MIN(a,  b)              ((a)  <  (b)  ?  (a)  :  (b))
 
 
 typedef  struct{

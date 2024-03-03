@@ -76,8 +76,6 @@ void ZG_DeInit(void){
 	ZG_Graphics_DeInit();
 	//ZG_ECS_DeInit();
 
-	SDL_DestroyResources();
-
 	ZN_DeInit();
 }
 

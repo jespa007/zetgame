@@ -1,4 +1,5 @@
 #include "@zg_graphics.h"
+#include "assets/image/default.png.c"
 
 typedef struct{
 	ZG_MapString 	* 	images;
@@ -12,8 +13,8 @@ static ZG_Image		* 	g_default_image=NULL;
 // STATIC
 
 ZG_Image * 	ZG_ImageManager_GetDefaultImage(void){
-	if(g_default_image==NULL){
-		g_default_image=ZG_Image_NewFromSurface(SDL_GetDefaultImage());
+	if(g_default_image == NULL){
+		g_default_image=ZG_Image_LoadImageFromMemory(default_png,default_png_len,0,0);
 	}
 	return g_default_image;
 }
@@ -92,7 +93,7 @@ ZG_Image * 		ZG_ImageManager_Get(ZG_ImageManager *_this,const char * _filename){
 			return NULL;
 		}
 
-		if((image=ZG_Image_NewFromFile(filename))!=NULL){
+		if((image=ZG_Image_LoadImageFromFile(filename,0,0))!=NULL){
 			ZG_MapString_Set(data->images,id,image);
 		}
 		else{

@@ -128,7 +128,7 @@ void CParticle::startParticle(
 		new_life = fabs(new_life)/(0.25f);
 		new_velocity = 0.0f;
 
-		steps_to_die = MIN(100, steps_to_die);
+		steps_to_die = ZG_MIN(100, steps_to_die);
 	}
 	else {
 

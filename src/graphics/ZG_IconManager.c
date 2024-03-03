@@ -66,10 +66,10 @@ ZG_IconManager * IconManager_LoadFromMemory(
 
 
 
-	SDL_Surface *img=SDL_LoadImageFromMemory(ptr,ptr_len,SDL_LOAD_IMAGE_POWER_OF_2_ORIGINAL_RESOLUTION,0);
+	ZG_Image *img=ZG_Image_LoadImageFromMemory(ptr,ptr_len,ZG_IMAGE_CONVERT_PROPERTY_POWER_OF_2_ORIGINAL_RESOLUTION,0);
 
 	if(img != NULL){
-		icon_manager->texture = ZG_Texture_NewFromSurface(img);
+		icon_manager->texture = ZG_Texture_NewFromImage(img);
 
 		icon_manager->icon_width = icon_width;
 		icon_manager->icon_height = icon_height;
@@ -82,7 +82,7 @@ ZG_IconManager * IconManager_LoadFromMemory(
 
 	if(img != NULL){
 
-		SDL_FreeSurface(img);
+		ZG_Image_Delete(img);
 	}
 
 	return icon_manager;
@@ -147,17 +147,17 @@ Icon ZG_IconManager_GetIcon(ZG_IconManager *_this,uint16_t idx_icon){
 			//return;
 		}*/
 
-		icon.texture_crop.u1 = (idx_icon%_this->icons_per_row)*(_this->icon_width +_this->icon_offset_x);
-		icon.texture_crop.v1 = (idx_icon/_this->icons_per_row)*(_this->icon_height +_this->icon_offset_y);
+		icon.texture_crop.x1 = (idx_icon%_this->icons_per_row)*(_this->icon_width +_this->icon_offset_x);
+		icon.texture_crop.y1 = (idx_icon/_this->icons_per_row)*(_this->icon_height +_this->icon_offset_y);
 
-		icon.texture_crop.u2 = icon.texture_crop.u1 + (_this->icon_width);
-		icon.texture_crop.v2 = icon.texture_crop.v1 + (_this->icon_height);
+		icon.texture_crop.x2 = icon.texture_crop.x1 + (_this->icon_width);
+		icon.texture_crop.y2 = icon.texture_crop.y1 + (_this->icon_height);
 
-		icon.texture_crop.u1 /= (float)_this->texture->width;
-		icon.texture_crop.u2 /= (float)_this->texture->width;
+		icon.texture_crop.x1 /= (float)_this->texture->width;
+		icon.texture_crop.x2 /= (float)_this->texture->width;
 
-		icon.texture_crop.v1 /= (float)_this->texture->height;
-		icon.texture_crop.v2 /= (float)_this->texture->height;
+		icon.texture_crop.y1 /= (float)_this->texture->height;
+		icon.texture_crop.y2 /= (float)_this->texture->height;
 
 
 		icon.texture = _this->texture;

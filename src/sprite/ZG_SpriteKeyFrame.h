@@ -6,8 +6,8 @@
 typedef struct ZG_SpriteKeyFrame ZG_SpriteKeyFrame;
 
 typedef struct {
-	ZG_TextureRect frame;
-	uint32_t	duration;
+	ZG_Rectanglef 	frame;
+	uint32_t		duration;
 }ZG_SpriteKeyFrameInfo;
 
 struct ZG_SpriteKeyFrame{

@@ -130,7 +130,7 @@ bool ZG_AnimationSystem_Init(void){
 
 
 	// check component consistency
-	 min_iter=MIN(g_animation_system_registered_components->count,AC_MAX_COMPONENTS);
+	 min_iter=ZG_MIN(g_animation_system_registered_components->count,AC_MAX_COMPONENTS);
 	for(unsigned i=0; i < min_iter; i++){
 		ZG_AnimationSystemRegisteredComponentData *component=g_animation_system_registered_components->items[i];
 		if(component->id != i){

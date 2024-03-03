@@ -312,7 +312,7 @@ namespace zetgine{
 
 
 			/*SDL_Rect dim={0,0,aux->w,aux->h};
-			SDL_BlitSurface(m_transformed_surface,NULL, aux,&dim);
+			ZG_Image_Blit(aux,&dim,m_transformed_surface,NULL);
 	*/
 			// provisional ...
 			/*m_totalBytesOutFrame = m_width*m_height*m_bytes_per_pixel;
@@ -362,7 +362,7 @@ namespace zetgine{
 		// rotate scale ...
 		//tAnimationFrame ani = m_cachedFrame[index];
 		//ani.img->setDimension(m_width,m_height);
-		//SDL_BlitSurface(m_cachedFrame[index]->getSDLSurface(), NULL,srf_info , NULL);
+		//ZG_Image_Blit(srf_info , NULL,m_cachedFrame[index]->getSDLSurface(), NULL);
 		//uint32_t * dst_pixels = (uint32_t *)work_raw_frame;
 
 		int sWidth = ft->SWidth;

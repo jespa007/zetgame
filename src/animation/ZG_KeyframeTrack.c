@@ -158,8 +158,8 @@ void ZG_KeyframeTrack_AddKeyframesFloat(ZG_KeyframeTrack *_this,const float * _p
 	x_end = _points[(number_keyframes-1)*length_offset+ ZG_I1D_IDX_TIME];
 	x_ini = _points[(0)*length_offset +              ZG_I1D_IDX_TIME];
 
-	_this->minx_interval = MIN(_this->minx_interval, x_ini);
-	_this->maxx_interval = MAX(_this->maxx_interval, x_end);
+	_this->minx_interval = ZG_MIN(_this->minx_interval, x_ini);
+	_this->maxx_interval = ZG_MAX(_this->maxx_interval, x_end);
 
 	_this->rangex_interval = _this->maxx_interval-_this->minx_interval;
 }
@@ -233,8 +233,8 @@ void ZG_KeyframeTrack_AddKeyframesBezier(ZG_KeyframeTrack * _this,ZG_List * _key
 	first_point=_keyframe_points->items[0];
 	last_point=_keyframe_points->items[_keyframe_points->count-1];
 
-	_this->minx_interval = MIN(_this->minx_interval, last_point->point[ZG_I1D_IDX_TIME]);
-	_this->maxx_interval = MAX(_this->maxx_interval, first_point->point[ZG_I1D_IDX_TIME]);
+	_this->minx_interval = ZG_MIN(_this->minx_interval, last_point->point[ZG_I1D_IDX_TIME]);
+	_this->maxx_interval = ZG_MAX(_this->maxx_interval, first_point->point[ZG_I1D_IDX_TIME]);
 
 	_this->rangex_interval = _this->maxx_interval-_this->minx_interval;
 }

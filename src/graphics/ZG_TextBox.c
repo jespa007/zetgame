@@ -236,9 +236,9 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 			}
 
 			word_width=bb_word.maxx-bb_word.minx;
-			bb_render->minx=MIN(bb_render->minx,bb_word.minx);
-			bb_render->miny=MIN(bb_render->miny,bb_word.miny);
-			bb_render->maxy=MAX(bb_render->maxy,y+bb_word.maxy);
+			bb_render->minx=ZG_MIN(bb_render->minx,bb_word.minx);
+			bb_render->miny=ZG_MIN(bb_render->miny,bb_word.miny);
+			bb_render->maxy=ZG_MAX(bb_render->maxy,y+bb_word.maxy);
 
 			if(((tbrt_token_line->total_word_width+word_width+total_space_width)>data->dimensions.x) // if current word width + space width overpasses x bound...
 					&& (tbrt_token_line->total_word_width > 0) // ... and there's some word
@@ -251,10 +251,10 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 						tbrt_token_line->space_width/=(tbrt_token_line->tbrt_tokens->count-1);
 					}
 
-					tbrt_token_line->space_width=MAX(tbrt_token_line->space_width,ZG_TTFont_GetSpaceWidth(data->font)*font_scale);
+					tbrt_token_line->space_width=ZG_MAX(tbrt_token_line->space_width,ZG_TTFont_GetSpaceWidth(data->font)*font_scale);
 
 					// update max x and y intervals
-					bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
+					bb_render->maxx=ZG_MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
 				}
 
 				tbrt_token_line=ZG_TextBox_RT_NewLine(data,font_scale);
@@ -262,8 +262,8 @@ void ZG_TextBox_RT_Build(ZG_TextBox *_this){
 				y+=char_height;
 			}else{
 				// update max x and y intervals
-				//bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
-				bb_render->maxx=MAX(bb_render->maxx,tbrt_token_line->total_word_width+word_width+total_space_width);
+				//bb_render->maxx=ZG_MAX(bb_render->maxx,tbrt_token_line->total_word_width+tbrt_token_line->space_width*(tbrt_token_line->tbrt_tokens->count-1));
+				bb_render->maxx=ZG_MAX(bb_render->maxx,tbrt_token_line->total_word_width+word_width+total_space_width);
 			}
 
 			// add word token...

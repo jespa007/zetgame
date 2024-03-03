@@ -32,8 +32,8 @@ void 	ZG_Action_SetKeyframesTrack(ZG_Action *_this
 	ZG_KeyframeTrack_SetEase(_this->channel_keyframe_tracks[idx_channel],ease);
 	ZG_KeyframeTrack_SetKeyframes(_this->channel_keyframe_tracks[idx_channel],keyframe_points,keyframe_points_count);
 
-	_this->min_time_ms=MIN(_this->min_time_ms,_this->channel_keyframe_tracks[idx_channel]->minx_interval);
-	_this->max_time_ms=MAX(_this->max_time_ms,_this->channel_keyframe_tracks[idx_channel]->maxx_interval);
+	_this->min_time_ms=ZG_MIN(_this->min_time_ms,_this->channel_keyframe_tracks[idx_channel]->minx_interval);
+	_this->max_time_ms=ZG_MAX(_this->max_time_ms,_this->channel_keyframe_tracks[idx_channel]->maxx_interval);
 
 	_this->duration = _this->max_time_ms - _this->min_time_ms;
 

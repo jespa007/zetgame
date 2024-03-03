@@ -28,7 +28,7 @@ void ZG_Sample_AudioCallback(uint8_t *stream, uint_t len){
 			for(j=0; j < ZG_MAX_PLAY_SAMPLES;j++){
 
 				if(eff->current_play[j].is_playing){
-					length = MIN(eff->wav_length - eff->current_play[j].position,len);
+					length = ZG_MIN(eff->wav_length - eff->current_play[j].position,len);
 					SDL_MixAudio(stream, eff->wav_buffer+eff->current_play[j].position, length, SDL_MIX_MAXVOLUME*g_mixer_vars->samples.loaded[i].volume);
 					eff->current_play[j].position+=length;
 
@@ -179,7 +179,7 @@ bool ZG_Sample_SetVolume(ZG_SAMPLE id, float vol){
 	}
 
 	ZG_MixerSound *sp_info = &g_mixer_vars->samples.loaded[id];
-	sp_info->volume = MAX(MIN(vol,1),0);
+	sp_info->volume = ZG_MAX(ZG_MIN(vol,1),0);
 
 	return true;
 }

@@ -30,7 +30,7 @@ void 		ZG_Texture_SetTextureResourcePath(const char *resource_path);
 
 
 ZG_Texture * 	ZG_Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uint8_t _bytes_per_pixel);
-ZG_Texture *	ZG_Texture_NewFromSurface(SDL_Surface *_img);
+ZG_Texture *	ZG_Texture_NewFromImage(ZG_Image *_img);
 ZG_Texture * 	ZG_Texture_NewFromFile(const char *file);
 ZG_Texture * 	ZG_Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len);
 ZG_Texture * 	ZG_Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
@@ -45,7 +45,7 @@ void	 	ZG_Texture_SetRepeatUV(ZG_Texture *_this, bool _repeat_uv);
 void	 	ZG_Texture_SetRepeatUV(ZG_Texture *_this, bool _repeat_uv);
 int		 	ZG_Texture_GetHandle(ZG_Texture *_this);
 bool 	  	ZG_Texture_Update(ZG_Texture * _this, uint16_t _x, uint16_t _y, uint16_t _width, uint16_t _height,void *_pixels, uint8_t _bytes_per_pixel);
-bool	  	ZG_Texture_UpdateFromSurface(ZG_Texture *_this, uint16_t _x, uint16_t _y,SDL_Surface * _srf);
+bool	  	ZG_Texture_UpdateFromImage(ZG_Texture *_this, uint16_t _x, uint16_t _y,ZG_Image * _image);
 void	  	ZG_Texture_Delete(ZG_Texture * _this);
 
 

@@ -32,7 +32,7 @@ typedef enum {
 }DefaultIcon;
 
 typedef struct{
-	ZG_TextureRect   	texture_crop;
+	ZG_Rectanglef   	texture_crop;
 	ZG_Texture  	*	texture;
 }Icon;
 
@@ -42,11 +42,11 @@ struct ZG_IconManager{
 	uint16_t 		n_icons;
 	ZG_Texture *	texture;
 	uint16_t 		icon_width,
-				icon_height,
-				icon_offset_x,
-				icon_offset_y,
-				icon_scanline_width,
-				icons_per_row;
+					icon_height,
+					icon_offset_x,
+					icon_offset_y,
+					icon_scanline_width,
+					icons_per_row;
 };
 
 

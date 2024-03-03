@@ -31,7 +31,7 @@ ZG_BufferByte * ZG_File_Read(const char *filename){
 	return NULL;
 }
 
-bool	File_Write(const char *filename, ZG_BufferByte * buf){
+bool	ZG_File_Write(const char *filename, ZG_BufferByte * buf){
 
 	size_t wrote_elements=0;
 	FILE  *fp;

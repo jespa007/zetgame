@@ -17,14 +17,19 @@ ZG_Texture * ZG_Texture_New(void *_pixels,uint16_t _width, uint16_t _height, uin
 	return text;
 }
 
-ZG_Texture * ZG_Texture_NewFromSurface(SDL_Surface *_image){
-	return ZG_Texture_New(_image->pixels,_image->w, _image->h, _image->format->BytesPerPixel);
+ZG_Texture * ZG_Texture_NewFromImage(ZG_Image *_image){
+	return ZG_Texture_New(
+		ZG_Image_GetPixels(_image)
+		,ZG_Image_GetWidth(_image)
+		,ZG_Image_GetHeight(_image)
+		,ZG_Image_GetBytesPerPixel(_image)
+	);
 }
 
 ZG_Texture * 	ZG_Texture_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color){
-	SDL_Surface *srf=SDL_NewCircle(radius, fill_color, border_width, border_color);
-	ZG_Texture *texture=ZG_Texture_NewFromSurface(srf);
-	SDL_FreeSurface(srf);
+	ZG_Image *img=ZG_Image_NewCircle(radius, fill_color, border_width, border_color);
+	ZG_Texture *texture=ZG_Texture_NewFromImage(img);
+	ZG_Image_Delete(img);
 	return texture;
 }
 
@@ -61,12 +66,12 @@ ZG_Texture * ZG_Texture_NewFromFile(const char *_filename){
 
 ZG_Texture * 	ZG_Texture_NewFromMemory(uint8_t *ptr, size_t ptr_len){
 	ZG_Texture * text=NULL;
-	SDL_Surface * srf=NULL;
+	ZG_Image * img=NULL;
 
-	if((srf=SDL_LoadImageFromMemory(ptr,ptr_len,0,0))!=NULL){
+	if((img=ZG_Image_LoadImageFromMemory(ptr,ptr_len,0,0))!=NULL){
 
-		text=ZG_Texture_NewFromSurface(srf);
-		SDL_FreeSurface(srf);
+		text=ZG_Texture_NewFromImage(img);
+		ZG_Image_Delete(img);
 	}
 
 	return text;
@@ -110,7 +115,15 @@ void		ZG_Texture_SetFilter(ZG_Texture *_this, ZG_TextureFilter _filter){
 	}
 }
 
-bool 	  ZG_Texture_Update(ZG_Texture * _this,uint16_t _x, uint16_t _y,uint16_t _width, uint16_t _height, GLvoid *_pixels, uint8_t _bytes_per_pixel){
+bool 	  ZG_Texture_Update(
+	ZG_Texture * _this
+	,uint16_t _x
+	, uint16_t _y
+	,uint16_t _width
+	, uint16_t _height
+	, GLvoid *_pixels
+	, uint8_t _bytes_per_pixel
+){
 
 	if(_this == NULL) return false;
 
@@ -127,15 +140,23 @@ bool 	  ZG_Texture_Update(ZG_Texture * _this,uint16_t _x, uint16_t _y,uint16_t _
 }
 
 
-bool ZG_Texture_UpdateFromSurface(ZG_Texture *_this, uint16_t _x, uint16_t _y,SDL_Surface *srf){
+bool ZG_Texture_UpdateFromImage(ZG_Texture *_this, uint16_t _x, uint16_t _y,ZG_Image *_image){
 
 	if(_this == NULL) return false;
 
-	if(srf ==NULL) {
+	if(_image ==NULL) {
 		ZG_LOG_WARNINGF("Surface null");
 		return false;
 	}
-	return ZG_Texture_Update(_this,_x,_y,srf->w,srf->h,srf->pixels,srf->format->BytesPerPixel);
+	return ZG_Texture_Update(
+		_this
+		,_x
+		,_y
+		,ZG_Image_GetWidth(_image)
+		,ZG_Image_GetHeight(_image)
+		,ZG_Image_GetPixels(_image)
+		,ZG_Image_GetBytesPerPixel(_image)
+	);
 }
 
 void ZG_Texture_Delete(ZG_Texture *_this){

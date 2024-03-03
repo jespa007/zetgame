@@ -131,8 +131,8 @@ void TTFont_BuildChars(
     	ZG_TTFontCharacter *font_character=ZG_TTFont_BuildChar(_this,c);
     	ZG_MapInt_Set(data->characters,c,font_character);
 
-    	min_height_char=MIN(min_height_char,-font_character->bearing.y);
-		max_height_char=MAX(max_height_char,font_character->size.y-font_character->bearing.y);
+    	min_height_char=ZG_MIN(min_height_char,-font_character->bearing.y);
+		max_height_char=ZG_MAX(max_height_char,font_character->size.y-font_character->bearing.y);
     }
 
     data->char_height=max_height_char-min_height_char;
@@ -335,9 +335,9 @@ ZG_BoundingBox TTFont_GetBoundingBoxInternal(ZG_TTFont *_this, const void *_text
 		if(x==0){
 			bb.minx=ch->bearing.x;
 		}
-		bb.miny=MIN(bb.miny,-ch->bearing.y);
-		bb.maxx=MAX(bb.maxx,x+ch->bearing.x+ch->size.x);
-		bb.maxy=MAX(bb.maxy,ch->size.y-ch->bearing.y);
+		bb.miny=ZG_MIN(bb.miny,-ch->bearing.y);
+		bb.maxx=ZG_MAX(bb.maxx,x+ch->bearing.x+ch->size.x);
+		bb.maxy=ZG_MAX(bb.maxy,ch->size.y-ch->bearing.y);
 
 		x+=ch->advance_x >> 6;
 		n++;

@@ -586,34 +586,34 @@ void ZG_Graphics_EndRender(void)
 
 	if(g_graphics_vars->screenshoot_request || g_graphics_vars->capture_screen_callbacks->count > 0) {
 
-		SDL_Surface *srf_screen_shoot=NULL;
+		ZG_Image *screen_shoot=NULL;
 		switch(g_graphics_vars->graphics_api){
 			case ZG_GRAPHICS_API_GL:
-				srf_screen_shoot=ZG_Graphics_GL_ScreenShoot();
+				screen_shoot=ZG_Graphics_GL_ScreenShoot();
 				break;
 
 		}
 
-		if(srf_screen_shoot != NULL){
+		if(screen_shoot != NULL){
 
 			if(g_graphics_vars->screenshoot_request){
 				char buffer[100];
 				sprintf(buffer,"screenshoot_%03i.png",g_graphics_vars->n_screenshoot++);
-				SDL_SavePNG(buffer,srf_screen_shoot);
+				ZG_Image_SavePNG(screen_shoot,buffer);
 				g_graphics_vars->screenshoot_request = false;
 			}
 			else {
 				for(unsigned i=0; i < g_graphics_vars->capture_screen_callbacks->count; i++){
 					ZG_Callback *c=g_graphics_vars->capture_screen_callbacks->items[i];
 					if(c->ptr_function){
-						c->ptr_function(srf_screen_shoot,NULL);
+						c->ptr_function(screen_shoot,NULL);
 					}
 				}
 
 				ZG_List_ClearAndFreeAllItems(g_graphics_vars->capture_screen_callbacks);
 			}
 
-			SDL_FreeSurface(srf_screen_shoot);
+			ZG_Image_Delete(screen_shoot);
 		}
 	}
 }
@@ -709,7 +709,7 @@ void ZG_Graphics_DrawFilledRectangle4f(float _center_x, float _center_y, float _
 	ZG_Transform_Restore(&t);
 }
 
-void ZG_Graphics_DrawTexturedRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_TextureRect * text_crop){
+void ZG_Graphics_DrawTexturedRectangle4i(int _center_x, int _center_y, uint16_t _width, uint16_t _height, ZG_Color4f _color, ZG_Texture *text, ZG_Rectanglef * text_crop){
 
 	ZG_Vector3f translate=ZG_ViewPort_ScreenToWorld(_center_x,_center_y);
 	ZG_Vector3f scale=ZG_ViewPort_ScreenToWorldDimension2i(_width,_height);
@@ -717,7 +717,7 @@ void ZG_Graphics_DrawTexturedRectangle4i(int _center_x, int _center_y, uint16_t 
 	ZG_Graphics_DrawTexturedRectangle4f(translate.x,translate.y,scale.x,scale.y,_color,text,text_crop);
 }
 
-void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y,  ZG_Color4f _color,ZG_Texture *_texture, ZG_TextureRect * _text_crop){
+void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float _scale_x, float _scale_y,  ZG_Color4f _color,ZG_Texture *_texture, ZG_Rectanglef * _text_crop){
 	ZG_Transform t=ZG_Transform_New();
 
 	t.translate.x=_center_x;
@@ -747,10 +747,10 @@ void ZG_Graphics_DrawTexturedRectangle4f(float _center_x, float _center_y, float
 		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));
 	}else{
 		float mesh_texture[]={
-			_text_crop->u1, _text_crop->v2, // bottom left
-			_text_crop->u2, _text_crop->v2, // bottom right
-			_text_crop->u1, _text_crop->v1, // top left
-			_text_crop->u2, _text_crop->v1  // top right
+			_text_crop->x1, _text_crop->y2, // bottom left
+			_text_crop->x2, _text_crop->y2, // bottom right
+			_text_crop->x1, _text_crop->y1, // top left
+			_text_crop->x2, _text_crop->y1  // top right
 		};
 
 		ZG_Geometry_SetMeshTexture(g_graphics_vars->default_geometry_textured_rectangle2d,mesh_texture,ZG_ARRAY_SIZE(mesh_texture));

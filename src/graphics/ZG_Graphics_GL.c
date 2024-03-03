@@ -202,14 +202,18 @@ void ZG_Graphics_GL_EndRender(void) {
 #endif
 }
 
-SDL_Surface * ZG_Graphics_GL_ScreenShoot(void){
+ZG_Image * ZG_Graphics_GL_ScreenShoot(void){
 
 	ZG_ViewPort *view_port=ZG_ViewPort_GetCurrent();
-	SDL_Surface * srf_screenshoot = SDL_CreateRGBSurface(SDL_SWSURFACE, view_port->width, view_port->height, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
+	ZG_Image * screen_shoot = ZG_Image_New(
+		view_port->width
+		,view_port->height
+		,4
+	);//SDL_CreateRGBSurface(SDL_SWSURFACE, view_port->width, view_port->height, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
-	glReadPixels(0, 0, view_port->width, view_port->height, GL_RGB, GL_UNSIGNED_BYTE, srf_screenshoot->pixels);
+	glReadPixels(0, 0, view_port->width, view_port->height, GL_RGB, GL_UNSIGNED_BYTE, ZG_Image_GetPixels(screen_shoot));
 
-	return srf_screenshoot;
+	return screen_shoot;
 
 }
 

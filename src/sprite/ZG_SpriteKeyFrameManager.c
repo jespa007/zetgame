@@ -174,16 +174,16 @@ bool ZG_SpriteKeyFrameManager_LoadFromMemory(
 
 					if(frame_property && duration_property){
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"x"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.u1=frame_element_property->valuedouble*one_over_texture_width;
+							skp->sprite_keyframes[i].frames[nframe].frame.x1=frame_element_property->valuedouble*one_over_texture_width;
 						}
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"y"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.v1=frame_element_property->valuedouble*one_over_texture_height;
+							skp->sprite_keyframes[i].frames[nframe].frame.y1=frame_element_property->valuedouble*one_over_texture_height;
 						}
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"w"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.u2=skp->sprite_keyframes[i].frames[nframe].frame.u1+frame_element_property->valuedouble*one_over_texture_width;
+							skp->sprite_keyframes[i].frames[nframe].frame.x2=skp->sprite_keyframes[i].frames[nframe].frame.x1+frame_element_property->valuedouble*one_over_texture_width;
 						}
 						if((frame_element_property=cJSON_GetObjectItem(frame_property,"h"))!=NULL){
-							skp->sprite_keyframes[i].frames[nframe].frame.v2=skp->sprite_keyframes[i].frames[nframe].frame.v1+frame_element_property->valuedouble*one_over_texture_height;
+							skp->sprite_keyframes[i].frames[nframe].frame.y2=skp->sprite_keyframes[i].frames[nframe].frame.y1+frame_element_property->valuedouble*one_over_texture_height;
 						}
 
 						skp->sprite_keyframes[i].frames[nframe].duration=duration_property->valueint;

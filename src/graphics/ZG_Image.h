@@ -12,7 +12,6 @@ struct ZG_Image{
 
 //-------
 // STATIC
-ZG_Image 	* 	ZG_Image_GetDefaultImage(void);
 
 ZG_Image	* 	ZG_Image_Convert(
 	ZG_Image *_src_image
@@ -20,8 +19,18 @@ ZG_Image	* 	ZG_Image_Convert(
 	, uint8_t _dst_bytes_per_pixel
 );
 
-ZG_Image 	*	ZG_Image_LoadFromFile(const char *_file);
-ZG_Image 	*	ZG_Image_LoadFromMemory(uint8_t *_ptr, size_t _ptr_len);
+ZG_Image 	*	ZG_Image_LoadImageFromFile(
+	const char *_file
+	, uint32_t _dst_convert_properties
+	, uint8_t _dst_bytes_per_pixel
+
+);
+ZG_Image 	*	ZG_Image_LoadImageFromMemory(
+	const uint8_t *_ptr
+	, size_t _ptr_len
+	, uint32_t _dst_convert_properties
+	, uint8_t _dst_bytes_per_pixel
+);
 
 //
 // Create from image formats from file or memory
@@ -55,19 +64,15 @@ uint8_t 		ZG_Image_GetBitsPerPixel(ZG_Image *_this);
 // Image management
 
 void 			ZG_Image_SetPixel(ZG_Image *surface, int x, int y, uint32_t pixel);
-ZG_Image 	* 	ZG_Image_NewImage(uint16_t w, uint16_t h, uint8_t bytes_per_pixel);
+ZG_Image 	* 	ZG_Image_NewImage(uint16_t _width, uint16_t _height, uint8_t bytes_per_pixel);
 ZG_Image 	* 	ZG_Image_NewCircle(uint16_t radius, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 ZG_Image 	* 	ZG_Image_NewCross(uint16_t dimension, uint32_t fill_color, uint16_t border_width);
 ZG_Image 	* 	ZG_Image_NewRectangle(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 ZG_Image 	* 	ZG_Image_NewTriangle(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
 ZG_Image 	* 	ZG_Image_NewArrow(uint16_t dimension, uint32_t fill_color, uint16_t border_width, uint32_t border_color);
+void 			ZG_Image_Blit(ZG_Image * _dst_image,ZG_Rectanglei *_dst_rect,ZG_Image * _src_image,ZG_Rectanglei *_src_rect);
 
-
-
-ZG_Image	* 	ZG_Image_NewImageFromFile(const char * _filename);//	, uint32_t properties, uint8_t convert_to_bytes_per_pixel);
-ZG_Image	*	ZG_Image_NewImageFromMemory(const uint8_t * _ptr, size_t _length);//, uint32_t properties_format, uint8_t convert_to_bytes_per_pixel);
-
-ZG_Image 	*	ZG_Image_Crop(ZG_Image *_src,ZG_Rectangle _rect);
+ZG_Image 	*	ZG_Image_Crop(ZG_Image *_src,ZG_Rectanglei _rect);
 
 bool 		 	ZG_Image_SavePNG(ZG_Image 	* _this, const char * _filename );
 bool			ZG_Image_SaveJPG(ZG_Image 	* _this, const char * _filename);

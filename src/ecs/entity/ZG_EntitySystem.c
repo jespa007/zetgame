@@ -153,7 +153,7 @@ bool ZG_EntitySystem_Init(void){
 
 
 	// check component consistency
-	 min_iter=MIN(g_entity_manager_registered_components->count,EC_MAX_COMPONENTS);
+	 min_iter=ZG_MIN(g_entity_manager_registered_components->count,EC_MAX_COMPONENTS);
 	for(unsigned i=0; i < min_iter; i++){
 		ZG_EntitySystemRegisteredComponentData *component=g_entity_manager_registered_components->items[i];
 		if(component->id != i){

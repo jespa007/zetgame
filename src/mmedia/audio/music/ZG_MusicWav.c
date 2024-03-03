@@ -88,7 +88,7 @@ void ZG_MusicWav_Update(ZG_MixerSound *sp_info){
 		sp_info->request_seek=-1;
 	}
 
-	len_play = MIN(s_wave->wav_length-sp_info->position_play,g_mixer_vars->frame_size);
+	len_play = ZG_MIN(s_wave->wav_length-sp_info->position_play,g_mixer_vars->frame_size);
 
 	memcpy(wave_buffer->block_ptr[n_current_block],s_wave->wav_buffer+sp_info->position_play, len_play);
 

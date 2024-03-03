@@ -12,7 +12,7 @@ static ZG_Texture		* 	g_default_texture=NULL;
 
 ZG_Texture * 	ZG_TextureManager_GetDefaultTexture(void){
 	if(g_default_texture==NULL){
-		g_default_texture=ZG_Texture_NewFromSurface(SDL_GetDefaultImage());
+		g_default_texture=ZG_Texture_NewFromImage(ZG_ImageManager_GetDefaultImage());
 	}
 	return g_default_texture;
 }

@@ -270,7 +270,7 @@ bool ZG_Music_SetVolume(ZG_MUSIC id, float vol){
 		return false;
 	}
 	ZG_MixerSound *sp_info = &g_mixer_vars->musics.loaded[id];
-	sp_info->volume = MAX(MIN(vol,1),0);
+	sp_info->volume = ZG_MAX(ZG_MIN(vol,1),0);
 
 	return true;
 }
