@@ -216,6 +216,9 @@ ZG_Image *ZG_Image_New(
 	uint8_t bytes_per_pixel=_bytes_per_pixel;
 	data->pixels = (uint8_t *)malloc(_width*_height*_bytes_per_pixel);
 	data->bits_per_pixel=bytes_per_pixel*8;
+	data->bytes_per_pixel=bytes_per_pixel;
+	data->width=_width;
+	data->height=_height;
 	img->data=data;
 
 	return img;
@@ -619,6 +622,8 @@ ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_convert_properti
 
 		_src_image = new_image;
 		allocated_image = new_image;
+	}else{
+		_dst_bytes_per_pixel=ZG_Graphics_GetBytesPerPixel();
 	}
 
 	uint16_t dest_width = data->width;
