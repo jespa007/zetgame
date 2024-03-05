@@ -399,6 +399,13 @@ add_executable(test_scenegraph3d${POST_NAME}
 
 target_link_libraries(test_scenegraph3d${POST_NAME}   ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
+#--- TILEMAP
+add_executable(test_tilemap${POST_NAME} 
+	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
+)
+
+target_link_libraries(test_tilemap${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
+
 if(false)
 
 add_executable(test_mixer${POST_NAME} 
@@ -434,12 +441,6 @@ add_executable(test_sprite${POST_NAME}
 
 target_link_libraries(test_sprite${POST_NAME}    	 ${ZETGAME_LIB_NAME}${POST_NAME} ${LIB_DEPS})
 
-#--- TILEMAP
-add_executable(test_tilemap${POST_NAME} 
-	${PROJECT_SOURCE_DIR}/../test/test_tilemap.c
-)
-
-target_link_libraries(test_tilemap${POST_NAME}     ${ZETGAME_LIB_NAME}${POST_NAME} 	${LIB_DEPS} )
 
 #--- SHADER
 add_executable(test_shader${POST_NAME} 

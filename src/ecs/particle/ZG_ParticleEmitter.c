@@ -441,8 +441,8 @@ void CParticleEmitter::updateAndDraw(){
 
 			if((generate_particles != 0.0) &&
 				n_particles_can_start > 0 &&
-				timer_waitNextParticle<SDL_GetTicks() &&
-				timer_createNewParticle<SDL_GetTicks()) {//(millis_start-millis_end) >  this.WAIT_TIME_MILLIS_TO_OUT_ANOTHER_PARTICLE)
+				timer_waitNextParticle<ZG_System_GetTicks() &&
+				timer_createNewParticle<ZG_System_GetTicks()) {//(millis_start-millis_end) >  this.WAIT_TIME_MILLIS_TO_OUT_ANOTHER_PARTICLE)
 
 				new_life     		=  (float)(system_particle->BASE_LIFE                           *(PERCENT_LIFE_PARTICLES        + (unifRand()*PERCENT_LIFE_VARIATION-PERCENT_LIFE_VARIATION*0.5f)));
 				new_size     		=  (float)(system_particle->BASE_SIZE*system_particle->BASE_ZOOM*(PERCENT_SIZE_PARTICLES        + unifRand()*PERCENT_SIZE_VARIATION -PERCENT_SIZE_VARIATION*0.5f));
@@ -499,8 +499,8 @@ void CParticleEmitter::updateAndDraw(){
 						0.033f
 					); // update at 1/30FPS = 0.33
 
-				timer_waitNextParticle=SDL_GetTicks()+WAIT_TIME_MILLIS_TO_OUT_ANOTHER_PARTICLE;
-				timer_createNewParticle=SDL_GetTicks()+WAIT_TIME_MILLIS_TO_CREATE_NEW_PARTICLE;
+				timer_waitNextParticle=ZG_System_GetTicks()+WAIT_TIME_MILLIS_TO_OUT_ANOTHER_PARTICLE;
+				timer_createNewParticle=ZG_System_GetTicks()+WAIT_TIME_MILLIS_TO_CREATE_NEW_PARTICLE;
 
 				n_particles_can_start--;
 				started_some_particle= true;

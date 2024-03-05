@@ -93,9 +93,9 @@ void particles_update(){
 
 	//currentRot += 0.2;
 
-	float r = sin(SDL_GetTicks()*0.001f)*0.5f+0.5f;// * 0.5f + 0.5f;
-	float g = cos(SDL_GetTicks()*0.001f) * 0.5f + 0.5f;
-	float b = sin(SDL_GetTicks()*0.001f) * 0.5f + 0.5f;
+	float r = sin(ZG_System_GetTicks()*0.001f)*0.5f+0.5f;// * 0.5f + 0.5f;
+	float g = cos(ZG_System_GetTicks()*0.001f) * 0.5f + 0.5f;
+	float b = sin(ZG_System_GetTicks()*0.001f) * 0.5f + 0.5f;
 	float incv=1.0f/(float)MAX_PARTICLES;
 	float dvdf=0;
 	for(int i=0; i<MAX_PARTICLES; i++) {

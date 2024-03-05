@@ -176,12 +176,12 @@ void ZG_Graphics_GL_ClearScreen(ZG_Color4f color) { // start render and clear ba
 void ZG_Graphics_GL_StartRender(void) { // start render and clear background...
 	glClearColor(g_graphics_vars->background_color.r,g_graphics_vars->background_color.g,g_graphics_vars->background_color.b,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	start_ticks=SDL_GetTicks();
+	start_ticks=ZG_System_GetTicks();
 
 }
 
 void ZG_Graphics_GL_EndRender(void) {
-	float diff = (float)(SDL_GetTicks()-start_ticks);
+	float diff = (float)(ZG_System_GetTicks()-start_ticks);
 	int to_16 = (16-diff);
 
 	/*if(diff == 0)

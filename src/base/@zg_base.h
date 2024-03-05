@@ -20,6 +20,7 @@
 	#include	<conio.h>
 	#include	<tchar.h>
 	#include 	<Rpc.h>
+	#include 	<sys\timeb.h>
 #endif
 
 #if defined(__GNUC__) // linux or mingw
@@ -114,6 +115,7 @@
 #include	"ZG_FileSystem.h"
 #include	"ZG_Bit.h"
 #include	"ZG_Guid.h"
+#include	"ZG_System.h"
 
 
 #define  ZG_MAX(a,  b)              ((a)  >  (b)  ?  (a)  :  (b))

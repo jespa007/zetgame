@@ -198,7 +198,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 			cJSON *tilesets_tile_animation_duration=NULL;
 
 			// load image ...
-			SDL_Surface *image=SDL_LoadImageFromFile(filename,0,0);
+			ZG_Image *image=ZG_Image_LoadImageFromFile(filename,0,0);
 
 			if(image == NULL){
 				goto tmm_load_error;
@@ -231,7 +231,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 				ZG_TileAnimation *tile_animation=ZG_NEW(ZG_TileAnimation);
 				ZG_List_Add(tm_tilesets->animations,tile_animation);
 
-				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*image->w;
+				int v1=tm_tilesets->tile_margin+(tileid->valueint/(tilemap_width->valueint))*ZG_Image_GetWidth(image);
 				int u1=tm_tilesets->tile_margin+(tileid->valueint%(tilemap_width->valueint))*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
 
 				tile_animation->u1=u1;
@@ -262,11 +262,14 @@ bool ZG_TilemapManager_LoadFromMemory(
 
 							// get offset uv
 							u1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id%(tilemap_width->valueint))*(tm_tilesets->tile_width+tm_tilesets->tile_spacing);
-							v1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id/(tilemap_width->valueint))*image->w;
+							v1=tm_tilesets->tile_margin+(tileset_animation_frame->tile_id/(tilemap_width->valueint))*ZG_Image_GetWidth(image);
 
 
 							ZG_TileImage *tile_image=ZG_NEW(ZG_TileImage);
-							tile_image->image=SDL_Crop(image,(SDL_Rect){u1,v1,tm_tilesets->tile_width,tm_tilesets->tile_height});
+							tile_image->image=ZG_Image_Crop(
+									image
+									,(ZG_Rectanglei){u1,v1,u1+tm_tilesets->tile_width,v1+tm_tilesets->tile_height}
+							);
 
 							tm_tilesets->tile_images[tileset_animation_frame->tile_id]=tile_image;
 
@@ -279,7 +282,7 @@ bool ZG_TilemapManager_LoadFromMemory(
 				}
 			}
 
-			SDL_FreeSurface(image);
+			ZG_Image_Delete(image);
 		}
 
 		// load texture...

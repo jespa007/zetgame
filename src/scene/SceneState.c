@@ -29,7 +29,7 @@ SceneState *SceneState_New(
 
 void SceneState_Start(SceneState *_this){
 	SceneStateData *data = _this->data;
-	data->start_time=SDL_GetTicks();
+	data->start_time=ZG_System_GetTicks();
 	_this->current_time=0;
 	if(data->on_start.ptr_function != NULL){
 		data->on_start.ptr_function(_this,data->on_start.user_data);
@@ -39,7 +39,7 @@ void SceneState_Start(SceneState *_this){
 
 void SceneState_Update(SceneState *_this){
 	SceneStateData *data = _this->data;
-	_this->current_time=SDL_GetTicks()-data->start_time;
+	_this->current_time=ZG_System_GetTicks()-data->start_time;
 	if(data->on_update.ptr_function != NULL){
 		data->on_update.ptr_function(_this,data->on_update.user_data);
 	}

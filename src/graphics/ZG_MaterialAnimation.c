@@ -18,7 +18,7 @@ ZG_MaterialAnimation *ZG_MaterialAnimation_New(void){
 
 void ZG_MaterialAnimation_Update(ZG_MaterialAnimation *_this, ZG_Material *_material){
 	ZG_MaterialAnimationData *data=_this->data;
-	ZG_Animation_Update(data->animation,SDL_GetTicks());
+	ZG_Animation_Update(data->animation,ZG_System_GetTicks());
 	ZG_Animation_CopyChannelValues(data->animation,&_material->color.r);
 
 }
@@ -33,7 +33,7 @@ void					ZG_MaterialAnimation_StartAction(
 	ZG_Animation_StartAction(
 			data->animation
 			,ZG_MaterialAction_GetAction(_action)
-			,SDL_GetTicks()
+			,ZG_System_GetTicks()
 			,_repeat
 	);
 }
@@ -50,7 +50,7 @@ void ZG_MaterialAnimation_StartTween(
 	ZG_MaterialAnimationData *data=_this->data;
 	ZG_Animation_StartTween(
 		data->animation
-		, SDL_GetTicks()
+		, ZG_System_GetTicks()
 		, _material_component
 		, _ease
 		, _from

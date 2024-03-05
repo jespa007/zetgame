@@ -49,7 +49,7 @@ void InfoAniAction_Delete(InfoAction *info_ani){
 
 uint32_t ZG_Animation_GetDefaultStartTimeTriggerAction(void *user_data){
 	ZG_UNUSUED_PARAM(user_data);
-	return SDL_GetTicks();
+	return ZG_System_GetTicks();
 }
 
 

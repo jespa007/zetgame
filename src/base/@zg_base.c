@@ -29,3 +29,4 @@
 #include "ZG_Guid.c"
 #include "ZG_String.c"
 #include "ZG_Memory.c"
+#include "ZG_System.c"

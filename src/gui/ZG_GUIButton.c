@@ -121,9 +121,9 @@ void ZG_GUIButton_PostUpdate(void *gui_button){
 	if(data->auto_click_on_over.total_time > 0){
 		if(data->mouse_collide){
 			if(data->auto_click_on_over.total_time == 0){ // not started
-				data->auto_click_on_over.total_time=data->auto_click_on_over.relative_time+SDL_GetTicks();
+				data->auto_click_on_over.total_time=data->auto_click_on_over.relative_time+ZG_System_GetTicks();
 			}else{ // started! check elapsed time...
-				if(data->auto_click_on_over.total_time < SDL_GetTicks()){ // -> do auto click
+				if(data->auto_click_on_over.total_time < ZG_System_GetTicks()){ // -> do auto click
 					ZG_GUIButton_Reset(_this);
 					auto_click_on_over=true;
 				}
@@ -178,7 +178,7 @@ static void  ZG_GUIButton_Draw(void *gui_button){
 
 	if(data->mouse_collide){
 		if(data->auto_click_on_over.total_time>0){ // auto click enabled ?
-			float v=(((float)(SDL_GetTicks()-data->auto_click_on_over.total_time))/data->auto_click_on_over.relative_time);
+			float v=(((float)(ZG_System_GetTicks()-data->auto_click_on_over.total_time))/data->auto_click_on_over.relative_time);
 			if(v < 0) v=0;
 			if(v > 1) v=1;
 

@@ -28,7 +28,7 @@ void			ZG_ACTransformAnimation_StartAction(ZG_AComponentHeader *_this, ZG_Transf
 	ZG_ACTransformAnimationData *data=ac_transform_animation->data;
 
 	// own custom time
-	uint32_t _start_time=SDL_GetTicks();
+	uint32_t _start_time=ZG_System_GetTicks();
 
 	TransformAnimation_StartAction(
 			data->ani_transform
@@ -50,7 +50,7 @@ void ZG_ACTransformAnimation_StartTween(
 	ZG_ACTransformAnimationData *ac_transform_animation_data=ac_transform_animation->data;
 
 	// define custom time
-	uint32_t _start_time=SDL_GetTicks();
+	uint32_t _start_time=ZG_System_GetTicks();
 
 	TransformAnimation_StartTween(
 		  ac_transform_animation_data->ani_transform

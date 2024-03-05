@@ -160,13 +160,13 @@ void ZG_Tilemap_Update(ZG_Tilemap *_this){
 
 				ZG_TileAnimation *tile_animation=data->tilesets->animations->items[j];
 
-				if(tile_animation->time_change_frame < SDL_GetTicks()){ // change frame
+				if(tile_animation->time_change_frame < ZG_System_GetTicks()){ // change frame
 					tile_animation->current_frame=(tile_animation->current_frame+1)%tile_animation->frames->count;
 					ZG_TileAnimationFrame *frame=tile_animation->frames->items[tile_animation->current_frame];
 
-					tile_animation->time_change_frame=SDL_GetTicks()+frame->duration;
+					tile_animation->time_change_frame=ZG_System_GetTicks()+frame->duration;
 					ZG_TileImage *tile_image=data->tilesets->tile_images[frame->tile_id];
-					ZG_Texture_UpdateFromSurface(data->texture,tile_animation->u1,tile_animation->v1,tile_image->image);
+					ZG_Texture_UpdateFromImage(data->texture,tile_animation->u1,tile_animation->v1,tile_image->image);
 
 				}
 			}
@@ -203,7 +203,7 @@ void ZG_Tilemap_Delete(ZG_Tilemap *_this){
 		for(int j=0; j < data->tilesets->tile_count; j++){
 			ZG_TileImage *tile_image=data->tilesets->tile_images[j];
 			if(tile_image != NULL){
-				SDL_FreeSurface(tile_image->image);
+				ZG_Image_Delete(tile_image->image);
 				ZG_FREE(tile_image);
 			}
 

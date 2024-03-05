@@ -21,7 +21,7 @@ typedef struct{
 }ZG_TileAnimation;
 
 typedef struct{
-	SDL_Surface *image;
+	ZG_Image *image;
 }ZG_TileImage;
 
 typedef struct{

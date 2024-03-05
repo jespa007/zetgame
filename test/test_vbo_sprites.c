@@ -121,9 +121,9 @@ void particles_update(){
 
 	currentRot += 0.2;
 
-	/*float r = sin(SDL_GetTicks()*0.5f) * 0.5f + 0.5f;
-	float g = cos(SDL_GetTicks()*0.5f) * 0.5f + 0.5f;
-	float b = sin(SDL_GetTicks()*0.5f) * 0.5f + 0.5f;
+	/*float r = sin(ZG_System_GetTicks()*0.5f) * 0.5f + 0.5f;
+	float g = cos(ZG_System_GetTicks()*0.5f) * 0.5f + 0.5f;
+	float b = sin(ZG_System_GetTicks()*0.5f) * 0.5f + 0.5f;
 	for(int i=0; i<numParticles; i++) {
 		pos[i].pos[0] += vel[i][0];
 		pos[i].pos[1] += vel[i][1];

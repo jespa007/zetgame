@@ -28,11 +28,11 @@ int main(int argc, char *argv[]){
 
 		if(skf_current != NULL){
 
-			if(SDL_GetTicks()>next_time){
+			if(ZG_System_GetTicks()>next_time){
 
 				idx_frame=(idx_frame+1)%skf_current->frames_len;
 
-				next_time=SDL_GetTicks()+skf_current->frames[idx_frame].duration;
+				next_time=ZG_System_GetTicks()+skf_current->frames[idx_frame].duration;
 
 			}
 

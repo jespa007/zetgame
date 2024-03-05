@@ -240,7 +240,7 @@ void Scene_SetBackgroundColor3i(Scene *_this,uint8_t r,uint8_t g,uint8_t b){
 
 void Scene_Start(Scene *_this){
 	SceneData *data = _this->data;
-	data->start_time = SDL_GetTicks();
+	data->start_time = ZG_System_GetTicks();
 
 
 /*
@@ -286,7 +286,7 @@ void Scene_Update(Scene *_this){
 
 	//SGRender_Begin(_this->sg_render,NULL);
 
-	_this->current_time = SDL_GetTicks() - data->start_time;
+	_this->current_time = ZG_System_GetTicks() - data->start_time;
 
 	for(unsigned i=0; i < data->animations->count;i++){
 		Animation_Update(data->animations->items[i],_this->current_time);
