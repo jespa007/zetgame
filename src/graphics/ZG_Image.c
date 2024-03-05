@@ -219,6 +219,7 @@ ZG_Image *ZG_Image_New(
 	data->bytes_per_pixel=bytes_per_pixel;
 	data->width=_width;
 	data->height=_height;
+	data->pitch=_width*bytes_per_pixel;
 	img->data=data;
 
 	return img;
@@ -452,15 +453,11 @@ void ZG_Image_Blit(
 	ZG_ImageData *dst_data=_dst_image->data;
 	ZG_Rectanglei src_rect,dst_rect;
 
-	// operation step by step
 	// 1. set start pixel offset for each src/dst
-	//uint16_t src_offset=0;
-	//uint16_t dst_offset=0;
 	float src_scale_x=1;
 	float src_scale_y=1;
 	float dst_scale_x=1;
 	float dst_scale_y=1;
-
 
 
 	if(_src_rect != NULL){
@@ -485,18 +482,18 @@ void ZG_Image_Blit(
 		};
 	}
 
-	// Correct rectangle dst/src in case goes out of bounds
+	// 2. Correct rectangle dst/src in case goes out of bounds
 	dst_rect.x1=ZG_MAX(dst_rect.x1,0);
 	dst_rect.y1=ZG_MAX(dst_rect.y1,0);
 	dst_rect.x2=ZG_MIN(dst_rect.x2,dst_rect.x1+dst_data->width);
-	dst_rect.x2=ZG_MIN(dst_rect.y2,dst_rect.y1+dst_data->height);
+	dst_rect.y2=ZG_MIN(dst_rect.y2,dst_rect.y1+dst_data->height);
 
 	src_rect.x1=ZG_MAX(src_rect.x1,0);
 	src_rect.y1=ZG_MAX(src_rect.y1,0);
 	src_rect.x2=ZG_MIN(src_rect.x2,src_rect.x1+src_data->width);
-	src_rect.x2=ZG_MIN(src_rect.y2,src_rect.y1+src_data->height);
+	src_rect.y2=ZG_MIN(src_rect.y2,src_rect.y1+src_data->height);
 
-	// Calcule dimensions and scales
+	// 3. Calcule dimensions and scales
 	float dst_width=dst_rect.x2-dst_rect.x1;
 	float dst_height=dst_rect.y2-dst_rect.y1;
 
@@ -506,7 +503,7 @@ void ZG_Image_Blit(
 	float dst_width_scaled=dst_width;
 	float src_width_scaled=src_width;
 
-	// destination will be scaled
+	// 4. Scale destination if src dimensions != dst dimensions
 	if(src_width != dst_width || dst_height != src_height){
 		float scale_x=dst_width/src_width;
 		float scale_y=dst_height/src_height;
@@ -517,8 +514,6 @@ void ZG_Image_Blit(
 			dst_scale_x=scale_x;
 			dst_width_scaled*=scale_x;
 			src_scale_x=1;
-
-
 		}else{
 			// down scale (writes 1 pixel and reads n pixels)
 			dst_scale_x=1;
@@ -540,24 +535,30 @@ void ZG_Image_Blit(
 		}
 	}
 
-	// setup src/dest pixels
+	// 5. Setup src/dest pixels
 	uint8_t *dst_pixels=dst_data->pixels+dst_rect.y1*dst_data->pitch+dst_rect.x1*dst_data->bytes_per_pixel;
 	uint8_t *src_pixels=src_data->pixels+src_rect.y1*src_data->pitch+src_rect.x1*src_data->bytes_per_pixel;
 	float dst_y=0;
 	int dst_previous_row_y=0;
 
-
+	// Fill pixels
 	for(float src_y=src_rect.y1; src_y < src_rect.y2;src_y+=src_scale_y){
+
+		if(src_y == 256){
+			int k=0;
+			k++;
+		}
+
 		uint8_t *dst_row_pixels=dst_pixels;
 		uint8_t *src_row_pixels=src_pixels;
 		// copy scanlines
 		// do repeat of dst is upscaled
-		int dst_next_row_y=(dst_y+dst_scale_y)-dst_previous_row_y;
+		int dst_next_row_y=(dst_y+dst_scale_y);//-dst_previous_row_y;
 		int repeats=dst_next_row_y-dst_previous_row_y;
 		while(repeats--){
-			float dst_x=0;
+			float dst_x=dst_rect.x1;
 			for(float src_x=src_rect.x1; src_x < src_rect.x2;src_x+=src_scale_x){
-				// Because we support at least 24bpp and RGBA,copy RGB
+				// Because we support at least 24bpp and RGBA,copy first 3 bytes (i.e RGB)
 				uint8_t *src_pixel=src_row_pixels+((int)src_x)*src_data->bytes_per_pixel;
 				uint8_t *dst_pixel=dst_row_pixels+((int)dst_x)*dst_data->bytes_per_pixel;
 				memcpy(dst_pixel,src_pixel,3);
@@ -573,7 +574,7 @@ void ZG_Image_Blit(
 				dst_x+=dst_scale_x;
 			}
 
-			// new row
+			// new dst row
 			dst_pixels+=(int)(dst_width_scaled)*dst_data->bytes_per_pixel;
 			dst_y+=dst_scale_y;
 		}
@@ -581,14 +582,8 @@ void ZG_Image_Blit(
 		dst_previous_row_y=dst_next_row_y;
 
 		src_pixels+=(int)(src_width_scaled)*src_data->bytes_per_pixel;
-
 	}
-
-	// if dimensions src/dst are equal or fill whole image scale=1 otherwise, if calcule dst scale respect from src
-	// read 1 src pixel
-	// write 1 dst pixel
 }
-
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_convert_properties,	uint8_t _dst_bytes_per_pixel) {
 
@@ -633,12 +628,12 @@ ZG_Image *	ZG_Image_Convert(ZG_Image *_src_image, uint32_t _dst_convert_properti
 	if((_dst_convert_properties & ZG_IMAGE_CONVERT_PROPERTY_POWER_OF_2_ORIGINAL_RESOLUTION) ==ZG_IMAGE_CONVERT_PROPERTY_POWER_OF_2_ORIGINAL_RESOLUTION ||
 			((dest_width == data->width) && (dest_height == data->height))
 	){ // simple copy original image...
-		new_image = ZG_Image_New(dest_width, dest_height, data->bytes_per_pixel);
+		new_image = ZG_Image_New(dest_width, dest_height, _dst_bytes_per_pixel);
 		// and just blit...
 		ZG_Image_Blit(new_image,NULL,_src_image,NULL);
 
 	}else{ //scale to fit image (warning may have a bug with copying rgb values !!!)...
-		new_image = ZG_Image_New(dest_width,dest_height,data->bytes_per_pixel);
+		new_image = ZG_Image_New(dest_width,dest_height,_dst_bytes_per_pixel);
 		ZG_Image_Blit(
 			_src_image,
 			NULL,
