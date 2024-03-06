@@ -121,7 +121,7 @@ void ZG_Geometry_GL_SetMeshColor(ZG_Geometry * _geometry,const float *_vertexs,s
 }
 
 
-void ZG_Geometry_GL_SetMeshNormal(ZG_Geometry * _geometry,const float *_vertexs,size_t _vertexs_len) {
+void ZG_Geometry_GL_SetMeshNormal(ZG_Geometry * _geometry,const float *_normals,size_t _normals_len) {
 
 	ZG_GeometryDataGL * data = NULL;
 
@@ -135,7 +135,7 @@ void ZG_Geometry_GL_SetMeshNormal(ZG_Geometry * _geometry,const float *_vertexs,
 
 	// reserve GPU memory ...
 	glBindBuffer(GL_ARRAY_BUFFER, data->normal);
-	glBufferData(GL_ARRAY_BUFFER, _vertexs_len*sizeof(float), _vertexs, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, _normals_len*sizeof(float), _normals, GL_DYNAMIC_DRAW);
 }
 
 
@@ -191,6 +191,9 @@ void ZG_Geometry_GL_Draw(ZG_Geometry * _geometry) {
 			break;
 		case ZG_GEOMETRY_TYPE_POINTS:
 			mode=GL_POINTS;
+			break;
+		case ZG_GEOMETRY_TYPE_LINES:
+			mode=GL_LINES;
 			break;
 		case ZG_GEOMETRY_TYPE_TRIANGLE_STRIP:
 			mode=GL_TRIANGLE_STRIP;

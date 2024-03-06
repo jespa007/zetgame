@@ -310,12 +310,12 @@ void 			ZG_Geometry_SetMeshColor(ZG_Geometry *_this,const float *_vertexs,size_t
 	}
 }
 
-void 			ZG_Geometry_SetMeshNormal(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len){
+void 			ZG_Geometry_SetMeshNormal(ZG_Geometry *_this,const float *_normals,size_t __normals_len){
 
 	if(_this == NULL) return;
 
-	if(_vertexs_len < 2 && _this->geometry_type != ZG_GEOMETRY_TYPE_POINTS){
-		ZG_LOG_ERRORF("ZG_Geometry_SetMeshNormal : Number of vertex should be greather than 2");
+	if(__normals_len < 2 && _this->geometry_type != ZG_GEOMETRY_TYPE_POINTS){
+		ZG_LOG_ERRORF("ZG_Geometry_SetMeshNormal : Number of normals should be greather than 2");
 		return;
 	}
 
@@ -324,7 +324,7 @@ void 			ZG_Geometry_SetMeshNormal(ZG_Geometry *_this,const float *_vertexs,size_
 
 		break;
 	case ZG_GRAPHICS_API_GL:
-		ZG_Geometry_GL_SetMeshNormal(_this,_vertexs,_vertexs_len);
+		ZG_Geometry_GL_SetMeshNormal(_this,_normals,__normals_len);
 		break;
 	}
 }

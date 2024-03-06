@@ -8,7 +8,7 @@ uint32_t ZG_System_GetTicks(void){
 #else
 	struct timeval tval;
 
-	gettimeofday(&tval_before, NULL);
+	gettimeofday(&tval, NULL);
 	// multiply 0.001 to convert us to ms
 	return (long int)tval.tv_usec*(0.001f);
 #endif

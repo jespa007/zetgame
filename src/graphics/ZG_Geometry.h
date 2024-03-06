@@ -26,6 +26,7 @@ typedef enum{
 	ZG_GEOMETRY_TYPE_POINTS=0,
 	ZG_GEOMETRY_TYPE_TRIANGLES,
 	ZG_GEOMETRY_TYPE_LINE_LOOP,
+	ZG_GEOMETRY_TYPE_LINES,
 	// To see com to configure triangle strip show the following link https://www.learnopengles.com/tag/triangle-strips/
 	ZG_GEOMETRY_TYPE_TRIANGLE_STRIP
 }ZG_GeometryType;
