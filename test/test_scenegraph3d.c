@@ -32,22 +32,22 @@ ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
 	        x = xy * cosf(sector_angle);             // r * cos(u) * cos(v)
 	        y = xy * sinf(sector_angle);             // r * cos(u) * sin(v)
 	        vertices[n_vertices++]=x;
-	        vertices[n_vertices++]=z;
 	        vertices[n_vertices++]=y;
+	        vertices[n_vertices++]=z;
 
 	        // normalized vertex normal (nx, ny, nz)
 	        nx = x * length_inv;
 	        ny = y * length_inv;
 	        nz = z * length_inv;
 	        normals[n_normals++]=nx;
-	        normals[n_normals++]=nz;
 	        normals[n_normals++]=ny;
+	        normals[n_normals++]=nz;
 
 	        // vertex tex coord (s, t) range between [0, 1]
 	        s = (float)j / sector_count;
-	        t = (float)i / sector_count;
-	        tex_coords[n_tex_coords++]=t;
+	        t = (float)i / stack_count;
 	        tex_coords[n_tex_coords++]=s;
+	        tex_coords[n_tex_coords++]=t;
 	    }
 	}
 
@@ -105,14 +105,14 @@ ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
 	ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_TRIANGLES);
 	ZG_Geometry_SetIndices(geometry,indices,n_indices);
 	ZG_Geometry_SetMeshVertex(geometry,vertices,n_vertices);
-	ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
+	//ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
 	ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);
 
 	/*ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_LINES);
 	ZG_Geometry_SetIndices(geometry,line_indices,n_line_indices);
-	ZG_Geometry_SetMeshVertex(geometry,vertices,n_vertices);
+	ZG_Geometry_SetMeshVertex(geometry,vertices,n_vertices);*/
 	//ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
-	//ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);*/
+	//ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);
 
 	free(line_indices);
 	free(indices);
