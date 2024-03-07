@@ -22,8 +22,8 @@ typedef struct{
 
 typedef struct{
 	ZG_Vector2i position;
-	bool  left_press;
-	bool  right_press;
+	bool  		left_press;
+	bool  		right_press;
 }ZG_MouseEvent;
 
 typedef struct
@@ -35,8 +35,8 @@ typedef struct
 
 typedef struct{
 	ZG_Vector2i   	position,position_previous,position_diff;
-	ZG_Vector2f    factor;
-	bool    	motion,left_press,left_hold;
+	ZG_Vector2f    	factor;
+	bool    		motion,left_press,left_hold;
 }ZG_MouseInfo;
 
 // TESTCASE SDL CALLBACK
