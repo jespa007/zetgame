@@ -60,8 +60,8 @@ ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
 	// |  / |
 	// | /  |
 	// k2--k2+1
-	uint32_t *indices=malloc(sizeof(uint32_t)*(stack_count-1)*sector_count*6);
-	uint32_t *line_indices=malloc(sizeof(uint32_t)*(stack_count)*sector_count*4);
+	unsigned int *indices=malloc(sizeof(unsigned int)*(stack_count-1)*sector_count*6);
+	unsigned int *line_indices=malloc(sizeof(unsigned int)*(stack_count)*sector_count*4);
 	int k1, k2;
 	int n_indices=0;
 	int n_line_indices=0;
@@ -99,6 +99,38 @@ ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
 	        }
 	    }
 	}
+
+	FILE *fp_vertices=fopen("vertices.txt","wt+");
+	FILE *fp_normals=fopen("normals.txt","wt+");
+	FILE *fp_textures=fopen("textures.txt","wt+");
+	FILE *fp_indices=fopen("indices.txt","wt+");
+
+	for(int i=0; i < n_indices;i++){
+		fprintf(fp_indices," %i",indices[i]);
+	}
+
+	for(int i=0; i < n_vertices;i++){
+		 if((i % 3) == 0 && i!=0){
+		            fprintf(fp_vertices,"\n");
+		        }
+		fprintf(fp_vertices," %0.4f",vertices[i]);
+	}
+
+	for(int i=0; i < n_tex_coords;i++){
+		fprintf(fp_textures," %0.4f",tex_coords[i]);
+	}
+
+	for(int i=0; i < n_normals;i++){
+        if((i % 3) == 0 && i!=0){
+            fprintf(fp_normals,"\n");
+        }
+		fprintf(fp_normals," %0.4f",normals[i]);
+	}
+
+	fclose(fp_indices);
+	fclose(fp_vertices);
+	fclose(fp_normals);
+	fclose(fp_textures);
 
 	//printf("r:%i e:%i\n",(stack_count-1)*sector_count*6,n_indices);
 

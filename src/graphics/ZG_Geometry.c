@@ -12,7 +12,7 @@ static ZG_Geometry * g_geometry_default_circle=NULL;
 
 ZG_Geometry	* ZG_Geometry_GetDefaultPoint(void){
 	if(g_geometry_default_point == NULL){
-		uint32_t index=0;
+		unsigned int index=0;
 		float pos[]={0,0,0};
 		g_geometry_default_point=ZG_Geometry_NewPoints();
 		ZG_Geometry_SetIndices(g_geometry_default_point,&index,1);
@@ -87,7 +87,7 @@ ZG_Geometry	* ZG_Geometry_NewPoints(void){
 }
 
 ZG_Geometry	* ZG_Geometry_NewRectangle2d(void){
-	uint32_t indices[]={
+	unsigned int indices[]={
 		0,1,2,3	// Indices of 1st and 2nd triangle. 1st triangle uses the vertexs according indices 0,1,2. 2nd triangle shares ones of the first triangle (i.e 0,1,2) + the rest one (i.e 3)		0,1,2,3
 	};
 
@@ -117,7 +117,7 @@ ZG_Geometry	* ZG_Geometry_NewFilledRectangle2d(void){
 
 	ZG_Geometry *geometry=NULL;
 
-	uint32_t indices[]={
+	unsigned int indices[]={
 		0,1,2,3	// Indices of 1st and 2nd triangle. 1st triangle uses the vertexs according indices 0,1,2. 2nd triangle shares ones of the first triangle (i.e 0,1,2) + the rest one (i.e 3)
 	};
 
@@ -146,7 +146,7 @@ ZG_Geometry	* ZG_Geometry_NewTexturedRectangle2d(void){
 
 	ZG_Geometry *geometry=NULL;
 
-	uint32_t indices[]={
+	unsigned int indices[]={
 		0,1,2,3	// Indices of 1st and 2nd triangle. 1st triangle uses the vertexs according indices 0,1,2. 2nd triangle shares ones of the first triangle (i.e 0,1,2) + the rest one (i.e 3)
 	};
 
@@ -193,12 +193,12 @@ ZG_Geometry	* ZG_Geometry_NewCircle2d(uint16_t _divisions_per_quadrant){
 	uint16_t n_vertexs = 4*_divisions_per_quadrant;
 	size_t indices_length=n_vertexs;
 
-	uint32_t *indices=malloc(indices_length*sizeof(uint32_t));
+	unsigned int *indices=malloc(indices_length*sizeof(unsigned int));
 
 	// A quarter of screen as size...
 	float *mesh_vertex=malloc(n_vertexs*sizeof(float)*ZG_VERTEX_COORDS_LEN);
 	float *it_vertexs=mesh_vertex;
-	uint32_t *it_indexs=indices;
+	unsigned int *it_indexs=indices;
 
 	float inc_r=2*PI/(float)n_vertexs;
 	int index=0;
@@ -232,7 +232,7 @@ ZG_Geometry	* ZG_Geometry_NewCircle2d(uint16_t _divisions_per_quadrant){
 	return geometry;
 }
 
-void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const uint32_t *_indices,size_t _indices_len){
+void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const unsigned int *_indices,size_t _indices_len){
 
 	if(_this == NULL) return;
 

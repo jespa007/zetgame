@@ -57,7 +57,7 @@ ZG_Geometry	* 	ZG_Geometry_NewCircle2d(uint16_t _divisions_per_quadrant);
 
 
 ZG_Geometry	* 	ZG_Geometry_New(ZG_GeometryType _geometry_type);
-void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const uint32_t *_indices,size_t _indices_len);
+void 			ZG_Geometry_SetIndices(ZG_Geometry *_this,const unsigned int *_indices,size_t _indices_len);
 void 			ZG_Geometry_SetMeshVertex(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len);
 void 			ZG_Geometry_SetMeshTexture(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len);
 void 			ZG_Geometry_SetMeshColor(ZG_Geometry *_this,const float *_vertexs,size_t _vertexs_len);

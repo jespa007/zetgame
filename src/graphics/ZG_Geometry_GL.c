@@ -27,7 +27,7 @@ void  ZG_Geometry_GL_New(ZG_Geometry *geometry){
 }
 
 
-void ZG_Geometry_GL_SetIndices(ZG_Geometry * _geometry, const uint32_t *indices,size_t indices_len) {
+void ZG_Geometry_GL_SetIndices(ZG_Geometry * _geometry, const unsigned int *indices,size_t indices_len) {
 
 	if(_geometry==NULL) return;
 
@@ -40,7 +40,7 @@ void ZG_Geometry_GL_SetIndices(ZG_Geometry * _geometry, const uint32_t *indices,
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data->index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_len*sizeof(uint32_t), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_len*sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 }
 
