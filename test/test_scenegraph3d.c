@@ -1,6 +1,104 @@
 #include "zetgame.h"
-#if 0
-ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
+#if 1
+/*ZG_Geometry *createSphere2(int radius, int slices, int stacks){
+    int numVertices = (slices + 1) * (stacks + 1);
+    int numIndices = slices * stacks * 6;
+    GLfloat *vertices = malloc(numVertices * 3 * sizeof(GLfloat));
+    GLfloat *texCoords = malloc(numVertices * 2 * sizeof(GLfloat));
+    GLuint *indices = malloc(numIndices * sizeof(GLuint));
+
+    int vertexIndex = 0;
+    int texCoordIndex = 0;
+
+    for (int i = 0; i <= slices; i++) {
+        float phi = ((float)i / slices) * PI * 2.0;
+        for (int j = 0; j <= stacks; j++) {
+            float theta = ((float)j / stacks) * PI;
+
+            float x = cos(phi) * sin(theta);
+            float y = cos(theta);
+            float z = sin(phi) * sin(theta);
+
+            vertices[vertexIndex++] = radius * x;
+            vertices[vertexIndex++] = radius * y;
+            vertices[vertexIndex++] = radius * z;
+
+            texCoords[texCoordIndex++] = (float)i / slices;
+            texCoords[texCoordIndex++] = (float)j / stacks;
+        }
+    }
+
+    int index = 0;
+    for (int i = 0; i < slices; i++) {
+        for (int j = 0; j < stacks; j++) {
+            indices[index++] = (i * (stacks + 1)) + j;
+            indices[index++] = ((i + 1) * (stacks + 1)) + j;
+            indices[index++] = ((i + 1) * (stacks + 1)) + (j + 1);
+
+            indices[index++] = (i * (stacks + 1)) + j;
+            indices[index++] = ((i + 1) * (stacks + 1)) + (j + 1);
+            indices[index++] = (i * (stacks + 1)) + (j + 1);
+        }
+    }
+
+	ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_TRIANGLES);
+	ZG_Geometry_SetIndices(geometry,indices,index);
+	ZG_Geometry_SetMeshVertex(geometry,vertices,vertexIndex);
+	//ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
+	ZG_Geometry_SetMeshTexture(geometry,texCoords,texCoordIndex);
+
+	//ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_LINES);
+	//ZG_Geometry_SetIndices(geometry,line_indices,n_line_indices);
+	//ZG_Geometry_SetMeshVertex(geometry,vertices,n_vertices);
+	//ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
+	//ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);
+
+	free(indices);
+	free(vertices);
+	free(texCoords);
+
+	return geometry;
+}*/
+
+
+float * buildInterleavedVertices(
+	size_t _vertices_count
+	,float *_vertices
+	,float *_normals
+	,float *_texCoords
+
+){
+    //std::vector<float>().swap(interleavedVertices);
+
+	float *interleavedVertices=malloc(sizeof(float)*(3+3+2)*_vertices_count);
+    size_t i, j;
+    size_t interleaved_index=0;
+    size_t count = _vertices_count;
+    for(i = 0, j = 0; i < count; i += 3, j += 2)
+    {
+    	interleavedVertices[interleaved_index++]=_vertices[i];
+    	interleavedVertices[interleaved_index++]=_vertices[i+1];
+    	interleavedVertices[interleaved_index++]=_vertices[i+2];
+
+    	interleavedVertices[interleaved_index++]=_normals[i];
+    	interleavedVertices[interleaved_index++]=_normals[i+1];
+    	interleavedVertices[interleaved_index++]=_normals[i+2];
+
+    	interleavedVertices[interleaved_index++]=_texCoords[j];
+    	interleavedVertices[interleaved_index++]=_texCoords[j+1];
+    }
+
+    return interleavedVertices;
+}
+
+void createSphere(
+	int radius
+	, int sector_count
+	, int stack_count
+	,unsigned int **_indices
+	,size_t *_indices_length
+	,float **_interleaved_vertices
+){
 	// clear memory of prev arrays
 	float x, y, z, xy;                              // vertex position
 	float nx, ny, nz, length_inv = 1.0f / radius;    // vertex normal
@@ -134,11 +232,11 @@ ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
 
 	//printf("r:%i e:%i\n",(stack_count-1)*sector_count*6,n_indices);
 
-	ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_TRIANGLES);
-	ZG_Geometry_SetIndices(geometry,indices,n_indices);
-	ZG_Geometry_SetMeshVertex(geometry,vertices,n_vertices);
+	//ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_TRIANGLES);
+	//ZG_Geometry_SetIndices(geometry,indices,n_indices);
+	//ZG_Geometry_SetMeshVertex(geometry,vertices,n_vertices);
 	//ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
-	ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);
+	//ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);
 
 	/*ZG_Geometry *geometry=ZG_Geometry_New(ZG_GEOMETRY_TYPE_LINES);
 	ZG_Geometry_SetIndices(geometry,line_indices,n_line_indices);
@@ -146,30 +244,74 @@ ZG_Geometry *createSphere(int radius, int sector_count, int stack_count){
 	//ZG_Geometry_SetMeshNormal(geometry,normals,n_normals);
 	//ZG_Geometry_SetMeshTexture(geometry,tex_coords,n_tex_coords);
 
+
+
+	*_interleaved_vertices=buildInterleavedVertices(
+		n_vertices
+		,vertices
+		,normals
+		,tex_coords
+	);
+	//return geometry;
+
+	*_indices=indices;
+	*_indices_length=n_indices;
+
+
 	free(line_indices);
-	free(indices);
+	//free(indices);
 	free(vertices);
 	free(normals);
 	free(tex_coords);
-
-	return geometry;
-
 }
 
+#define INTERLEAVED_STRIDE 32
+
+void Sphere_draw(
+	unsigned int *_indices
+	,size_t _indices_len
+	,float *interleavedVertices
+)
+{
+    // interleaved array
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glVertexPointer(3, GL_FLOAT, INTERLEAVED_STRIDE, &interleavedVertices[0]);
+    glNormalPointer(GL_FLOAT, INTERLEAVED_STRIDE, &interleavedVertices[3]);
+    glTexCoordPointer(2, GL_FLOAT, INTERLEAVED_STRIDE, &interleavedVertices[6]);
+
+    glDrawElements(GL_TRIANGLES, (unsigned int)_indices_len, GL_UNSIGNED_INT, _indices);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
 
 
 int main(int argc, char *argv[]){
 	ZG_UNUSUED_PARAM(argc);
 	ZG_UNUSUED_PARAM(argv);
 
+	unsigned int *indices=NULL;
+	size_t indices_length=0;
+	float *interleaved_vertices=NULL;
+
 	ZG_Init(NULL);
 
-	ZG_Geometry *geometry=createSphere(1, 36, 18);
+	/*ZG_Geometry *geometry=*/createSphere(
+		1
+		, 30
+		, 30
+		,&indices
+		,&indices_length
+		,&interleaved_vertices
+	);
 	ZG_Transform transform=ZG_Transform_New();
 	ZG_Appearance *appearance=ZG_Appearance_New();
 	ZG_Texture *texture=ZG_Texture_NewFromFile("../../../test/data/images/mars.jpg");
 	ZG_TransformAnimation 			*ta=ZG_TransformAnimation_New();
-	ZG_Texture_SetRepeatUV(texture,true);
+	//ZG_Texture_SetRepeatUV(texture,true);
 
 	ZG_Graphics_SetProjectionMode(ZG_PROJECTION_MODE_PERSPECTIVE);
 
@@ -248,7 +390,11 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_BeginRender();
 
-		ZG_Graphics_Draw(&transform,geometry,appearance);
+		Sphere_draw(
+			indices
+			,indices_length
+			,interleaved_vertices
+		);
 
 		ZG_Graphics_EndRender();
 
@@ -256,15 +402,18 @@ int main(int argc, char *argv[]){
 
 	}while(!ZG_KP_ESC);
 
+	free(indices);
+	free(interleaved_vertices);
+
 	ZG_Appearance_Delete(appearance);
-	ZG_Geometry_Delete(geometry);
+	//ZG_Geometry_Delete(geometry);
 	ZG_Texture_Delete(texture);
 	ZG_TransformAnimation_Delete(ta);
 	ZG_DeInit();
 
 	return 0;
 }
-#endif
+#else
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/gl.h>
@@ -584,3 +733,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+#endif
