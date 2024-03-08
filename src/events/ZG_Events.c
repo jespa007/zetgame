@@ -1,5 +1,12 @@
 #include "@zg_events.h"
 
+void SDL_SetWindowsMessageHook(SDL_WindowsMessageHook callback, void *userdata)
+{
+    g_WindowsMessageHook = callback;
+    g_WindowsMessageHookData = userdata;
+}
+
+
 void
 WIN_PumpEvents(_THIS)
 {
