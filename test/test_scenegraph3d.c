@@ -71,21 +71,25 @@ float * buildInterleavedVertices(
     //std::vector<float>().swap(interleavedVertices);
 
 	float *interleavedVertices=malloc(sizeof(float)*(3+3+2)*_vertices_count);
-    size_t i, j;
+    size_t n_vertex=0;
+    size_t n_texcoord=0;
     size_t interleaved_index=0;
     size_t count = _vertices_count;
-    for(i = 0, j = 0; i < count; i += 3, j += 2)
-    {
-    	interleavedVertices[interleaved_index++]=_vertices[i];
-    	interleavedVertices[interleaved_index++]=_vertices[i+1];
-    	interleavedVertices[interleaved_index++]=_vertices[i+2];
+    for(size_t i = 0; i < count; i++){
 
-    	interleavedVertices[interleaved_index++]=_normals[i];
-    	interleavedVertices[interleaved_index++]=_normals[i+1];
-    	interleavedVertices[interleaved_index++]=_normals[i+2];
+    	interleavedVertices[interleaved_index++]=_vertices[n_vertex];
+    	interleavedVertices[interleaved_index++]=_vertices[n_vertex+1];
+    	interleavedVertices[interleaved_index++]=_vertices[n_vertex+2];
 
-    	interleavedVertices[interleaved_index++]=_texCoords[j];
-    	interleavedVertices[interleaved_index++]=_texCoords[j+1];
+    	interleavedVertices[interleaved_index++]=_normals[n_vertex];
+    	interleavedVertices[interleaved_index++]=_normals[n_vertex+1];
+    	interleavedVertices[interleaved_index++]=_normals[n_vertex+2];
+
+    	interleavedVertices[interleaved_index++]=_texCoords[n_texcoord];
+    	interleavedVertices[interleaved_index++]=_texCoords[n_texcoord+1];
+
+    	n_vertex+=3;
+    	n_texcoord+=2;
     }
 
     return interleavedVertices;
@@ -198,7 +202,7 @@ void createSphere(
 	    }
 	}
 
-	FILE *fp_vertices=fopen("vertices.txt","wt+");
+	/*FILE *fp_vertices=fopen("vertices.txt","wt+");
 	FILE *fp_normals=fopen("normals.txt","wt+");
 	FILE *fp_textures=fopen("textures.txt","wt+");
 	FILE *fp_indices=fopen("indices.txt","wt+");
@@ -228,7 +232,7 @@ void createSphere(
 	fclose(fp_indices);
 	fclose(fp_vertices);
 	fclose(fp_normals);
-	fclose(fp_textures);
+	fclose(fp_textures);*/
 
 	//printf("r:%i e:%i\n",(stack_count-1)*sector_count*6,n_indices);
 
@@ -247,7 +251,7 @@ void createSphere(
 
 
 	*_interleaved_vertices=buildInterleavedVertices(
-		n_vertices
+		num_vertices
 		,vertices
 		,normals
 		,tex_coords
@@ -311,9 +315,20 @@ int main(int argc, char *argv[]){
 	ZG_Appearance *appearance=ZG_Appearance_New();
 	ZG_Texture *texture=ZG_Texture_NewFromFile("../../../test/data/images/mars.jpg");
 	ZG_TransformAnimation 			*ta=ZG_TransformAnimation_New();
-	//ZG_Texture_SetRepeatUV(texture,true);
+	ZG_Texture_SetRepeatUV(texture,true);
 
-	ZG_Graphics_SetProjectionMode(ZG_PROJECTION_MODE_PERSPECTIVE);
+	 glMatrixMode(GL_PROJECTION);
+	    glLoadIdentity();
+		glPerspective(90.0f, //90.0f,  // field of view
+				(float)ZG_DEFAULT_SCREEN_WIDTH/(float)ZG_DEFAULT_SCREEN_HEIGHT, // shape of viewport rectangle
+				.01f,         // Min Z: how far from eye position does view start
+				500.0f);       // max Z: how far from eye position does view extend
+
+
+	    glMatrixMode(GL_MODELVIEW);
+	    glLoadIdentity();
+
+	//ZG_Graphics_SetProjectionMode(ZG_PROJECTION_MODE_PERSPECTIVE);
 
 	/*ZG_TransformAnimation_StartTween(
 		ta
@@ -349,8 +364,8 @@ int main(int argc, char *argv[]){
 
 	transform.translate.z=-5.5;
 	//transform.translate.x01.5;
-
-	appearance->texture=texture;
+	    ZG_Texture_Bind(texture);
+	//appearance->texture=texture;
 
 	do{
 		// Event update
@@ -390,11 +405,15 @@ int main(int argc, char *argv[]){
 
 		ZG_Graphics_BeginRender();
 
+		ZG_Transform_Apply(&transform);
+
 		Sphere_draw(
 			indices
 			,indices_length
 			,interleaved_vertices
 		);
+
+		ZG_Transform_Restore(&transform);
 
 		ZG_Graphics_EndRender();
 
