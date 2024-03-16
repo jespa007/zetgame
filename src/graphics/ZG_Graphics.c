@@ -50,7 +50,7 @@ typedef struct{
 ZG_GraphicsVars *g_graphics_vars=NULL;
 
 #include "ZG_Graphics_GL.c"
-#include "ZG_Graphics_Win32.c"
+#include "ZG_Graphics_WIN.c"
 
 static void ZG_Graphics_PrintAdapterInformation(void);
 
@@ -171,7 +171,7 @@ bool ZG_Graphics_Init(
 	g_graphics_vars->adapters=NULL;
 
 #ifdef _WIN32
-	g_graphics_vars->adapters=ZG_Graphics_Win32_GetListAdapters();
+	g_graphics_vars->adapters=ZG_Graphics_WIN_GetListAdapters();
 #endif
 
 	ZG_Graphics_PrintAdapterInformation();
