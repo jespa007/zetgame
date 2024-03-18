@@ -6,10 +6,10 @@
 static VideoBootStrap *bootstrap[] = {
 	//...
 	#if SDL_VIDEO_DRIVER_WINDOWS
-		&WINDOWS_bootstrap,
+		&WINDOWS_bootstrap, // defined at VideoDevice_WIN
 	#endif
 	//...
-}
+};
 
 
 typedef struct VideoBootStrap
@@ -165,4 +165,115 @@ pre_driver_error:
         SDL_QuitSubSystem(SDL_INIT_EVENTS);
     }
     return -1;
+}
+
+void
+SDL_SetWindowKeyboardGrab(SDL_Window * window, SDL_bool grabbed)
+{
+    CHECK_WINDOW_MAGIC(window,);
+
+    if (!!grabbed == !!(window->flags & SDL_WINDOW_KEYBOARD_GRABBED)) {
+        return;
+    }
+    if (grabbed) {
+        window->flags |= SDL_WINDOW_KEYBOARD_GRABBED;
+    } else {
+        window->flags &= ~SDL_WINDOW_KEYBOARD_GRABBED;
+    }
+    SDL_UpdateWindowGrab(window);
+}
+
+void
+SDL_UpdateWindowGrab(SDL_Window * window)
+{
+    SDL_bool keyboard_grabbed, mouse_grabbed;
+
+    if (window->flags & SDL_WINDOW_INPUT_FOCUS) {
+        if (SDL_GetMouse()->relative_mode || (window->flags & SDL_WINDOW_MOUSE_GRABBED)) {
+            mouse_grabbed = SDL_TRUE;
+        } else {
+            mouse_grabbed = SDL_FALSE;
+        }
+
+        if (window->flags & SDL_WINDOW_KEYBOARD_GRABBED) {
+            keyboard_grabbed = SDL_TRUE;
+        } else {
+            keyboard_grabbed = SDL_FALSE;
+        }
+    } else {
+        mouse_grabbed = SDL_FALSE;
+        keyboard_grabbed = SDL_FALSE;
+    }
+
+    if (mouse_grabbed || keyboard_grabbed) {
+        if (_this->grabbed_window && (_this->grabbed_window != window)) {
+            /* stealing a grab from another window! */
+            _this->grabbed_window->flags &= ~(SDL_WINDOW_MOUSE_GRABBED | SDL_WINDOW_KEYBOARD_GRABBED);
+            if (_this->SetWindowMouseGrab) {
+                _this->SetWindowMouseGrab(_this, _this->grabbed_window, SDL_FALSE);
+            }
+            if (_this->SetWindowKeyboardGrab) {
+                _this->SetWindowKeyboardGrab(_this, _this->grabbed_window, SDL_FALSE);
+            }
+        }
+        _this->grabbed_window = window;
+    } else if (_this->grabbed_window == window) {
+        _this->grabbed_window = NULL;  /* ungrabbing input. */
+    }
+
+    if (_this->SetWindowMouseGrab) {
+        _this->SetWindowMouseGrab(_this, window, mouse_grabbed);
+    }
+    if (_this->SetWindowKeyboardGrab) {
+        _this->SetWindowKeyboardGrab(_this, window, keyboard_grabbed);
+    }
+}
+
+void
+SDL_SetWindowMouseGrab(SDL_Window * window, SDL_bool grabbed)
+{
+    CHECK_WINDOW_MAGIC(window,);
+
+    if (!!grabbed == !!(window->flags & SDL_WINDOW_MOUSE_GRABBED)) {
+        return;
+    }
+    if (grabbed) {
+        window->flags |= SDL_WINDOW_MOUSE_GRABBED;
+    } else {
+        window->flags &= ~SDL_WINDOW_MOUSE_GRABBED;
+    }
+    SDL_UpdateWindowGrab(window);
+}
+
+void
+SDL_OnWindowFocusGained(SDL_Window * window)
+{
+    SDL_Mouse *mouse = SDL_GetMouse();
+
+    if (window->gamma && _this->SetWindowGammaRamp) {
+        _this->SetWindowGammaRamp(_this, window, window->gamma);
+    }
+
+    if (mouse && mouse->relative_mode) {
+        SDL_SetMouseFocus(window);
+        if (mouse->relative_mode_warp) {
+            SDL_PerformWarpMouseInWindow(window, window->w/2, window->h/2, SDL_TRUE);
+        }
+    }
+
+    SDL_UpdateWindowGrab(window);
+}
+
+void
+SDL_OnWindowFocusLost(SDL_Window * window)
+{
+    if (window->gamma && _this->SetWindowGammaRamp) {
+        _this->SetWindowGammaRamp(_this, window, window->saved_gamma);
+    }
+
+    SDL_UpdateWindowGrab(window);
+
+    if (ShouldMinimizeOnFocusLoss(window)) {
+        SDL_MinimizeWindow(window);
+    }
 }

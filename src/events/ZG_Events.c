@@ -202,6 +202,124 @@ SDL_WaitEventTimeout(SDL_Event * event, int timeout)
     }
 }
 
+/* Public functions */
+
+void
+SDL_StopEventLoop(void)
+{
+    const char *report = SDL_GetHint("SDL_EVENT_QUEUE_STATISTICS");
+    int i;
+    SDL_EventEntry *entry;
+    SDL_SysWMEntry *wmmsg;
+
+    if (SDL_EventQ.lock) {
+        SDL_LockMutex(SDL_EventQ.lock);
+    }
+
+    SDL_AtomicSet(&SDL_EventQ.active, 0);
+
+    if (report && SDL_atoi(report)) {
+        SDL_Log("SDL EVENT QUEUE: Maximum events in-flight: %d\n",
+                SDL_EventQ.max_events_seen);
+    }
+
+    /* Clean out EventQ */
+    for (entry = SDL_EventQ.head; entry; ) {
+        SDL_EventEntry *next = entry->next;
+        SDL_free(entry);
+        entry = next;
+    }
+    for (entry = SDL_EventQ.free; entry; ) {
+        SDL_EventEntry *next = entry->next;
+        SDL_free(entry);
+        entry = next;
+    }
+    for (wmmsg = SDL_EventQ.wmmsg_used; wmmsg; ) {
+        SDL_SysWMEntry *next = wmmsg->next;
+        SDL_free(wmmsg);
+        wmmsg = next;
+    }
+    for (wmmsg = SDL_EventQ.wmmsg_free; wmmsg; ) {
+        SDL_SysWMEntry *next = wmmsg->next;
+        SDL_free(wmmsg);
+        wmmsg = next;
+    }
+
+    SDL_AtomicSet(&SDL_EventQ.count, 0);
+    SDL_EventQ.max_events_seen = 0;
+    SDL_EventQ.head = NULL;
+    SDL_EventQ.tail = NULL;
+    SDL_EventQ.free = NULL;
+    SDL_EventQ.wmmsg_used = NULL;
+    SDL_EventQ.wmmsg_free = NULL;
+    SDL_AtomicSet(&SDL_sentinel_pending, 0);
+
+    /* Clear disabled event state */
+    for (i = 0; i < SDL_arraysize(SDL_disabled_events); ++i) {
+        SDL_free(SDL_disabled_events[i]);
+        SDL_disabled_events[i] = NULL;
+    }
+
+    if (SDL_event_watchers_lock) {
+        SDL_DestroyMutex(SDL_event_watchers_lock);
+        SDL_event_watchers_lock = NULL;
+    }
+    if (SDL_event_watchers) {
+        SDL_free(SDL_event_watchers);
+        SDL_event_watchers = NULL;
+        SDL_event_watchers_count = 0;
+    }
+    SDL_zero(SDL_EventOK);
+
+    if (SDL_EventQ.lock) {
+        SDL_UnlockMutex(SDL_EventQ.lock);
+        SDL_DestroyMutex(SDL_EventQ.lock);
+        SDL_EventQ.lock = NULL;
+    }
+}
+
+/* This function (and associated calls) may be called more than once */
+int
+SDL_StartEventLoop(void)
+{
+    /* We'll leave the event queue alone, since we might have gotten
+       some important events at launch (like SDL_DROPFILE)
+
+       FIXME: Does this introduce any other bugs with events at startup?
+     */
+
+    /* Create the lock and set ourselves active */
+#if !SDL_THREADS_DISABLED
+    if (!SDL_EventQ.lock) {
+        SDL_EventQ.lock = SDL_CreateMutex();
+        if (SDL_EventQ.lock == NULL) {
+            return -1;
+        }
+    }
+
+    if (!SDL_event_watchers_lock) {
+        SDL_event_watchers_lock = SDL_CreateMutex();
+        if (SDL_event_watchers_lock == NULL) {
+            return -1;
+        }
+    }
+#endif /* !SDL_THREADS_DISABLED */
+
+    /* Process most event types */
+    SDL_EventState(SDL_TEXTINPUT, SDL_DISABLE);
+    SDL_EventState(SDL_TEXTEDITING, SDL_DISABLE);
+    SDL_EventState(SDL_SYSWMEVENT, SDL_DISABLE);
+#if 0 /* Leave these events enabled so apps can respond to items being dragged onto them at startup */
+    SDL_EventState(SDL_DROPFILE, SDL_DISABLE);
+    SDL_EventState(SDL_DROPTEXT, SDL_DISABLE);
+#endif
+
+    SDL_AtomicSet(&SDL_EventQ.active, 1);
+
+    return 0;
+}
+
+
 int
 SDL_PushEvent(SDL_Event * event)
 {
@@ -254,6 +372,42 @@ SDL_PushEvent(SDL_Event * event)
     SDL_GestureProcessEvent(event);
 
     return 1;
+}
+
+int
+SDL_EventsInit(void)
+{
+#if !SDL_JOYSTICK_DISABLED
+    SDL_AddHintCallback(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_AutoUpdateJoysticksChanged, NULL);
+#endif
+#if !SDL_SENSOR_DISABLED
+    SDL_AddHintCallback(SDL_HINT_AUTO_UPDATE_SENSORS, SDL_AutoUpdateSensorsChanged, NULL);
+#endif
+    SDL_AddHintCallback(SDL_HINT_EVENT_LOGGING, SDL_EventLoggingChanged, NULL);
+    SDL_AddHintCallback(SDL_HINT_POLL_SENTINEL, SDL_PollSentinelChanged, NULL);
+    if (SDL_StartEventLoop() < 0) {
+        SDL_DelHintCallback(SDL_HINT_EVENT_LOGGING, SDL_EventLoggingChanged, NULL);
+        return -1;
+    }
+
+    SDL_QuitInit();
+
+    return 0;
+}
+
+void
+SDL_EventsQuit(void)
+{
+    SDL_QuitQuit();
+    SDL_StopEventLoop();
+    SDL_DelHintCallback(SDL_HINT_POLL_SENTINEL, SDL_PollSentinelChanged, NULL);
+    SDL_DelHintCallback(SDL_HINT_EVENT_LOGGING, SDL_EventLoggingChanged, NULL);
+#if !SDL_JOYSTICK_DISABLED
+    SDL_DelHintCallback(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_AutoUpdateJoysticksChanged, NULL);
+#endif
+#if !SDL_SENSOR_DISABLED
+    SDL_DelHintCallback(SDL_HINT_AUTO_UPDATE_SENSORS, SDL_AutoUpdateSensorsChanged, NULL);
+#endif
 }
 
 void ZG_Events_Update(void){
