@@ -1,3 +1,13 @@
+
+/* Public functions */
+int
+SDL_KeyboardInit(void)
+{
+    /* Set the default keymap */
+    SDL_SetKeymap(0, SDL_default_keymap, SDL_NUM_SCANCODES, SDL_FALSE);
+    return 0;
+}
+
 static int
 SDL_SendKeyboardKeyInternal(Uint8 source, Uint8 state, SDL_Scancode scancode)
 {
