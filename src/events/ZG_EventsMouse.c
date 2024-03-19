@@ -1,3 +1,21 @@
+static void SDLCALL
+SDL_MouseDoubleClickTimeChanged(void *userdata, const char *name, const char *oldValue, const char *hint)
+{
+    SDL_Mouse *mouse = (SDL_Mouse *)userdata;
+
+    if (hint && *hint) {
+        mouse->double_click_time = SDL_atoi(hint);
+    } else {
+#if defined(__WIN32__) || defined(__WINGDK__)
+        mouse->double_click_time = GetDoubleClickTime();
+#elif defined(__OS2__)
+        mouse->double_click_time = WinQuerySysValue(HWND_DESKTOP, SV_DBLCLKTIME);
+#else
+        mouse->double_click_time = 500;
+#endif
+    }
+}
+
 /* Public functions */
 int
 SDL_MouseInit(void)
