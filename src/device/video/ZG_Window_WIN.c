@@ -1,3 +1,140 @@
+static void
+WIN_GL_SetupPixelFormat(_THIS, PIXELFORMATDESCRIPTOR * pfd)
+{
+    SDL_zerop(pfd);
+    pfd->nSize = sizeof(*pfd);
+    pfd->nVersion = 1;
+    pfd->dwFlags = (PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL);
+    if (_this->gl_config.double_buffer) {
+        pfd->dwFlags |= PFD_DOUBLEBUFFER;
+    }
+    if (_this->gl_config.stereo) {
+        pfd->dwFlags |= PFD_STEREO;
+    }
+    pfd->iLayerType = PFD_MAIN_PLANE;
+    pfd->iPixelType = PFD_TYPE_RGBA;
+    pfd->cRedBits = _this->gl_config.red_size;
+    pfd->cGreenBits = _this->gl_config.green_size;
+    pfd->cBlueBits = _this->gl_config.blue_size;
+    pfd->cAlphaBits = _this->gl_config.alpha_size;
+    if (_this->gl_config.buffer_size) {
+        pfd->cColorBits =
+            _this->gl_config.buffer_size - _this->gl_config.alpha_size;
+    } else {
+        pfd->cColorBits = (pfd->cRedBits + pfd->cGreenBits + pfd->cBlueBits);
+    }
+    pfd->cAccumRedBits = _this->gl_config.accum_red_size;
+    pfd->cAccumGreenBits = _this->gl_config.accum_green_size;
+    pfd->cAccumBlueBits = _this->gl_config.accum_blue_size;
+    pfd->cAccumAlphaBits = _this->gl_config.accum_alpha_size;
+    pfd->cAccumBits =
+        (pfd->cAccumRedBits + pfd->cAccumGreenBits + pfd->cAccumBlueBits +
+         pfd->cAccumAlphaBits);
+    pfd->cDepthBits = _this->gl_config.depth_size;
+    pfd->cStencilBits = _this->gl_config.stencil_size;
+}
+
+/* Choose the closest pixel format that meets or exceeds the target.
+   FIXME: Should we weight any particular attribute over any other?
+*/
+static int
+WIN_GL_ChoosePixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR * target)
+{
+    PIXELFORMATDESCRIPTOR pfd;
+    int count, index, best = 0;
+    unsigned int dist, best_dist = ~0U;
+
+    count = DescribePixelFormat(hdc, 1, sizeof(pfd), NULL);
+
+    for (index = 1; index <= count; index++) {
+
+        if (!DescribePixelFormat(hdc, index, sizeof(pfd), &pfd)) {
+            continue;
+        }
+
+        if ((pfd.dwFlags & target->dwFlags) != target->dwFlags) {
+            continue;
+        }
+
+        if (pfd.iLayerType != target->iLayerType) {
+            continue;
+        }
+        if (pfd.iPixelType != target->iPixelType) {
+            continue;
+        }
+
+        dist = 0;
+
+        if (pfd.cColorBits < target->cColorBits) {
+            continue;
+        } else {
+            dist += (pfd.cColorBits - target->cColorBits);
+        }
+        if (pfd.cRedBits < target->cRedBits) {
+            continue;
+        } else {
+            dist += (pfd.cRedBits - target->cRedBits);
+        }
+        if (pfd.cGreenBits < target->cGreenBits) {
+            continue;
+        } else {
+            dist += (pfd.cGreenBits - target->cGreenBits);
+        }
+        if (pfd.cBlueBits < target->cBlueBits) {
+            continue;
+        } else {
+            dist += (pfd.cBlueBits - target->cBlueBits);
+        }
+        if (pfd.cAlphaBits < target->cAlphaBits) {
+            continue;
+        } else {
+            dist += (pfd.cAlphaBits - target->cAlphaBits);
+        }
+        if (pfd.cAccumBits < target->cAccumBits) {
+            continue;
+        } else {
+            dist += (pfd.cAccumBits - target->cAccumBits);
+        }
+        if (pfd.cAccumRedBits < target->cAccumRedBits) {
+            continue;
+        } else {
+            dist += (pfd.cAccumRedBits - target->cAccumRedBits);
+        }
+        if (pfd.cAccumGreenBits < target->cAccumGreenBits) {
+            continue;
+        } else {
+            dist += (pfd.cAccumGreenBits - target->cAccumGreenBits);
+        }
+        if (pfd.cAccumBlueBits < target->cAccumBlueBits) {
+            continue;
+        } else {
+            dist += (pfd.cAccumBlueBits - target->cAccumBlueBits);
+        }
+        if (pfd.cAccumAlphaBits < target->cAccumAlphaBits) {
+            continue;
+        } else {
+            dist += (pfd.cAccumAlphaBits - target->cAccumAlphaBits);
+        }
+        if (pfd.cDepthBits < target->cDepthBits) {
+            continue;
+        } else {
+            dist += (pfd.cDepthBits - target->cDepthBits);
+        }
+        if (pfd.cStencilBits < target->cStencilBits) {
+            continue;
+        } else {
+            dist += (pfd.cStencilBits - target->cStencilBits);
+        }
+
+        if (dist < best_dist) {
+            best = index;
+            best_dist = dist;
+        }
+    }
+
+    return best;
+}
+
 int
 WIN_CreateWindow(_THIS, SDL_Window * window)
 {
