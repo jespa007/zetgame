@@ -33,6 +33,10 @@ void ZG_Init(ZG_SetupParams * info){
 #endif
 	ZN_Init();
 
+    if (!ZG_VideoDevice_Init()) {
+    	exit(EXIT_FAILURE);
+    }
+
 	//ZG_Mixer_Init();
 
 	if(!ZG_Graphics_Init(
