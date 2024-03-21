@@ -1,33 +1,36 @@
-SDL_Window *
-SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
+#include "@zg_device_video.h"
+
+ZG_Window * ZG_CreateWindow(
+		const char *_title
+		, int _x
+		, int _y
+		, uint16_t _width
+		, uint16_t _height
+		, uint32_t _flags
+)
 {
     SDL_Window *window;
-    Uint32 graphics_flags = flags & (SDL_WINDOW_OPENGL | SDL_WINDOW_METAL | SDL_WINDOW_VULKAN);
-
-    if (!_this) {
-        /* Initialize the video system if needed */
-        if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-            return NULL;
-        }
-    }
-
-    if ((((flags & SDL_WINDOW_UTILITY) != 0) + ((flags & SDL_WINDOW_TOOLTIP) != 0) + ((flags & SDL_WINDOW_POPUP_MENU) != 0)) > 1) {
-        SDL_SetError("Conflicting window flags specified");
-        return NULL;
-    }
+    uint32_t graphics_flags = _flags;
 
     /* Some platforms can't create zero-sized windows */
-    if (w < 1) {
-        w = 1;
-    }
-    if (h < 1) {
-        h = 1;
+    if (_width == 0) {
+    	ZG_LOG_ERROR("ZG_CreateWindow : _width == 0");
+    	return NULL;
     }
 
-    /* Some platforms blow up if the windows are too large. Raise it later? */
-    if ((w > 16384) || (h > 16384)) {
-        SDL_SetError("Window is too large.");
-        return NULL;
+    if (_height == 0) {
+    	ZG_LOG_ERROR("ZG_CreateWindow : _height == 0");
+    	return NULL;
+    }
+
+    if (_width > 16384) {
+    	ZG_LOG_ERROR("ZG_CreateWindow : _width > 16384");
+    	return NULL;
+    }
+
+    if (_height > 16384) {
+    	ZG_LOG_ERROR("ZG_CreateWindow : _height > 16384");
+    	return NULL;
     }
 
     /* Some platforms have certain graphics backends enabled by default */
