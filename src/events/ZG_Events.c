@@ -1,4 +1,7 @@
 #include "@zg_events.h"
+#include "ZG_Keyboard.c"
+
+#include "ZG_Mouse.c"
 
 /* @{ */
 typedef enum
@@ -140,19 +143,8 @@ SDL_PumpEvents(void)
         _this->PumpEvents(_this);
     }
 
-#if !SDL_JOYSTICK_DISABLED
-    /* Check for joystick state change */
-    if (SDL_update_joysticks) {
-        SDL_JoystickUpdate();
-    }
-#endif
-
-#if !SDL_SENSOR_DISABLED
-    /* Check for sensor state change */
-    if (SDL_update_sensors) {
-        SDL_SensorUpdate();
-    }
-#endif
+    // update josticks
+    // update sensors
 
     SDL_SendPendingSignalEvents();  /* in case we had a signal handler fire, etc. */
 }
@@ -160,47 +152,19 @@ SDL_PumpEvents(void)
 /* Public functions */
 
 int
-SDL_PollEvent(SDL_Event * event)
-{
-    return SDL_WaitEventTimeout(event, 0);
+SDL_PollEvent(SDL_Event * event){
+	SDL_PumpEvents();
+	switch (SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) {
+	case -1:
+	case  0:
+		return 0;
+	default:
+		/* Has events */
+		return 1;
+	}
+
 }
 
-int
-SDL_WaitEvent(SDL_Event * event)
-{
-    return SDL_WaitEventTimeout(event, -1);
-}
-
-int
-SDL_WaitEventTimeout(SDL_Event * event, int timeout)
-{
-    Uint32 expiration = 0;
-
-    if (timeout > 0)
-        expiration = SDL_GetTicks() + timeout;
-
-    for (;;) {
-        SDL_PumpEvents();
-        switch (SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) {
-        case -1:
-            return 0;
-        case 0:
-            if (timeout == 0) {
-                /* Polling and no events, just return */
-                return 0;
-            }
-            if (timeout > 0 && SDL_TICKS_PASSED(SDL_GetTicks(), expiration)) {
-                /* Timeout expired and no events */
-                return 0;
-            }
-            SDL_Delay(1);
-            break;
-        default:
-            /* Has events */
-            return 1;
-        }
-    }
-}
 
 /* Public functions */
 
@@ -625,3 +589,6 @@ void ZG_Events_Update(void){
 #endif
 #endif
 }
+
+
+

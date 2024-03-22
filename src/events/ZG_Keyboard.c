@@ -414,3 +414,15 @@ SDL_ReleaseAutoReleaseKeys(void)
         keyboard->autorelease_pending = SDL_FALSE;
     }
 }
+
+const Uint8 *
+SDL_GetKeyboardState(int *numkeys)
+{
+    SDL_Keyboard *keyboard = &SDL_keyboard;
+
+    if (numkeys != (int *) 0) {
+        *numkeys = SDL_NUM_SCANCODES;
+    }
+    return keyboard->keystate;
+}
+
