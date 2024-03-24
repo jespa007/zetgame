@@ -24,6 +24,9 @@ void ZG_Init(ZG_SetupParams * info){
 		info=&default_setup;
 	}
 
+
+	ZG_VideoDevice_Init();
+
 	//setlocale(LC_ALL, ""); // set utf-8 by default
 
 	ZG_Luts_Init();
