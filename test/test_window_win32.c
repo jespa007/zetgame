@@ -6,6 +6,10 @@
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	600
 
+
+// capture hIntance,nCmdShow
+HINSTANCE g_hInstance=0;
+int g_nCmdShow=0;
 const char g_szClassName[] = "myWindowClass";
 
 typedef struct{
@@ -302,14 +306,61 @@ void setFullscreen(Win32Window *_window, bool _fullscreen){
 	}
 }
 
+//----------------------------------------------------------
+
+int main(int argc, char *argv[]);
+
+#ifdef _WIN32
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine, int nCmdShow)
-{
+    LPSTR lpCmdLine, int nCmdShow){
+
+	int argc=0;
+	char **argv=NULL;
+
+	// capture args (lpCmdLine)
+	LPWSTR *argvw=CommandLineToArgvW(GetCommandLineW(),&argc);
+
+	if(argvw==NULL){
+		exit(-1);
+	}
+
+	argv=malloc(sizeof(char *)*argc);
+	// convert wchar to char
+	for(int i=0; i < argc; i++){
+		int len=wcslen(argvw[i])+1;
+		argv[i]=malloc(sizeof(char)*len);
+		memset(argv[i],0,len);
+		wcstombs(argv[i], argvw[i], wcslen(argvw[i]));
+	}
+
+	LocalFree(argvw);
+
+
+	g_hInstance=hInstance;
+	g_nCmdShow=nCmdShow;
+
+	int result=main(argc,argv);
+
+	for(int i=0; i < argc; i++){
+		free(argv[i]);
+	}
+	free(argv);
+	return result;
+}
+#endif
+
+//----------------------------------------------------------
+
+int main(int argc, char *argv[]){
 	Win32DisplayDevice display_device;
 	Win32Window *window;
 	bool fullscreen=false;
 
-	ZG_CreateDisplay(&display_device,hInstance,nCmdShow);
+	for(int i=0; i < argc; i++){
+		printf("arg %i : %s\n",i,argv[i]);
+	}
+
+	ZG_CreateDisplay(&display_device,g_hInstance,g_nCmdShow);
 	window=ZG_CreateWindow(&display_device);
 
 
@@ -350,6 +401,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     // Cleanup
 	ZG_DestroyWindow(window);
 	ZG_DestroyDisplay(&display_device);
-
-    return 0;
 }
+
