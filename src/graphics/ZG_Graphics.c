@@ -85,14 +85,14 @@ bool ZG_Graphics_Init(
 	g_graphics_vars->graphics_api = _video_context;
 	g_graphics_vars->sdl_window = NULL;
 
-	if (SDL_WasInit(SDL_INIT_VIDEO) != SDL_INIT_VIDEO) {
+	/*if (SDL_WasInit(SDL_INIT_VIDEO) != SDL_INIT_VIDEO) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
 			ZG_LOG_ERROR("Unable to init video subsystem: %s", SDL_GetError());
 			return false;
 		}
-	}
+	}*/
 
-	g_graphics_vars->num_displays=SDL_GetNumVideoDisplays();
+	g_graphics_vars->num_displays=ZG_VideoDevice_GetNumVideoDisplays();
 	if(g_graphics_vars->num_displays < 0){
 		ZG_LOG_ERROR("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
 		return false;
@@ -122,12 +122,12 @@ bool ZG_Graphics_Init(
 	switch(g_graphics_vars->graphics_api){
 	case ZG_GRAPHICS_API_GL:
 		// set video_flags as opengl
-		video_flags|=SDL_WINDOW_OPENGL;
+		video_flags|=ZG_WINDOW_OPENGL;
 		break;
 	}
 
 	// main window is always created at the main screen...
-	g_graphics_vars->sdl_window = SDL_CreateWindow(
+	g_graphics_vars->sdl_window = ZG_Window_Create(
 			_caption
 			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].x:g_graphics_vars->rect_display[g_graphics_vars->active_display].x+(g_graphics_vars->rect_display[g_graphics_vars->active_display].w>>1)
 			,g_graphics_vars->fullscreen?g_graphics_vars->rect_display[g_graphics_vars->active_display].y-1:g_graphics_vars->rect_display[g_graphics_vars->active_display].y+(g_graphics_vars->rect_display[g_graphics_vars->active_display].h>>1)
@@ -139,9 +139,9 @@ bool ZG_Graphics_Init(
 		return false;
 	}
 
-	g_graphics_vars->sdl_renderer = SDL_GetRenderer(g_graphics_vars->sdl_window);
-	g_graphics_vars->sdl_window_surface = SDL_GetWindowSurface(g_graphics_vars->sdl_window);
-	g_graphics_vars->bytes_per_pixel = g_graphics_vars->sdl_window_surface->format->BytesPerPixel;
+	//g_graphics_vars->sdl_renderer = SDL_GetRenderer(g_graphics_vars->sdl_window);
+	//g_graphics_vars->sdl_window_surface = SDL_GetWindowSurface(g_graphics_vars->sdl_window);
+	//g_graphics_vars->bytes_per_pixel = g_graphics_vars->sdl_window_surface->format->BytesPerPixel;
 	g_graphics_vars->width = _width;
 	g_graphics_vars->height = _height;
 	g_graphics_vars->one_over_width=1.0f/(g_graphics_vars->width);
@@ -152,7 +152,7 @@ bool ZG_Graphics_Init(
 
 
 	ZG_LOG_INFO("Created main window %ix%i (%ibpp)", _window_width,_window_height, g_graphics_vars->sdl_window_surface->format->BitsPerPixel);
-	ZG_LOG_INFO("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
+	//ZG_LOG_INFO("SDL version: %02i.%02i.%02i",SDL_MAJOR_VERSION,SDL_MINOR_VERSION,SDL_PATCHLEVEL);
 
 	//ZG_Input_SetupCursors();
 	switch(g_graphics_vars->graphics_api){

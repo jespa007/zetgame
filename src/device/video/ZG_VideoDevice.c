@@ -169,40 +169,7 @@ typedef struct ZG_VideoDevice{
     Uint32 next_object_id;
     char *clipboard_text;
 
-    /* * * */
-    /* Data used by the GL drivers */
-    struct
-    {
-        int red_size;
-        int green_size;
-        int blue_size;
-        int alpha_size;
-        int depth_size;
-        int buffer_size;
-        int stencil_size;
-        int double_buffer;
-        int accum_red_size;
-        int accum_green_size;
-        int accum_blue_size;
-        int accum_alpha_size;
-        int stereo;
-        int multisamplebuffers;
-        int multisamplesamples;
-        int accelerated;
-        int major_version;
-        int minor_version;
-        int flags;
-        int profile_mask;
-        int share_with_current_context;
-        int release_behavior;
-        int reset_notification;
-        int framebuffer_srgb_capable;
-        int no_error;
-        int retained_backing;
-        int driver_loaded;
-        char driver_path[256];
-        void *dll_handle;
-    } gl_config;
+
 
     /* * * */
     /* Cache current GL context; don't call the OS when it hasn't changed. */
@@ -272,7 +239,7 @@ ZG_VideoDevice *g_video_device=NULL;
  * Initialize the video and event subsystems -- determine native pixel format
  */
 bool ZG_VideoDevice_Init(void) {
-    SDL_VideoDevice *video;
+    ZG_VideoDevice *video;
     SDL_bool init_events = SDL_FALSE;
     SDL_bool init_keyboard = SDL_FALSE;
     SDL_bool init_mouse = SDL_FALSE;
@@ -280,31 +247,31 @@ bool ZG_VideoDevice_Init(void) {
     int i;
 
     /* Check to make sure we don't overwrite '_this' */
-    if (_this != NULL) {
+    /*if (_this != NULL) {
         SDL_VideoQuit();
-    }
+    }*/
 
 
     /* Start the event loop */
-    if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0) {
+   /* if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0) {
         goto pre_driver_error;
     }
-    init_events = SDL_TRUE;
+    init_events = SDL_TRUE;*/
     if (SDL_KeyboardInit() < 0) {
         goto pre_driver_error;
     }
-    init_keyboard = SDL_TRUE;
+    //init_keyboard = SDL_TRUE;
     if (SDL_MouseInit() < 0) {
         goto pre_driver_error;
     }
-    init_mouse = SDL_TRUE;
-    if (SDL_TouchInit() < 0) {
+    //init_mouse = SDL_TRUE;
+    /*if (SDL_TouchInit() < 0) {
         goto pre_driver_error;
     }
-    init_touch = SDL_TRUE;
+    init_touch = SDL_TRUE;*/
 
     /* Select the proper video driver */
-    video = NULL;
+    /*video = NULL;
     if (driver_name == NULL) {
         driver_name = SDL_GetHint(SDL_HINT_VIDEODRIVER);
     }
@@ -340,23 +307,26 @@ bool ZG_VideoDevice_Init(void) {
         }
         SDL_SetError("No available video device");
         goto pre_driver_error;
-    }
+    }*/
+#ifdef _WIN32
+    ZG_VideoDevice_WIN_Create();
+#endif
 
     /* From this point on, use SDL_VideoQuit to cleanup on error, rather than
     pre_driver_error. */
-    _this = video;
-    _this->name = bootstrap[i]->name;
-    _this->next_object_id = 1;
-    _this->thread = SDL_ThreadID();
+    //_this = video;
+    //_this->name = bootstrap[i]->name;
+    //_this->next_object_id = 1;
+    //_this->thread = SDL_ThreadID();
 
 
     /* Set some very sane GL defaults */
-    _this->gl_config.driver_loaded = 0;
-    _this->gl_config.dll_handle = NULL;
+    //_this->gl_config.driver_loaded = 0;
+    //_this->gl_config.dll_handle = NULL;
     SDL_GL_ResetAttributes();
 
-    _this->current_glwin_tls = SDL_TLSCreate();
-    _this->current_glctx_tls = SDL_TLSCreate();
+    //_this->current_glwin_tls = SDL_TLSCreate();
+    //_this->current_glctx_tls = SDL_TLSCreate();
 
     /* Initialize the video subsystem */
     if (_this->VideoInit(_this) < 0) {
