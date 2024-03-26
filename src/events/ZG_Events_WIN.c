@@ -116,27 +116,4 @@ WIN_WaitEventTimeout(_THIS, int timeout)
 
 }
 
-/* Unregisters the windowclass registered in SDL_RegisterApp above. */
-void
-SDL_UnregisterApp()
-{
-    WNDCLASSEX wcex;
 
-    /* SDL_RegisterApp might not have been called before */
-    if (!app_registered) {
-        return;
-    }
-    --app_registered;
-    if (app_registered == 0) {
-        /* Ensure the icons are initialized. */
-        wcex.hIcon = NULL;
-        wcex.hIconSm = NULL;
-        /* Check for any registered window classes. */
-#if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
-        if (GetClassInfoEx(SDL_Instance, SDL_Appname, &wcex)) {
-            UnregisterClass(SDL_Appname, SDL_Instance);
-        }
-#endif
-        WIN_CleanRegisterApp(wcex);
-    }
-}
