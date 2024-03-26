@@ -229,9 +229,6 @@ Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
         0, 0, 0
     };
 
-    ShowWindow(win32_window->hwnd, _display_device->nCmdShow);
-    UpdateWindow(win32_window->hwnd);
-
     int pixelFormat = ChoosePixelFormat(win32_window->hdc, &pfd);
     SetPixelFormat(win32_window->hdc, pixelFormat, &pfd);
 
@@ -240,6 +237,9 @@ Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
     wglMakeCurrent(win32_window->hdc, win32_window->hrc);
 
     printf("Created window OK\n");
+
+    ShowWindow(win32_window->hwnd, _display_device->nCmdShow);
+    UpdateWindow(win32_window->hwnd);
 
     return win32_window;
 }
