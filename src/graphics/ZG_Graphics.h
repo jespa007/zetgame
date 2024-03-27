@@ -6,62 +6,58 @@
 
 
 typedef enum{
-	ZG_GRAPHICS_API_GL=0
-}ZG_GraphicsApi;
-
-typedef enum{
 	ZG_PROJECTION_MODE_ORTHO=0
 	,ZG_PROJECTION_MODE_PERSPECTIVE
 }ZG_ProjectionMode;
 
 
-bool 	ZG_Graphics_Init(int start_posx
-		,int start_posy
-		, uint16_t _width	// game resolution resolution
-		, uint16_t _height // game resolution resolution
-		,ZG_GraphicsApi video_context
-		,const char *caption
-		,uint16_t properties);
+bool 		ZG_Graphics_Init(
+				int start_posx
+				,int start_posy
+				, uint16_t _width	// game resolution resolution
+				, uint16_t _height // game resolution resolution
+				,const char *caption
+				,uint16_t properties
+);
 
-void 	ZG_Graphics_SetProjectionMode(ZG_ProjectionMode );
-void 	ZG_Graphics_SetCameraTransform(ZG_Transform *transform);
-void 	ZG_Graphics_SetResolutionDesign(int _width, int _height);
+void 		ZG_Graphics_SetProjectionMode(ZG_ProjectionMode );
+void 		ZG_Graphics_SetCameraTransform(ZG_Transform *transform);
+void 		ZG_Graphics_SetResolutionDesign(int _width, int _height);
 
 ZG_Vector2f ZG_Graphics_GetScale(void);
 
-ZG_GraphicsApi ZG_Graphics_GetGraphicsApi(void);
-unsigned ZG_Graphics_GetNumMonitors(void);
-bool ZG_Graphics_GetScreenBounds(int num_display, SDL_Rect * rect );
-bool ZG_Graphics_IsFullscreen(void);
-void ZG_Graphics_ToggleFullscreen(void);
-void ZG_Graphics_SetFullscreen(bool _fullscreen);
+unsigned 	ZG_Graphics_GetNumMonitors(void);
+bool 		ZG_Graphics_GetScreenBounds(int num_display, SDL_Rect * rect );
+bool 		ZG_Graphics_IsFullscreen(void);
+void 		ZG_Graphics_ToggleFullscreen(void);
+void 		ZG_Graphics_SetFullscreen(bool _fullscreen);
 
-void ZG_Graphics_SetLineThickness(uint8_t _thickness);
-void ZG_Graphics_SetPointSize(uint8_t _point_size);
-void ZG_Graphics_SetColor4f(float _r, float _g, float _b, float _a);
+void 		ZG_Graphics_SetLineThickness(uint8_t _thickness);
+void 		ZG_Graphics_SetPointSize(uint8_t _point_size);
+void 		ZG_Graphics_SetColor4f(float _r, float _g, float _b, float _a);
 
-uint16_t ZG_Graphics_GetWindowWidth(void);
-uint16_t ZG_Graphics_GetWindowHeight(void);
-uint16_t ZG_Graphics_GetWidth(void);
-uint16_t ZG_Graphics_GetHeight(void);
-float ZG_Graphics_GetOneOverWidth(void);
-float ZG_Graphics_GetOneOverHeight(void);
+uint16_t 	ZG_Graphics_GetWindowWidth(void);
+uint16_t 	ZG_Graphics_GetWindowHeight(void);
+uint16_t 	ZG_Graphics_GetWidth(void);
+uint16_t 	ZG_Graphics_GetHeight(void);
+float 		ZG_Graphics_GetOneOverWidth(void);
+float 		ZG_Graphics_GetOneOverHeight(void);
 
-uint8_t  ZG_Graphics_GetBytesPerPixel(void);
+uint8_t  	ZG_Graphics_GetBytesPerPixel(void);
 
-float ZG_Graphics_GetAspectRatio(void);
-float ZG_Graphics_GetOneOverAspectRatio(void);
+float		ZG_Graphics_GetAspectRatio(void);
+float 		ZG_Graphics_GetOneOverAspectRatio(void);
 
-void ZG_Graphics_PrintGraphicsInfo(void);
-void ZG_Graphics_SetBackgroundColor(ZG_Color4f color);
+void 		ZG_Graphics_PrintGraphicsInfo(void);
+void 		ZG_Graphics_SetBackgroundColor(ZG_Color4f color);
 
-void ZG_Graphics_MakeScreenShot(void);
+void 		ZG_Graphics_MakeScreenShot(void);
 
-void ZG_Graphics_ClearScreen(ZG_Color4f color);
+void 		ZG_Graphics_ClearScreen(ZG_Color4f color);
 
-void ZG_Graphics_BeginRender(void);
-void ZG_Graphics_SetBackgroundColor(ZG_Color4f color);
-void ZG_Graphics_EndRender(void);
+void 		ZG_Graphics_BeginRender(void);
+void 		ZG_Graphics_SetBackgroundColor(ZG_Color4f color);
+void 		ZG_Graphics_EndRender(void);
 
 
 

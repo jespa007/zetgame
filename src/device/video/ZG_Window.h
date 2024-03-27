@@ -7,7 +7,7 @@ struct ZG_Window{
 	void *data;
 };
 
-ZG_Window *ZG_Window_Create(
+ZG_Window *ZG_Window_New(
 		const char *title
 		, int x
 		, int y
@@ -15,5 +15,7 @@ ZG_Window *ZG_Window_Create(
 		, uint16_t _height
 		, uint32_t flags
 );
+
+void ZG_Window_Delete(ZG_Window *_this);
 
 #endif

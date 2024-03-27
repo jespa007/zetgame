@@ -25,7 +25,9 @@ void ZG_Init(ZG_SetupParams * info){
 	}
 
 
-	ZG_VideoDevice_Init();
+	if(!ZG_VideoDevice_Init()) {
+		exit(EXIT_FAILURE);
+	}
 
 	//setlocale(LC_ALL, ""); // set utf-8 by default
 

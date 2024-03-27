@@ -9,21 +9,21 @@ typedef struct
 
 typedef struct{
 	 uint8_t 		bytes_per_pixel;
-	 uint16_t     width,height;
+	 uint16_t     	width,height;
 	 ZG_Vector2f 	scale;
-	 float		one_over_width
-	 	 	 	,one_over_height
-				,aspect_ratio
-				,one_over_aspect_ratio;
+	 float			one_over_width
+	 	 	 		,one_over_height
+					,aspect_ratio
+					,one_over_aspect_ratio;
 
-	 float 		fps;
+	 float 			fps;
 
 	 //ZG_ViewPort  * view_port;
 
-	 ZG_Color4f 			background_color;
-	 SDL_Window		* 	sdl_window;
-	 SDL_Renderer 	*	sdl_renderer;
-	 SDL_Surface 	*	sdl_window_surface;
+	 ZG_Color4f 		background_color;
+	 ZG_Window		* 	window;
+	 //SDL_Renderer 	*	sdl_renderer;
+	 //SDL_Surface 	*	sdl_window_surface;
 
 	 bool stated_render;
 	 bool screenshoot_request;
@@ -55,10 +55,9 @@ ZG_GraphicsVars *g_graphics_vars=NULL;
 static void ZG_Graphics_PrintAdapterInformation(void);
 
 bool ZG_Graphics_Init(
-		int start_posx,int start_posy	// start position
+		int start_posx
+		,int start_posy	// start position
 		, uint16_t _width, uint16_t _height // logical resolution
-		//, uint16_t _window_width, uint16_t _window_height // screen resolution
-		,ZG_GraphicsApi _video_context
 		,const char *_caption
 		,uint16_t _properties
 	) {
@@ -94,13 +93,13 @@ bool ZG_Graphics_Init(
 
 	g_graphics_vars->num_displays=ZG_VideoDevice_GetNumVideoDisplays();
 	if(g_graphics_vars->num_displays < 0){
-		ZG_LOG_ERROR("SDL_GetNumVideoDisplays error : %s\n", SDL_GetError());
+		ZG_LOG_ERROR("ZG_VideoDevice_GetNumVideoDisplays error : %s\n", SDL_GetError());
 		return false;
 	}
-	g_graphics_vars->rect_display=(SDL_Rect *)malloc(sizeof(SDL_Rect)*g_graphics_vars->num_displays);
+	g_graphics_vars->rect_display=(ZG_Rectangle *)malloc(sizeof(ZG_Rectangle)*g_graphics_vars->num_displays);
 	for(int i=0 ; i < g_graphics_vars->num_displays; i++){
 		if(SDL_GetDisplayBounds(i, &g_graphics_vars->rect_display[i])!=0){
-			ZG_LOG_ERROR("SDL_GetDisplayBounds error : %s\n", SDL_GetError());
+			ZG_LOG_ERROR("ZG_VideoDevice_GetDisplayBounds error : %s\n", SDL_GetError());
 			return false;
 		}
 	}

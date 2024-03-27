@@ -76,8 +76,8 @@ SDL_RegisterApp(const char *name, Uint32 style, void *hInst)
     return 0;
 }
 
-static SDL_VideoDevice *
-ZG_Video_WIN_CreateDevice(void)
+static ZG_VideoDevice *
+ZG_VideoDevice_WIN_Create(void)
 {
     SDL_VideoDevice *device;
     SDL_VideoData *data;

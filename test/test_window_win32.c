@@ -20,7 +20,7 @@ typedef struct{
 	ZG_Rectangle * monitors;
 	int			n_monitors;
 	int 		posx,posy;
-	HINSTANCE hInstance;
+	HINSTANCE hInstance; // registered application
 	int nCmdShow;
 }Win32DisplayDevice;
 
@@ -141,7 +141,7 @@ void ZG_CreateDisplay(Win32DisplayDevice *_display_device, HINSTANCE hInstance,i
 	memset(_display_device,0,sizeof(Win32DisplayDevice));
 
 	_display_device->nCmdShow=nCmdShow;
-	_display_device->hInstance=hInstance;
+	_display_device->hInstance=hInstance; // ZG_Instance
 
     // Monitor information
     ZG_MonitorInfo(_display_device);
@@ -169,7 +169,7 @@ Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
     wc.lpfnWndProc   = WndProc;
     wc.cbClsExtra    = 0;
     wc.cbWndExtra    = 0;
-    wc.hInstance     = _display_device->hInstance;
+    wc.hInstance     = _display_device->hInstance; // the registered application
     wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
     wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
@@ -196,7 +196,7 @@ Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
         ,  wr.bottom - wr.top    // height of the window
         ,NULL
 		, NULL
-		, _display_device->hInstance
+		, _display_device->hInstance // the registered application
 		, NULL);
 
     if(win32_window->hwnd == NULL)
@@ -308,7 +308,7 @@ void setFullscreen(Win32Window *_window, bool _fullscreen){
 
 //----------------------------------------------------------
 
-int main(int argc, char *argv[]);
+int ZG_main(int argc, char *argv[]);
 
 #ifdef _WIN32
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -339,7 +339,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	g_hInstance=hInstance;
 	g_nCmdShow=nCmdShow;
 
-	int result=main(argc,argv);
+	int result=ZG_main(argc,argv);
 
 	for(int i=0; i < argc; i++){
 		free(argv[i]);
@@ -351,7 +351,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 //----------------------------------------------------------
 
-int main(int argc, char *argv[]){
+int ZG_main(int argc, char *argv[]){
 	Win32DisplayDevice display_device;
 	Win32Window *window;
 	bool fullscreen=false;
@@ -359,6 +359,9 @@ int main(int argc, char *argv[]){
 	for(int i=0; i < argc; i++){
 		printf("arg %i : %s\n",i,argv[i]);
 	}
+
+	printf("g_hInstance:%i\n",g_hInstance);
+	printf("g_nCmdShow:%i\n",g_nCmdShow);
 
 	ZG_CreateDisplay(&display_device,g_hInstance,g_nCmdShow);
 	window=ZG_CreateWindow(&display_device);

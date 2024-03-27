@@ -314,9 +314,11 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	#-- Base --
 	base/@zg_base.c
 	
+	#-- Device -- 
+	device/video/@zg_video_device.c
+	
 	#-- Graphics -- 
 	graphics/@zg_graphics.c
-	
 	
 	#-- Animation --
 	animation/@zg_animation.c
@@ -325,7 +327,7 @@ set( ZETGAME_LIB_SRCS ${ZETGAME_LIB_SRCS}
 	math/@zg_math.c
 	
 	#-- Input --
-	input/@zg_input.c
+	event/@zg_event.c
 	
 	#-- Scene --
 	##scene/@zg_scene.c

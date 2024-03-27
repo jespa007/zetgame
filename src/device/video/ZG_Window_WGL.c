@@ -1,12 +1,49 @@
 /* Private display data */
 
-typedef struct SDL_VideoData
-{
+typedef struct{
+    ZG_Window *window;
+    HWND hwnd;
+    HWND parent;
+    HDC hdc;
+    HDC mdc;
+    HINSTANCE hinstance;
+    HBITMAP hbm;
+    WNDPROC wndproc;
+    HHOOK keyboard_hook;
+    bool created;
+    WPARAM mouse_button_flags;
+    LPARAM last_pointer_update;
+    WCHAR high_surrogate;
+    bool initializing;
+    bool expected_resize;
+    bool in_border_change;
+    bool in_title_click;
+    Uint8 focus_click_pending;
+    bool skip_update_clipcursor;
+    Uint32 last_updated_clipcursor;
+    bool mouse_relative_mode_center;
+    bool windowed_mode_was_maximized;
+    bool in_window_deactivation;
+    RECT cursor_clipped_rect;
+    SDL_Point last_raw_mouse_position;
+    bool mouse_tracked;
+    WCHAR *ICMFileName;
+    struct SDL_VideoData *videodata;
+#if SDL_VIDEO_OPENGL_EGL
+    EGLSurface egl_surface;
+#endif
+    /**
+     * Cached value of GetDpiForWindow, for use for scaling points in the client area
+     * between dpi-scaled points and pixels. Only used if videodata->dpi_scaling_enabled.
+     */
+    int scaling_dpi;
+} ZG_WindowDriverData_WIN;
+
+typedef struct{
     int render;
 
     DWORD clipboard_count;
 
-#if !defined(__XBOXONE__) && !defined(__XBOXSERIES__) /* Xbox doesn't support user32/shcore*/
     /* Touch input functions */
     void* userDLL;
     BOOL (WINAPI *CloseTouchInputHandle)( HTOUCHINPUT );
@@ -29,75 +66,20 @@ typedef struct SDL_VideoData
                                         UINT             *dpiX,
                                         UINT             *dpiY );
     HRESULT (WINAPI *SetProcessDpiAwareness)(PROCESS_DPI_AWARENESS dpiAwareness);
-#endif /*!defined(__XBOXONE__) && !defined(__XBOXSERIES__)*/
 
-    SDL_bool dpi_scaling_enabled;
-
- #ifndef SDL_DISABLE_WINDOWS_IME
-    SDL_bool ime_com_initialized;
-    struct ITfThreadMgr *ime_threadmgr;
-    SDL_bool ime_initialized;
-    SDL_bool ime_enabled;
-    SDL_bool ime_available;
-    HWND ime_hwnd_main;
-    HWND ime_hwnd_current;
-    SDL_bool ime_suppress_endcomposition_event;
-    HIMC ime_himc;
-
-    WCHAR* ime_composition;
-    int ime_composition_length;
-    WCHAR ime_readingstring[16];
-    int ime_cursor;
-
-    SDL_bool ime_candlist;
-    WCHAR* ime_candidates;
-    DWORD ime_candcount;
-    DWORD ime_candref;
-    DWORD ime_candsel;
-    UINT ime_candpgsize;
-    int ime_candlistindexbase;
-    SDL_bool ime_candvertical;
-
-    SDL_bool ime_dirty;
-    SDL_Rect ime_rect;
-    SDL_Rect ime_candlistrect;
-    int ime_winwidth;
-    int ime_winheight;
-
-    HKL ime_hkl;
-    void* ime_himm32;
-    UINT (WINAPI *GetReadingString)(HIMC himc, UINT uReadingBufLen, LPWSTR lpwReadingBuf, PINT pnErrorIndex, BOOL *pfIsVertical, PUINT puMaxReadingLen);
-    BOOL (WINAPI *ShowReadingWindow)(HIMC himc, BOOL bShow);
-    LPINPUTCONTEXT2 (WINAPI *ImmLockIMC)(HIMC himc);
-    BOOL (WINAPI *ImmUnlockIMC)(HIMC himc);
-    LPVOID (WINAPI *ImmLockIMCC)(HIMCC himcc);
-    BOOL (WINAPI *ImmUnlockIMCC)(HIMCC himcc);
-
-    SDL_bool ime_uiless;
-    struct ITfThreadMgrEx *ime_threadmgrex;
-    DWORD ime_uielemsinkcookie;
-    DWORD ime_alpnsinkcookie;
-    DWORD ime_openmodesinkcookie;
-    DWORD ime_convmodesinkcookie;
-    TSFSink *ime_uielemsink;
-    TSFSink *ime_ippasink;
-    LONG ime_uicontext;
-#endif /* !SDL_DISABLE_WINDOWS_IME */
+    bool dpi_scaling_enabled;
 
     BYTE pre_hook_key_state[256];
     UINT _SDL_WAKEUP;
-} SDL_VideoData;
+} ZG_Window_WGL_Data;
 
 
-#if SDL_VIDEO_OPENGL_WGL
-
-struct SDL_GLDriverData
-{
-    SDL_bool HAS_WGL_ARB_pixel_format;
-    SDL_bool HAS_WGL_EXT_swap_control_tear;
-    SDL_bool HAS_WGL_ARB_context_flush_control;
-    SDL_bool HAS_WGL_ARB_create_context_robustness;
-    SDL_bool HAS_WGL_ARB_create_context_no_error;
+typedef struct{
+    bool HAS_WGL_ARB_pixel_format;
+    bool HAS_WGL_EXT_swap_control_tear;
+    bool HAS_WGL_ARB_context_flush_control;
+    bool HAS_WGL_ARB_create_context_robustness;
+    bool HAS_WGL_ARB_create_context_no_error;
 
     /* Max version of OpenGL ES context that can be created if the
        implementation supports WGL_EXT_create_context_es2_profile.
@@ -126,7 +108,7 @@ struct SDL_GLDriverData
                                                  int *piValues);
     BOOL (WINAPI * wglSwapIntervalEXT) (int interval);
     int (WINAPI * wglGetSwapIntervalEXT) (void);
-};
+}ZG_WindowDriverData_GLW;
 
 
 
@@ -187,11 +169,9 @@ struct SDL_GLDriverData
 #define WGL_SAMPLES_ARB                0x2042
 #endif
 
-#endif
-
 
 static void
-WIN_GL_SetupPixelFormat(_THIS, PIXELFORMATDESCRIPTOR * pfd)
+ZG_Window_WGL_SetupPixelFormat(_THIS, PIXELFORMATDESCRIPTOR * pfd)
 {
     SDL_zerop(pfd);
     pfd->nSize = sizeof(*pfd);
@@ -230,7 +210,7 @@ WIN_GL_SetupPixelFormat(_THIS, PIXELFORMATDESCRIPTOR * pfd)
    FIXME: Should we weight any particular attribute over any other?
 */
 static int
-WIN_GL_ChoosePixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR * target)
+ZG_Window_WGL_ChoosePixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR * target)
 {
     PIXELFORMATDESCRIPTOR pfd;
     int count, index, best = 0;
@@ -327,11 +307,11 @@ WIN_GL_ChoosePixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR * target)
     return best;
 }
 
-/* actual work of WIN_GL_SetupWindow() happens here. */
+/* actual work of ZG_Window_WGL_SetupWindow() happens here. */
 static int
-WIN_GL_SetupWindowInternal(_THIS, SDL_Window * window)
+ZG_Window_WGL_SetupWindowInternal(_THIS, ZG_Window * window)
 {
-    HDC hdc = ((SDL_WindowData *) window->driverdata)->hdc;
+    HDC hdc = ((ZG_WindowDriverData_WIN *) window->driverdata)->hdc;
     PIXELFORMATDESCRIPTOR pfd;
     int pixel_format = 0;
     int iAttribs[64];
@@ -339,7 +319,7 @@ WIN_GL_SetupWindowInternal(_THIS, SDL_Window * window)
     int *iAccelAttr;
     float fAttribs[1] = { 0 };
 
-    WIN_GL_SetupPixelFormat(_this, &pfd);
+    ZG_Window_WGL_SetupPixelFormat(_this, &pfd);
 
     /* setup WGL_ARB_pixel_format attribs */
     iAttr = &iAttribs[0];
@@ -428,62 +408,62 @@ WIN_GL_SetupWindowInternal(_THIS, SDL_Window * window)
     *iAttr = 0;
 
     /* Choose and set the closest available pixel format */
-    pixel_format = WIN_GL_ChoosePixelFormatARB(_this, iAttribs, fAttribs);
+    pixel_format = ZG_Window_WGL_ChoosePixelFormatARB(_this, iAttribs, fAttribs);
 
     /* App said "don't care about accel" and FULL accel failed. Try NO. */
     if ( ( !pixel_format ) && ( _this->gl_config.accelerated < 0 ) ) {
         *iAccelAttr = WGL_NO_ACCELERATION_ARB;
-        pixel_format = WIN_GL_ChoosePixelFormatARB(_this, iAttribs, fAttribs);
+        pixel_format = ZG_Window_WGL_ChoosePixelFormatARB(_this, iAttribs, fAttribs);
         *iAccelAttr = WGL_FULL_ACCELERATION_ARB;  /* if we try again. */
     }
     if (!pixel_format) {
-        pixel_format = WIN_GL_ChoosePixelFormat(hdc, &pfd);
+        pixel_format = ZG_Window_WGL_ChoosePixelFormat(hdc, &pfd);
     }
     if (!pixel_format) {
         return SDL_SetError("No matching GL pixel format available");
     }
     if (!SetPixelFormat(hdc, pixel_format, &pfd)) {
-        return WIN_SetError("SetPixelFormat()");
+        return ZG_Window_WGL_SetError("SetPixelFormat()");
     }
     return 0;
 }
 
 int
-WIN_GL_SetupWindow(_THIS, SDL_Window * window)
+ZG_Window_WGL_SetupWindow(_THIS, ZG_Window * window)
 {
     /* The current context is lost in here; save it and reset it. */
-    SDL_Window *current_win = SDL_GL_GetCurrentWindow();
+    ZG_Window *current_win = SDL_GL_GetCurrentWindow();
     SDL_GLContext current_ctx = SDL_GL_GetCurrentContext();
-    const int retval = WIN_GL_SetupWindowInternal(_this, window);
-    WIN_GL_MakeCurrent(_this, current_win, current_ctx);
+    const int retval = ZG_Window_WGL_SetupWindowInternal(_this, window);
+    ZG_Window_WGL_MakeCurrent(_this, current_win, current_ctx);
     return retval;
 }
 
 int
-WIN_CreateWindow(_THIS, SDL_Window * window)
+ZG_Window_WGL_CreateWindow(_THIS, ZG_Window * window)
 {
     HWND hwnd, parent = NULL;
     DWORD style = STYLE_BASIC;
     int x, y;
     int w, h;
 
-    if (window->flags & SDL_WINDOW_SKIP_TASKBAR) {
+    if (window->flags & ZG_WINDOW_SKIP_TASKBAR) {
         parent = CreateWindow(SDL_Appname, TEXT(""), STYLE_BASIC, 0, 0, 32, 32, NULL, NULL, SDL_Instance, NULL);
     }
 
     style |= GetWindowStyle(window);
 
     /* Figure out what the window area will be */
-    WIN_AdjustWindowRectWithStyle(window, style, FALSE, &x, &y, &w, &h, SDL_FALSE);
+    ZG_Window_WGL_AdjustWindowRectWithStyle(window, style, FALSE, &x, &y, &w, &h, SDL_FALSE);
 
     hwnd =
         CreateWindow(SDL_Appname, TEXT(""), style, x, y, w, h, parent, NULL,
                      SDL_Instance, NULL);
     if (!hwnd) {
-        return WIN_SetError("Couldn't create window");
+        return ZG_Window_WGL_SetError("Couldn't create window");
     }
 
-    WIN_PumpEvents(_this);
+    ZG_Window_WGL_PumpEvents(_this);
 
     if (SetupWindowData(_this, window, hwnd, parent, SDL_TRUE) < 0) {
         DestroyWindow(hwnd);
@@ -496,11 +476,11 @@ WIN_CreateWindow(_THIS, SDL_Window * window)
     /* Inform Windows of the frame change so we can respond to WM_NCCALCSIZE */
     SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 
-    if (window->flags & SDL_WINDOW_MINIMIZED) {
+    if (window->flags & ZG_WINDOW_MINIMIZED) {
         ShowWindow(hwnd, SW_SHOWMINNOACTIVE);
     }
 
-    if (!(window->flags & SDL_WINDOW_OPENGL)) {
+    if (!(window->flags & ZG_WINDOW_OPENGL)) {
         return 0;
     }
 
@@ -508,12 +488,12 @@ WIN_CreateWindow(_THIS, SDL_Window * window)
 #if SDL_VIDEO_OPENGL_ES2
     if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES
 #if SDL_VIDEO_OPENGL_WGL
-        && (!_this->gl_data || WIN_GL_UseEGL(_this))
+        && (!_this->gl_data || ZG_Window_WGL_UseEGL(_this))
 #endif /* SDL_VIDEO_OPENGL_WGL */
     ) {
 #if SDL_VIDEO_OPENGL_EGL
-        if (WIN_GLES_SetupWindow(_this, window) < 0) {
-            WIN_DestroyWindow(_this, window);
+        if (ZG_Window_WGL_GLES_SetupWindow(_this, window) < 0) {
+            ZG_Window_WGL_DestroyWindow(_this, window);
             return -1;
         }
         return 0;
@@ -524,8 +504,8 @@ WIN_CreateWindow(_THIS, SDL_Window * window)
 #endif /* SDL_VIDEO_OPENGL_ES2 */
 
 #if SDL_VIDEO_OPENGL_WGL
-    if (WIN_GL_SetupWindow(_this, window) < 0) {
-        WIN_DestroyWindow(_this, window);
+    if (ZG_Window_WGL_SetupWindow(_this, window) < 0) {
+        ZG_Window_WGL_DestroyWindow(_this, window);
         return -1;
     }
 #else
@@ -536,13 +516,13 @@ WIN_CreateWindow(_THIS, SDL_Window * window)
 }
 
 static int
-SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool created)
+ZG_Window_WGL_SetupWindowData(_THIS, ZG_Window * window, HWND hwnd, HWND parent, bool created)
 {
-    SDL_VideoData *videodata = (SDL_VideoData *) _this->driverdata;
-    SDL_WindowData *data;
+    ZG_Window_WGL_Data *videodata = (ZG_Window_WGL_Data *) _this->driverdata;
+    ZG_WindowDriverData_WIN *data;
 
     /* Allocate the window data */
-    data = (SDL_WindowData *) SDL_calloc(1, sizeof(*data));
+    data = (ZG_WindowDriverData_WIN *) SDL_calloc(1, sizeof(*data));
     if (!data) {
         return SDL_OutOfMemory();
     }
@@ -559,39 +539,39 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
     data->last_pointer_update = (LPARAM)-1;
     data->videodata = videodata;
     data->initializing = SDL_TRUE;
-    data->scaling_dpi = WIN_GetScalingDPIForHWND(videodata, hwnd);
+    data->scaling_dpi = ZG_Window_WGL_GetScalingDPIForHWND(videodata, hwnd);
 
 #ifdef HIGHDPI_DEBUG
-    SDL_Log("SetupWindowData: initialized data->scaling_dpi to %d", data->scaling_dpi);
+    SDL_Log("ZG_Window_WGL_SetupWindowData: initialized data->scaling_dpi to %d", data->scaling_dpi);
 #endif
 
-    SDL_AddHintCallback(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, WIN_MouseRelativeModeCenterChanged, data);
+    SDL_AddHintCallback(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, ZG_Window_WGL_MouseRelativeModeCenterChanged, data);
 
     window->driverdata = data;
 
 #if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
     /* Associate the data with the window */
-    if (!SetProp(hwnd, TEXT("SDL_WindowData"), data)) {
+    if (!SetProp(hwnd, TEXT("ZG_WindowDriverData_WIN"), data)) {
         ReleaseDC(hwnd, data->hdc);
         SDL_free(data);
-        return WIN_SetError("SetProp() failed");
+        return ZG_Window_WGL_SetError("SetProp() failed");
     }
 #endif
 
     /* Set up the window proc function */
 #ifdef GWLP_WNDPROC
     data->wndproc = (WNDPROC) GetWindowLongPtr(hwnd, GWLP_WNDPROC);
-    if (data->wndproc == WIN_WindowProc) {
+    if (data->wndproc == ZG_Window_WGL_WindowProc) {
         data->wndproc = NULL;
     } else {
-        SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) WIN_WindowProc);
+        SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) ZG_Window_WGL_WindowProc);
     }
 #else
     data->wndproc = (WNDPROC) GetWindowLong(hwnd, GWL_WNDPROC);
-    if (data->wndproc == WIN_WindowProc) {
+    if (data->wndproc == ZG_Window_WGL_WindowProc) {
         data->wndproc = NULL;
     } else {
-        SetWindowLong(hwnd, GWL_WNDPROC, (LONG_PTR) WIN_WindowProc);
+        SetWindowLong(hwnd, GWL_WNDPROC, (LONG_PTR) ZG_Window_WGL_WindowProc);
     }
 #endif
 
@@ -602,12 +582,12 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
             int w = rect.right;
             int h = rect.bottom;
 
-            WIN_ClientPointToSDL(window, &w, &h);
+            ZG_Window_WGL_ClientPointToSDL(window, &w, &h);
             if ((window->windowed.w && window->windowed.w != w) || (window->windowed.h && window->windowed.h != h)) {
                 /* We tried to create a window larger than the desktop and Windows didn't allow it.  Override! */
                 int x, y;
                 /* Figure out what the window area will be */
-                WIN_AdjustWindowRect(window, &x, &y, &w, &h, SDL_FALSE);
+                ZG_Window_WGL_AdjustWindowRect(window, &x, &y, &w, &h, SDL_FALSE);
                 data->expected_resize = SDL_TRUE;
                 SetWindowPos(hwnd, HWND_NOTOPMOST, x, y, w, h, SWP_NOCOPYBITS | SWP_NOZORDER | SWP_NOACTIVATE);
                 data->expected_resize = SDL_FALSE;
@@ -617,7 +597,7 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
             }
         }
     }
-#if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
+
     {
         POINT point;
         point.x = 0;
@@ -625,54 +605,54 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
         if (ClientToScreen(hwnd, &point)) {
             int x = point.x;
             int y = point.y;
-            WIN_ScreenPointToSDL(&x, &y);
+            ZG_Window_WGL_ScreenPointToSDL(&x, &y);
             window->x = x;
             window->y = y;
         }
     }
-    WIN_UpdateWindowICCProfile(window, SDL_FALSE);
-#endif
+    ZG_Window_WGL_UpdateWindowICCProfile(window, SDL_FALSE);
+
     {
         DWORD style = GetWindowLong(hwnd, GWL_STYLE);
         if (style & WS_VISIBLE) {
-            window->flags |= SDL_WINDOW_SHOWN;
+            window->flags |= ZG_WINDOW_SHOWN;
         } else {
-            window->flags &= ~SDL_WINDOW_SHOWN;
+            window->flags &= ~ZG_WINDOW_SHOWN;
         }
         if (style & WS_POPUP) {
-            window->flags |= SDL_WINDOW_BORDERLESS;
+            window->flags |= ZG_WINDOW_BORDERLESS;
         } else {
-            window->flags &= ~SDL_WINDOW_BORDERLESS;
+            window->flags &= ~ZG_WINDOW_BORDERLESS;
         }
         if (style & WS_THICKFRAME) {
-            window->flags |= SDL_WINDOW_RESIZABLE;
+            window->flags |= ZG_WINDOW_RESIZABLE;
         } else {
-            window->flags &= ~SDL_WINDOW_RESIZABLE;
+            window->flags &= ~ZG_WINDOW_RESIZABLE;
         }
 #ifdef WS_MAXIMIZE
         if (style & WS_MAXIMIZE) {
-            window->flags |= SDL_WINDOW_MAXIMIZED;
+            window->flags |= ZG_WINDOW_MAXIMIZED;
         } else
 #endif
         {
-            window->flags &= ~SDL_WINDOW_MAXIMIZED;
+            window->flags &= ~ZG_WINDOW_MAXIMIZED;
         }
 #ifdef WS_MINIMIZE
         if (style & WS_MINIMIZE) {
-            window->flags |= SDL_WINDOW_MINIMIZED;
+            window->flags |= ZG_WINDOW_MINIMIZED;
         } else
 #endif
         {
-            window->flags &= ~SDL_WINDOW_MINIMIZED;
+            window->flags &= ~ZG_WINDOW_MINIMIZED;
         }
     }
 #if defined(__XBOXONE__) || defined(__XBOXSERIES__)
-    window->flags |= SDL_WINDOW_INPUT_FOCUS;
+    window->flags |= ZG_WINDOW_INPUT_FOCUS;
 #else
     if (GetFocus() == hwnd) {
-        window->flags |= SDL_WINDOW_INPUT_FOCUS;
+        window->flags |= ZG_WINDOW_INPUT_FOCUS;
         SDL_SetKeyboardFocus(window);
-        WIN_UpdateClipCursor(window);
+        ZG_Window_WGL_UpdateClipCursor(window);
     }
 #endif
 
@@ -683,9 +663,9 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
     }
 #endif
 
-    /* Force the SDL_WINDOW_ALLOW_HIGHDPI window flag if we are doing DPI scaling */
+    /* Force the ZG_WINDOW_ALLOW_HIGHDPI window flag if we are doing DPI scaling */
     if (videodata->dpi_scaling_enabled) {
-        window->flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+        window->flags |= ZG_WINDOW_ALLOW_HIGHDPI;
     }
 
     data->initializing = SDL_FALSE;
@@ -696,10 +676,11 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
 
 
 // It restricts the mouse within the window
-void
-WIN_UpdateClipCursor(SDL_Window *window)
+void ZG_Window_WGL_UpdateClipCursor(
+	ZG_Window *window
+)
 {
-    SDL_WindowData *data = (SDL_WindowData *) window->driverdata;
+    ZG_WindowDriverData_WIN *data = (ZG_WindowDriverData_WIN *) window->driverdata;
     SDL_Mouse *mouse = SDL_GetMouse();
     RECT rect, clipped_rect;
 
@@ -713,9 +694,9 @@ WIN_UpdateClipCursor(SDL_Window *window)
         return;
     }
 
-    if ((mouse->relative_mode || (window->flags & SDL_WINDOW_MOUSE_GRABBED) ||
+    if ((mouse->relative_mode || (window->flags & ZG_WINDOW_MOUSE_GRABBED) ||
          (window->mouse_rect.w > 0 && window->mouse_rect.h > 0)) &&
-        (window->flags & SDL_WINDOW_INPUT_FOCUS)) {
+        (window->flags & ZG_WINDOW_INPUT_FOCUS)) {
         if (mouse->relative_mode && !mouse->relative_mode_warp && data->mouse_relative_mode_center) {
             if (GetWindowRect(data->hwnd, &rect)) {
                 LONG cx, cy;
@@ -745,8 +726,8 @@ WIN_UpdateClipCursor(SDL_Window *window)
 
                     /* mouse_rect_win_client is the mouse rect in Windows client space */
                     mouse_rect_win_client = window->mouse_rect;
-                    WIN_ClientPointFromSDL(window, &mouse_rect_win_client.x, &mouse_rect_win_client.y);
-                    WIN_ClientPointFromSDL(window, &mouse_rect_win_client.w, &mouse_rect_win_client.h);
+                    ZG_Window_WGL_ClientPointFromSDL(window, &mouse_rect_win_client.x, &mouse_rect_win_client.y);
+                    ZG_Window_WGL_ClientPointFromSDL(window, &mouse_rect_win_client.w, &mouse_rect_win_client.h);
 
                     /* mouse_rect is the rect in Windows screen space */
                     mouse_rect.left = rect.left + mouse_rect_win_client.x;
@@ -755,7 +736,7 @@ WIN_UpdateClipCursor(SDL_Window *window)
                     mouse_rect.bottom = mouse_rect.top + mouse_rect_win_client.h;
                     if (IntersectRect(&intersection, &rect, &mouse_rect)) {
                         SDL_memcpy(&rect, &intersection, sizeof(rect));
-                    } else if ((window->flags & SDL_WINDOW_MOUSE_GRABBED) != 0) {
+                    } else if ((window->flags & ZG_WINDOW_MOUSE_GRABBED) != 0) {
                         /* Mouse rect was invalid, just do the normal grab */
                     } else {
                         SDL_zero(rect);
