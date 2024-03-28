@@ -10,7 +10,6 @@
 // capture hIntance,nCmdShow
 HINSTANCE g_hInstance=0;
 int g_nCmdShow=0;
-const char g_szClassName[] = "myWindowClass";
 
 typedef struct{
 	int x,y,w,h;
@@ -20,15 +19,16 @@ typedef struct{
 	ZG_Rectangle * monitors;
 	int			n_monitors;
 	int 		posx,posy;
-	HINSTANCE hInstance; // registered application
+	HINSTANCE hInstance; // hinstance
+	const char *g_szClassName; // class name used to register app and create windows
 	int nCmdShow;
 }Win32DisplayDevice;
 
 
 typedef struct{
-	HDC hdc;
-	HWND hwnd;
-	HGLRC hrc; // context
+	HDC hdc; // device context
+	HWND hwnd; // window handle
+	HGLRC hrc; // wgl context
 }Win32Window;
 
 
@@ -137,36 +137,20 @@ void ZG_MonitorInfo(Win32DisplayDevice *_display_device){
 	}*/
 }
 
-void ZG_CreateDisplay(Win32DisplayDevice *_display_device, HINSTANCE hInstance,int nCmdShow){
+int ZG_CreateDisplay(const char *_name, Win32DisplayDevice *_display_device, HINSTANCE hInstance,int nCmdShow){
 	memset(_display_device,0,sizeof(Win32DisplayDevice));
+
+	_display_device->g_szClassName=_name;
 
 	_display_device->nCmdShow=nCmdShow;
 	_display_device->hInstance=hInstance; // ZG_Instance
 
-    // Monitor information
-    ZG_MonitorInfo(_display_device);
-}
-
-void ZG_DestroyDisplay(Win32DisplayDevice *_display_device){
-
-    //glXMakeCurrent(_display_device->display, None, NULL);
-}
-
-Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
-	Win32Window *win32_window = malloc(sizeof(Win32Window));
-
-	memset(win32_window,0,sizeof(Win32Window));
-
+	// register window class
     WNDCLASSEX wc;
-    MSG Msg;
-
-	RECT wr = {0, 0, 800, 600};    // set the size, but not the position
-	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);    // adjust the size
-
     //Step 1: Registering the Window Class
     wc.cbSize        = sizeof(WNDCLASSEX);
     wc.style         = 0;
-    wc.lpfnWndProc   = WndProc;
+    wc.lpfnWndProc   = WndProc; // should be initialized!
     wc.cbClsExtra    = 0;
     wc.cbWndExtra    = 0;
     wc.hInstance     = _display_device->hInstance; // the registered application
@@ -174,7 +158,7 @@ Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
     wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
     wc.lpszMenuName  = NULL;
-    wc.lpszClassName = g_szClassName;
+    wc.lpszClassName = _display_device->g_szClassName;
     wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
     if(!RegisterClassEx(&wc))
@@ -184,11 +168,34 @@ Win32Window *ZG_CreateWindow(Win32DisplayDevice *_display_device){
         return 0;
     }
 
+    // Monitor information
+    ZG_MonitorInfo(_display_device);
+
+    return 1;
+}
+
+void ZG_DestroyDisplay(Win32DisplayDevice *_display_device){
+
+    //glXMakeCurrent(_display_device->display, None, NULL);
+}
+
+Win32Window *ZG_CreateWindow(const char *_title, Win32DisplayDevice *_display_device){
+	Win32Window *win32_window = malloc(sizeof(Win32Window));
+
+	memset(win32_window,0,sizeof(Win32Window));
+
+
+    MSG Msg;
+
+	RECT wr = {0, 0, 800, 600};    // set the size, but not the position
+	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);    // adjust the size
+
+
     // Step 2: Creating the Window
     win32_window->hwnd = CreateWindowEx(
         0
-        ,g_szClassName
-		,"OpenGL Window"
+        ,_display_device->g_szClassName
+		,_title
         ,WS_OVERLAPPEDWINDOW
         ,CW_USEDEFAULT
 		, CW_USEDEFAULT
@@ -305,71 +312,26 @@ void setFullscreen(Win32Window *_window, bool _fullscreen){
 
 	}
 }
-
 //----------------------------------------------------------
-
-int ZG_main(int argc, char *argv[]);
-
-#ifdef _WIN32
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine, int nCmdShow){
-
-	int argc=0;
-	char **argv=NULL;
-
-	// capture args (lpCmdLine)
-	LPWSTR *argvw=CommandLineToArgvW(GetCommandLineW(),&argc);
-
-	if(argvw==NULL){
-		exit(-1);
-	}
-
-	argv=malloc(sizeof(char *)*argc);
-	// convert wchar to char
-	for(int i=0; i < argc; i++){
-		int len=wcslen(argvw[i])+1;
-		argv[i]=malloc(sizeof(char)*len);
-		memset(argv[i],0,len);
-		wcstombs(argv[i], argvw[i], wcslen(argvw[i]));
-	}
-
-	LocalFree(argvw);
-
-
-	g_hInstance=hInstance;
-	g_nCmdShow=nCmdShow;
-
-	int result=ZG_main(argc,argv);
-
-	for(int i=0; i < argc; i++){
-		free(argv[i]);
-	}
-	free(argv);
-	return result;
-}
-#endif
-
-//----------------------------------------------------------
-
-int ZG_main(int argc, char *argv[]){
+int main(){
 	Win32DisplayDevice display_device;
 	Win32Window *window;
 	bool fullscreen=false;
+	STARTUPINFOW lpStartupInfo;
+	GetStartupInfoW(&lpStartupInfo);
 
-	for(int i=0; i < argc; i++){
-		printf("arg %i : %s\n",i,argv[i]);
-	}
+	HINSTANCE g_hInstance=GetModuleHandle(NULL); // get hInstance
+	int g_nCmdShow=lpStartupInfo.wShowWindow;//SW_NORMAL;
 
 	printf("g_hInstance:%i\n",g_hInstance);
 	printf("g_nCmdShow:%i\n",g_nCmdShow);
 
-	ZG_CreateDisplay(&display_device,g_hInstance,g_nCmdShow);
-	window=ZG_CreateWindow(&display_device);
+	ZG_CreateDisplay("myWindowClass",&display_device,g_hInstance,g_nCmdShow);
+	window=ZG_CreateWindow("My window",&display_device);
 
 
     // Enable basic OpenGL functionality
     glEnable(GL_DEPTH_TEST);
-
 
 
     // Step 3: The Message Loop

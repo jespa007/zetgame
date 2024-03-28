@@ -10,6 +10,12 @@ static void WIN_CleanRegisterApp(WNDCLASSEX wcex)
 #endif
     SDL_free(SDL_Appname);
     SDL_Appname = NULL;
+
+    // TODO : Call unregisterclass
+    /*BOOL UnregisterClassA(
+      [in]           LPCSTR    lpClassName,
+      [in, optional] HINSTANCE hInstance
+    );*/
 }
 
 int
